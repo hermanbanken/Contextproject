@@ -74,9 +74,38 @@ We hebben een java backend draaien waar verschillende features zullen worden bep
 
 \end{itemize}
 \section{Prototypes}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Om een beeld te geven van hoe het systeem eruit komt te zien, zijn deze beelden gemaakt in \emph{Balsamiq}. 
+
+Wanneer de gebruiker het systeem opent ziet hij het overzichtsscherm zoals te zien in figuur 1. Aan de hand van de verschillende selectiecriteria aan de rechterkant van het scherm kan de gebruiker de selectie monumenten zichtbaar op de kaart beperken.
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=3in]{user-story-overview.png}
+  \caption[Het overzichtsscherm]%
+  {De kaart van Nederland, met rechts ervan selectiecriteria aan de hand waarvan de monumenten op de kaart worden getoond of verborgen.}
+\end{figure}
+
+
+Heeft de gebruiker een monument geselecteerd, dan wordt de detailpagina, als te zien in figuur 2, getoond. 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=3in]{user-story-detail.png}
+  \caption[Voorbeeld van een detailpagina van een monument]%
+  {In dit scherm zijn de details te zien van een gekozen monument, met de besproken opties.}
+\end{figure}
+
 \section{Use cases}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \section{Software requirements specification}
-
+We onderscheiden de \emph{serverside} van de \emph{clientside}.
+De systeemvereisten voor de server zijn:
+\begin{itemize}
+	\item{PHP $>= 5.2.x$}
+	\item{MySQL $>= 7.x$}
+	\item{JAVA $>= 1.5$}
+	\item{Apache $>= 2.3$}
+\end{itemize}
+De systeemvereisten voor de client zijn:
+\begin{itemize}
+	\item{Webbrowser met V8 Javascript Engine}
+\end{itemize}
 \end{document}
