@@ -4,7 +4,7 @@
 \begin{document}
 
 \title{TI2800 Contextproject - Cultural Heritage \\ Requirements Analysis}
-\author{Sjoerd van Bekhoven \\ Tim Eversdijk \\ Herman Banken \\ Rutger Plak \and 1234567 \\ 1234567 \\ 1234567 \\ 1358375}
+\author{Sjoerd van Bekhoven \\ Tim Eversdijk \\ Herman Banken \\ Rutger Plak \and 1234567 \\ 1234567 \\ 1234567 \\ 1358375} 
 \maketitle
 
 \section{Stakeholder Identification}
@@ -27,32 +27,32 @@ De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 	Statements of fact and assumptions that define the expectations of the system in terms of mission objectives, environment, constraints, and measures of effectiveness and suitability (MOE/MOS). The customers are those that perform the eight primary functions of systems engineering, with special emphasis on the operator as the key customer. Operational requirements will define the basic need and, at a minimum, answer the questions posed in the following listing:[1]
 	\begin{enumerate}
 		\item{\textbf{Operational distribution or deployment:}} Where will the system be used?
-		\item{\textbf{Mission profile or scenario:}} How will the system accomplish its mission objective?
+		
+		Het systeem zal gebruikt worden in de toeristische sector. Toeristen kunnen via de webinterface zoeken naar een monument om te bezoeken. Het systeem zal dus in de huiselijke sfeer worden gebruikt, maar ook mobiel, wanneer de toerist bij het monument aankomt en de achtergrond informatie nog bij de hand wil hebben. Ook onderweg zal hij het systeem willen gebruiken.
+		\item{\textbf{Mission profile or scenario:}} How will the system accomplish its mission objective? 
+		
+		Het systeem is opgedeeld in een webinterface en een back-end. De back-end verzamelt en berekent alle data die de webinterface kan gebruiken. Deze back-end gebruikt een dataset met alle monumenten in het Rijksmonumenten register en bij behorende afbeeldingen uit Wikimedia Commons. Daarnaast verzameld deze extra input gegenereerd door gebruikers zoals reacties op afbeeldingen en pagina\'s. Op deze manier weet de back-end te bepalen of monumenten relevant zijn of niet. 
+		
 		\item{\textbf{Performance and related parameters:}} What are the critical system parameters to accomplish the mission?
+		
+		De beschikbare data is een kritische systeem parameter omdat het van de data afhangt wat het systeem de gebruiker kan laten zien. Wanneer het systeem de gebruiker geen relevante informatie kan geven dan is de missie gefaald.
+		
 		\item{\textbf{Utilization environments:}} How are the various system components to be used?
+		
+		De webinterface bestaat uit diverse onderdelen. Allereerst is er een kaart met daarop de gefilterde monumenten. Deze kaart is te gebruiken om snel een geografische selectie te maken van de monumenten. Er is een filter-component waar gebruikers aan de hand van gegeven labels danwel berekende selectiecriteria monumenten kunnen filteren. 
+		
+		Het detailoverzicht van een monument bevat informatie over het monument zelf. De toerist kan zich zo vast verdiepen in het monument. Daarnaast bevat deze pagina aggregated data van weersinformatie, hotelboeking-sites, etc.
+		
 		\item{\textbf{Effectiveness requirements:}} How effective or efficient must the system be in performing its mission?
 		\item{\textbf{Operational life cycle:}} How long will the system be in use by the user?
 		\item{\textbf{Environment:}} What environments will the system be expected to operate in an effective manner?
 	\end{enumerate}
 	\item{\textbf{Architectural Requirements}}
 	Architectural requirements explain what has to be done by identifying the necessary system architecture of a system.
-	\item{\textbf{Structural Requirements}}
-	Structural requirements explain what has to be done by identifying the necessary structure of a system.
 	\item{\textbf{Behavioral Requirements}}
 	Behavioral requirements explain what has to be done by identifying the necessary behavior of a system.
-	\item{\textbf{Functional Requirements}}
-	Functional requirements explain what has to be done by identifying the necessary task, action or activity that must be accomplished. Functional requirements analysis will be used as the toplevel functions for functional analysis.[1]
-	\item{\textbf{Non-functional Requirements}}
-	Non-functional requirements are requirements that specify criteria that can be used to judge the operation of a system, rather than specific behaviors.
 	\item{\textbf{Performance Requirements}}
-	The extent to which a mission or function must be executed; generally measured in terms of quantity, quality, coverage, timeliness or readiness. During requirements analysis, performance (how well does it have to be done) requirements will be interactively developed across all identified functions based on system life cycle factors; and characterized in terms of the degree of certainty in their estimate, the degree of criticality to system success, and their relationship to other requirements.[1]
-	\item{\textbf{Design Requirements}}
-	The “build to,” “code to,” and “buy to” requirements for products and “how to execute” requirements for processes expressed in technical data packages and technical manuals.[1]
-	\item{\textbf{Derived Requirements}}
-	Requirements that are implied or transformed from higher-level requirement. For example, a requirement for long range or high speed may result in a design requirement for low weight.[1]
-\item{\textbf{Allocated Requirements}}
-	A requirement that is established by dividing or otherwise allocating a high-level requirement into multiple lower-level requirements. Example: A 100-pound item that consists of two subsystems might result in weight requirements of 70 pounds and 30 pounds for the two lower-level items.[1]
-	
+	The extent to which a mission or function must be executed; generally measured in terms of quantity, quality, coverage, timeliness or readiness. During requirements analysis, performance (how well does it have to be done) requirements will be interactively developed across all identified functions based on system life cycle factors; and characterized in terms of the degree of certainty in their estimate, the degree of criticality to system success, and their relationship to other requirements.[1]	
 \end{enumerate}
 \subsection{Strengths}
 \begin{itemize}
