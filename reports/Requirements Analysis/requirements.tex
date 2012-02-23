@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{wrapfig}
-\usepackage[hmargin=3.5cm,vmargin=3.5cm]{geometry}
+\usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry}
 \begin{document}
 
 \title{TI2800 Contextproject - Cultural Heritage \\ Requirements Analysis}
@@ -18,14 +18,14 @@ Het systeem zal voorzien in informatie over en verbanden tussen monumenten, maar
 		\item{een monument gaan bezoeken en willen weten waar ze daarna wat kunnen eten of drinken.}
 		\item{een monument hebben bezocht en graag inspiratie willen opdoen over andere gerelateerde of soortgelijke monumenten.}
 \end{itemize}
-Volgens de World Tourism Organization is een toerist iemand "die reist naar plaatsen buiten zijn/haar gebruikelijk milieu, die niet meer dan \'e\'en jaar voor vrije tijd, zaken en andere doeleinden blijft en die niet beloond wordt voor zijn/haar activiteit ter plaatse".\footnote{http://pub.unwto.org/WebRoot/Store/Shops/Infoshop/Products/1034/1034-1.pdf, World Tourism Organization. 1995. p. 14. Retrieved 2009-03-26} \\
+Volgens de World Tourism Organization is een toerist iemand "die reist naar plaatsen buiten zijn/haar gebruikelijk milieu, die niet meer dan \'e\'en jaar voor vrije tijd, zaken en andere doeleinden blijft en die niet beloond wordt voor zijn/haar activiteit ter plaatse".\footnote{http://pub.unwto.org/WebRoot/Store/Shops/Infoshop/Products/1034/1034-1.pdf, World Tourism Organization. 1995. p. 14.} \\
 Het systeem zal voornamelijk worden toegespitst op toeristen, maar zal ook voor kenners, wetenschappers, scholen, studenten e.d. een interessante informatiebron worden. Naast toeristen, zullen ook zij het voor hen relevante deel van het systeem kunnen gebruiken.
 \clearpage
 \section{Systeem requirements}
 De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 \begin{enumerate}
 	
-	\item{\textbf{Requirements Gebruiker}}
+	\item{\textbf{Requirements}}
 	\begin{enumerate}
 		\item{\textbf{Gebruiksomgeving:}}		
 		Het systeem zal gebruikt worden in de toeristische sector. Toeristen kunnen via de webinterface zoeken naar een monument om te bezichtigen. Het systeem zal dus in de huiselijke sfeer worden gebruikt, maar ook mobiel, wanneer de toerist bij het monument aankomt en de achtergrond informatie nog bij de hand wil hebben. Ook onderweg zal hij het systeem willen gebruiken.
@@ -50,24 +50,27 @@ De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 		Het systeem moet direct al interessante monumenten kunnen tonen. Gebruikers weten niet waar ze op moeten zoeken maar moeten wel direct vastgehouden worden, dus ook als ze niet naar iets specifieks op zoek zijn. Ze moeten binnen enkele minuten iets kunnen uitkiezen. Het systeem moet de gebruiker dus heel snel kunnen informeren.
 	\end{enumerate}
 	\item{\textbf{Systeem architectuur}}
-We hebben een java-backend draaien waar onder andere visuele kenmerken en/of gelijkenissen zullen worden bepaald en berekend tussen foto's van monumenten. Er zal een sql server worden gebruikt om user data en monumenten informatie in op te slaan en op te vragen. Vervolgens zal de front-end web based zijn en draaien op een php server.
+	We hebben een java-backend draaien waar onder andere visuele kenmerken en/of gelijkenissen zullen worden bepaald en berekend tussen foto's van monumenten. Er zal een sql server worden gebruikt om user data en monumenten informatie in op te slaan en op te vragen. Vervolgens zal de front-end web based zijn en draaien op een php server.
 	
 \end{enumerate}
+
 \section{Mogelijke valkuilen}
 \begin{itemize}
-\item Cold start: in het begin is er nog nauwelijks user data beschikbaar behalve die van Flickr. De recommendations zijn daarom nog nauwelijks gebaseerd op user-input.
-\item Long tail: veel ongebruikte data. Nooit bekeken monumenten worden ook later niet meer gevonden.
+	\item Cold start: in het begin is er nog nauwelijks user data beschikbaar behalve die van Flickr. De recommendations zijn daarom nog nauwelijks gebaseerd op user-input.
+	\item Long tail: veel ongebruikte data. Nooit bekeken monumenten worden ook later niet meer gevonden.
 \end{itemize}
+
 \section{Meetbare doelen}
 \begin{itemize}
-\item Het is een goal om een zo hoog mogelijk percentage relevante / niet relevante foto's te vinden/weergeven d.m.v beeld en tag informatie bij verschillende criteria zoals:
-\begin{itemize}
-\item dag / nacht
-\item indoor / outdoor
-\item gebouw / geen gebouw
+	\item Het is een goal om een zo hoog mogelijk percentage relevante / niet relevante foto's te vinden/weergeven d.m.v beeld en tag informatie bij verschillende criteria zoals:
+	\begin{itemize}
+		\item dag / nacht
+		\item indoor / outdoor
+		\item gebouw / geen gebouw
+	\end{itemize}
+	\item Het is een goal om bij het tonen van soortgelijke monumenten een zo hoog mogelijk percentage soortgelijke monumenten te tonen, die we aan de hand van diverse bronnen (visueel, textueel) berekenen.
 \end{itemize}
-\item Het is een goal om bij het tonen van soortgelijke monumenten een zo hoog mogelijk percentage soortgelijke monumenten te tonen, die we aan de hand van diverse bronnen (visueel, textueel) berekenen.
-\end{itemize}
+
 \section{Prototypes}
 Om een beeld te geven van hoe het systeem eruit komt te zien, zijn de beelden in bijlage 1 gemaakt in \emph{Balsamiq}. 
 
@@ -91,16 +94,16 @@ De systeemvereisten voor de client zijn:
 \clearpage
 \section*{Bijlage 1}
 \begin{figure}[h!]
-  \centering
-  \includegraphics[width=3in]{user-story-overview.png}
-  \caption[Het overzichtsscherm]%
-  {De kaart van Nederland, met rechts ervan selectiecriteria aan de hand waarvan de monumenten op de kaart worden getoond of verborgen.}
+	\centering
+	\includegraphics[width=3in]{user-story-overview.png}
+	\caption[Het overzichtsscherm]%
+	{De kaart van Nederland, met rechts ervan selectiecriteria aan de hand waarvan de monumenten op de kaart worden getoond of verborgen.}
 \end{figure}
 \begin{figure}[h!]
-  \centering
-  \includegraphics[width=3in]{user-story-detail.png}
-  \caption[Voorbeeld van een detailpagina van een monument]%
-  {In dit scherm zijn de details te zien van een gekozen monument, met de besproken opties.}
+	\centering
+	\includegraphics[width=3in]{user-story-detail.png}
+	\caption[Voorbeeld van een detailpagina van een monument]%
+	{In dit scherm zijn de details te zien van een gekozen monument, met de besproken opties.}
 \end{figure}
 
 \end{document}
