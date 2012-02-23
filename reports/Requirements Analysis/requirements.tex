@@ -28,10 +28,10 @@ De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 	\item{\textbf{Requirements Gebruiker}}
 	\begin{enumerate}
 		\item{\textbf{Gebruiksomgeving:}}		
-		Het systeem zal gebruikt worden in de toeristische sector. Toeristen kunnen via de webinterface zoeken naar een monument om te bezoeken. Het systeem zal dus in de huiselijke sfeer worden gebruikt, maar ook mobiel, wanneer de toerist bij het monument aankomt en de achtergrond informatie nog bij de hand wil hebben. Ook onderweg zal hij het systeem willen gebruiken.
-		\item{\textbf{Missie profiel of scenario:}} How will the system accomplish its mission objective? 
+		Het systeem zal gebruikt worden in de toeristische sector. Toeristen kunnen via de webinterface zoeken naar een monument om te bezichtigen. Het systeem zal dus in de huiselijke sfeer worden gebruikt, maar ook mobiel, wanneer de toerist bij het monument aankomt en de achtergrond informatie nog bij de hand wil hebben. Ook onderweg zal hij het systeem willen gebruiken.
+		\item{\textbf{Missie profiel of scenario:}} Hoe zal het systeem de doelen van de missie bewerkstelligen? 
 		
-		Het systeem is opgedeeld in een webinterface en een back-end. De back-end verzamelt en berekent alle data die de webinterface kan gebruiken. Deze back-end gebruikt een dataset met alle monumenten in het Rijksmonumenten register en bij behorende afbeeldingen uit Wikimedia Commons. Daarnaast verzamelt deze extra input gegenereerd door gebruikers zoals reacties op afbeeldingen en pagina\'s. Op deze manier weet de back-end te bepalen of monumenten relevant zijn of niet. 
+		Het systeem is opgedeeld in een webinterface en een back-end. De back-end verzamelt en berekent alle data die de webinterface kan gebruiken. Deze back-end gebruikt een dataset met alle monumenten in het Rijksmonumenten register en bij behorende afbeeldingen uit Wikimedia Commons. Daarnaast verzamelt deze extra input van diverse bronnen zoals \emph{Flickr} en \emph{Wikipedia}, maar ook input gegenereerd door gebruikers zoals reacties op afbeeldingen en pagina's. Op deze manier weet de back-end te bepalen of monumenten relevant zijn of niet. 
 		
 		\item{\textbf{Prestaties en bijbehorende parameters:}}
 		
@@ -39,9 +39,9 @@ De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 		
 		\item{\textbf{Interface:}}
 		
-		De webinterface bestaat uit diverse onderdelen. Allereerst is er een kaart met daarop de gefilterde monumenten. Deze kaart is te gebruiken om snel een geografische selectie te maken van de monumenten. Er is een filter-component waar gebruikers aan de hand van gegeven labels danwel berekende selectiecriteria monumenten kunnen filteren. 
+		De webinterface bestaat uit diverse onderdelen. Allereerst is er een kaart met daarop de gefilterde monumenten. Er is een filter-component waar gebruikers aan de hand van gegeven labels danwel berekende selectiecriteria monumenten kunnen filteren. Deze kaart is in combinatie met het filter-component te gebruiken om snel een geografische selectie te maken van de monumenten. 
 		
-		De pagina met kaart bevat ook een lijst met aanbevolen monumenten op basis van eerder bekeken monumenten gefilterd op relevantie en beoordeling door andere gebruikers. Deze kunnen worden aangeklikt zodat de gebruiker ze kan bekijken.
+		De pagina met kaart bevat ook een lijst met aanbevolen monumenten op basis van eerder bekeken monumenten gefilterd op relevantie en beoordeling door andere gebruikers. Deze kunnen worden aangeklikt zodat de gebruiker ze kan bekijken. Hoe vaker een gebruiker het systeem gebruikt, hoe meer aanbevolen resultaten naar zijn / haar smaak zullen zijn, gezien deze berekend worden aan de hand van de interesse van de gebruiker die verkregen wordt door te kijken welke monumenten de gebruiker bezichtigd.
 		
 		Het detailoverzicht van een monument bevat informatie over het monument zelf. De toerist kan zich zo vast verdiepen in het monument. Daarnaast bevat deze pagina aggregated data van weersinformatie, hotelboeking-sites, etc. Onderaan vindt de toerist aanbevolen monumenten aan de hand van het getoonde monument, user-input, eerder bekeken monumenten en andere rankings-criteria.
 		
@@ -49,8 +49,8 @@ De vereisten van het te maken systeem verdelen we onder in verschillende kopjes.
 		
 		Het systeem moet direct al interessante monumenten kunnen tonen. Gebruikers weten niet waar ze op moeten zoeken maar moeten wel direct vastgehouden worden, dus ook als ze niet naar iets specifieks op zoek zijn. Ze moeten binnen enkele minuten iets kunnen uitkiezen. Het systeem moet de gebruiker dus heel snel kunnen informeren.
 	\end{enumerate}
-	\item{\textbf{Systeem architectuur}} 
-We hebben een java backend draaien waar verschillende features zullen worden bepaald en berekend. Er zal een sql server worden gebruikt om user data en monumenten informatie in op te slaan en op te vragen. Vervolgens zal de front-end web based zijn en draaien op een php server.
+	\item{\textbf{Systeem architectuur}}
+We hebben een java-backend draaien waar onder andere visuele kenmerken en/of gelijkenissen zullen worden bepaald en berekend tussen foto's van monumenten. Er zal een sql server worden gebruikt om user data en monumenten informatie in op te slaan en op te vragen. Vervolgens zal de front-end web based zijn en draaien op een php server.
 	
 \end{enumerate}
 \section{Mogelijke valkuilen}
@@ -60,44 +60,47 @@ We hebben een java backend draaien waar verschillende features zullen worden bep
 \end{itemize}
 \section{Meetbare doelen}
 \begin{itemize}
-\item Het is een goal om een zo hoog mogelijk percentage relevante / niet relevante fotos te vinden/weergeven d.m.v beeld en tag informatie bij verschillende criteria zoals:
+\item Het is een goal om een zo hoog mogelijk percentage relevante / niet relevante foto's te vinden/weergeven d.m.v beeld en tag informatie bij verschillende criteria zoals:
 \begin{itemize}
 \item dag / nacht
 \item indoor / outdoor
 \item gebouw / geen gebouw
 \end{itemize}
-
+\item Het is een goal om bij het tonen van soortgelijke monumenten een zo hoog mogelijk percentage soortgelijke monumenten te tonen, die we aan de hand van diverse bronnen (visueel, textueel) berekenen.
 \end{itemize}
 \section{Prototypes}
-Om een beeld te geven van hoe het systeem eruit komt te zien, zijn deze beelden gemaakt in \emph{Balsamiq}. 
+Om een beeld te geven van hoe het systeem eruit komt te zien, zijn de beelden in bijlage 1 gemaakt in \emph{Balsamiq}. 
 
 Wanneer de gebruiker het systeem opent ziet hij het overzichtsscherm zoals te zien in figuur 1. Aan de hand van de verschillende selectiecriteria aan de rechterkant van het scherm kan de gebruiker de selectie monumenten zichtbaar op de kaart beperken.
-\begin{figure}[htp]
+
+Heeft de gebruiker een monument geselecteerd, dan wordt de detailpagina, als te zien in figuur 2, getoond. 
+
+\section{Software requirements specification}
+We onderscheiden de \emph{serverside} van de \emph{clientside}.
+De systeemvereisten voor de server zijn:
+\begin{itemize}
+	\item{PHP $\geq 5.2.x$}
+	\item{MySQL $\geq 7.x$}
+	\item{JAVA $\geq 1.5$}
+	\item{Apache $\geq 2.3$}
+\end{itemize}
+De systeemvereisten voor de client zijn:
+\begin{itemize}
+	\item{Webbrowser met V8 Javascript Engine}
+\end{itemize}
+\clearpage
+\section*{Bijlage 1}
+\begin{figure}[h!]
   \centering
   \includegraphics[width=3in]{user-story-overview.png}
   \caption[Het overzichtsscherm]%
   {De kaart van Nederland, met rechts ervan selectiecriteria aan de hand waarvan de monumenten op de kaart worden getoond of verborgen.}
 \end{figure}
-
-Heeft de gebruiker een monument geselecteerd, dan wordt de detailpagina, als te zien in figuur 2, getoond. 
-\begin{figure}[htp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=3in]{user-story-detail.png}
   \caption[Voorbeeld van een detailpagina van een monument]%
   {In dit scherm zijn de details te zien van een gekozen monument, met de besproken opties.}
 \end{figure}
 
-\section{Software requirements specification}
-We onderscheiden de \emph{serverside} van de \emph{clientside}.
-De systeemvereisten voor de server zijn:
-\begin{itemize}
-	\item{PHP $>= 5.2.x$}
-	\item{MySQL $>= 7.x$}
-	\item{JAVA $>= 1.5$}
-	\item{Apache $>= 2.3$}
-\end{itemize}
-De systeemvereisten voor de client zijn:
-\begin{itemize}
-	\item{Webbrowser met V8 Javascript Engine}
-\end{itemize}
 \end{document}
