@@ -15,16 +15,15 @@
 Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogelijke informatie gaan voorzien van verschillende monumenten. Deze doelen zullen op verschillende manieren worden bereikt. Deze manieren staan beschreven in hoofdstuk 2.
 
 \clearpage
-\section{Voorgesteld systeem}
-	\subsection{Overzicht}
-		\subsubsection{Front-end}
+	\section{Overzicht}
+		\subsection{Front-end}
 			Onze front-end gaat zich vooral focussen op 2 punten:
 			\begin{enumerate}
 				\item Het aantrekkelijk weergeven van de informatie die we vergaard hebben van de monumenten.
 				\item Het systeem zo intuatief mogelijk laten werken en weergeven.
 			\end{enumerate}
 				
-		\subsubsection{Back-end}
+		\subsection{Back-end}
 			Onze back-end gaat zich vooral focussen op het vergaren van nieuwe informatie voor ons systeem. Dit zal gaan gebeuren op meerdere manieren:
 			\begin{itemize}
 				\item Niet alle monumenten hebben standaard al een categorie aan zich gelinkt. Onze back-end zal d.m.v. beeld informatie alsnog proberen te bepalen aan wat voor categorie het monument gelinkt moet worden.
@@ -35,12 +34,13 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\item Het verwerken van user informatie tot bruikbare informatie zoals bijvoorbeeld voorkeuren van users.
 				\item Het bijhouden van user interactie informatie.
 			\end{itemize}
-	
-		\subsection{Functional requirements}
-			\subsubsection{Zoeken van relevante Flickr-foto\'s}
+			
+		\clearpage
+		\section{Functional requirements}
+			\subsection{Zoeken van relevante Flickr-foto\'s}
 			Via de Flickr\footnote{http://www.flickr.com/services/api/} kunnen foto\'s worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto\'s in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
 			
-			\subsubsection{Completeren dataset}
+			\subsection{Completeren dataset}
 			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie bernaderen door de monumenten die al wel zijn ingdeeld in een categorie te analyseren op basis van:
 				\begin{itemize}
 					\item Visuele analyse, door middel van ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait.
@@ -48,22 +48,23 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\end{itemize}
 			De overige monumenten zullen worden ingedeeld in een categorie door de informatie die bij deze monumenten hoort ook te analyseren op bovenstaande manier en deze te matchen met de reeds gevonden typerende criteria van de categorie\"en.
 	
-	        \subsubsection{Foursquare}
+	        \subsection{Foursquare}
 			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare\footnote{https://developer.foursquare.com/overview/}. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
 				
-			\subsubsection{Weersinformatie}
+			\subsection{Weersinformatie}
 			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground\footnote{http://dutch.wunderground.com/weather/api/} waar de longitude en latitude van het monument aan mee zal worden gegeven.
 				
-			\subsubsection{Faciliteiten rond locatie}
+			\subsection{Faciliteiten rond locatie}
 			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorien hij op de map wil zien verschijnen en dit word dus ook meegeven aan de api. De categorien waaruit gekozen kan worden zijn nader te bepalen.
 				
-			\subsubsection{Monumenten vergelijken aan de hand van foto\'s}
+			\subsection{Monumenten vergelijken aan de hand van foto\'s}
 			De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
 				
-			\subsubsection{Implementeren Thesaurus}
+			\subsection{Implementeren Thesaurus}
 			De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
 		
-		\subsection{Nonfunctional requirements}
+		\clearpage
+		\section{Nonfunctional requirements}
 			De non-functional requirements die uitgewerkt worden zijn toegankelijkheid, onderhoudbaarheid en betrouwbaarheid.\\	\\
 			\textit{Toegankelijkheid}\\
 			Er is een centrale server waar alle berekeningen worden uitgevoerd met specifieke software. De client heeft slechts een internetbrowser met een v8 javascript engine. Dit betekent dat het op iedere computer / handheld met een gerenomeerde webbrowser (IE9, Google Chrome, Mozilla Firefox, Opera, Safari) werkt. Op een handheld device als een iPhone of Android toestel zal het systeem (ondanks grotere afmetingen van de website dan van het scherm) dus ook werken. Op deze manier is de applicatie voor zoveel mogelijk mensen tegelijk bruikbaar. Een gebruiker kan het systeem thuis gebruiken, maar ook op locatie (mits verbonden met internet).\\ \\
@@ -72,15 +73,16 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Betrouwbaarheid}\\
 			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaal daags gebackupped worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe source crashed, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een uptime van minimaal 99,9\% (bron: http://www.google.com/enterprise/earthmaps/maps-sla.html) komt dat neer op maximaal 90 seconden per dag. Een refresh zou dit probleem al oplossen.
 			
-		\subsection{Constraints ("Pseudo requirements")}
+		\section{Constraints ("Pseudo requirements")}
 			De pseudo requirements delen we onder in de serverside en de clientside:
 			\begin{itemize}
 				\item De serverside van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeorienteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van requests van de client wordt de programmeertaal PHP gebruikt.
 				\item Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt javascript gebruikt.
 			\end{itemize}
-				
-		\subsection{Analysis models}
-		\subsubsection{Use case models, descriptions and scenarios}
+		
+		\clearpage
+		\section{Analysis models}
+		\subsection{Use case model}
 			\textbf{Use case 1}\\
 			\textit{Use case naam}\\
 			Selecteren\\ \\
@@ -163,32 +165,32 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Post condities}\\
 			De foto is toegevoegd aan de database van foto\'s die bij het monument horen.
 
-	\subsubsection{Use case diagram}
+	\subsection{Use case diagram}
+	\subsection{Use case descriptions plus scenarios}
 	
-	
-	\subsection{Business object model}
+	\section{Business object model}
 		Zie figuur \ref{bom}.
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\textwidth]{BusinessObjectModel.png}
 			\caption{Business Object Model \label{bom}}
 		\end{figure}
-		\subsection{Dynamic models (describe the main scenarios with sequence, state, or activity diagrams)}
-			\subsubsection{Sequence diagram 1}
+		\section{Dynamic models (describe the main scenarios with sequence, state, or activity diagrams)}
+			\subsection{Sequence diagram 1}
 			De gebruiker start de applicatie en komt uit op de pagina waarop de gebruiker monumenten ziet en selectiecriteria kan gebruiken, zie figuur .. %\ref{sequence1}.
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\textwidth]{sequence1.png}
 				\caption{Sequence Diagram 1 \label{sequence1}}
 			\end{figure}
-			\subsubsection{Sequence diagram 2}
+			\subsection{Sequence diagram 2}
 			De gebruiker heeft een monument geselecteerd en komt uit op de detailpagina, zie figuur \ref{sequence2}.
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\textwidth]{sequence2.png}
 				\caption{Sequence Diagram 2 \label{sequence2}}
 			\end{figure}
-			\subsubsection{Sequence diagram 3}
+			\subsection{Sequence diagram 3}
 			De gebruiker tweet een foto van een monument aan de hand van \#cultuurapp \#monumentID, zie figuur \ref{sequence3}.
 			\begin{figure}[ht!]
 				\centering
@@ -197,8 +199,8 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{figure}
 		
 		\clearpage			
-		\subsection{User interface}
-			\subsubsection{Interface 1}
+		\section{User interface}
+			\subsection{Interface 1}
 			De gebruiker start de applicatie en komt uit op een pagina met monumenten die de gebruiker kan filteren aan de hand van selectiecriteria. De gebruiker kan schakelen tussen twee view-mogelijkheden, namelijk de kaart met monumenten (figuur \ref{interface1}) of de overzichtspagina met monumenten (figuur \ref{interface2}). De gebruiker kan hierbij selecteren op een aantal criteria:\\
 			\\
 			\textit{Monmument-type}\\
@@ -226,7 +228,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\\
 			\textit{Jaartal}\\
 			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.
-			\subsubsection{Interface 2}
+			\subsection{Interface 2}
 			Wanneer de gebruiker een monument heeft geselecteerd komt de gebruiker uit op een detailpagina (figuur \ref{interface3}).\\
 			\\
 			\textit{Details die altijd bij een monument worden weergeven:}
