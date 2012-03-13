@@ -30,77 +30,16 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Onze back-end gaat zich vooral focussen op het vergaren van nieuwe informatie voor ons systeem. Dit zal gaan gebeuren op meerdere manieren:
 			\begin{itemize}
 				\item Niet alle monumenten hebben standaard al een categorie aan zich gelinkt. Onze back-end zal d.m.v. beeld informatie alsnog proberen te bepalen aan wat voor categorie het monument gelinkt moet worden.
-				\item Er zullen automatisch foto’s van de monumenten van de website flickr.com gehaald worden.
-				\item Er zal automatisch data en foto’s van de website rijksmonumenten.nl gehaald worden.
-				\item Er zullen automatisch foto’s en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
+				\item Er zullen automatisch fotoís van de monumenten van de website flickr.com gehaald worden.
+				\item Er zal automatisch data en fotoís van de website rijksmonumenten.nl gehaald worden.
+				\item Er zullen automatisch fotoís en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
 				\item Het bijhouden van user informatie.
 				\item Het verwerken van user informatie tot bruikbare informatie zoals bijvoorbeeld voorkeuren van users.
 				\item Het bijhouden van user interactie informatie.
 			\end{itemize}
 	
 	\subsection{Functional requirements}
-		\subsubsection{Selectiecriteria}
-			\begin{enumerate}
-			\item \textbf{Een gebruiker moet aan de hand van de volgende selectiecriteria de verzameling getoonde monumenten op de kaart kunnen beperken en specificeren:}\\
-			\\
-			\textit{Monmument-type}\\
-			Wanneer de gebruiker het type monument wil selecteren, kan hij in een lijst van monumenttypes een of meerdere types aanvinken.\\
-			\\
-			\textit{Locatie}
-			\begin{itemize}
-				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde. 
-				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde.
-				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
-				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
-				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
-			\end{itemize}
-			\textit{Naam}\\
-			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van “abc” worden zowel monumenten “abc”, “abcdef” als “qweabc” getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
-			\\
-			\textit{Populariteit}\\
-			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
-			\\
-			\textit{Trefwoorden}\\
-			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevat worden getoond.\\
-			\\
-			\textit{Indoor/outdoor}\\
-			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.\\
-			\\
-			\textit{Jaartal}\\
-			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.\\
-			\\
-			\textit{De input van de zoekfunctie is een set met de besproken selectiecriteria:}\\
-			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \}\\
-			\\
-			\textit{De output van de zoekfunctie is een set monumenten die aan de selectiecriteria voldoen:}\\
-			De gebruiker zal dit ervaren doordat slechts de set monumenten die aan de selectiecriteria voldoen op de kaart worden getoond, of in de overzichtsweergave in de lijst worden getoond.
-			
-			\item \textbf{De gebruiker moet bij het aanklikken van een monument de detailpagina van het betreffende monument te zien krijgen. Deze detailpagina zal de volgende items bevatten.}\\
-			\\
-			\textit{Items die altijd bij een monument worden weergeven:}
-			\begin{enumerate}
-				\item Naam, de naam van het monument.
-				\item Omschrijving, een korte omschrijving van het monument.
-				\item Plaatje, een plaatje van het monument uit het monumenten register.
-				\item Locatie (longitude, latitude), deze zal worden weergeven d.m.v. een kaartje (google maps).
-				\item Provincie, provincie waar het monument zich bevind.
-				\item Gemeente, gemeente waar het monument zich bevind.
-				\item Stad, stad waar het monument zich bevind.
-				\item Postcode, de postcode van het gebied waar het monument zich bevind.
-				\item Datum, de datum van toevoeging in het monumenten register.
-				\item Categorie, de categorie van het monument.
-			\end{enumerate}	
-				
-			\textit{Items waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
-			\begin{enumerate}
-				\item Foto’s van het monument, op diverse manieren vergaard van diverse data-sources.
-				\item Weersverwachting voor de locatie van het monument.
-				\item Informatie over of het monument overdekt is, of in de open lucht.
-			\end{enumerate}
-			
-			\item \textbf{Nog meer?}
-			Nog op te vullen...		
-		\end{enumerate}
+		
 		
 		\subsection{Nonfunctional requirements}
 			De non-functional requirements die uitgewerkt worden zijn toegankelijkheid, onderhoudbaarheid en betrouwbaarheid.\\	\\
@@ -127,7 +66,30 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Selecteren\\ \\
 			\textit{Doel}\\
-			Het doel is de gebruiker op een eenvoudige wijze gebruiker monumenten te laten zoeken aan de hand van verschillende criteria. De gebruiker moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.\\ \\
+			Het doel is de gebruiker op een eenvoudige wijze gebruiker monumenten te laten zoeken aan de hand van verschillende criteria. De gebruiker moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.
+			\subsubsection{Selectiecriteria}
+			\begin{itemize}
+			\item{\textbf{Monmument-type}}
+			Wanneer de gebruiker het type monument wil selecteren, kan hij in een lijst van monumenttypes een of meerdere types aanvinken.
+			\item{\textbf{Locatie}}
+			\begin{itemize}
+				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de ìstraalî ingevuld met een standaardwaarde. 
+				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de ìstraalî ingevuld met een standaardwaarde.
+				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
+				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
+				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
+			\end{itemize}
+			\item{\textbf{Naam}}
+			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van ìabcî worden zowel monumenten ìabcî, ìabcdefî als ìqweabcî getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.
+			\item{\textbf{Populariteit}}
+			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.			
+			\item{\textbf{Trefwoorden}}
+			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevat worden getoond.
+			\item{\textbf{Indoor/outdoor}}
+			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.
+			\item{\textbf{Jaartal}}
+			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.
+		\end{itemize}
 			\textit{Samenvatting}\\
 			Als gebruiker wil ik aan de hand van verschillende selectiecriteria de monumenten in de resultaatpagina beperken:
 			\begin{itemize}
@@ -138,18 +100,43 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Gebruiker\\ \\
 			\textit{Precondities}\\
 			De set met getoonde monumenten is de set van alle monumenten.\\ \\
+			\textit{De input van de zoekfunctie is een set met de besproken selectiecriteria:}\\
+			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \}\\
+			\\
 			\textit{Triggers}\\
 			Deze usecase wordt getriggerd zodra de gebruiker een of meerdere selectiecriteria invult.\\ \\
 			\textit{Post condities}\\
-			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.
-		
+			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.\\
+			\textit{De output van de zoekfunctie is een set monumenten die aan de selectiecriteria voldoen:}\\
+			De gebruiker zal dit ervaren doordat slechts de set monumenten die aan de selectiecriteria voldoen op de kaart worden getoond, of in de overzichtsweergave in de lijst worden getoond.
 		\subsection{Use case 2}
 			\textit{Use case naam}\\
 			Informatie\\ \\
 			\textit{Doel}\\
 			Het doel is de gebruiker op een overzichtelijke en natuurlijke van informatie over het geselecteerde monument te voorzien. De gebruiker moet nuttige informatie te zien krijgen. Ook moet de gebruiker informatie te zien krijgen die de gebruiker kunnen helpen bij het bezoeken van het monument.\\ \\
+			\subsubsection{Getoonde informatie}
+			\textit{Items die altijd bij een monument worden weergeven:}
+			\begin{enumerate}
+				\item Naam, de naam van het monument.
+				\item Omschrijving, een korte omschrijving van het monument.
+				\item Plaatje, een plaatje van het monument uit het monumenten register.
+				\item Locatie (longitude, latitude), deze zal worden weergeven d.m.v. een kaartje (google maps).
+				\item Provincie, provincie waar het monument zich bevind.
+				\item Gemeente, gemeente waar het monument zich bevind.
+				\item Stad, stad waar het monument zich bevind.
+				\item Postcode, de postcode van het gebied waar het monument zich bevind.
+				\item Datum, de datum van toevoeging in het monumenten register.
+				\item Categorie, de categorie van het monument.
+			\end{enumerate}	
+				
+			\textit{Items waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
+			\begin{enumerate}
+				\item Fotoís van het monument, op diverse manieren vergaard van diverse data-sources.
+				\item Weersverwachting voor de locatie van het monument.
+				\item Informatie over of het monument overdekt is, of in de open lucht.
+			\end{enumerate}
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in 3.2.2 te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in geïnteresseerd ben.\\ \\
+			Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de zo juist beschrevcen informatie beschreven te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in geÔnteresseerd ben.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -163,9 +150,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Mobiliteit\\ \\
 			\textit{Doel}\\
-			De gebruiker op locatie voorzien van informatie en het mogelijk maken foto’s toe te voegen aan het systeem.\\ \\
+			De gebruiker op locatie voorzien van informatie en het mogelijk maken fotoís toe te voegen aan het systeem.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto’s die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
+			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de fotoís die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -173,7 +160,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in usecase 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in usecase 4.\\ \\
 			\textit{Post condities}\\
-			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto’s.
+			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra fotoís.
 		
 		\subsection{Use case 4}
 			\textit{Use case naam}\\
@@ -195,9 +182,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Toevoegen\\ \\
 			\textit{Doel}\\
-			De gebruiker extra foto’s laten toevoegen aan de database.\\ \\
+			De gebruiker extra fotoís laten toevoegen aan de database.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt foto’s van een monument uploaden.\\ \\
+			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt fotoís van een monument uploaden.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -205,7 +192,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker twittert de foto met \#cultuurapp \#monumentid.\\ \\
 			\textit{Post condities}\\
-			De foto is toegevoegd aan de database van foto’s die bij het monument horen.
+			De foto is toegevoegd aan de database van fotoís die bij het monument horen.
 	
 	\clearpage
 	\section{Use case diagram}
