@@ -20,7 +20,7 @@
 
 \clearpage
 \section{Introductie}
-Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogelijke informatie gaan voorzien van verschillende monumenten. Deze doelen zullen op verschillende manieren worden bereikt. Deze manieren staan beschreven in hoofdstuk 2.
+Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke informatie gaan voorzien van verschillende monumenten. Deze doelen zullen op verschillende manieren worden bereikt. Deze manieren staan beschreven in hoofdstuk 2.
 
 \clearpage
 	\section{Overzicht}
@@ -61,12 +61,12 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground\footnote{http://dutch.wunderground.com/weather/api/} waar de longitude en latitude van het monument aan mee zal worden gegeven.
 				
 			\subsection{Faciliteiten rond locatie}
-			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de map wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
+			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de kaart wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
 				
 			\subsection{Monumenten vergelijken aan de hand van foto's}
 			De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke gebruik maakt van de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
 				
-			\subsection{Implementeren Thesaurus}
+			\subsection{Implementeren thesaurus}
 			De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
 		
 			\subsection{Kaarten}
@@ -86,13 +86,13 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Onderhoudbaarheid}\\
 			De onderhoudbaarheid geeft aan in hoeverre het eenvoudig, moeilijk, goedkoop of duur is om het systeem in een later stadium aan te passen om aan nieuwe requirements te voldoen of fouten te herstellen. De ontwikkelomgeving die we gebruiken maakt het mogelijk om eenvoudig aanpassingen te maken aan het systeem. De inspanningen bij onderhoud zullen dan ook gering zijn.\\ \\
 			\textit{Betrouwbaarheid}\\
-			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaaldaags gebackupt worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe source crashed, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een uptime van minimaal 99,9\%\footnote{http://www.google.com/enterprise/earthmaps/maps-sla.html} komt dat neer op maximaal 90 seconden per dag, in de praktijk merkt een gebruiker hier niets van.
+			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaaldaags gebackupt worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe databron niet beschikbaar is, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een up-time van minimaal 99,9\%\footnote{http://www.google.com/enterprise/earthmaps/maps-sla.html} komt dat neer op maximaal 90 seconden per dag, in de praktijk merkt een gebruiker hier niets van.
 			
 		\clearpage
 		\section{Constraints ("Pseudo requirements")}
 			De pseudo-requirements delen we onder in de serverside en de clientside:
 			\begin{itemize}
-				\item De serverside van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeori\"enteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van verzoeken van de client wordt de programmeertaal PHP gebruikt.
+				\item De back-end van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeori\"enteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van verzoeken van de client wordt de programmeertaal PHP gebruikt.
 				\item Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt JavaScript gebruikt.
 			\end{itemize}
 		
@@ -164,7 +164,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Doel}\\
 			De gebruiker extra foto's laten toevoegen aan de database.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door vanuit de mobiele applicatie een foto te maken en te uploaden. Ook kan een gebruiker zodra hij of zij thuis komt foto's van een monument uploaden.\\ \\
+			"Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door vanuit de mobiele applicatie een foto te maken en te uploaden. Ook kan een gebruiker zodra hij of zij thuis komt foto's van een monument uploaden."\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -180,7 +180,8 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\includegraphics[width=\textwidth]{BusinessObjectModel.png}
 			\caption{Business Object Model \label{bom}}
 		\end{figure}
-		\subsection{Dynamic models (describe the main scenarios with sequence, state, or activity diagrams)}
+		\subsection{Dynamische modellen}
+			Belangrijke scenario's beschreven met sequence, state of activity diagrammen.
 			\subsubsection{Sequence diagram 1}
 			De gebruiker start de applicatie en komt uit op de pagina waarop de gebruiker monumenten ziet en selectiecriteria kan gebruiken, zie figuur .. %\ref{sequence1}.
 			\begin{figure}[ht!]
@@ -208,31 +209,31 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\subsection{Interface 1}
 			De gebruiker start de applicatie en komt uit op een pagina met monumenten die de gebruiker kan filteren aan de hand van selectiecriteria. De gebruiker kan schakelen tussen twee view-mogelijkheden, namelijk de kaart met monumenten (figuur \ref{interface1}) of de overzichtspagina met monumenten (figuur \ref{interface2}). De gebruiker kan hierbij selecteren op een aantal criteria:\\
 			\\
-			\textit{Monmument-type}\\
+			\textit{Monument-type}\\
 			Wanneer de gebruiker het type monument wil selecteren, kan hij in een lijst van monumenttypes een of meerdere types aanvinken.\\
 			\\
 			\textit{Locatie}
 			\begin{itemize}
-				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de �straal� ingevuld met een standaardwaarde. 
-				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de �straal� ingevuld met een standaardwaarde.
-				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
+				\item Op GPS of WIFI gebaseerde huidige locatie: de huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de straal ingevuld met een standaardwaarde. 
+				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de straal ingevuld met een standaardwaarde.
+				\item Straal om de locatie: in combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
 				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
 				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
 			\end{itemize}
 			\textit{Naam}\\
-			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van 'abc' worden zowel monumenten 'abc', 'abcdef' als 'qweabc' getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
+			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van 'abc' worden zowel monumenten 'abc', 'abcdef' als 'qweabc' getoond.\\
 			\\
 			\textit{Populariteit}\\
 			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
 			\\
 			\textit{Trefwoorden}\\
-			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevat worden getoond.\\
+			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevatten worden getoond.\\
 			\\
 			\textit{Indoor/outdoor}\\
 			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.\\
 			\\
 			\textit{Jaartal}\\
-			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.
+			De gebruiker kan een periode opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.
 			\subsection{Interface 2}
 			Wanneer de gebruiker een monument heeft geselecteerd komt de gebruiker uit op een detailpagina (figuur \ref{interface3}).\\
 			\\
@@ -242,10 +243,10 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\item Omschrijving, een korte omschrijving van het monument.
 				\item Plaatje, een plaatje van het monument uit het monumenten register.
 				\item Locatie (longitude, latitude), deze zal worden weergeven door middel van een kaartje (google maps).
-				\item Provincie, provincie waar het monument zich bevind.
-				\item Gemeente, gemeente waar het monument zich bevind.
-				\item Stad, stad waar het monument zich bevind.
-				\item Postcode, de postcode van het gebied waar het monument zich bevind.
+				\item Provincie, provincie waar het monument zich bevindt.
+				\item Gemeente, gemeente waar het monument zich bevindt.
+				\item Stad, stad waar het monument zich bevindt.
+				\item Postcode, de postcode van het gebied waar het monument zich bevindt.
 				\item Datum, de datum van toevoeging in het monumenten register.
 				\item Categorie, de categorie van het monument.
 			\end{enumerate}
@@ -269,7 +270,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{figure}
 			\textit{Details waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
 			\begin{enumerate}
-				\item foto's van het monument, op diverse manieren vergaard van diverse data-sources.
+				\item Foto's van het monument, op diverse manieren vergaard van diverse data-bronnen.
 				\item Weersverwachting voor de locatie van het monument.
 				\item Informatie over of het monument overdekt is, of in de open lucht.
 			\end{enumerate}
@@ -277,7 +278,19 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 	\clearpage
 	\section{Glossary}
 		\begin{tabular}{ l | l }
-		Dataset & de set van $\sim$25.000 monumenten die is vrijgegeven voor dit project.\\
+		API & Een systeem dat functies en data van het systeem beschikbaar  \\
+			& stelt voor de buitenwereld via gedocumenteerde functies.\\
+		back-end & de kant van het systeem die de gebruiker nooit ziet.\\
+		check-in& actie op het FourSquare-platform, het aangeven dat een gebruiker  \\
+			& zich op een bepaalde locatie op een bepaalde tijd bevindt.\\
+		dataset & de set van $\sim$25.000 monumenten die is vrijgegeven voor dit project.\\
+		Flickr & website waar gebruikers foto's kunnen delen met anderen.\\
+		FourSquare& website en platform waar gebruikers vrienden kunnen laten weten \\
+			& waar ze zich bevinden, met spelelement.\\
+		front-end & de kant van het systeem die de gebruiker ziet.\\
 		geo-tag & aan een foto gekoppelde locatiegegevens.\\
+		user-interactie-informatie& informatie vergaard aan de hand van acties van een gebruiker.\\
+		Wikimedia Commons& website waar miljoenen multimedia bestanden staan verzameld, \\
+			& deze zijn door iedereen vrij te gebruiken.\\
 		\end{tabular}
 \end{document}
