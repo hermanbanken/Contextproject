@@ -47,12 +47,12 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
 				
 			\subsubsection{Weersinformatie}
-			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald d.m.v. de api van wunderground.com waar we de longitude en latitude van het monument aan meegeven.
+			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald door middel van de api van wunderground.com waar de longitude en latitude van het monument aan mee zal worden gegeven.
 				
 			\subsubsection{Faciliteiten rond locatie}
-			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden verkregen d.m.v. de google places api van google.com. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven
+			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden verkregen door middel van de google places api van google.com. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorien hij op de map wil zien verschijnen en dit word dus ook meegeven aan de api. De categorien waaruit gekozen kan worden zijn nader te bepalen.
 				
-			\subsubsection{Monumenten vergelijken adhv foto's}
+			\subsubsection{Monumenten vergelijken aan de hand van foto's}
 			Nog op te vullen...
 				
 			\subsubsection{Implementeren Thesaurus}
@@ -240,7 +240,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\item Naam, de naam van het monument.
 				\item Omschrijving, een korte omschrijving van het monument.
 				\item Plaatje, een plaatje van het monument uit het monumenten register.
-				\item Locatie (longitude, latitude), deze zal worden weergeven d.m.v. een kaartje (google maps).
+				\item Locatie (longitude, latitude), deze zal worden weergeven door middel van een kaartje (google maps).
 				\item Provincie, provincie waar het monument zich bevind.
 				\item Gemeente, gemeente waar het monument zich bevind.
 				\item Stad, stad waar het monument zich bevind.
