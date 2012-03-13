@@ -28,9 +28,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Onze back-end gaat zich vooral focussen op het vergaren van nieuwe informatie voor ons systeem. Dit zal gaan gebeuren op meerdere manieren:
 			\begin{itemize}
 				\item Niet alle monumenten hebben standaard al een categorie aan zich gelinkt. Onze back-end zal d.m.v. beeld informatie alsnog proberen te bepalen aan wat voor categorie het monument gelinkt moet worden.
-				\item Er zullen automatisch fotoís van de monumenten van de website flickr.com gehaald worden.
-				\item Er zal automatisch data en fotoís van de website rijksmonumenten.nl gehaald worden.
-				\item Er zullen automatisch fotoís en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
+				\item Er zullen automatisch fotoï¿½s van de monumenten van de website flickr.com gehaald worden.
+				\item Er zal automatisch data en fotoï¿½s van de website rijksmonumenten.nl gehaald worden.
+				\item Er zullen automatisch fotoï¿½s en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
 				\item Het bijhouden van user informatie.
 				\item Het verwerken van user informatie tot bruikbare informatie zoals bijvoorbeeld voorkeuren van users.
 				\item Het bijhouden van user interactie informatie.
@@ -47,10 +47,10 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Voor ieder van de ~22.500 monumenten gaan we locaties aanmaken op FourSquare. Mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de lokaties kunnen we populariteit van de monumenten nagaan. Niet alleen gebruikers van het systeem kunnen inchecken, ook mensen die nooit het systeem gebruiken. Hierdoor wordt de data verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken. 
 				
 			\subsubsection{Weersinformatie}
-			Nog op te vullen...
+			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting halen we op d.m.v. de api van wunderground.com waar we de longitude en latitude aan meegeven.
 				
 			\subsubsection{Faciliteiten rond locatie}
-			Nog op te vullen...
+			Op de detail pagina zal de optie zijn faciliteiten rond het betreffende monument op het kaartje te weergeven. 
 				
 			\subsubsection{Implementeren Thesaurus}
 			Nog op te vullen...
@@ -102,7 +102,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Doel}\\
 			Het doel is de gebruiker op een overzichtelijke en natuurlijke van informatie over het geselecteerde monument te voorzien. De gebruiker moet nuttige informatie te zien krijgen. Ook moet de gebruiker informatie te zien krijgen die de gebruiker kunnen helpen bij het bezoeken van het monument.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in 3.2.2 te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in geïnteresseerd ben.\\ \\
+			Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in 3.2.2 te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in geï¿½nteresseerd ben.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -116,9 +116,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Mobiliteit\\ \\
 			\textit{Doel}\\
-			De gebruiker op locatie voorzien van informatie en het mogelijk maken foto’s toe te voegen aan het systeem.\\ \\
+			De gebruiker op locatie voorzien van informatie en het mogelijk maken fotoï¿½s toe te voegen aan het systeem.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto’s die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
+			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de fotoï¿½s die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -126,7 +126,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in usecase 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in usecase 4.\\ \\
 			\textit{Post condities}\\
-			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto’s.
+			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra fotoï¿½s.
 		
 		\subsection{Use case 4}
 			\textit{Use case naam}\\
@@ -148,9 +148,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Toevoegen\\ \\
 			\textit{Doel}\\
-			De gebruiker extra foto’s laten toevoegen aan de database.\\ \\
+			De gebruiker extra fotoï¿½s laten toevoegen aan de database.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt foto’s van een monument uploaden.\\ \\
+			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt fotoï¿½s van een monument uploaden.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -158,7 +158,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker twittert de foto met \#cultuurapp \#monumentid.\\ \\
 			\textit{Post condities}\\
-			De foto is toegevoegd aan de database van foto’s die bij het monument horen.
+			De foto is toegevoegd aan de database van fotoï¿½s die bij het monument horen.
 			
 	\clearpage
 	\section{Use case diagram}
@@ -203,14 +203,14 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\\
 			\textit{Locatie}
 			\begin{itemize}
-				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde. 
-				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde.
+				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de ï¿½straalï¿½ ingevuld met een standaardwaarde. 
+				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de ï¿½straalï¿½ ingevuld met een standaardwaarde.
 				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
 				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
 				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
 			\end{itemize}
 			\textit{Naam}\\
-			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van “abc” worden zowel monumenten “abc”, “abcdef” als “qweabc” getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
+			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van ï¿½abcï¿½ worden zowel monumenten ï¿½abcï¿½, ï¿½abcdefï¿½ als ï¿½qweabcï¿½ getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
 			\\
 			\textit{Populariteit}\\
 			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
@@ -265,7 +265,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{figure}
 			\textit{Details waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
 			\begin{enumerate}
-				\item Foto’s van het monument, op diverse manieren vergaard van diverse data-sources.
+				\item Fotoï¿½s van het monument, op diverse manieren vergaard van diverse data-sources.
 				\item Weersverwachting voor de locatie van het monument.
 				\item Informatie over of het monument overdekt is, of in de open lucht.
 			\end{enumerate}
