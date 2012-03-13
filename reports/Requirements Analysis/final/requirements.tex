@@ -28,27 +28,28 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Onze back-end gaat zich vooral focussen op het vergaren van nieuwe informatie voor ons systeem. Dit zal gaan gebeuren op meerdere manieren:
 			\begin{itemize}
 				\item Niet alle monumenten hebben standaard al een categorie aan zich gelinkt. Onze back-end zal d.m.v. beeld informatie alsnog proberen te bepalen aan wat voor categorie het monument gelinkt moet worden.
-				\item Er zullen automatisch foto�s van de monumenten van de website flickr.com gehaald worden.
-				\item Er zal automatisch data en foto�s van de website rijksmonumenten.nl gehaald worden.
-				\item Er zullen automatisch foto�s en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
+				\item Er zullen automatisch foto\'s van de monumenten van de website flickr.com gehaald worden.
+				\item Er zal automatisch data en foto\'s van de website rijksmonumenten.nl gehaald worden.
+				\item Er zullen automatisch foto\'s en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
 				\item Het bijhouden van user informatie.
 				\item Het verwerken van user informatie tot bruikbare informatie zoals bijvoorbeeld voorkeuren van users.
 				\item Het bijhouden van user interactie informatie.
 			\end{itemize}
 	
 		\subsection{Functional requirements}
-			\subsubsection{Zoeken van relevante Flickr-foto's}
-			Via de Flickr-api kunnen foto's worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto's in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
+			\subsubsection{Zoeken van relevante Flickr-foto\'s}
+			Via de Flickr-api kunnen foto\'s worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto\'s in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
 			
 			\subsubsection{Completeren dataset}
-			
-			\subsubsection{Foursquare}
-			\begin{wrapfigure}{r}{4cm}
+			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Aan de hand van visuele eigenschappen van de afbeeldingen bij de monumenten en het op een nader te bepalen manier vergelijken van omschrijvingen, zal het systeem typerende criteria per categorie genereren. Aan de hand van deze criteria zullen de overige monumenten ingedeeld worden in een categorie.
+	
+	        		\subsubsection{Foursquare}
+  			\begin{wrapfigure}{r}{4cm}
 				\begin{center}
     					\includegraphics[width=4cm]{nunl-logo}
 				\end{center}
 			\end{wrapfigure}
-			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Aan de hand van visuele eigenschappen van de afbeeldingen bij de monumenten en het op een nader te bepalen manier vergelijken van omschrijvingen, zal het systeem typerende criteria per categorie genereren. Aan de hand van deze criteria zullen de overige monumenten ingedeeld worden in een categorie.
+			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
 				
 			\subsubsection{Weersinformatie}
 			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald door middel van de api van wunderground.com waar de longitude en latitude van het monument aan mee zal worden gegeven.
@@ -56,7 +57,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\subsubsection{Faciliteiten rond locatie}
 			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden verkregen door middel van de google places api van google.com. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorien hij op de map wil zien verschijnen en dit word dus ook meegeven aan de api. De categorien waaruit gekozen kan worden zijn nader te bepalen.
 				
-			\subsubsection{Monumenten vergelijken aan de hand van foto's}
+			\subsubsection{Monumenten vergelijken aan de hand van foto\'s}
 			Nog op te vullen...
 				
 			\subsubsection{Implementeren Thesaurus}
@@ -123,9 +124,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Mobiliteit\\ \\
 			\textit{Doel}\\
-			De gebruiker op locatie voorzien van informatie en het mogelijk maken foto�s toe te voegen aan het systeem.\\ \\
+			De gebruiker op locatie voorzien van informatie en het mogelijk maken foto\'s toe te voegen aan het systeem.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto�s die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
+			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto\'s die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -133,7 +134,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in usecase 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in usecase 4.\\ \\
 			\textit{Post condities}\\
-			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto�s.
+			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto\'s.
 		
 		\subsection{Use case 4}
 			\textit{Use case naam}\\
@@ -155,9 +156,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Use case naam}\\
 			Toevoegen\\ \\
 			\textit{Doel}\\
-			De gebruiker extra foto�s laten toevoegen aan de database.\\ \\
+			De gebruiker extra foto\'s laten toevoegen aan de database.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt foto�s van een monument uploaden.\\ \\
+			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt foto\'s van een monument uploaden.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -165,7 +166,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker twittert de foto met \#cultuurapp \#monumentid.\\ \\
 			\textit{Post condities}\\
-			De foto is toegevoegd aan de database van foto�s die bij het monument horen.
+			De foto is toegevoegd aan de database van foto\'s die bij het monument horen.
 			
 	\clearpage
 	\section{Use case diagram}
@@ -272,7 +273,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{figure}
 			\textit{Details waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
 			\begin{enumerate}
-				\item Foto�s van het monument, op diverse manieren vergaard van diverse data-sources.
+				\item Foto\'s van het monument, op diverse manieren vergaard van diverse data-sources.
 				\item Weersverwachting voor de locatie van het monument.
 				\item Informatie over of het monument overdekt is, of in de open lucht.
 			\end{enumerate}
