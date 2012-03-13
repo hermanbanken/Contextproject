@@ -4,3 +4,19 @@
 *.pdf
 *.synctex.gz
 *.fdb_latexmk
+
+reports/Requirements Analysis/.DS_Store
+
+reports/Requirements Analysis/final/requirements.out
+
+reports/Requirements Analysis/final/requirements.toc
+
+.DS_Store
+
+test/test.php
+
+test/test.php
+
+reports/Requirements Analysis/final/sequence1.png
+
+test/monument.sql
