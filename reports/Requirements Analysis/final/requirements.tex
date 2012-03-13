@@ -32,41 +32,39 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{enumerate}
 				
 		\subsection{Back-end}
-			Onze back-end gaat zich vooral focussen op het vergaren van nieuwe informatie voor ons systeem. Dit zal gaan gebeuren op meerdere manieren:
+			De back-end focust zich op het vergaren van nieuwe informatie voor ons systeem. Dit gebeurt op meerdere manieren:
 			\begin{itemize}
-				\item Niet alle monumenten hebben standaard al een categorie aan zich gelinkt. Onze back-end zal d.m.v. beeldinformatie alsnog proberen te bepalen aan wat voor categorie het monument gelinkt moet worden.
-				\item Er zullen automatisch foto's van de monumenten van de website flickr.com gehaald worden.
-				\item Er zal automatisch data en foto's van de website rijksmonumenten.nl gehaald worden.
-				\item Er zullen automatisch foto's en bijbehorende tags van de website twitter.com gehaald worden welke door user daar worden toegevoegd.
-				\item Het bijhouden van user informatie.
-				\item Het verwerken van user informatie tot bruikbare informatie zoals bijvoorbeeld voorkeuren van users.
-				\item Het bijhouden van user interactie informatie.
+				\item Niet alle monumenten hebben standaard een categorie aan zich gelinkt. De back-end zal door middel van beeld- en tekstanalyse bepalen in welke categorie het monument ingedeeld moet worden.
+				\item Foto's van de monumenten zullen van Flickr en Wikimedia Commons gehaald worden.
+				\item Data en foto's worden via de API van rijksmonumenten.nl opgehaald.
+				\item Er wordt user-interactie-informatie bijgehouden.
+				\item User-interactie-informatie wordt verwerkt tot bruikbare informatie, zoals bijvoorbeeld voorkeuren van users of applicatie brede aanbevelingen en sorteringen.
 			\end{itemize}
 			
 		\clearpage
 		\section{Functional requirements}
 			\subsection{Zoeken van relevante Flickr-foto's}
-			Via de Flickr\footnote{http://www.flickr.com/services/api/} kunnen foto's worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto's in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
+			Via Flickr\footnote{http://www.flickr.com/services/api/} kunnen foto's worden opgehaald die gemaakt zijn door gebruikers. Vele hiervan hebben een geo-tag meegekregen. Foto's in een bepaalde radius tot het monument kunnen worden opgehaald aan de hand van deze geo-tag. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
 			
 			\subsection{Completeren dataset}
-			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie bernaderen door de monumenten die al wel zijn ingdeeld in een categorie te analyseren op basis van:
+			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie benaderen door de monumenten die al wel zijn ingedeeld in een categorie te analyseren op basis van:
 				\begin{itemize}
-					\item Visuele analyse, door middel van ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait.
-					\item Een nader te bepalen manier vergelijken van omschrijvingen.
+					\item Visuele analyse, door middel van ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke gebruik maakt van de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
+					\item Een nader te bepalen manier van vergelijken van omschrijvingen.
 				\end{itemize}
 			De overige monumenten zullen worden ingedeeld in een categorie door de informatie die bij deze monumenten hoort ook te analyseren op bovenstaande manier en deze te matchen met de reeds gevonden typerende criteria van de categorie\"en.
 	
 	        \subsection{Foursquare}
-			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare\footnote{https://developer.foursquare.com/overview/}. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
+			Voor ieder van de $\sim$24.500 monumenten zal het systeem locaties aanmaken op FourSquare\footnote{https://developer.foursquare.com/overview/}. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het systeem automatisch wordt verreikt met informatie van mensen zonder dat zij hier actief aan meewerken.
 				
 			\subsection{Weersinformatie}
 			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground\footnote{http://dutch.wunderground.com/weather/api/} waar de longitude en latitude van het monument aan mee zal worden gegeven.
 				
 			\subsection{Faciliteiten rond locatie}
-			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorien hij op de map wil zien verschijnen en dit word dus ook meegeven aan de api. De categorien waaruit gekozen kan worden zijn nader te bepalen.
+			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de map wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
 				
 			\subsection{Monumenten vergelijken aan de hand van foto's}
-			De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
+			De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke gebruik maakt van de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
 				
 			\subsection{Implementeren Thesaurus}
 			De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
@@ -283,6 +281,6 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 	\section{Glossary}
 		\begin{tabular}{ l | l }
 		Dataset & de set van $\sim$25.000 monumenten die is vrijgegeven voor dit project.\\
-		\\
+		geo-tag & aan een foto gekoppelde locatiegegevens.\\
 		\end{tabular}
 \end{document}
