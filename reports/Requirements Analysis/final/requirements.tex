@@ -100,11 +100,12 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
-			De set met getoonde monumenten is de set van alle monumenten.\\ \\
+			De set met getoonde monumenten is de set van alle monumenten.\\
+			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \} \\ \\
 			\textit{Triggers}\\
 			Deze usecase wordt getriggerd zodra de gebruiker een of meerdere selectiecriteria invult.\\ \\
-			\textit{Post condities}\\
-			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.\\ \\
+			\textit{Post condities}\\			
+			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.\\ \\			
 			\textbf{Use case 2}\\
 			\textit{Use case naam}\\
 			Informatie\\ \\
@@ -217,7 +218,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
 			\end{itemize}
 			\textit{Naam}\\
-			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van �abc� worden zowel monumenten �abc�, �abcdef� als �qweabc� getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
+			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van 'abc' worden zowel monumenten 'abc', 'abcdef' als 'qweabc' getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
 			\\
 			\textit{Populariteit}\\
 			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
@@ -229,13 +230,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.\\
 			\\
 			\textit{Jaartal}\\
-			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.\\
-			\\
-			\textit{De input van de zoekfunctie is een set met de besproken selectiecriteria:}\\
-			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \}\\
-			\\
-			\textit{De output van de zoekfunctie is een set monumenten die aan de selectiecriteria voldoen:}\\
-			De gebruiker zal dit ervaren doordat slechts de set monumenten die aan de selectiecriteria voldoen op de kaart worden getoond, of in de overzichtsweergave in de lijst worden getoond.
+			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.
 			\subsubsection{Interface 2}
 			Wanneer de gebruiker een monument heeft geselecteerd komt de gebruiker uit op een detailpagina (figuur \ref{interface3}).\\
 			\\
