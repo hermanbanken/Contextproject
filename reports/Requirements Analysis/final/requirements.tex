@@ -41,7 +41,12 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			Via de Flickr-api kunnen foto\'s worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto\'s in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
 			
 			\subsubsection{Completeren dataset}
-			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Aan de hand van visuele eigenschappen van de afbeeldingen bij de monumenten en het op een nader te bepalen manier vergelijken van omschrijvingen, zal het systeem typerende criteria per categorie genereren. Aan de hand van deze criteria zullen de overige monumenten ingedeeld worden in een categorie.
+			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie bernaderen door de monumenten die al wel zijn ingdeeld in een categorie te analyseren op basis van:
+				\begin{itemize}
+					\item Visuele analyse, door middel van ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait.
+					\item Een nader te bepalen manier vergelijken van omschrijvingen.
+				\end{itemize}
+			De overige monumenten zullen worden ingedeeld in een categorie door de informatie die bij deze monumenten hoort ook te analyseren op bovenstaande manier en deze te matchen met de reeds gevonden typerende criteria van de categorie\"en.
 	
 	        		\subsubsection{Foursquare}
   			\begin{wrapfigure}{r}{4cm}
