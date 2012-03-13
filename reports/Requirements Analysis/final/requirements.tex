@@ -73,6 +73,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Betrouwbaarheid}\\
 			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaal daags gebackupped worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe source crashed, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een uptime van minimaal 99,9\% (bron: http://www.google.com/enterprise/earthmaps/maps-sla.html) komt dat neer op maximaal 90 seconden per dag. Een refresh zou dit probleem al oplossen.
 			
+		\clearpage
 		\section{Constraints ("Pseudo requirements")}
 			De pseudo requirements delen we onder in de serverside en de clientside:
 			\begin{itemize}
@@ -83,7 +84,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 		\clearpage
 		\section{Analysis models}
 		\subsection{Use case model}
-			\textbf{Use case 1}\\
+			\subsubsection{Use case 1}
 			\textit{Use case naam}\\
 			Selecteren\\ \\
 			\textit{Doel}\\
@@ -102,8 +103,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			Deze usecase wordt getriggerd zodra de gebruiker een of meerdere selectiecriteria invult.\\ \\
 			\textit{Post condities}\\			
-			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.\\ \\			
-			\textbf{Use case 2}\\
+			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.		
+			
+			\subsubsection{Use case 2}
 			\textit{Use case naam}\\
 			Informatie\\ \\
 			\textit{Doel}\\
@@ -117,8 +119,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			Deze usecase wordt getriggerd wanneer de gebruiker een monument selecteerd. In de overzichtsweergave gebeurt dit wanneer een informatierij die een monument vertegenwoordigt aangeklikt wordt. In de kaartweergave gebeurt dit bij het aanklikken van een speld die een monument vertegenwoordigt.\\ \\
 			\textit{Post condities}\\
-			De gebruiker weet veel over het monument en heeft alle informatie die de gebruiker nodig heeft wanneer de gebruiker het monument zou willen bezoeken.\\ \\
-			\textbf{Use case 3}\\
+			De gebruiker weet veel over het monument en heeft alle informatie die de gebruiker nodig heeft wanneer de gebruiker het monument zou willen bezoeken.	
+			
+			\subsubsection{Use case 3}
 			\textit{Use case naam}\\
 			Mobiliteit\\ \\
 			\textit{Doel}\\
@@ -132,8 +135,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in usecase 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in usecase 4.\\ \\
 			\textit{Post condities}\\
-			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto\'s.\\ \\
-			\textbf{Use case 4}\\
+			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto\'s.	
+			
+			\subsubsection{Use case 4}
 			\textit{Use case naam}\\
 			Favorieten\\ \\
 			\textit{Doel}\\
@@ -147,9 +151,9 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Triggers}\\
 			De gebruiker voegt een monument toe aan zijn favorieten.\\ \\
 			\textit{Post condities}\\
-			De gebruiker kan inloggen om zijn lijst favoriete monumenten te raadplegen.\\
-			\\
-			\textbf{Use case 5}\\
+			De gebruiker kan inloggen om zijn lijst favoriete monumenten te raadplegen.	
+			
+			\subsubsection{Use case 5}
 			\textit{Use case naam}\\
 			Toevoegen\\ \\
 			\textit{Doel}\\
@@ -168,6 +172,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 	\subsection{Use case diagram}
 	\subsection{Use case descriptions plus scenarios}
 	
+	\clearpage
 	\section{Business object model}
 		Zie figuur \ref{bom}.
 		\begin{figure}[ht!]
