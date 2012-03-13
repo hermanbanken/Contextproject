@@ -69,87 +69,88 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\subsection{Implementeren Thesaurus}
 			De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
 		
+			\subsection{Kaarten}
+			De gebruiker zal de mogelijkheid hebben om monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} te bekijken. De monumenten worden als spelden op de kaart geplaatst. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt dit ook op de kaart getoond.
+			
+			\subsection{Locatie gebonden functies}
+			Wanneer de locatie van de gebruiker bekend is, kan een lijst getoond worden met monumenten in de buurt. Sociale functies zoals een FourSquare- en Tweet-knop worden dan ook getoond.
+			
+			\subsection{OpenID en Facebook}
+			Gebruikers kunnen inloggen met behulp van inlogsystemen van derden. OpenID en Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een gebruiker geen extra gegevens hoeft te onthouden.
+		
 		\clearpage
 		\section{Nonfunctional requirements}
-			De non-functional requirements die uitgewerkt worden zijn toegankelijkheid, onderhoudbaarheid en betrouwbaarheid.\\	\\
+			Hieronder wordt ingegaan op de non-functional requirements toegankelijkheid, onderhoudbaarheid en betrouwbaarheid.\\	\\
 			\textit{Toegankelijkheid}\\
-			Er is een centrale server waar alle berekeningen worden uitgevoerd met specifieke software. De client heeft slechts een internetbrowser met een v8 javascript engine. Dit betekent dat het op iedere computer / handheld met een gerenomeerde webbrowser (IE9, Google Chrome, Mozilla Firefox, Opera, Safari) werkt. Op een handheld device als een iPhone of Android toestel zal het systeem (ondanks grotere afmetingen van de website dan van het scherm) dus ook werken. Op deze manier is de applicatie voor zoveel mogelijk mensen tegelijk bruikbaar. Een gebruiker kan het systeem thuis gebruiken, maar ook op locatie (mits verbonden met internet).\\ \\
+			Er is een centrale server waar alle berekeningen worden uitgevoerd met specifieke software. De client heeft slechts een webkit of Gecko internetbrowser met een javascript engine. Dit betekent dat het op iedere computer / handheld met een gerenomeerde webbrowser (Google Chrome, Mozilla Firefox, Safari) werkt. Op een handheld device, zoals een iPhone of Android toestel, zal het systeem ook werken. Op deze manier is de applicatie voor zoveel mogelijk mensen bruikbaar. Een gebruiker kan het systeem thuis gebruiken, maar ook op locatie (mits verbonden met internet).\\ \\
 			\textit{Onderhoudbaarheid}\\
-			De onderhoudbaarheid geeft aan in hoeverre het eenvoudig, moeilijk, goedkoop of duur is om het systeem in een later stadium aan te passen om aan nieuwe requirements te voldoen of fouten te herstellen. De ontwikkelomgeving die we gebruiken maakt het mogelijk op eenvoudig aanpassingen te maken aan het systeem. De onderhoudskosten zullen dan ook laag zijn.\\ \\
+			De onderhoudbaarheid geeft aan in hoeverre het eenvoudig, moeilijk, goedkoop of duur is om het systeem in een later stadium aan te passen om aan nieuwe requirements te voldoen of fouten te herstellen. De ontwikkelomgeving die we gebruiken maakt het mogelijk om eenvoudig aanpassingen te maken aan het systeem. De inspanningen bij onderhoud zullen dan ook gering zijn.\\ \\
 			\textit{Betrouwbaarheid}\\
-			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaal daags gebackupped worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe source crashed, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een uptime van minimaal 99,9\% (bron: http://www.google.com/enterprise/earthmaps/maps-sla.html) komt dat neer op maximaal 90 seconden per dag. Een refresh zou dit probleem al oplossen.
+			De data die gebruikt wordt ligt grotendeels vast in de database. De database wordt dynamisch bijgewerkt wanneer een gebruiker interfereert met het systeem. De database zal eenmaaldaags gebackupt worden naar een andere server. Bij een eventuele crash van het systeem waarbij schade aan de database zou optreden zullen alleen wijzigingen van maximaal 24 uur verdwijnen. Deze wijzigingen zijn echter geen triviale informatie voor het systeem, zij zullen het systeem alleen helpen bij het accurater tonen van informatie. Wanneer een externe source crashed, zal slechts een module of feature van de website (zoals nabije hotels tonen) niet werken. Slechts wanneer Google Maps niet meer werkt, zal een grote visuele feature van de software niet beschikbaar zijn. Met een uptime van minimaal 99,9\%\footnote{http://www.google.com/enterprise/earthmaps/maps-sla.html} komt dat neer op maximaal 90 seconden per dag, in de praktijk merkt een gebruiker hier niets van.
 			
 		\clearpage
 		\section{Constraints ("Pseudo requirements")}
-			De pseudo requirements delen we onder in de serverside en de clientside:
+			De pseudo-requirements delen we onder in de serverside en de clientside:
 			\begin{itemize}
-				\item De serverside van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeorienteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van requests van de client wordt de programmeertaal PHP gebruikt.
-				\item Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt javascript gebruikt.
+				\item De serverside van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeori\"enteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van verzoeken van de client wordt de programmeertaal PHP gebruikt.
+				\item Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt JavaScript gebruikt.
 			\end{itemize}
 		
 		\clearpage
 		\section{Analysis models}
 		\subsection{Use case models, descriptions and scenarios}
-			\subsubsection{Use case 1}
-			\textit{Use case naam}\\
-			Selecteren\\ \\
+			\subsubsection{Use case: selecteren}
 			\textit{Doel}\\
-			Het doel is de gebruiker op een eenvoudige wijze gebruiker monumenten te laten zoeken aan de hand van verschillende criteria. De gebruiker moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.\\ \\
+			Het doel is de gebruiker op een eenvoudige wijze monumenten te laten zoeken aan de hand van verschillende criteria. De gebruiker moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik aan de hand van verschillende selectiecriteria de monumenten in de resultaatpagina beperken:
+			"Als gebruiker wil ik aan de hand van verschillende selectiecriteria de monumenten in de resultaatpagina beperken:
 			\begin{itemize}
 				\item Wanneer ik kaartweergave gebruik, moeten spelden verdwijnen of verschijnen afhankelijk van of de monumenten die deze spelden verantwoorden aan deze selectiecriteria voldoen.
-				\item Wanneer ik overzichtsweergave gebruik, moeten rijen informatie verdwijnen of verschijnen afhankelijk vam of de monumenten die deze rijen informatie verantwoorden aan deze selectiecriteria voldoen.
+				\item Wanneer ik overzichtsweergave gebruik, moeten rijen informatie verdwijnen of verschijnen afhankelijk vam of de monumenten die deze rijen informatie verantwoorden aan deze selectiecriteria voldoen."
 			\end{itemize}
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
 			De set met getoonde monumenten is de set van alle monumenten.\\
-			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \} \\ \\
+			\{ type monument, locatie, naam, populariteit, trefwoorden, jaartal \} \\ \\
 			\textit{Triggers}\\
-			Deze usecase wordt getriggerd zodra de gebruiker een of meerdere selectiecriteria invult.\\ \\
+			Deze use case wordt getriggerd zodra de gebruiker een of meerdere selectiecriteria invult.\\ \\
 			\textit{Post condities}\\			
 			De input van de gebruiker wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.		
 			
-			\subsubsection{Use case 2}
-			\textit{Use case naam}\\
-			Informatie\\ \\
+			\subsubsection{Use case: informatie}
 			\textit{Doel}\\
-			Het doel is de gebruiker op een overzichtelijke en natuurlijke van informatie over het geselecteerde monument te voorzien. De gebruiker moet nuttige informatie te zien krijgen. Ook moet de gebruiker informatie te zien krijgen die de gebruiker kunnen helpen bij het bezoeken van het monument.\\ \\
+			Het doel is de gebruiker op een overzichtelijke en natuurlijke manier van informatie over het geselecteerde monument te voorzien. De gebruiker moet nuttige informatie te zien krijgen. Ook moet hij informatie te zien krijgen die hem kunnen helpen bij het bezoeken van het monument.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in 3.2.2 te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in ge�nteresseerd ben.\\ \\
+			"Als gebruiker wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in figuur \ref{interface3} op pagina \pageref{interface3} te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in ge\"interesseerd ben."\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
 			De gebruiker weet niets van het geselecteerde monument.\\ \\
 			\textit{Triggers}\\
-			Deze usecase wordt getriggerd wanneer de gebruiker een monument selecteerd. In de overzichtsweergave gebeurt dit wanneer een informatierij die een monument vertegenwoordigt aangeklikt wordt. In de kaartweergave gebeurt dit bij het aanklikken van een speld die een monument vertegenwoordigt.\\ \\
+			Deze use case beschrijft de situatie waarin de gebruiker een monument selecteert. In de overzichtsweergave gebeurt dit wanneer een informatierij die een monument vertegenwoordigt aangeklikt wordt. In de kaartweergave gebeurt dit bij het aanklikken van een speld die een monument vertegenwoordigt.\\ \\
 			\textit{Post condities}\\
 			De gebruiker weet veel over het monument en heeft alle informatie die de gebruiker nodig heeft wanneer de gebruiker het monument zou willen bezoeken.	
 			
-			\subsubsection{Use case 3}
-			\textit{Use case naam}\\
-			Mobiliteit\\ \\
+			\subsubsection{Use case: mobiliteit}
 			\textit{Doel}\\
 			De gebruiker op locatie voorzien van informatie en het mogelijk maken foto's toe te voegen aan het systeem.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto's die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toegeleid wordt.\\ \\
+			"Als gebruiker wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto's die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toe geleid wordt."\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
 			De gebruiker is onderweg en wil informatie opzoeken. De gebruiker heeft op zijn mobiele apparaat een internetverbinding waarmee de gebruiker het systeem kan raadplegen.\\ \\
 			\textit{Triggers}\\
-			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in usecase 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in usecase 4.\\ \\
+			De gebruiker gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in use case 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in use case 4.\\ \\
 			\textit{Post condities}\\
 			De gebruiker heeft op locatie toegang tot informatie. Het systeem heeft extra foto's.	
 			
-			\subsubsection{Use case 4}
-			\textit{Use case naam}\\
-			Favorieten\\ \\
+			\subsubsection{Use case: favorieten}
 			\textit{Doel}\\
 			De gebruiker zijn favoriete monumenten eenvoudig terug te laten vinden.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik wanneer ik een monument heb gevonden dat ik graag zou willen bezoeken of op een later tijdstip nogmaals wil bekijken, dat ik dit monument aan een lijst kan toevoegen. Deze lijst wil ik altijd kunnen raadplegen aan de hand van een gebruikersnaam en wachtwoord. Wanneer ik onderweg ben, wil ik op mijn mobiele apparaat kunnen inloggen en alle beschikbare informatie over dit monument kunnen zien. Wel wil ik zelf kunnen bepalen of andere gebruikers mijn lijst met monumenten kunnen bekijken.\\ \\
+			"Als gebruiker wil ik wanneer ik een monument heb gevonden dat ik graag zou willen bezoeken of op een later tijdstip nogmaals wil bekijken, dat ik dit monument aan een lijst kan toevoegen. Deze lijst wil ik altijd kunnen raadplegen na inloggen met mijn gebruikersnaam en wachtwoord of OpenID. Wanneer ik onderweg ben, wil ik op mijn mobiele apparaat kunnen inloggen en alle beschikbare informatie over dit monument kunnen zien. Wel wil ik zelf kunnen bepalen of andere gebruikers mijn lijst met monumenten kunnen bekijken."\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
@@ -159,19 +160,17 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\textit{Post condities}\\
 			De gebruiker kan inloggen om zijn lijst favoriete monumenten te raadplegen.	
 			
-			\subsubsection{Use case 5}
-			\textit{Use case naam}\\
-			Toevoegen\\ \\
+			\subsubsection{Use case: toevoegen foto's}
 			\textit{Doel}\\
 			De gebruiker extra foto's laten toevoegen aan de database.\\ \\
 			\textit{Samenvatting}\\
-			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door een tweet te sturen met mijn foto erin, daarin \#cultuurapp en \#monumentid, waarbij monumentid het id is dat het systeem aangeeft dat bij het monument hoort. Ook kan een gebruiker zodra hij of zij thuis komt foto's van een monument uploaden.\\ \\
+			Als gebruiker wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door vanuit de mobiele applicatie een foto te maken en te uploaden. Ook kan een gebruiker zodra hij of zij thuis komt foto's van een monument uploaden.\\ \\
 			\textit{Actoren}\\
 			Gebruiker\\ \\
 			\textit{Precondities}\\
 			De gebruiker is bij het monument en maakt een foto\\ \\
 			\textit{Triggers}\\
-			De gebruiker twittert de foto met \#cultuurapp \#monumentid.\\ \\
+			De gebruiker upload een foto.\\ \\
 			\textit{Post condities}\\
 			De foto is toegevoegd aan de database van foto's die bij het monument horen.
 
