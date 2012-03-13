@@ -37,60 +37,6 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 			\end{itemize}
 	
 \subsection{Functional requirements}
-		\subsubsection{Selectiecriteria}
-			\textit{Monmument-type}\\
-			Wanneer de gebruiker het type monument wil selecteren, kan hij in een lijst van monumenttypes een of meerdere types aanvinken.\\
-			\\
-			\textit{Locatie}
-			\begin{itemize}
-				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde. 
-				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde.
-				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
-				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
-				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
-			\end{itemize}
-			\textit{Naam}\\
-			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van “abc” worden zowel monumenten “abc”, “abcdef” als “qweabc” getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
-			\\
-			\textit{Populariteit}\\
-			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
-			\\
-			\textit{Trefwoorden}\\
-			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevat worden getoond.\\
-			\\
-			\textit{Indoor/outdoor}\\
-			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.\\
-			\\
-			\textit{Jaartal}\\
-			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.\\
-			\\
-			\textit{De input van de zoekfunctie is een set met de besproken selectiecriteria:}\\
-			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \}\\
-			\\
-			\textit{De output van de zoekfunctie is een set monumenten die aan de selectiecriteria voldoen:}\\
-			De gebruiker zal dit ervaren doordat slechts de set monumenten die aan de selectiecriteria voldoen op de kaart worden getoond, of in de overzichtsweergave in de lijst worden getoond.
-			
-			\subsubsection{Detailpagina}
-			\textit{Items die altijd bij een monument worden weergeven:}
-			\begin{enumerate}
-				\item Naam, de naam van het monument.
-				\item Omschrijving, een korte omschrijving van het monument.
-				\item Plaatje, een plaatje van het monument uit het monumenten register.
-				\item Locatie (longitude, latitude), deze zal worden weergeven d.m.v. een kaartje (google maps).
-				\item Provincie, provincie waar het monument zich bevind.
-				\item Gemeente, gemeente waar het monument zich bevind.
-				\item Stad, stad waar het monument zich bevind.
-				\item Postcode, de postcode van het gebied waar het monument zich bevind.
-				\item Datum, de datum van toevoeging in het monumenten register.
-				\item Categorie, de categorie van het monument.
-			\end{enumerate}	
-				
-			\textit{Items waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
-			\begin{enumerate}
-				\item Foto’s van het monument, op diverse manieren vergaard van diverse data-sources.
-				\item Weersverwachting voor de locatie van het monument.
-				\item Informatie over of het monument overdekt is, of in de open lucht.
-			\end{enumerate}
 			
 			\subsubsection{Nog meer?}
 			Nog op te vullen...
@@ -232,28 +178,83 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 				\includegraphics[width=\textwidth]{sequence3.png}
 				\caption{Sequence Diagram 3 \label{sequence3}}
 			\end{figure}
+		
+		\clearpage			
 		\subsection{User interface}
 			\subsubsection{Interface 1}
-			De gebruiker start de applicatie en komt uit op een pagina met monumenten die de gebruiker kan filteren aan de hand van selectiecriteria. De gebruiker kan schakelen tussen twee view-mogelijkheden, namelijk de kaart met monumenten (figuur \ref{interface1}) of de overzichtspagina met monumenten (figuur \ref{interface2}).
+			De gebruiker start de applicatie en komt uit op een pagina met monumenten die de gebruiker kan filteren aan de hand van selectiecriteria. De gebruiker kan schakelen tussen twee view-mogelijkheden, namelijk de kaart met monumenten (figuur \ref{interface1}) of de overzichtspagina met monumenten (figuur \ref{interface2}). De gebruiker kan hierbij selecteren op een aantal criteria:\\
+			\\
+			\textit{Monmument-type}\\
+			Wanneer de gebruiker het type monument wil selecteren, kan hij in een lijst van monumenttypes een of meerdere types aanvinken.\\
+			\\
+			\textit{Locatie}
+			\begin{itemize}
+				\item GPS / WIFI based huidige locatie: De huidige locatie van de gebruiker kan worden berekend door het systeem. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde. 
+				\item Provincie / plaats / straat: De gebruiker kan in een veld een adres, straat of provincie invoeren. Wanneer deze optie wordt gebruikt, wordt automatisch de “straal” ingevuld met een standaardwaarde.
+				\item Straal om de locatie: In combinatie met een gekozen locatie (ingevoerd of berekend) kan een gebied worden aangegeven waarin het systeem monumenten moet weergeven. Alleen de monumenten binnen het ingevuld aantal kilometers van de gekozen of berekende locatie worden getoond door het systeem.
+				\item Te bereiken binnen x tijd met ov: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met het openbaar vervoer bereikt kunnen worden.
+				\item Te bereiken binnen x tijd met de auto: Deze optie is alleen beschikbaar als er een locatie is berekend of ingevoerd. De gebruiker kan een tijdsspan invullen. Het systeem toont slechts de monumenten die binnen de ingevoerde tijdsspan met de auto bereikt kunnen worden.
+			\end{itemize}
+			\textit{Naam}\\
+			De gebruiker kan een (gedeeltelijke) naam invoeren van een monument. Alleen de monumenten met (gedeeltelijk) deze ingevoerde naam worden door het systeem getoond. Bij invoer van “abc” worden zowel monumenten “abc”, “abcdef” als “qweabc” getoond. Alle andere monumenten die de gedeeltelijke naam niet bevatten worden niet getoond.\\
+			\\
+			\textit{Populariteit}\\
+			De populariteit van een monument wordt door het systeem berekend aan de hand van hoe vaak een monument bezocht wordt, in verhouding met hoeveel monumenten er in een straal van x kilometer ligt. Met een schuifbalk kan de gebruiker meer / minder monumenten tonen door een minimum populariteit op te geven.\\
+			\\
+			\textit{Trefwoorden}\\
+			De gebruiker kan trefwoorden invoeren waarop de gebruiker wil zoeken. Alleen de monumenten die (in een van de bronnen) de ingevoerde woorden bevat worden getoond.\\
+			\\
+			\textit{Indoor/outdoor}\\
+			De gebruiker kan ingeven of hij een indoor of een outdoor monument zoekt. Bij keuze van indoor worden alleen monumenten getoond die indoor zijn. Bij keuze van outdoor worden alleen monumenten getoond die outdoor zijn. Bijvoorbeeld bruggen wegen of ruines zijn leuk om te zoeken bij mooi weer. Kerken en musea zijn ook leuk om te bezoeken bij slecht weer. De categorisatie wordt gedaan aan de hand van zowel tekstuele als visuele informatie van het document.\\
+			\\
+			\textit{Jaartal}\\
+			De gebruiker kan een range opgeven waarin het bouwjaar van een monument moet liggen. Alleen de monumenten die tussen de randwaarden zijn gebouwd worden getoond op de kaart.\\
+			\\
+			\textit{De input van de zoekfunctie is een set met de besproken selectiecriteria:}\\
+			\{ type monument, locatie[], naam, populariteit, trefwoorden, indoor, jaartal \}\\
+			\\
+			\textit{De output van de zoekfunctie is een set monumenten die aan de selectiecriteria voldoen:}\\
+			De gebruiker zal dit ervaren doordat slechts de set monumenten die aan de selectiecriteria voldoen op de kaart worden getoond, of in de overzichtsweergave in de lijst worden getoond.
+			\subsubsection{Interface 2}
+			Wanneer de gebruiker een monument heeft geselecteerd komt de gebruiker uit op een detailpagina (figuur \ref{interface3}).\\
+			\\
+			\textit{Details die altijd bij een monument worden weergeven:}
+			\begin{enumerate}
+				\item Naam, de naam van het monument.
+				\item Omschrijving, een korte omschrijving van het monument.
+				\item Plaatje, een plaatje van het monument uit het monumenten register.
+				\item Locatie (longitude, latitude), deze zal worden weergeven d.m.v. een kaartje (google maps).
+				\item Provincie, provincie waar het monument zich bevind.
+				\item Gemeente, gemeente waar het monument zich bevind.
+				\item Stad, stad waar het monument zich bevind.
+				\item Postcode, de postcode van het gebied waar het monument zich bevind.
+				\item Datum, de datum van toevoeging in het monumenten register.
+				\item Categorie, de categorie van het monument.
+			\end{enumerate}
+			
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[height=10cm]{interface1.png}
 				\caption{Kaart met monumenten \label{interface1}}
 			\end{figure}
+			
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[height=10cm]{interface2.png}
 				\caption{Overzichtspagina met monumenten \label{interface2}}
 			\end{figure}
 			
-			\subsubsection{Interface 2}
-			Wanneer de gebruiker een monument heeft geselecteerd komt de gebruiker uit op een detailpagina (figuur \ref{interface3}).
-			
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[height=10cm]{interface3.png}
 				\caption{Detailpagina monument \label{interface3}}
 			\end{figure}
+			\textit{Details waarvan het systeem informatie toont wanneer deze berekend kunnen worden / beschikbaar zijn:}
+			\begin{enumerate}
+				\item Foto’s van het monument, op diverse manieren vergaard van diverse data-sources.
+				\item Weersverwachting voor de locatie van het monument.
+				\item Informatie over of het monument overdekt is, of in de open lucht.
+			\end{enumerate}
 	
 	\clearpage
 	\section{Glossary}
