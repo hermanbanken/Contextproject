@@ -38,7 +38,7 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
 	
 		\subsection{Functional requirements}
 			\subsubsection{Zoeken van relevante Flickr-foto\'s}
-			Via de Flickr-api kunnen foto\'s worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto\'s in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
+			Via de Flickr\footnote{http://www.flickr.com/services/api/} kunnen foto\'s worden opgehaald die gemaakt zijn door gebruikers. Velen hiervan hebben een geo-tag meegekregen, waardoor aan de hand van de locatie van de monumenten, foto\'s in een bepaalde radius kunnen worden opgehaald. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
 			
 			\subsubsection{Completeren dataset}
 			Ongeveer 5000 van de $\sim$24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie bernaderen door de monumenten die al wel zijn ingdeeld in een categorie te analyseren op basis van:
@@ -54,16 +54,16 @@ Het systeem zal onze gebruikers op een aantrekkelijke manier van zo nuttig mogel
     					\includegraphics[width=4cm]{nunl-logo}
 				\end{center}
 			\end{wrapfigure}
-			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
+			Voor ieder van de $\sim$24.500 monumenten zal het syteem locaties aanmaken op FourSquare\footnote{https://developer.foursquare.com/overview/}. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het syteem automatisch wordt verreikt met informatie van mensen zonder dat zij hier bewust aan meewerken.
 				
 			\subsubsection{Weersinformatie}
-			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald door middel van de api van wunderground.com waar de longitude en latitude van het monument aan mee zal worden gegeven.
+			Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground\footnote{http://dutch.wunderground.com/weather/api/} waar de longitude en latitude van het monument aan mee zal worden gegeven.
 				
 			\subsubsection{Faciliteiten rond locatie}
 			Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden verkregen door middel van de google places api van google.com. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorien hij op de map wil zien verschijnen en dit word dus ook meegeven aan de api. De categorien waaruit gekozen kan worden zijn nader te bepalen.
 				
 			\subsubsection{Monumenten vergelijken aan de hand van foto\'s}
-			Nog op te vullen...
+			De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html} draait. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
 				
 			\subsubsection{Implementeren Thesaurus}
 			De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
