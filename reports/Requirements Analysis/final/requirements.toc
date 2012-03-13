@@ -4,24 +4,25 @@
 \contentsline {subsubsection}{\numberline {2.1.1}Front-end}{4}{subsubsection.2.1.1}
 \contentsline {subsubsection}{\numberline {2.1.2}Back-end}{4}{subsubsection.2.1.2}
 \contentsline {subsection}{\numberline {2.2}Functional requirements}{4}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Selectiecriteria}{4}{subsubsection.2.2.1}
-\contentsline {subsection}{\numberline {2.3}Nonfunctional requirements}{6}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Constraints ("Pseudo requirements")}{7}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}Analysis models}{7}{subsection.2.5}
-\contentsline {section}{\numberline {3}Use case model}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}Use case 1}{8}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Use case 2}{8}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Use case 3}{9}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Use case 4}{9}{subsection.3.4}
-\contentsline {subsection}{\numberline {3.5}Use case 5}{10}{subsection.3.5}
-\contentsline {section}{\numberline {4}Use case diagram}{11}{section.4}
-\contentsline {subsection}{\numberline {4.1}Use case descriptions plus scenarios}{11}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Business object model}{11}{subsection.4.2}
-\contentsline {subsection}{\numberline {4.3}Dynamic models (describe the main scenarios with sequence, state, or activity diagrams)}{11}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}Sequence diagram 1}{11}{subsubsection.4.3.1}
-\contentsline {subsubsection}{\numberline {4.3.2}Sequence diagram 2}{11}{subsubsection.4.3.2}
-\contentsline {subsubsection}{\numberline {4.3.3}Sequence diagram 3}{11}{subsubsection.4.3.3}
-\contentsline {subsection}{\numberline {4.4}User interface}{12}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Interface 1}{12}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}Interface 2}{12}{subsubsection.4.4.2}
-\contentsline {section}{\numberline {5}Glossary}{15}{section.5}
+\contentsline {subsubsection}{\numberline {2.2.1}Zoeken van relevante Flickr-foto\'s}{4}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Completeren dataset}{4}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Foursquare}{5}{subsubsection.2.2.3}
+\contentsline {subsubsection}{\numberline {2.2.4}Weersinformatie}{5}{subsubsection.2.2.4}
+\contentsline {subsubsection}{\numberline {2.2.5}Faciliteiten rond locatie}{5}{subsubsection.2.2.5}
+\contentsline {subsubsection}{\numberline {2.2.6}Monumenten vergelijken aan de hand van foto\'s}{5}{subsubsection.2.2.6}
+\contentsline {subsubsection}{\numberline {2.2.7}Implementeren Thesaurus}{5}{subsubsection.2.2.7}
+\contentsline {subsection}{\numberline {2.3}Nonfunctional requirements}{5}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Constraints ("Pseudo requirements")}{6}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Analysis models}{6}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Use case model}{6}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Use case diagram}{9}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}Use case descriptions plus scenarios}{9}{subsubsection.2.5.3}
+\contentsline {subsection}{\numberline {2.6}Business object model}{9}{subsection.2.6}
+\contentsline {subsection}{\numberline {2.7}Dynamic models (describe the main scenarios with sequence, state, or activity diagrams)}{9}{subsection.2.7}
+\contentsline {subsubsection}{\numberline {2.7.1}Sequence diagram 1}{9}{subsubsection.2.7.1}
+\contentsline {subsubsection}{\numberline {2.7.2}Sequence diagram 2}{9}{subsubsection.2.7.2}
+\contentsline {subsubsection}{\numberline {2.7.3}Sequence diagram 3}{9}{subsubsection.2.7.3}
+\contentsline {subsection}{\numberline {2.8}User interface}{12}{subsection.2.8}
+\contentsline {subsubsection}{\numberline {2.8.1}Interface 1}{12}{subsubsection.2.8.1}
+\contentsline {subsubsection}{\numberline {2.8.2}Interface 2}{13}{subsubsection.2.8.2}
+\contentsline {section}{\numberline {3}Glossary}{16}{section.3}
