@@ -1,0 +1,1577 @@
+%%
+%% This is file `glossaries.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% glossaries.dtx  (with options: `glossaries.sty,package')
+%% 
+%%  glossaries.dtx
+%%  Copyright 2008 Nicola Talbot
+%% 
+%%  This work may be distributed and/or modified under the
+%%  conditions of the LaTeX Project Public License, either version 1.3
+%%  of this license of (at your option) any later version.
+%%  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%%  and version 1.3 or later is part of all distributions of LaTeX
+%%  version 2005/12/01 or later.
+%% 
+%%  This work has the LPPL maintenance status `maintained'.
+%% 
+%%  The Current Maintainer of this work is Nicola Talbot.
+%% 
+%%  This work consists of the files glossaries.dtx and glossaries.ins and the derived files glossaries.sty, mfirstuc.sty, glossary-hypernav.sty, glossary-list.sty, glossary-long.sty, glossary-super.sty, glossaries-babel.sty, glossaries-dictionary-Danish.dict, glossaries-dictionary-Dutch.dict, glossaries-dictionary-English.dict, glossaries-dictionary-French.dict, glossaries-dictionary-German.dict, glossaries-dictionary-Irish.dict, glossaries-dictionary-Italian.dict, glossaries-dictionary-Magyar.dict, glossaries-dictionary-Spanish.dict, minimalgls.tex, sample.tex, sample4col.tex, sampleAcr.tex, sampleAcrDesc.tex, sampleDB.tex, sampleEq.tex, sampleEqPg.tex, sampleNtn.tex, sampleSec.tex, database1.tex, database2.tex, glossaries.perl.
+%% 
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{glossaries}[2008/03/08 v1.12 (NLCT)]
+\RequirePackage{ifthen}
+\RequirePackage{xkeyval}[2006/11/18]
+\RequirePackage{mfirstuc}
+\RequirePackage{amsgen}
+\define@boolkey{glossaries.sty}[gls]{toc}[true]{}
+\define@boolkey{glossaries.sty}[gls]{numberline}[true]{}
+\@ifundefined{chapter}{\newcommand*{\@@glossarysec}{section}}{%
+\newcommand*{\@@glossarysec}{chapter}}
+\define@choicekey{glossaries.sty}{section}{part,chapter,section,%
+subsection,subsubsection,paragraph,subparagraph}[section]{%
+\renewcommand*{\@@glossarysec}{#1}}
+\newcommand*{\@@glossarysecstar}{*}
+\newcommand*{\@@glossaryseclabel}{}
+\define@choicekey{glossaries.sty}{numberedsection}[\val\nr]{%
+false,nolabel,autolabel}[nolabel]{%
+\ifcase\nr\relax
+  \renewcommand*{\@@glossarysecstar}{*}%
+  \renewcommand*{\@@glossaryseclabel}{}%
+\or
+  \renewcommand*{\@@glossarysecstar}{}%
+  \renewcommand*{\@@glossaryseclabel}{}%
+\or
+  \renewcommand*{\@@glossarysecstar}{}%
+  \renewcommand*{\@@glossaryseclabel}{\label{\@glo@type}}%
+\fi}
+\newcommand*{\@glossary@default@style}{list}
+\define@key{glossaries.sty}{style}{%
+\renewcommand*{\@glossary@default@style}{#1}}
+\newcommand*{\glossaryentrynumbers}[1]{#1}
+\DeclareOptionX{nonumberlist}{%
+\renewcommand*{\glossaryentrynumbers}[1]{}}
+\newcommand{\glsdefaulttype}{main}
+\newcommand{\acronymtype}{\glsdefaulttype}
+\define@boolkey{glossaries.sty}[gls]{acronym}[true]{}
+\newcommand{\glscounter}{page}
+\define@key{glossaries.sty}{counter}{%
+\renewcommand*{\glscounter}{#1}}
+\newcommand*{\@gls@sanitizedesc}{\@onelevel@sanitize\@glo@desc}
+\newcommand*{\@gls@sanitizename}{\@onelevel@sanitize\@glo@name}
+\newcommand*{\@gls@sanitizesymbol}{\@onelevel@sanitize\@glo@symbol}
+\define@boolkey[gls]{sanitize}{description}[true]{%
+\ifgls@sanitize@description
+  \renewcommand*{\@gls@sanitizedesc}{\@onelevel@sanitize\@glo@desc}%
+\else
+  \renewcommand*{\@gls@sanitizedesc}{}%
+\fi
+}
+\define@boolkey[gls]{sanitize}{name}[true]{%
+\ifgls@sanitize@name
+  \renewcommand*{\@gls@sanitizename}{\@onelevel@sanitize\@glo@name}%
+\else
+  \renewcommand*{\@gls@sanitizename}{}%
+\fi}
+\define@boolkey[gls]{sanitize}{symbol}[true]{%
+\ifgls@sanitize@symbol
+  \renewcommand*{\@gls@sanitizesymbol}{%
+\@onelevel@sanitize\@glo@symbol}%
+\else
+  \renewcommand*{\@gls@sanitizesymbol}{}%
+\fi}
+\define@key{glossaries.sty}{sanitize}[description=true,symbol=true,
+name=true]{%
+\ifthenelse{\equal{#1}{none}}{%
+\renewcommand*{\@gls@sanitizedesc}{}%
+\renewcommand*{\@gls@sanitizename}{}%
+\renewcommand*{\@gls@sanitizesymbol}{}%
+}{\setkeys[gls]{sanitize}{#1}}%
+}
+\define@boolkey{glossaries.sty}[gls]{translate}[true]{}
+\glstranslatefalse
+\@ifpackageloaded{translator}{\glstranslatetrue}{%
+\@ifpackageloaded{babel}{\glstranslatetrue}{}}
+\define@boolkey{glossaries.sty}[glsacr]{footnote}[true]{%
+\ifthenelse{\boolean{glsacrdescription}}{}%
+{\renewcommand*{\@gls@sanitizedesc}{}}%
+}
+\define@boolkey{glossaries.sty}[glsacr]{description}[true]{%
+  \renewcommand*{\@gls@sanitizesymbol}{}%
+}
+\define@boolkey{glossaries.sty}[glsacr]{smallcaps}[true]{%
+  \renewcommand*{\@gls@sanitizesymbol}{}%
+}
+\define@boolkey{glossaries.sty}[glsacr]{dua}[true]{%
+  \renewcommand*{\@gls@sanitizesymbol}{}%
+}
+\ProcessOptionsX
+\ifthenelse{\equal{\glscounter}{section}}{%
+\@ifundefined{chapter}{}{%
+\let\@gls@old@chapter\@chapter
+\def\@chapter[#1]#2{\@gls@old@chapter[{#1}]{#2}%
+\@ifundefined{hyperdef}{}{\hyperdef{section}{\thesection}{}}}}}{}
+\providecommand*{\glossaryname}{Glossary}
+\providecommand*{\acronymname}{Acronyms}
+\providecommand*{\entryname}{Notation}
+\providecommand*{\descriptionname}{Description}
+\providecommand*{\symbolname}{Symbol}
+\providecommand*{\pagelistname}{Page List}
+\providecommand*{\glssymbolsgroupname}{Symbols}
+\providecommand*{\glsnumbersgroupname}{Numbers}
+\ifglstranslate
+\@ifpackageloaded{translator}{\usedictionary{glossaries-dictionary}%
+\renewcommand*{\glossaryname}{\translate{Glossary}}%
+\renewcommand*{\acronymname}{\translate{Acronyms}}%
+\renewcommand*{\entryname}{\translate{Notation (glossaries)}}%
+\renewcommand*{\descriptionname}{\translate{Description (glossaries)}}%
+\renewcommand*{\symbolname}{\translate{Symbol (glossaries)}}%
+\renewcommand*{\pagelistname}{\translate{Page List (glossaries)}}%
+\renewcommand*{\glssymbolsgroupname}{\translate{Symbols (glossaries)}}%
+\renewcommand*{\glsnumbersgroupname}{\translate{Numbers (glossaries)}}%
+}{%
+\@ifpackageloaded{babel}{\RequirePackage{glossaries-babel}}{}}
+\fi
+\newcommand*{\glspostdescription}{.}
+\providecommand*{\istfilename}{\jobname.ist}
+\newcommand*{\@istfilename}[1]{}
+\newcommand{\glscompositor}{.}
+\@ifundefined{hyperlink}{%
+\newcommand*{\glsnumberformat}[1]{#1}}{%
+\newcommand*{\glsnumberformat}[1]{\glshypernumber{#1}}}
+\newcommand{\delimN}{, }
+\newcommand{\delimR}{--}
+\newcommand*{\glossarypreamble}{}
+\newcommand*{\glossarypostamble}{}
+\newcommand*{\glossarysection}[2][\@gls@title]{%
+\def\@gls@title{#2}%
+\@ifundefined{phantomsection}{%
+\@glossarysection{#1}{#2}}{\@p@glossarysection{#1}{#2}}%
+\@mkboth{\glossarytoctitle}{}%
+}
+\newcommand*{\setglossarysection}[1]{%
+\setkeys{glossaries.sty}{section=#1}}
+\newcommand*{\@glossarysection}[2]{%
+\ifx\@@glossarysecstar\@empty
+  \csname\@@glossarysec\endcsname{#2}%
+\else
+  \csname\@@glossarysec\endcsname*{#2}%
+  \@gls@toc{#1}{\@@glossarysec}%
+\fi
+\@@glossaryseclabel}
+\newcommand*{\@p@glossarysection}[2]{%
+\gls@doclearpage
+\phantomsection
+\ifx\@@glossarysecstar\@empty
+  \csname\@@glossarysec\endcsname{#2}%
+\else
+  \@gls@toc{#1}{\@@glossarysec}%
+  \csname\@@glossarysec\endcsname*{#2}%
+\fi
+\@@glossaryseclabel}
+\newcommand{\gls@doclearpage}{%
+\ifthenelse{\equal{\@@glossarysec}{chapter}}{%
+\@ifundefined{cleardoublepage}{\clearpage}{\cleardoublepage}}{}%
+}
+\newcommand*{\@gls@toc}[2]{%
+\ifglstoc
+  \ifglsnumberline
+    \addcontentsline{toc}{#2}{\numberline{}#1}%
+  \else
+    \addcontentsline{toc}{#2}{#1}%
+  \fi
+\fi}
+\newcommand*{\forallglossaries}[3][\@glo@types]{%
+\@for#2:=#1\do{\ifthenelse{\equal{#2}{}}{}{#3}}}
+\newcommand*{\forglsentries}[3][\glsdefaulttype]{%
+\edef\@@glo@list{\csname glolist@#1\endcsname}%
+\@for#2:=\@@glo@list\do{%
+\ifthenelse{\equal{#2}{}}{}{#3}}}
+\newcommand*{\forallglsentries}[3][\@glo@types]{%
+\expandafter\forallglossaries\expandafter[#1]{\@@this@glo@}{%
+\forglsentries[\@@this@glo@]{#2}{#3}}}
+\newcommand{\ifglossaryexists}[3]{%
+\@ifundefined{@glotype@#1@out}{#3}{#2}}
+\newcommand{\ifglsentryexists}[3]{%
+\@ifundefined{glo@#1@name}{#3}{#2}}
+\newcommand*{\ifglsused}[3]{\ifthenelse{\boolean{glo@#1@flag}}{#2}{#3}}
+\newcommand{\glsdoifexists}[2]{\ifglsentryexists{#1}{#2}{%
+\PackageError{glossaries}{Glossary entry `#1' has not been
+defined.}{You need to define a glossary entry before you
+can use it.}}}
+\newcommand{\glsdoifnoexists}[2]{\ifglsentryexists{#1}{%
+\PackageError{glossaries}{Glossary entry `#1' has already
+been defined.}{}}{#2}}
+\newcommand*{\@glo@types}{,}
+\newcommand*{\newglossary}[5][glg]{%
+\ifglossaryexists{#2}{%
+\PackageError{glossaries}{Glossary type `#2' already exists}{%
+You can't define a new glossary called `#2' because it already
+exists}%
+}{%
+\toks@{#2}\edef\@glo@types{\@glo@types\the\toks@,}%
+\expandafter\gdef\csname glolist@#2\endcsname{,}%
+\expandafter\def\csname @glotype@#2@in\endcsname{#3}%
+\expandafter\def\csname @glotype@#2@out\endcsname{#4}%
+\expandafter\def\csname @glotype@#2@title\endcsname{#5}%
+\protected@write\@auxout{}{\string\@newglossary{#2}{#1}{#3}{#4}}%
+\expandafter\gdef\csname gls@#2@display\endcsname{%
+\glsdisplay}%
+\expandafter\gdef\csname gls@#2@displayfirst\endcsname{%
+\glsdisplayfirst}%
+\@ifnextchar[{\@gls@setcounter{#2}}{\@gls@setcounter{#2}[\glscounter]}}}
+\@onlypreamble{\newglossary}
+\newcommand*{\@newglossary}[4]{}
+\def\@gls@setcounter#1[#2]{%
+\expandafter\def\csname @glotype@#1@counter\endcsname{#2}%
+}
+\newcommand*{\@gls@getcounter}[1]{%
+\csname @glotype@#1@counter\endcsname}
+\newglossary{main}{gls}{glo}{\glossaryname}
+\define@key{glossentry}{name}{%
+\def\@glo@name{#1}%
+}
+\define@key{glossentry}{description}{%
+\def\@glo@desc{#1}%
+}
+\define@key{glossentry}{descriptionplural}{%
+\def\@glo@descplural{#1}%
+}
+\define@key{glossentry}{sort}{%
+\def\@glo@sort{#1}%
+\@onelevel@sanitize\@glo@sort}
+\define@key{glossentry}{text}{%
+\def\@glo@text{#1}%
+}
+\define@key{glossentry}{plural}{%
+\def\@glo@plural{#1}%
+}
+\define@key{glossentry}{first}{%
+\def\@glo@first{#1}%
+}
+\define@key{glossentry}{firstplural}{%
+\def\@glo@firstplural{#1}%
+}
+\define@key{glossentry}{symbol}{%
+\def\@glo@symbol{#1}%
+}
+\define@key{glossentry}{symbolplural}{%
+\def\@glo@symbolplural{#1}%
+}
+\define@key{glossentry}{type}{%
+\def\@glo@type{#1}}
+\define@key{glossentry}{counter}{%
+\@ifundefined{c@#1}{\PackageError{glossaries}{There is no counter
+called `#1'}{The counter key should have the name of a valid
+counter as its value}}{%
+\def\@glo@counter{#1}}}
+\DeclareRobustCommand{\newglossaryentry}[2]{%
+\glsdoifnoexists{#1}{%
+\def\@glo@name{\PackageError{glossaries}{name key required in
+\string\newglossaryentry}{You haven't specified the entry name}}%
+\def\@glo@desc{\PackageError{glossaries}{description key required in
+\string\newglossaryentry}{You haven't specified the entry description}}%
+\def\@glo@descplural{\@glo@desc}%
+\def\@glo@type{\glsdefaulttype}%
+\def\@glo@symbol{\relax}%
+\def\@glo@symbolplural{\@glo@symbol}%
+\def\@glo@text{\@glo@name}%
+\def\@glo@plural{\@glo@text s}%
+\def\@glo@first{\@glo@text}%
+\def\@glo@firstplural{\@glo@first s}%
+\def\@glo@sort{\@glo@name}%
+\def\@glo@counter{\@gls@getcounter{\@glo@type}}%
+\setkeys{glossentry}{#2}%
+\@ifundefined{glolist@\@glo@type}{\PackageError{glossaries}{%
+Glossary type '\@glo@type' has not been defined}{%
+You need to define a new glossary type, before making entries
+in it}}{%
+\protected@edef\@glolist@{\csname glolist@\@glo@type\endcsname}%
+\expandafter\xdef\csname glolist@\@glo@type\endcsname{\@glolist@{#1},}%
+}%
+\expandafter\protected@xdef\csname glo@#1@text\endcsname{\@glo@text}%
+\expandafter\protected@xdef\csname glo@#1@plural\endcsname{\@glo@plural}%
+\expandafter\protected@xdef\csname glo@#1@first\endcsname{\@glo@first}%
+\expandafter\protected@xdef\csname glo@#1@firstpl\endcsname{\@glo@firstplural}%
+\expandafter\protected@xdef\csname glo@#1@type\endcsname{\@glo@type}%
+\expandafter\protected@xdef\csname glo@#1@counter\endcsname{\@glo@counter}%
+\@gls@sanitizename
+\expandafter\protected@xdef\csname glo@#1@name\endcsname{\@glo@name}%
+\@gls@sanitizedesc
+\expandafter\protected@xdef\csname glo@#1@desc\endcsname{\@glo@desc}%
+\expandafter\protected@xdef\csname glo@#1@descplural\endcsname{\@glo@descplural}%
+\expandafter\protected@xdef\csname glo@#1@sort\endcsname{\@glo@sort}%
+\@gls@sanitizesymbol
+\expandafter\protected@xdef\csname glo@#1@symbol\endcsname{\@glo@symbol}%
+\expandafter\protected@xdef\csname glo@#1@symbolplural\endcsname{\@glo@symbolplural}%
+\expandafter\gdef\csname glo@#1@flagfalse\endcsname{%
+\expandafter\global\expandafter
+\let\csname ifglo@#1@flag\endcsname\iffalse}%
+\expandafter\gdef\csname glo@#1@flagtrue\endcsname{%
+\expandafter\global\expandafter
+\let\csname ifglo@#1@flag\endcsname\iftrue}%
+\csname glo@#1@flagfalse\endcsname
+}}
+\@onlypreamble{\newglossaryentry}
+\newcommand*{\glsreset}[1]{%
+\glsdoifexists{#1}{%
+\expandafter\global\csname glo@#1@flagfalse\endcsname}}
+\newcommand*{\glslocalreset}[1]{%
+\glsdoifexists{#1}{%
+\expandafter\let\csname ifglo@#1@flag\endcsname\iffalse}}
+\newcommand*{\glsunset}[1]{%
+\glsdoifexists{#1}{%
+\expandafter\global\csname glo@#1@flagtrue\endcsname}}
+\newcommand*{\glslocalunset}[1]{%
+\glsdoifexists{#1}{%
+\expandafter\let\csname ifglo@#1@flag\endcsname\iftrue}}
+\newcommand*{\glsresetall}[1][\@glo@types]{%
+\forallglsentries[#1]{\@glsentry}{%
+\glsreset{\@glsentry}}}
+\newcommand*{\glslocalresetall}[1][\@glo@types]{%
+\forallglsentries[#1]{\@glsentry}{%
+\glslocalreset{\@glsentry}}}
+\newcommand*{\glsunsetall}[1][\@glo@types]{%
+\forallglsentries[#1]{\@glsentry}{%
+\glsunset{\@glsentry}}}
+\newcommand*{\glslocalunsetall}[1][\@glo@types]{%
+\forallglsentries[#1]{\@glsentry}{%
+\glslocalunset{\@glsentry}}}
+\newcommand*{\loadglsentries}[2][\@gls@default]{%
+\let\@gls@default\glsdefaulttype
+\def\glsdefaulttype{#1}\input{#2}%
+\let\glsdefaulttype\@gls@default}
+\@onlypreamble{\loadglsentries}
+\newcommand*{\glstextformat}[1]{#1}
+\newcommand*{\glsdisplayfirst}[4]{#1#4}
+\newcommand*{\glsdisplay}[4]{#1#4}
+\newcommand*{\defglsdisplay}[2][\glsdefaulttype]{%
+\expandafter\def\csname gls@#1@display\endcsname##1##2##3##4{#2}}
+\newcommand*{\defglsdisplayfirst}[2][\glsdefaulttype]{%
+\expandafter\def\csname gls@#1@displayfirst\endcsname##1##2##3##4{#2}}
+\define@key{glslink}{counter}{%
+\@ifundefined{c@#1}{\PackageError{glossaries}{There is no counter
+called `#1'}{The counter key should have the name of a valid
+counter as its value}}{%
+\def\@gls@counter{#1}}}
+\define@key{glslink}{format}{%
+\def\@glsnumberformat{#1}}
+\define@boolkey{glslink}{hyper}[true]{}
+\newcommand{\glslink}{%
+\@ifstar\@sgls@link\@gls@link}
+\newcommand*{\@sgls@link}[1][]{\@gls@link[hyper=false,#1]}
+\newcommand*{\@gls@link}[3][]{%
+\glsdoifexists{#2}{%
+\def\@glsnumberformat{glsnumberformat}%
+\edef\@gls@counter{\csname glo@#2@counter\endcsname}%
+\KV@glslink@hypertrue
+\setkeys{glslink}{#1}%
+\edef\theglsentrycounter{\expandafter\noexpand\csname the\@gls@counter\endcsname}%
+\ifKV@glslink@hyper
+\@glslink{glo:#2}{\glstextformat{#3}}%
+\else
+\glstextformat{#3}\relax
+\fi
+\protected@edef\@glo@sort{\csname glo@#2@sort\endcsname}%
+\@gls@checkmkidxchars\@glo@sort
+\protected@edef\@@glo@name{\csname glo@#2@name\endcsname}%
+\@gls@checkmkidxchars\@@glo@name
+\protected@edef\@glo@name{\string\glsnamefont{\@@glo@name}}%
+\protected@edef\@glo@desc{\csname glo@#2@desc\endcsname}%
+\@gls@checkmkidxchars\@glo@desc
+\protected@edef\@glo@symbol{\csname glo@#2@symbol\endcsname}%
+\@gls@checkmkidxchars\@glo@symbol
+\@set@glo@numformat\@glo@numfmt\@gls@counter\@glsnumberformat
+\glossary[\csname glo@#2@type\endcsname]{%
+\@glo@sort\@gls@actualchar
+\string\glossaryentryfield{#2}{\@glo@name}{\@glo@desc
+}{\@glo@symbol}\@gls@encapchar\@glo@numfmt}%
+}}
+\def\@set@glo@numformat#1#2#3{%
+\expandafter\@glo@check@mkidxrangechar#3\@nil
+\protected@edef#1{\@glo@prefix setentrycounter{#2}%
+\expandafter\string\csname\@glo@suffix\endcsname}%
+\@gls@checkmkidxchars#1}
+\def\@glo@check@mkidxrangechar#1#2\@nil{%
+\if#1(\relax
+  \def\@glo@prefix{(}%
+  \if\relax#2\relax
+    \def\@glo@suffix{glsnumberformat}%
+  \else
+    \def\@glo@suffix{#2}%
+  \fi
+\else
+  \if#1)\relax
+    \def\@glo@prefix{)}%
+    \if\relax#2\relax
+      \def\@glo@suffix{glsnumberformat}%
+    \else
+      \def\@glo@suffix{#2}%
+  \fi
+  \else
+    \def\@glo@prefix{}\def\@glo@suffix{#1#2}%
+  \fi
+\fi}
+\newcommand{\@gls@checkmkidxchars}[1]{%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkquote#1\@nil""\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkescquote#1\@nil\"\"\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkescactual#1\@nil\?\?\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkactual#1\@nil??\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkbar#1\@nil||\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checkescbar#1\@nil\|\|\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+\def\@gls@checkedmkidx{}%
+\expandafter\@gls@checklevel#1\@nil!!\null%
+\expandafter\@gls@updatechecked\@gls@checkedmkidx{#1}%
+}
+\def\@gls@updatechecked#1\@nil#2{\def#2{#1}}
+\newtoks\@gls@tmpb
+\def\@gls@checkquote#1"#2"#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkquote{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\@gls@quotechar\@gls@quotechar\@gls@quotechar}%
+  \def\@@gls@checkquote{\@gls@checkquote#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\@gls@quotechar}%
+ \ifx\null#3\null
+   \def\@@gls@checkquote{\@gls@checkquote#2""\null}%
+ \else
+   \def\@@gls@checkquote{\@gls@checkquote#2"#3\null}%
+ \fi
+\fi
+\@@gls@checkquote}
+\def\@gls@checkescquote#1\"#2\"#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkescquote{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\string\"\@gls@quotechar
+    \@gls@quotechar\string\"\@gls@quotechar}%
+  \def\@@gls@checkescquote{\@gls@checkescquote#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\string\"\@gls@quotechar}%
+ \ifx\null#3\null
+   \def\@@gls@checkescquote{\@gls@checkescquote#2\"\"\null}%
+ \else
+   \def\@@gls@checkescquote{\@gls@checkescquote#2\"#3\null}%
+ \fi
+\fi
+\@@gls@checkescquote}
+\def\@gls@checkescactual#1\?#2\?#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkescactual{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\string\"\@gls@actualchar
+    \@gls@quotechar\string\"\@gls@actualchar}%
+  \def\@@gls@checkescactual{\@gls@checkescactual#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\string\"\@gls@actualchar}%
+ \ifx\null#3\null
+  \def\@@gls@checkescactual{\@gls@checkescactual#2\?\?\null}%
+ \else
+  \def\@@gls@checkescactual{\@gls@checkescactual#2\?#3\null}%
+ \fi
+\fi
+\@@gls@checkescactual}
+\def\@gls@checkescbar#1\|#2\|#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkescbar{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\string\"\@gls@encapchar
+    \@gls@quotechar\string\"\@gls@encapchar}%
+  \def\@@gls@checkescbar{\@gls@checkescbar#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\string\"\@gls@encapchar}%
+ \ifx\null#3\null
+  \def\@@gls@checkescbar{\@gls@checkescbar#2\|\|\null}%
+ \else
+  \def\@@gls@checkescbar{\@gls@checkescbar#2\|#3\null}%
+ \fi
+\fi
+\@@gls@checkescbar}
+\def\@gls@checkesclevel#1\!#2\!#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkesclevel{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\string\"\@gls@levelchar
+    \@gls@quotechar\string\"\@gls@levelchar}%
+  \def\@@gls@checkesclevel{\@gls@checkesclevel#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\string\"\@gls@levelchar}%
+ \ifx\null#3\null
+  \def\@@gls@checkesclevel{\@gls@checkesclevel#2\!\!\null}%
+ \else
+  \def\@@gls@checkesclevel{\@gls@checkesclevel#2\!#3\null}%
+ \fi
+\fi
+\@@gls@checkesclevel}
+\def\@gls@checkbar#1|#2|#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkbar{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\@gls@encapchar\@gls@quotechar\@gls@encapchar}%
+  \def\@@gls@checkbar{\@gls@checkbar#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\@gls@encapchar}%
+ \ifx\null#3\null
+   \def\@@gls@checkbar{\@gls@checkbar#2||\null}%
+ \else
+   \def\@@gls@checkbar{\@gls@checkbar#2|#3\null}%
+ \fi
+\fi
+\@@gls@checkbar}
+\def\@gls@checklevel#1!#2!#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checklevel{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\@gls@levelchar\@gls@quotechar\@gls@levelchar}%
+  \def\@@gls@checklevel{\@gls@checklevel#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\@gls@levelchar}%
+ \ifx\null#3\null
+   \def\@@gls@checklevel{\@gls@checklevel#2!!\null}%
+ \else
+   \def\@@gls@checklevel{\@gls@checklevel#2!#3\null}%
+ \fi
+\fi
+\@@gls@checklevel}
+\def\@gls@checkactual#1?#2?#3\null{%
+\@gls@tmpb=\expandafter{\@gls@checkedmkidx}%
+\toks@={#1}%
+\ifx\null#2\null%
+ \ifx\null#3\null
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@}%
+  \def\@@gls@checkactual{\relax}%
+ \else
+  \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+    \@gls@quotechar\@gls@actualchar\@gls@quotechar\@gls@actualchar}%
+  \def\@@gls@checkactual{\@gls@checkactual#3\null}%
+ \fi
+\else
+ \edef\@gls@checkedmkidx{\the\@gls@tmpb\the\toks@
+   \@gls@quotechar\@gls@actualchar}%
+ \ifx\null#3\null
+   \def\@@gls@checkactual{\@gls@checkactual#2??\null}%
+ \else
+   \def\@@gls@checkactual{\@gls@checkactual#2?#3\null}%
+ \fi
+\fi
+\@@gls@checkactual}
+\@ifundefined{hyperlink}{%
+  \gdef\@glslink#1#2{#2}%
+}{%
+  \gdef\@glslink#1#2{\hyperlink{#1}{#2}}%
+}
+\@ifundefined{hypertarget}{%
+  \gdef\@glstarget#1#2{#2}%
+}{%
+  \gdef\@glstarget#1#2{\hypertarget{#1}{#2}}}
+\newcommand{\glsdisablehyper}{%
+\renewcommand*\@glslink[2]{##2}%
+\renewcommand*\@glstarget[2]{##2}}
+\newcommand{\glsenablehyper}{%
+\renewcommand*\@glslink[2]{\hyperlink{##1}{##2}}%
+\renewcommand*\@glstarget[2]{\hypertarget{##1}{##2}}}
+\newcommand*{\gls}{\@ifstar\@sgls\@gls}
+\newcommand*{\@sgls}[1][]{\@gls[hyper=false,#1]}
+\newcommand*{\@gls}[2][]{%
+\new@ifnextchar[{\@gls@{#1}{#2}}{\@gls@{#1}{#2}[]}}
+\def\@gls@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentrytext{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirst{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{\@glo@text}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{\@glo@text}%
+  \else
+    \@gls@link[#1]{#2}{\@glo@text}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\Gls}{\@ifstar\@sGls\@Gls}
+\newcommand*{\@sGls}[1][]{\@Gls[hyper=false,#1]}
+\newcommand*{\@Gls}[2][]{%
+\new@ifnextchar[{\@Gls@{#1}{#2}}{\@Gls@{#1}{#2}[]}}
+\def\@Gls@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentrytext{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirst{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+  \else
+    \@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\GLS}{\@ifstar\@sGLS\@GLS}
+\newcommand*{\@sGLS}[1][]{\@GLS[hyper=false,#1]}
+\newcommand*{\@GLS}[2][]{%
+\new@ifnextchar[{\@GLS@{#1}{#2}}{\@GLS@{#1}{#2}[]}}
+\def\@GLS@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentrytext{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirst{#2}}{\glsentrydesc{#2}}{\glsentrysymbol{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{\MakeUppercase{\@glo@text}}%
+  \else
+    \@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\glspl}{\@ifstar\@sglspl\@glspl}
+\newcommand*{\@sglspl}[1][]{\@glspl[hyper=false,#1]}
+\newcommand*{\@glspl}[2][]{%
+\new@ifnextchar[{\@glspl@{#1}{#2}}{\@glspl@{#1}{#2}[]}}
+\def\@glspl@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentryplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirstplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{\@glo@text}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{\@glo@text}%
+  \else
+    \@gls@link[#1]{#2}{\@glo@text}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\Glspl}{\@ifstar\@sGlspl\@Glspl}
+\newcommand*{\@sGlspl}[1][]{\@Glspl[hyper=false,#1]}
+\newcommand*{\@Glspl}[2][]{%
+\new@ifnextchar[{\@Glspl@{#1}{#2}}{\@Glspl@{#1}{#2}[]}}
+\def\@Glspl@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentryplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirstplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{%
+    \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{%
+      \expandafter\makefirstuc\expandafter{\@glo@text}}%
+  \else
+    \@gls@link[#1]{#2}{%
+      \expandafter\makefirstuc\expandafter{\@glo@text}}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\GLSpl}{\@ifstar\@sGLSpl\@GLSpl}
+\newcommand*{\@sGLSpl}[1][]{\@GLSpl[hyper=false,#1]}
+\newcommand*{\@GLSpl}[2][]{%
+\new@ifnextchar[{\@GLSpl@{#1}{#2}}{\@GLSpl@{#1}{#2}[]}}
+\def\@GLSpl@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\def\@gls@link@opts{#1}%
+\def\@gls@link@label{#2}%
+\ifglsused{#2}{\protected@edef\@glo@text{%
+\csname gls@\@glo@type @display\endcsname
+{\glsentryplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}{%
+\protected@edef\@glo@text{%
+\csname gls@\@glo@type @displayfirst\endcsname
+{\glsentryfirstplural{#2}}{\glsentrydescplural{#2}}{%
+\glsentrysymbolplural{#2}}{#3}}}%
+\ifglsused{#2}{%
+  \@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}{%
+  \ifglsacrfootnote
+    \@gls@link[#1,hyper=false]{#2}{\MakeUppercase{\@glo@text}}%
+  \else
+    \@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+  \fi
+}%
+\glsunset{#2}}%
+}
+\newcommand*{\glstext}{\@ifstar\@sglstext\@glstext}
+\newcommand*{\@sglstext}[1][]{\@glstext[hyper=false,#1]}
+\newcommand*{\@glstext}[2][]{%
+\new@ifnextchar[{\@glstext@{#1}{#2}}{\@glstext@{#1}{#2}[]}}
+\def\@glstext@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrytext{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\GLStext}{\@ifstar\@sGLStext\@GLStext}
+\newcommand*{\@sGLStext}[1][]{\@GLStext[hyper=false,#1]}
+\newcommand*{\@GLStext}[2][]{%
+\new@ifnextchar[{\@GLStext@{#1}{#2}}{\@GLStext@{#1}{#2}[]}}
+\def\@GLStext@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrytext{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\Glstext}{\@ifstar\@sGlstext\@Glstext}
+\newcommand*{\@sGlstext}[1][]{\@Glstext[hyper=false,#1]}
+\newcommand*{\@Glstext}[2][]{%
+\new@ifnextchar[{\@Glstext@{#1}{#2}}{\@Glstext@{#1}{#2}[]}}
+\def\@Glstext@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrytext{#2}}%
+\@gls@link[#1]{#2}{%
+   \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\glsfirst}{\@ifstar\@sglsfirst\@glsfirst}
+\newcommand*{\@sglsfirst}[1][]{\@glsfirst[hyper=false,#1]}
+\newcommand*{\@glsfirst}[2][]{%
+\new@ifnextchar[{\@glsfirst@{#1}{#2}}{\@glsfirst@{#1}{#2}[]}}
+\def\@glsfirst@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirst{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsfirst}{\@ifstar\@sGlsfirst\@Glsfirst}
+\newcommand*{\@sGlsfirst}[1][]{\@Glsfirst[hyper=false,#1]}
+\newcommand*{\@Glsfirst}[2][]{%
+\new@ifnextchar[{\@Glsfirst@{#1}{#2}}{\@Glsfirst@{#1}{#2}[]}}
+\def\@Glsfirst@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirst{#2}}%
+\@gls@link[#1]{#2}{%
+   \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSfirst}{\@ifstar\@sGLSfirst\@GLSfirst}
+\newcommand*{\@sGLSfirst}[1][]{\@GLSfirst[hyper=false,#1]}
+\newcommand*{\@GLSfirst}[2][]{%
+\new@ifnextchar[{\@GLSfirst@{#1}{#2}}{\@GLSfirst@{#1}{#2}[]}}
+\def\@GLSfirst@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirst{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsplural}{\@ifstar\@sglsplural\@glsplural}
+\newcommand*{\@sglsplural}[1][]{\@glsplural[hyper=false,#1]}
+\newcommand*{\@glsplural}[2][]{%
+\new@ifnextchar[{\@glsplural@{#1}{#2}}{\@glsplural@{#1}{#2}[]}}
+\def\@glsplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryplural{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsplural}{\@ifstar\@sGlsplural\@Glsplural}
+\newcommand*{\@sGlsplural}[1][]{\@Glsplural[hyper=false,#1]}
+\newcommand*{\@Glsplural}[2][]{%
+\new@ifnextchar[{\@Glsplural@{#1}{#2}}{\@Glsplural@{#1}{#2}[]}}
+\def\@Glsplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryplural{#2}}%
+\@gls@link[#1]{#2}{%
+   \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSplural}{\@ifstar\@sGLSplural\@GLSplural}
+\newcommand*{\@sGLSplural}[1][]{\@GLSplural[hyper=false,#1]}
+\newcommand*{\@GLSplural}[2][]{%
+\new@ifnextchar[{\@GLSplural@{#1}{#2}}{\@GLSplural@{#1}{#2}[]}}
+\def\@GLSplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryplural{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsfirstplural}{\@ifstar\@sglsfirstplural\@glsfirstplural}
+\newcommand*{\@sglsfirstplural}[1][]{\@glsfirstplural[hyper=false,#1]}
+\newcommand*{\@glsfirstplural}[2][]{%
+\new@ifnextchar[{\@glsfirstplural@{#1}{#2}}{\@glsfirstplural@{#1}{#2}[]}}
+\def\@glsfirstplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirstplural{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsfirstplural}{\@ifstar\@sGlsfirstplural\@Glsfirstplural}
+\newcommand*{\@sGlsfirstplural}[1][]{\@Glsfirstplural[hyper=false,#1]}
+\newcommand*{\@Glsfirstplural}[2][]{%
+\new@ifnextchar[{\@Glsfirstplural@{#1}{#2}}{\@Glsfirstplural@{#1}{#2}[]}}
+\def\@Glsfirstplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirstplural{#2}}%
+\@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSfirstplural}{\@ifstar\@sGLSfirstplural\@GLSfirstplural}
+\newcommand*{\@sGLSfirstplural}[1][]{\@GLSfirstplural[hyper=false,#1]}
+\newcommand*{\@GLSfirstplural}[2][]{%
+\new@ifnextchar[{\@GLSfirstplural@{#1}{#2}}{\@GLSfirstplural@{#1}{#2}[]}}
+\def\@GLSfirstplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryfirstplural{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsname}{\@ifstar\@sglsname\@glsname}
+\newcommand*{\@sglsname}[1][]{\@glsname[hyper=false,#1]}
+\newcommand*{\@glsname}[2][]{%
+\new@ifnextchar[{\@glsname@{#1}{#2}}{\@glsname@{#1}{#2}[]}}
+\def\@glsname@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryname{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsname}{\@ifstar\@sGlsname\@Glsname}
+\newcommand*{\@sGlsname}[1][]{\@Glsname[hyper=false,#1]}
+\newcommand*{\@Glsname}[2][]{%
+\new@ifnextchar[{\@Glsname@{#1}{#2}}{\@Glsname@{#1}{#2}[]}}
+\def\@Glsname@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryname{#2}}%
+\@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSname}{\@ifstar\@sGLSname\@GLSname}
+\newcommand*{\@sGLSname}[1][]{\@GLSname[hyper=false,#1]}
+\newcommand*{\@GLSname}[2][]{%
+\new@ifnextchar[{\@GLSname@{#1}{#2}}{\@GLSname@{#1}{#2}[]}}
+\def\@GLSname@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentryname{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsdesc}{\@ifstar\@sglsdesc\@glsdesc}
+\newcommand*{\@sglsdesc}[1][]{\@glsdesc[hyper=false,#1]}
+\newcommand*{\@glsdesc}[2][]{%
+\new@ifnextchar[{\@glsdesc@{#1}{#2}}{\@glsdesc@{#1}{#2}[]}}
+\def\@glsdesc@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydesc{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsdesc}{\@ifstar\@sGlsdesc\@Glsdesc}
+\newcommand*{\@sGlsdesc}[1][]{\@Glsdesc[hyper=false,#1]}
+\newcommand*{\@Glsdesc}[2][]{%
+\new@ifnextchar[{\@Glsdesc@{#1}{#2}}{\@Glsdesc@{#1}{#2}[]}}
+\def\@Glsdesc@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydesc{#2}}%
+\@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSdesc}{\@ifstar\@sGLSdesc\@GLSdesc}
+\newcommand*{\@sGLSdesc}[1][]{\@GLSdesc[hyper=false,#1]}
+\newcommand*{\@GLSdesc}[2][]{%
+\new@ifnextchar[{\@GLSdesc@{#1}{#2}}{\@GLSdesc@{#1}{#2}[]}}
+\def\@GLSdesc@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydesc{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsdescplural}{\@ifstar\@sglsdescplural\@glsdescplural}
+\newcommand*{\@sglsdescplural}[1][]{\@glsdescplural[hyper=false,#1]}
+\newcommand*{\@glsdescplural}[2][]{%
+\new@ifnextchar[{\@glsdescplural@{#1}{#2}}{\@glsdescplural@{#1}{#2}[]}}
+\def\@glsdescplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydescplural{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glsdescplural}{\@ifstar\@sGlsdescplural\@Glsdescplural}
+\newcommand*{\@sGlsdescplural}[1][]{\@Glsdescplural[hyper=false,#1]}
+\newcommand*{\@Glsdescplural}[2][]{%
+\new@ifnextchar[{\@Glsdescplural@{#1}{#2}}{\@Glsdescplural@{#1}{#2}[]}}
+\def\@Glsdescplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydescplural{#2}}%
+\@gls@link[#1]{#2}{%
+  \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSdescplural}{\@ifstar\@sGLSdescplural\@GLSdescplural}
+\newcommand*{\@sGLSdescplural}[1][]{\@GLSdescplural[hyper=false,#1]}
+\newcommand*{\@GLSdescplural}[2][]{%
+\new@ifnextchar[{\@GLSdescplural@{#1}{#2}}{\@GLSdescplural@{#1}{#2}[]}}
+\def\@GLSdescplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrydescplural{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glssymbol}{\@ifstar\@sglssymbol\@glssymbol}
+\newcommand*{\@sglssymbol}[1][]{\@glssymbol[hyper=false,#1]}
+\newcommand*{\@glssymbol}[2][]{%
+\new@ifnextchar[{\@glssymbol@{#1}{#2}}{\@glssymbol@{#1}{#2}[]}}
+\def\@glssymbol@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbol{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glssymbol}{\@ifstar\@sGlssymbol\@Glssymbol}
+\newcommand*{\@sGlssymbol}[1][]{\@Glssymbol[hyper=false,#1]}
+\newcommand*{\@Glssymbol}[2][]{%
+\new@ifnextchar[{\@Glssymbol@{#1}{#2}}{\@Glssymbol@{#1}{#2}[]}}
+\def\@Glssymbol@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbol{#2}}%
+\@gls@link[#1]{#2}{%
+   \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSsymbol}{\@ifstar\@sGLSsymbol\@GLSsymbol}
+\newcommand*{\@sGLSsymbol}[1][]{\@GLSsymbol[hyper=false,#1]}
+\newcommand*{\@GLSsymbol}[2][]{%
+\new@ifnextchar[{\@GLSsymbol@{#1}{#2}}{\@GLSsymbol@{#1}{#2}[]}}
+\def\@GLSsymbol@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbol{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glssymbolplural}{\@ifstar\@sglssymbolplural\@glssymbolplural}
+\newcommand*{\@sglssymbolplural}[1][]{\@glssymbolplural[hyper=false,#1]}
+\newcommand*{\@glssymbolplural}[2][]{%
+\new@ifnextchar[{\@glssymbolplural@{#1}{#2}}{\@glssymbolplural@{#1}{#2}[]}}
+\def\@glssymbolplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbolplural{#2}}%
+\@gls@link[#1]{#2}{\@glo@text}%
+}%
+}
+\newcommand*{\Glssymbolplural}{\@ifstar\@sGlssymbolplural\@Glssymbolplural}
+\newcommand*{\@sGlssymbolplural}[1][]{\@Glssymbolplural[hyper=false,#1]}
+\newcommand*{\@Glssymbolplural}[2][]{%
+\new@ifnextchar[{\@Glssymbolplural@{#1}{#2}}{\@Glssymbolplural@{#1}{#2}[]}}
+\def\@Glssymbolplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbolplural{#2}}%
+\@gls@link[#1]{#2}{%
+   \expandafter\makefirstuc\expandafter{\@glo@text}}%
+}%
+}
+\newcommand*{\GLSsymbolplural}{\@ifstar\@sGLSsymbolplural\@GLSsymbolplural}
+\newcommand*{\@sGLSsymbolplural}[1][]{\@GLSsymbolplural[hyper=false,#1]}
+\newcommand*{\@GLSsymbolplural}[2][]{%
+\new@ifnextchar[{\@GLSsymbolplural@{#1}{#2}}{\@GLSsymbolplural@{#1}{#2}[]}}
+\def\@GLSsymbolplural@#1#2[#3]{%
+\glsdoifexists{#2}{\edef\@glo@type{\glsentrytype{#2}}%
+\protected@edef\@glo@text{\glsentrysymbolplural{#2}}%
+\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}%
+}%
+}
+\newcommand*{\glsentryname}[1]{\csname glo@#1@name\endcsname}
+\newcommand*{\Glsentryname}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@name\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrydesc}[1]{\csname glo@#1@desc\endcsname}
+\newcommand*{\Glsentrydesc}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@desc\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrydescplural}[1]{%
+\csname glo@#1@descplural\endcsname}
+\newcommand*{\Glsentrydescplural}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@descplural\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrytext}[1]{\csname glo@#1@text\endcsname}
+\newcommand*{\Glsentrytext}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@text\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentryplural}[1]{\csname glo@#1@plural\endcsname}
+\newcommand*{\Glsentryplural}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@plural\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrysymbol}[1]{\csname glo@#1@symbol\endcsname}
+\newcommand*{\Glsentrysymbol}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@symbol\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrysymbolplural}[1]{%
+\csname glo@#1@symbolplural\endcsname}
+\newcommand*{\Glsentrysymbolplural}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@symbolplural\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentryfirst}[1]{\csname glo@#1@first\endcsname}
+\newcommand*{\Glsentryfirst}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@first\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentryfirstplural}[1]{%
+\csname glo@#1@firstpl\endcsname}
+\newcommand*{\Glsentryfirstplural}[1]{%
+\protected@edef\@glo@text{\csname glo@#1@firstpl\endcsname}%
+\expandafter\makefirstuc\expandafter{\@glo@text}}
+\newcommand*{\glsentrytype}[1]{\csname glo@#1@type\endcsname}
+\newcommand*{\glsentrysort}[1]{\csname glo@#1@sort\endcsname}
+\define@key{glossadd}{counter}{\def\@glo@counter{#1}}
+\define@key{glossadd}{format}{\def\@glo@format{#1}}
+\define@key{glossadd}{types}{\def\@glo@type{#1}}
+\newcommand*{\glsadd}[2][]{%
+\glsdoifexists{#2}{%
+\def\@glo@format{glsnumberformat}%
+\edef\@glo@counter{\csname glo@#2@counter\endcsname}%
+\setkeys{glossadd}{#1}%
+\edef\theglsentrycounter{\expandafter\noexpand\csname the\@glo@counter\endcsname}%
+\protected@edef\@glo@sort{\csname glo@#2@sort\endcsname}%
+\@gls@checkmkidxchars\@glo@sort
+\protected@edef\@@glo@name{\csname glo@#2@name\endcsname}%
+\@gls@checkmkidxchars\@@glo@name
+\protected@edef\@glo@name{\string\glsnamefont{\@@glo@name}}%
+\protected@edef\@glo@desc{\csname glo@#2@desc\endcsname}%
+\@gls@checkmkidxchars\@glo@desc
+\protected@edef\@glo@symbol{\csname glo@#2@symbol\endcsname}%
+\@gls@checkmkidxchars\@glo@symbol
+\@set@glo@numformat\@glo@numfmt\@glo@counter\@glo@format
+\glossary[\csname glo@#2@type\endcsname]{%
+\@glo@sort\@gls@actualchar\string\glossaryentryfield
+{#2}{\@glo@name}{\@glo@desc}{\@glo@symbol}\@gls@encapchar
+\@glo@numfmt}%
+}}
+\newcommand*{\glsaddall}[1][]{%
+\def\@glo@type{\@glo@types}%
+\setkeys{glossadd}{#1}%
+\forallglsentries[\@glo@type]{\@glo@entry}{%
+\glsadd[#1]{\@glo@entry}}%
+}
+\newwrite\istfile
+\bgroup
+\catcode`\%12\relax
+\catcode`\"12\relax
+\catcode`\|12\relax
+\catcode`\!12\relax
+\catcode`\?12\relax
+\gdef\@gls@actualchar{?}
+\gdef\@gls@encapchar{|}
+\gdef\@gls@levelchar{!}
+\gdef\@gls@quotechar{"}
+\gdef\writeist{\relax
+\protected@write\@auxout{}{\string\@istfilename{\istfilename}}
+\openout\istfile=\istfilename
+\write\istfile{% makeindex style file created by the glossaries package}
+\write\istfile{% for document '\jobname' on \the\year-\the\month-\the\day}
+\write\istfile{actual '\@gls@actualchar'}
+\write\istfile{encap '\@gls@encapchar'}
+\write\istfile{level '\@gls@levelchar'}
+\write\istfile{quote '\@gls@quotechar'}
+\write\istfile{keyword "\string\\glossaryentry"}
+\write\istfile{preamble "\string\\glossarysection[\string\\glossarytoctitle]{\string\\glossarytitle}\string\\glossarypreamble\string\n\string\\begin{theglossary}\string\\glossaryheader\string\n"}
+\write\istfile{postamble "\string\n\string\\end{theglossary}\string\n\string\\glossarypostamble\string\n"}
+\write\istfile{group_skip "\string\\glsgroupskip\string\n"}
+\write\istfile{item_0 "\string\n"}
+\write\istfile{delim_0 "\{\string\\glossaryentrynumbers\{\string\\relax "}
+\write\istfile{delim_t "\}\}"}
+\write\istfile{delim_n "\string\\delimN "}
+\write\istfile{delim_r "\string\\delimR "}
+\write\istfile{headings_flag 1}
+\write\istfile{heading_prefix "\string\\glsgroupheading\{"}
+\write\istfile{heading_suffix "\}"}
+\write\istfile{symhead_positive "glssymbols"}
+\write\istfile{numhead_positive "glsnumbers"}
+\write\istfile{page_compositor "\glscompositor"}
+\noist}
+\egroup
+\newcommand{\noist}{\let\writeist\relax}
+\newcommand*{\@makeglossary}[1]{%
+\ifglossaryexists{#1}{%
+\edef\glo@out{\csname @glotype@#1@out\endcsname}%
+\expandafter\newwrite\csname glo@#1@file\endcsname
+\edef\@glo@file{\csname glo@#1@file\endcsname}%
+\immediate\openout\@glo@file=\jobname.\glo@out
+\@gls@renewglossary
+\PackageInfo{glossaries}{Writing glossary file \jobname.\glo@out}
+\writeist
+}{\PackageError{glossaries}{%
+Glossary type `#1' not defined}{New glossaries must be defined before
+using \string\makeglossary}}}
+\newcommand*{\makeglossaries}{%
+\@for\@glo@type:=\@glo@types\do{%
+\ifthenelse{\equal{\@glo@type}{}}{}{%
+\@makeglossary{\@glo@type}}}%
+\renewcommand*\newglossary[4][]{%
+\PackageError{glossaries}{New glossaries
+must be created before \string\makeglossaries}{You need
+to move \string\makeglossaries\space after all your
+\string\newglossary\space commands}}%
+\let\@makeglossary\empty
+\let\makeglossary\empty}
+\let\makeglossary\makeglossaries
+\renewcommand*{\glossary}[1][\glsdefaulttype]{%
+\@glossary[#1]}
+\def\@glossary[#1]{\@bsphack\begingroup\@sanitize\@index}
+\newcommand{\@gls@renewglossary}{%
+\gdef\@glossary[##1]{\@bsphack\begingroup\@wrglossary{##1}}%
+\let\@gls@renewglossary\@empty
+}
+\renewcommand*{\@wrglossary}[2]{%
+\expandafter\protected@write\csname glo@#1@file\endcsname{}{%
+\string\glossaryentry{#2}{\theglsentrycounter}}\endgroup\@esphack}
+\newcommand*{\printglossary}[1][type=\glsdefaulttype]{%
+\def\@glo@type{\glsdefaulttype}%
+\def\glossarytitle{\csname @glotype@\@glo@type @title\endcsname}%
+\def\glossarytoctitle{\glossarytitle}%
+\def\@glossarystyle{}%
+\setkeys{printgloss}{#1}%
+\bgroup
+\@glossarystyle
+\makeatletter
+\@input@{\jobname.\csname @glotype@\@glo@type @in\endcsname}%
+\egroup
+}
+\newcommand*{\printglossaries}{%
+\forallglossaries{\@@glo@type}{\printglossary[type=\@@glo@type]}}
+\define@key{printgloss}{type}{\def\@glo@type{#1}}
+\define@key{printgloss}{title}{\def\glossarytitle{#1}}
+\define@key{printgloss}{toctitle}{\def\glossarytoctitle{#1}}
+\define@key{printgloss}{style}{%
+\@ifundefined{@glsstyle@#1}{\PackageError{glossaries}{Glossary
+style `#1' undefined}{}}{%
+\def\@glossarystyle{\csname @glsstyle@#1\endcsname}}}
+\@ifundefined{theglossary}{%
+\newenvironment{theglossary}{}{}}{%
+\PackageWarning{glossaries}{overriding `theglossary' environment}%
+\renewenvironment{theglossary}{}{}}
+\newcommand*{\glossaryheader}{}
+\newcommand*{\glossaryentryfield}[5]{%
+\@glstarget{glo:#1}{#2} #4 #3. #5\par}
+\newcommand*{\glsgroupskip}{}
+\newcommand*{\glsgroupheading}[1]{}
+\newcommand*{\glsgetgrouptitle}[1]{%
+\@ifundefined{#1groupname}{#1}{\csname #1groupname\endcsname}}
+\newcommand*{\glsgetgrouplabel}[1]{%
+\ifthenelse{\equals{#1}{\glssymbolsgroupname}}{glssymbols}{%
+\ifthenelse{\equals{#1}{\glsnumbersgroupname}}{glsnumbers}{#1}}}
+\newcommand*{\setentrycounter}[1]{\def\glsentrycounter{#1}}
+\newcommand*{\glossarystyle}[1]{%
+\@ifundefined{@glsstyle@#1}{\PackageError{glossaries}{Glossary
+style `#1' undefined}{}}{%
+\csname @glsstyle@#1\endcsname}}
+\newcommand*{\newglossarystyle}[2]{%
+\@ifundefined{@glsstyle@#1}{%
+\expandafter\def\csname @glsstyle@#1\endcsname{#2}}{%
+\PackageError{glossaries}{Glossary style `#1' is already defined}{}}}
+\newcommand*{\glsnamefont}[1]{#1}
+\@ifundefined{hyperlink}{%
+\def\glshypernumber#1{#1}}{%
+\def\glshypernumber#1{%
+\@delimR#1\delimR\delimR\\}}
+\def\@delimR#1\delimR #2\delimR #3\\{%
+\ifx\\#2\\%
+  \@delimN{#1}%
+\else
+  \@gls@numberlink{#1}\delimR\@gls@numberlink{#2}%
+\fi}
+\def\@delimN#1{\@@delimN#1\delimN \delimN\\}
+\def\@@delimN#1\delimN #2\delimN#3\\{%
+\ifx\\#3\\%
+  \@gls@numberlink{#1}%
+\else
+  \@gls@numberlink{#1}\delimN\@gls@numberlink{#2}%
+\fi
+}
+\def\@gls@numberlink#1{%
+\begingroup
+ \toks@={}%
+ \@gls@removespaces#1 \@nil
+\endgroup}
+\def\@gls@removespaces#1 #2\@nil{%
+ \toks@=\expandafter{\the\toks@#1}%
+ \ifx\\#2\\%
+   \edef\x{\the\toks@}%
+   \ifx\x\empty
+   \else
+     \hyperlink{\glsentrycounter.\the\toks@}{\the\toks@}%
+   \fi
+ \else
+   \@gls@ReturnAfterFi{%
+     \@gls@removespaces#2\@nil
+   }%
+ \fi
+}
+\long\def\@gls@ReturnAfterFi#1\fi{\fi#1}
+\newcommand*{\hyperrm}[1]{\textrm{\glshypernumber{#1}}}
+\newcommand*{\hypersf}[1]{\textsf{\glshypernumber{#1}}}
+\newcommand*{\hypertt}[1]{\texttt{\glshypernumber{#1}}}
+\newcommand*{\hyperbf}[1]{\textbf{\glshypernumber{#1}}}
+\newcommand*{\hypermd}[1]{\textmd{\glshypernumber{#1}}}
+\newcommand*{\hyperit}[1]{\textit{\glshypernumber{#1}}}
+\newcommand*{\hypersl}[1]{\textsl{\glshypernumber{#1}}}
+\newcommand*{\hyperup}[1]{\textup{\glshypernumber{#1}}}
+\newcommand*{\hypersc}[1]{\textsc{\glshypernumber{#1}}}
+\newcommand*{\hyperemph}[1]{\emph{\glshypernumber{#1}}}
+\ifglsacronym
+  \newglossary[alg]{acronym}{acr}{acn}{\acronymname}
+  \renewcommand{\acronymtype}{acronym}
+  \defglsdisplay[acronym]{#1#4}
+  \defglsdisplayfirst[acronym]{#1#4}
+\fi
+\newcommand{\newacronym}[4][]{%
+\newglossaryentry{#2}{type=\acronymtype,%
+name={#3},description={#4},text={#3},descriptionplural={#4s},%
+first={#4 (#3)},plural={#3s},%
+firstplural={\@glo@descplural\space (\@glo@plural)},%
+#1}}
+\@onlypreamble{\newacronym}
+\newcommand*{\glsshortkey}{text}
+\newcommand*{\glsshortpluralkey}{plural}
+\newcommand*{\glslongkey}{description}
+\newcommand*{\glslongpluralkey}{descriptionplural}
+\newcommand*{\acrshort}[2][]{%
+\new@ifnextchar[{\@acrshort{#1}{#2}}{\@acrshort{#1}{#2}[]}}
+\def\@acrshort#1#2[#3]{\@glstext@{#1}{#2}[#3]}
+\newcommand*{\Acrshort}[2][]{%
+\new@ifnextchar[{\@Acrshort{#1}{#2}}{\@Acrshort{#1}{#2}[]}}
+\def\@Acrshort#1#2[#3]{\@glstext@{#1}{#2}[#3]}
+\newcommand*{\ACRshort}[2][]{%
+\new@ifnextchar[{\@ACRshort{#1}{#2}}{\@ACRshort{#1}{#2}[]}}
+\def\@ACRshort#1#2[#3]{\@glstext@{#1}{#2}[#3]}
+\newcommand*{\acrlong}[2][]{%
+\new@ifnextchar[{\@acrlong{#1}{#2}}{\@acrlong{#1}{#2}[]}}
+\def\@acrlong#1#2[#3]{\@glsdesc@{#1}{#2}[#3]}
+\newcommand*{\Acrlong}[2][]{%
+\new@ifnextchar[{\@Acrlong{#1}{#2}}{\@Acrlong{#1}{#2}[]}}
+\def\@Acrlong#1#2[#3]{\@glsdesc@{#1}{#2}[#3]}
+\newcommand*{\ACRlong}[2][]{%
+\new@ifnextchar[{\@ACRlong{#1}{#2}}{\@ACRlong{#1}{#2}[]}}
+\def\@ACRlong#1#2[#3]{\@glsdesc@{#1}{#2}[#3]}
+\newcommand*{\acrfull}[2][]{%
+\new@ifnextchar[{\@acrfull{#1}{#2}}{\@acrfull{#1}{#2}[]}}
+\def\@acrfull#1#2[#3]{\@glsfirst@{#1}{#2}[#3]}
+\newcommand*{\Acrfull}[2][]{%
+\new@ifnextchar[{\@Acrfull{#1}{#2}}{\@Acrfull{#1}{#2}[]}}
+\def\@Acrfull#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]}
+\newcommand*{\ACRfull}[2][]{%
+\new@ifnextchar[{\@ACRfull{#1}{#2}}{\@ACRfull{#1}{#2}[]}}
+\def\@ACRfull#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]}
+\newcommand{\acronymfont}[1]{#1}
+\ifglsacrdescription
+  \ifglsacrfootnote
+    \renewcommand{\newacronym}[4][]{%
+    \newglossaryentry{#2}{type=\acronymtype,%
+    name={#3},%
+    symbol={#4},%
+    #1}}
+\def\glsshortkey{text}%
+\def\glsshortpluralkey{plural}%
+\def\glslongkey{symbol}%
+\def\glslongpluralkey{symbolplural}%
+    \def\@acrshort#1#2[#3]{\acronymfont{\@glstext@{#1}{#2}[#3]}}
+    \def\@Acrshort#1#2[#3]{\acronymfont{\@Glstext@{#1}{#2}[#3]}}
+    \def\@ACRshort#1#2[#3]{\acronymfont{\@GLStext@{#1}{#2}[#3]}}
+    \def\@acrlong#1#2[#3]{\@glssymbol@{#1}{#2}[#3]}
+    \def\@Acrlong#1#2[#3]{\@Glssymbol@{#1}{#2}[#3]}
+    \def\@ACRlong#1#2[#3]{\@GLSsymbol@{#1}{#2}[#3]}
+    \def\@acrfull#1#2[#3]{\@glssymbol@{#1}{#2}[#3]
+      (\acronymfont{\@glstext@{#1}{#2}[#3]})}
+    \def\@Acrfull#1#2[#3]{\@Glssymbol@{#1}{#2}[#3]
+      (\acronymfont{\@glstext@{#1}{#2}[#3]})}
+    \def\@ACRfull#1#2[#3]{\@GLSsymbol@{#1}{#2}[#3]
+      (\acronymfont{\@GLStext@{#1}{#2}[#3]})}
+    \defglsdisplayfirst[\acronymtype]{%
+      \acronymfont{#1}#4\noexpand\protect\noexpand\footnote{%
+      \noexpand\protect\noexpand\glslink
+        [\@gls@link@opts]{\@gls@link@label}{#3}}}%
+    \defglsdisplay[\acronymtype]{\acronymfont{#1}#4}%
+    \ifglsacrsmallcaps
+       \renewcommand*{\acronymfont}[1]{\textsc{#1}}
+    \fi
+    \ifglsacrdua
+       \PackageError{glossaries}{Option clash: `footnote' and `dua'
+        can't both be set}{}%
+    \fi
+  \else
+    \ifglsacrdua
+      \ifglsacrsmallcaps
+        \PackageError{glossaries}{Option clash: `smallcaps' and `dua'
+         can't both be set}{}%
+      \fi
+      \renewcommand{\newacronym}[4][]{%
+      \newglossaryentry{#2}{type=\acronymtype,%
+      name={#4},%
+      first={#4},%
+      symbol={#3},%
+      #1}}
+\def\glsshortkey{symbol}%
+\def\glsshortpluralkey{symbolplural}%
+\def\glslongkey{first}%
+\def\glslongpluralkey{plural}%
+      \def\@acrshort#1#2[#3]{\acronymfont{\@glssymbol@{#1}{#2}[#3]}}
+      \def\@Acrshort#1#2[#3]{\acronymfont{\@Glssymbol@{#1}{#2}[#3]}}
+      \def\@ACRshort#1#2[#3]{\acronymfont{\@GLSsymbol@{#1}{#2}[#3]}}
+      \def\@acrlong#1#2[#3]{\@glsfirst@{#1}{#2}[#3]}
+      \def\@Acrlong#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]}
+      \def\@ACRlong#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]}
+      \def\@acrfull#1#2[#3]{\@glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+      \def\@Acrfull#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+      \def\@ACRfull#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]
+        (\acronymfont{\@GLSsymbol@{#1}{#2}[#3]})}
+      \defglsdisplayfirst[\acronymtype]{#1#4}
+      \defglsdisplay[\acronymtype]{#1#4}
+    \else
+      \renewcommand{\newacronym}[4][]{%
+      \newglossaryentry{#2}{type=\acronymtype,%
+      name={#3},%
+      first={#4},%
+      symbol={#3},%
+      #1}}
+\def\glsshortkey{text}%
+\def\glsshortpluralkey{plural}%
+\def\glslongkey{first}%
+\def\glslongpluralkey{firstplural}%
+      \def\@acrshort#1#2[#3]{\acronymfont{\@glstext@{#1}{#2}[#3]}}
+      \def\@Acrshort#1#2[#3]{\acronymfont{\@Glstext@{#1}{#2}[#3]}}
+      \def\@ACRshort#1#2[#3]{\acronymfont{\@GLStext@{#1}{#2}[#3]}}
+      \def\@acrlong#1#2[#3]{\@glsfirst@{#1}{#2}[#3]}
+      \def\@Acrlong#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]}
+      \def\@ACRlong#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]}
+      \def\@acrfull#1#2[#3]{\@glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+      \def\@Acrfull#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+      \def\@ACRfull#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]
+        (\acronymfont{\@GLSsymbol@{#1}{#2}[#3]})}
+      \defglsdisplayfirst[\acronymtype]{#1#4 (\acronymfont{#3})}
+      \defglsdisplay[\acronymtype]{\acronymfont{#1}#4}
+      \ifglsacrsmallcaps
+         \renewcommand{\acronymfont}[1]{\textsc{#1}}
+      \fi
+    \fi
+  \fi
+\else
+  \ifglsacrfootnote
+    \renewcommand{\newacronym}[4][]{%
+    \newglossaryentry{#2}{type=\acronymtype,%
+    name={#3},%
+    description={#4},%
+    #1}}
+\def\glsshortkey{text}%
+\def\glsshortpluralkey{plural}%
+\def\glslongkey{description}%
+\def\glslongpluralkey{descriptionplural}%
+    \defglsdisplayfirst[\acronymtype]{%
+    \acronymfont{#1}#4\noexpand\protect\noexpand\footnote{%
+       \noexpand\protect\noexpand\glslink
+         [\@gls@link@opts]{\@gls@link@label}{#2}}}%
+    \defglsdisplay[\acronymtype]{\acronymfont{#1}#4}%
+    \def\@acrshort#1#2[#3]{\acronymfont{\@glstext@{#1}{#2}[#3]}}
+    \def\@Acrshort#1#2[#3]{\acronymfont{\@Glstext@{#1}{#2}[#3]}}
+    \def\@ACRshort#1#2[#3]{\acronymfont{\@GLStext@{#1}{#2}[#3]}}
+    \def\@acrlong#1#2[#3]{\@glsdesc@{#1}{#2}[#3]}
+    \def\@Acrlong#1#2[#3]{\@Glsdesc@{#1}{#2}[#3]}
+    \def\@ACRlong#1#2[#3]{\@GLSdesc@{#1}{#2}[#3]}
+    \def\@acrfull#1#2[#3]{\@glsdesc@{#1}{#2}[#3]
+      (\@glstext@{#1}{#2}[#3])}
+    \def\@Acrfull#1#2[#3]{\@Glsdesc@{#1}{#2}[#3]
+      (\@glstext@{#1}{#2}[#3])}
+    \def\@ACRfull#1#2[#3]{\@GLSdesc@{#1}{#2}[#3]
+      (\@GLStext@{#1}{#2}[#3])}
+    \ifglsacrsmallcaps
+       \renewcommand*{\acronymfont}[1]{\textsc{#1}}%
+    \fi
+    \ifglsacrdua
+       \PackageError{glossaries}{Option clash: `footnote' and `dua'
+       can't both be set}{}%
+    \fi
+  \else
+    \ifglsacrsmallcaps
+      \renewcommand{\newacronym}[4][]{%
+      \newglossaryentry{#2}{type=\acronymtype,%
+      name={#3},%
+      first={#4},%
+      description={#4},%
+      symbol={#3},%
+      #1}}
+\def\glsshortkey{symbol}%
+\def\glsshortpluralkey{symbolplural}%
+\def\glslongkey{first}%
+\def\glslongpluralkey{firstplural}%
+      \defglsdisplayfirst[\acronymtype]{#1#4 (\acronymfont{#3})}
+      \defglsdisplay[\acronymtype]{\acronymfont{#1}#4}
+      \renewcommand*{\acronymfont}[1]{\textsc{#1}}
+      \def\@acrshort#1#2[#3]{\acronymfont{\@glstext@{#1}{#2}[#3]}}
+      \def\@Acrshort#1#2[#3]{\acronymfont{\@Glstext@{#1}{#2}[#3]}}
+      \def\@ACRshort#1#2[#3]{\acronymfont{\@GLStext@{#1}{#2}[#3]}}
+      \def\@acrlong#1#2[#3]{\@glsfirst@{#1}{#2}[#3]}
+      \def\@Acrlong#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]}
+      \def\@ACRlong#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]}
+      \def\@acrfull#1#2[#3]{\@glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glstext@{#1}{#2}[#3]})}
+      \def\@Acrfull#1#2[#3]{\@Glsfirst@{#1}{#2}[#3]
+        (\acronymfont{\@glstext@{#1}{#2}[#3]})}
+      \def\@ACRfull#1#2[#3]{\@GLSfirst@{#1}{#2}[#3]
+        (\acronymfont{\@GLStext@{#1}{#2}[#3]})}
+      \ifglsacrdua
+        \PackageError{glossaries}{Option clash: `smallcaps' and `dua'
+        can't both be set}{}%
+      \fi
+    \else
+      \ifglsacrdua
+        \renewcommand{\newacronym}[4][]{%
+        \newglossaryentry{#2}{type=\acronymtype,%
+        name={#3},%
+        description={#4},%
+        text={#4},%
+        symbol={#3},%
+        #1}}
+\def\glsshortkey{symbol}%
+\def\glsshortpluralkey{symbolplural}%
+\def\glslongkey{text}%
+\def\glslongpluralkey{plural}%
+        \defglsdisplayfirst[\acronymtype]{#1#4}
+        \defglsdisplay[\acronymtype]{#1#4}
+        \def\@acrshort#1#2[#3]{\@glssymbol@{#1}{#2}[#3]}
+        \def\@Acrshort#1#2[#3]{\@Glssymbol@{#1}{#2}[#3]}
+        \def\@ACRshort#1#2[#3]{\@GLSsymbol@{#1}{#2}[#3]}
+        \def\@acrlong#1#2[#3]{\@glstext@{#1}{#2}[#3]}
+        \def\@Acrlong#1#2[#3]{\@Glstext@{#1}{#2}[#3]}
+        \def\@ACRlong#1#2[#3]{\@GLStext@{#1}{#2}[#3]}
+        \def\@acrfull#1#2[#3]{\@glstext@{#1}{#2}[#3]
+          (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+        \def\@Acrfull#1#2[#3]{\@Glstext@{#1}{#2}[#3]
+          (\acronymfont{\@glssymbol@{#1}{#2}[#3]})}
+        \def\@ACRfull#1#2[#3]{\@GLStext@{#1}{#2}[#3]
+          (\acronymfont{\@GLSsymbol@{#1}{#2}[#3]})}
+      \fi
+    \fi
+  \fi
+\fi
+\RequirePackage{glossary-hypernav}
+\RequirePackage{glossary-list}
+\RequirePackage{glossary-long}
+\RequirePackage{glossary-super}
+\glossarystyle{\@glossary@default@style}
+\endinput
+%%
+%% End of file `glossaries.sty'.
