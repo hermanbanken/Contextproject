@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.4">
+  <zoom_level>7</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>42</x>
+      <y>168</y>
+      <w>147</w>
+      <h>259</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Models::Monument
+extends ORM::Model
+--
+- id: int
+- province: string
+- municipality: string
+- town: string
+- street: string
+- streetNumber: string
+- zipCode: string
+- function
+- description
+- x
+- y
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>266</x>
+      <y>168</y>
+      <w>147</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Models::Category
+extends ORM::Model
+--
+- id: int
+- name: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>168</x>
+      <y>154</y>
+      <w>111</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..n
+belongs to&gt;</panel_attributes>
+    <additional_attributes>21;35;98;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>266</x>
+      <y>238</y>
+      <w>147</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Models::Photo
+extends ORM::Model
+--
+-id: int
+-monumentId: int
+-title: string
+-text: string
+-latitude
+-longitude
+-localUri: string
+-remoteUri: string
+-analysisData: blob</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>259</y>
+      <w>147</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Photo&gt;&gt;
+Models::Photo::PhotoFlickr
+extends Models::Photo
+--
+-id: int
+-photoId: int
+-userName
+-keywords
+-region
+-locality
+-country</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>168</x>
+      <y>217</y>
+      <w>111</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+&lt; belongs to</panel_attributes>
+    <additional_attributes>21;35;98;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>28</x>
+      <y>140</y>
+      <w>595</w>
+      <h>511</h>
+    </coordinates>
+    <panel_attributes>ORM</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>455</x>
+      <y>315</y>
+      <w>147</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Photo&gt;&gt;
+Models::Photo::PhotoWiki
+extends Model::Photo
+--
+-id: int
+-photoId: int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>455</x>
+      <y>392</y>
+      <w>147</w>
+      <h>175</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Models::WikiCommon
+{An article from WMC}
+--
+-id: int
+-monumentId: int
+-title: string
+-url: string
+-description
+-authorUrl
+-date
+-longtitude
+-latitude
+-usageOnOtherWikis
+-usageOnWikiMediaCommons</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>168</x>
+      <y>371</y>
+      <w>300</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..1
+&lt; belongs to</panel_attributes>
+    <additional_attributes>21;35;287;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>651</y>
+      <w>147</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Models::Tweet
+extends ORM::Model
+--
+-id
+-monumentId
+-tags
+-description</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>770</x>
+      <y>546</y>
+      <w>147</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Photo&gt;&gt;
+Models::Photo::PhotoTweet
+extends Models::Photo
+--
+-id: int
+-photoId: int
+-tweetId</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>672</x>
+      <y>546</y>
+      <w>111</w>
+      <h>118</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1
+r1=belongs to</panel_attributes>
+    <additional_attributes>98;21;21;35;63;105</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>168</x>
+      <y>385</y>
+      <w>510</w>
+      <h>342</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..1
+&lt; belongs to</panel_attributes>
+    <additional_attributes>21;21;119;231;371;231;497;329</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>28</x>
+      <y>658</y>
+      <w>595</w>
+      <h>175</h>
+    </coordinates>
+    <panel_attributes>Auth</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>42</x>
+      <y>686</y>
+      <w>196</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>Kohana::Auth::User
+extends ORM::Model
+--
+-id: int
+-name: string
+-username: string
+-pass_hash: string
+-salt: string
+-email: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>329</x>
+      <y>686</y>
+      <w>91</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Auth::Identity
+--
+identity: string
+userId: int
+provider: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>217</x>
+      <y>658</y>
+      <w>125</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..n
+&lt; belongs to</panel_attributes>
+    <additional_attributes>21;35;112;35</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>651</x>
+      <y>763</y>
+      <w>196</w>
+      <h>238</h>
+    </coordinates>
+    <panel_attributes>FourSquare</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>791</y>
+      <w>168</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+FourSquare::API
+--
+-API_KEY
+--
+#findVenue(m: monument): Venue
+#updateVenue(v: venue): bool
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>868</y>
+      <w>147</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+FourSquare::Venue
+extends ORM::Model
+--
+-id: string (from 4sq)
+-monument_id
+-checkins: int
+-lastupdate: date
+--
+#getFourSquareUrl(): string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>651</x>
+      <y>427</y>
+      <w>280</w>
+      <h>322</h>
+    </coordinates>
+    <panel_attributes>Twitter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>455</y>
+      <w>252</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+Twitter::API
+--
+-API_KEY
+--
+#findTweetsByLocation(x, y): Tweet[]
+#findTweetsAbout(hash: string): Tweet[]
+#findTweetsMentioning(userName: string): Tweet[]
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>462</x>
+      <y>686</y>
+      <w>119</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Provider&gt;&gt;
+Auth::Provider::Facebook
+--
+login()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>462</x>
+      <y>749</y>
+      <w>119</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Provider&gt;&gt;
+Auth::Provider::OpenID
+--
+login()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>42</x>
+      <y>469</y>
+      <w>147</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;ORM_Driver&gt;&gt;
+Kohana::ORM::ORM
+--
+#factory(type: string): Model</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>42</x>
+      <y>525</y>
+      <w>147</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Model&gt;&gt;
+Kohana::ORM::Model
+--
+#validate(): bool
+#save(): bool
+#values(): key-value
+#has(type: string): bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>651</x>
+      <y>154</y>
+      <w>280</w>
+      <h>238</h>
+    </coordinates>
+    <panel_attributes>Flickr</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>665</x>
+      <y>182</y>
+      <w>252</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Controller&gt;&gt;
+Flickr::API
+--
+#findPhotosByLocation(x, y): PhotoFlickr[]
+#findPhotosByKeyword(key: string): PhotoFlickr[]
+#findPhotosBySearch(keys[]: string): PhotoFlickr[]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>448</x>
+      <y>294</y>
+      <w>161</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>WikiMedia Commons</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>28</x>
+      <y>28</y>
+      <w>350</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Processing</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>392</x>
+      <y>231</y>
+      <w>286</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=EER</panel_attributes>
+    <additional_attributes>273;42;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>392</x>
+      <y>231</y>
+      <w>76</w>
+      <h>111</h>
+    </coordinates>
+    <panel_attributes>lt=EER</panel_attributes>
+    <additional_attributes>63;98;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>392</x>
+      <y>231</y>
+      <w>391</w>
+      <h>349</h>
+    </coordinates>
+    <panel_attributes>lt=EER</panel_attributes>
+    <additional_attributes>378;336;245;336;245;63;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>42</x>
+      <y>56</y>
+      <w>154</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Processing::photoAnalyser
+--
+#analysePhotos(p: Photo[])
+#similarPhotos(p: Photo): Photo[]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>210</x>
+      <y>56</y>
+      <w>154</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Processing::textAnalyser
+--
+#conceptifyText(t: string): string
+#similarByText(t: string): Model[]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>14</x>
+      <y>0</y>
+      <w>931</w>
+      <h>1015</h>
+    </coordinates>
+    <panel_attributes>Back-end</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
