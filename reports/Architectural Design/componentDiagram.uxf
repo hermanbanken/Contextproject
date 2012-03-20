@@ -20,7 +20,9 @@
       <w>710</w>
       <h>800</h>
     </coordinates>
-    <panel_attributes>PHP Back-end</panel_attributes>
+    <panel_attributes>PHP Back-end
+bg=
+fg=</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -340,7 +342,8 @@ ORM::factory</panel_attributes>
       <w>150</w>
       <h>100</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;-
+fg=</panel_attributes>
     <additional_attributes>130;80;30;30</additional_attributes>
   </element>
   <element>
@@ -522,7 +525,8 @@ Identity-combiner</panel_attributes>
       <w>710</w>
       <h>240</h>
     </coordinates>
-    <panel_attributes>JAVA/Compiled Back-end</panel_attributes>
+    <panel_attributes>JAVA/Compiled Back-end
+bg=</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -745,7 +749,8 @@ offline linkdata</panel_attributes>
       <w>150</w>
       <h>210</h>
     </coordinates>
-    <panel_attributes>MySQL</panel_attributes>
+    <panel_attributes>MySQL
+bg=</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -803,7 +808,8 @@ live user-data</panel_attributes>
       <w>710</w>
       <h>220</h>
     </coordinates>
-    <panel_attributes>JavaScript Front-end</panel_attributes>
+    <panel_attributes>JavaScript Front-end
+bg=</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
