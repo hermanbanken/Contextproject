@@ -419,7 +419,7 @@ POST</panel_attributes>
       <w>150</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;130;60</additional_attributes>
   </element>
   <element>
@@ -710,7 +710,7 @@ live linkdata</panel_attributes>
       <w>50</w>
       <h>360</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;340;30;30</additional_attributes>
   </element>
   <element>
@@ -734,7 +734,7 @@ offline linkdata</panel_attributes>
       <w>150</w>
       <h>120</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;130;100</additional_attributes>
   </element>
   <element>
@@ -780,7 +780,7 @@ live user-data</panel_attributes>
       <w>240</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;60;220;30</additional_attributes>
   </element>
   <element>
@@ -982,7 +982,7 @@ AJAX</panel_attributes>
       <w>240</w>
       <h>440</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;.
+    <panel_attributes>lt=&lt;&lt;-
 &lt;&lt;optionally via analysis&gt;&gt;</panel_attributes>
     <additional_attributes>60;420;190;30</additional_attributes>
   </element>
