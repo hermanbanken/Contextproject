@@ -979,6 +979,18 @@ center:wheater</panel_attributes>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>30;30;30;90</additional_attributes>
   </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>190</x>
+      <y>590</y>
+      <w>240</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+&lt;&lt;optionally via analysis&gt;&gt;</panel_attributes>
+    <additional_attributes>60;420;190;30</additional_attributes>
+  </element>
   <group>
     <element>
       <type>com.umlet.element.Class</type>
