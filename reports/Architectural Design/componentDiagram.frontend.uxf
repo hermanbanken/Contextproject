@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.4">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.custom.SimpleComponent</type>
+    <coordinates>
+      <x>80</x>
+      <y>160</y>
+      <w>270</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;views&gt;&gt;
+Templater
+ 
+model &gt;&gt; template &gt;&gt; html</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Package</type>
+    <coordinates>
+      <x>20</x>
+      <y>120</y>
+      <w>710</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>JavaScript Front-end
+bg=</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Node</type>
+    <coordinates>
+      <x>90</x>
+      <y>260</y>
+      <w>110</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>center:Login form</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>300</x>
+      <y>70</y>
+      <w>50</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>320</x>
+      <y>180</y>
+      <w>110</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>30;30;90;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.SimpleComponent</type>
+    <coordinates>
+      <x>410</x>
+      <y>160</y>
+      <w>190</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Combiner</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>570</x>
+      <y>90</y>
+      <w>260</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+AJAX</panel_attributes>
+    <additional_attributes>30;100;240;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>570</x>
+      <y>150</y>
+      <w>260</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+AJAX</panel_attributes>
+    <additional_attributes>30;50;240;40</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>570</x>
+      <y>180</y>
+      <w>260</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+AJAX</panel_attributes>
+    <additional_attributes>30;30;240;80</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>570</x>
+      <y>190</y>
+      <w>260</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+AJAX</panel_attributes>
+    <additional_attributes>30;30;240;140</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Node</type>
+    <coordinates>
+      <x>810</x>
+      <y>90</y>
+      <w>160</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>center:&lt;&lt;External Source&gt;&gt;
+center:Google::Maps</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Node</type>
+    <coordinates>
+      <x>810</x>
+      <y>160</y>
+      <w>160</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>center:&lt;&lt;External Source&gt;&gt;
+center:Google::Places</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Node</type>
+    <coordinates>
+      <x>810</x>
+      <y>230</y>
+      <w>160</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>center:&lt;&lt;External Source&gt;&gt;
+center:booking.com</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.custom.Node</type>
+    <coordinates>
+      <x>810</x>
+      <y>300</y>
+      <w>160</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>center:&lt;&lt;Internal Source&gt;&gt;
+center:wheater</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Actor</type>
+    <coordinates>
+      <x>290</x>
+      <y>20</y>
+      <w>80</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+</diagram>
