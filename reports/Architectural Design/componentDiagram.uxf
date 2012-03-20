@@ -402,27 +402,14 @@ ORM::factory</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>50</x>
-      <y>900</y>
-      <w>150</w>
-      <h>94</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-&gt;&gt;
-models
-GET, POST</panel_attributes>
-    <additional_attributes>30;50;130;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>50</x>
-      <y>600</y>
-      <w>150</w>
-      <h>94</h>
+      <y>240</y>
+      <w>160</w>
+      <h>430</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
 login
 POST</panel_attributes>
-    <additional_attributes>130;50;30;50</additional_attributes>
+    <additional_attributes>130;410;50;410;50;30;140;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -449,14 +436,14 @@ POST</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>50</x>
-      <y>680</y>
-      <w>580</w>
-      <h>120</h>
+      <x>770</x>
+      <y>260</y>
+      <w>310</w>
+      <h>590</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;
 GET</panel_attributes>
-    <additional_attributes>30;50;480;50;560;100</additional_attributes>
+    <additional_attributes>290;30;290;80;130;140;130;570;30;550</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.Node</type>
@@ -858,16 +845,16 @@ center:booking.com</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>40</x>
-      <y>120</y>
-      <w>160</w>
-      <h>108</h>
+      <x>0</x>
+      <y>140</y>
+      <w>200</w>
+      <h>820</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-&gt;&gt;
 models
 AJAX
 GET, POST</panel_attributes>
-    <additional_attributes>140;50;30;50</additional_attributes>
+    <additional_attributes>180;30;70;30;70;800;180;800</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.SimpleComponent</type>
@@ -1009,19 +996,6 @@ AJAX</panel_attributes>
     </coordinates>
     <panel_attributes>center:Login form</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>40</x>
-      <y>220</y>
-      <w>170</w>
-      <h>94</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-login
-POST</panel_attributes>
-    <additional_attributes>30;50;150;50</additional_attributes>
   </element>
   <group>
     <element>
