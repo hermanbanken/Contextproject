@@ -1,0 +1,136 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{graphicx,wrapfig,hyperref}
+\usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry}
+\begin{document}
+
+\title{TI2800 Contextproject - My Cultural Heritage\\ Test- en implentatieplan}
+\author{Sjoerd van Bekhoven\\ Tim Eversdijk \\ Herman Blanken \\ Rutger Plak \and 4014774 \\ 4005562 \\ 4078624 \\ 1358375}
+
+\maketitle
+\setcounter{page}{0}
+\renewcommand*\contentsname{Inhoudsopgave}
+
+\thispagestyle{empty}
+\vspace{10cm}
+		\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=\textwidth]{../Artwork/cultuurapp-logo.png}
+			\end{figure}
+\clearpage
+
+\tableofcontents
+\clearpage
+
+\section{Introductie}
+Dit is het Test en Implementatie Plan van het systeem. Hier zal worden uitgelegd hoe het systeem ge\"mplementeerd wordt en hoe het systeem tijdens ontwikkelingsfase en daarna getest zal worden.
+
+	\subsection{Afkortingen}
+		\begin{tabular}{ l | l }
+			DB & Database \\
+			HTML & Hyper Text Markup Language \\
+			ext4 & Fourth Extended File System \\
+			PHP & Pre- Hypertext Processor \\
+			SQL & Structured Query Language \\
+			XML & Extended Markup Language\\
+			ORM & Object Relational Mapping\\
+		\end{tabular}
+
+\section{Requirements met MoSCoW}
+De requirements zijn niet allemaal even kritiek voor het systeem, daarom hebben we een ordening gemaakt met behulp van MoSCoW\footnote{http://nl.wikipedia.org/wiki/MoSCoW-methode}. De requirements die essentieel zijn vallen onder de "Must"-kop. Requirements die voorlopig niet haalbaar en essentieel zijn vallen onder de "Won’t"-kop. De koppen "Should" en "Could" zitten hier tussen in en geven respectievelijk aan dat het onderdeel er in moet komen wanneer de "Must" onderdelen zijn ge\"implementeerd en wanneer de "Should" onderdelen zijn ge\"implementeerd.
+
+	\subsection{Must}
+	\begin{itemize}
+		\item \textbf{Kaart- en overzichtsweergave.} De gebruiker zal de mogelijkheid hebben om monumenten in een lijst, of op een kaart van Google Maps, te bekijken. De monumenten worden als lijst, of als spelden op de kaart getoond. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt dit ook op de kaart getoond.
+		\item \textbf{Filteren monumenten.} De gebruiker zal op een eenvoudige wijze monumenten kunnen filteren met verschillende criteria. De gebruiker moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.
+		\item \textbf{Informatie weergeven.} De gebruiker zal op overzichtelijke en natuurlijke manier van informatie over het geselecteerde monument voorzien worden. De gebruiker moet nuttige informatie te zien krijgen. Ook moet hij informatie te zien krijgen die hem kunnen helpen bij het bezoeken van het monument.
+	\end{itemize}
+	
+	\subsection{Should}
+	\begin{itemize}
+		\item \textbf{Zoeken van relevante Flickr-foto's.} Via Flickr kunnen foto's worden opgehaald die gemaakt zijn door gebruikers. Vele hiervan hebben een geo-tag meegekregen. Foto's in een bepaalde radius tot het monument kunnen worden opgehaald aan de hand van deze geo-tag. Met behulp van het op een nader te bepalen manier van analyseren van omschrijvingen van de monumenten, zullen een aantal 'tags' meegegeven worden aan de Flickr-api, zodat de zoekresultaten kunnen worden verfijnd.
+		\item  \textbf{Completeren dataset.} Ongeveer 5000 van de 24.500 monumenten waarover het systeem beschikt, zijn niet gecategoriseerd. Het systeem zal typerende criteria per categorie benaderen door de monumenten die al wel zijn ingedeeld in een categorie te analyseren op basis van: 
+		\item  \textbf{Visuele analyse.} Door middel van ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke gebruik maakt van de plugin Image-Plot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
+		\item Een nader te bepalen manier van vergelijken van omschrijvingen. De overige monumenten zullen worden ingedeeld in een categorie door de informatie die bij deze monumenten hoort ook te analyseren op bovenstaande manier en deze te matchen met de reeds gevonden typerende criteria van de categorieen.
+		\item  \textbf{FourSquare.} Voor ieder van de 24.500 monumenten zal het systeem locaties aanmaken op FourSquare. Gebruikers en overige mensen kunnen inchecken bij deze locaties. Aan de hand van de hoeveelheid check-ins bij de locaties kan het systeem een mate van populariteit calculeren. Ook mensen die het systeem niet gebruiken kunnen inchecken, waardoor de data van het systeem automatisch wordt verreikt met informatie van mensen zonder dat zij hier actief aan meewerken.
+		\item  \textbf{Weersinformatie.} Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground\footnote{http://dutch.wunderground.com/weather/api/} waar de longitude en latitude van het monument aan mee zal worden gegeven.
+		\item  \textbf{Faciliteiten rond locatie.} Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorieën hij op de map wil zien verschijnen. De categorieën waaruit gekozen kan worden zijn nader te bepalen.
+		\item  \textbf{OpenID en OAuth}. Gebruikers kunnen inloggen met behulp van inlogsystemen van derden. De OpenID van Google en OAuth van Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een gebruiker geen extra gegevens hoeft te onthouden.
+		\item  \textbf{Locatie gebonden functies.} Wanneer de locatie van de gebruiker bekend is, kan een lijst getoond worden met monumenten in de buurt. Sociale functies zoals een FourSquare- en Tweet-knop worden dan ook getoond.
+		\item  \textbf{Toevoegen foto's.} De gebruiker extra foto’s laten toevoegen aan de database.
+		\item  \textbf{Favorieten.} De gebruiker kan hier makkelijk zijn favoriete monumenten opslaan om deze zo later makkelijk terug te vinden.
+	\end{itemize}
+	
+	\subsection{Could}
+	\begin{itemize}
+		\item  \textbf{Implementeren Thesaurus.} De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
+		\item  \textbf{Monumenten vergelijken} aan de hand van foto's, de gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ, welke gebruik maakt van de plugin ImagePlot. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
+		\item  \textbf{User-interactie.} Er zal worden bijgehouden wat voor interactie onze gebruikers met het systeem hebben. Met deze informatie zal het systeem zelf geupdate worden en de user zelf.
+		\item  \textbf{Het profieleren van gebruikers} van het systeem door middel van het analyseren van de User-interactie informatie.
+	\end{itemize}
+	
+	\subsection{Won't}
+	\begin{itemize}
+		\item  \textbf{Zoeken van relevante Flickr-foto's} met behulp van beeldinformatie, relevante foto’s van Flickr zouden ook gevonden kunnen worden door beeldinformatie te analyseren en te vergelijken. Dit ligt echter niet binnen het bereik omdat Flickr zoveel foto’s heeft dat dit technisch niet kunnen realiseren.
+	\end{itemize}
+	
+\section{Implementatie en tests}
+	Tijdens de implementatiefase zal Test Driven Design (TDD) worden toegepast. Het volgende schema wordt bij de ontwikkeling aangehouden:
+	\begin{itemize}
+		\item Er wordt besloten welke klasse of functie ontwikkeld gaat worden.
+		\item Er wordt een interface (prototype) gemaakt aan de hand van het Architectural Design.
+		\item Er worden tests geschreven voor de functies van de klasse.
+		\item De interface wordt ge\"implementeerd.
+		\item De tests worden uitgevoerd en de code wordt herschreven om te voldoen aan de tests.
+	\end{itemize}
+
+	\subsection{Volgorde voor het implementeren van de features}
+	Het implementeren van het systeem gebeurt per feature. Omdat sommige features afhankelijk zijn van andere features zullen deze in volgorde moeten worden ge\"implementeerd. Elke feature beslaat weer een aantal taken. Voor elke iteratie zal worden bepaald hoeveel features er worden geïmplementeerd, welke taken hiervoor voltooid moeten worden en wie deze taken gaat uitvoeren. 
+	
+	\begin{itemize}
+		\item Een factory per object type waaraan informatie kan worden opgevraagd uit en opgeslagen in de database. Zonder deze factory's kunnen de andere features niet worden geïmplementeerd daar deze gebruik maken van informatie in de database.
+		\item Kaarten en overzichtsweergave. Deze features zullen als eerste en door hun verwantschap synchroon worden ge\"implementeerd, omdat de rest van het systeem hier afhankelijk van is. Ook zal dit over het algemeen het eerste zijn wat onze gebruikers zullen zien.
+		\item Filteren, deze feature staat op twee omdat deze goed de feature met de kaarten- en overzichtsweergave aanvult. Ook hier is de rest van systeem afhankelijk van.
+		\item Informatie weergeven, deze feature volgt op de filteren feature. Ook is deze feature essentieel voor de rest van het systeem. Met deze feature is de basis van systeem af en kan er aan meer geavanceerde features begonnen worden.
+		\item Completeren data-set, deze feature zorgt ervoor dat de data completer wordt waardoor de vorige feature Informatie weergeven goed wordt aangevuld.
+	\end{itemize}
+	
+	\subsubsection{Iteraties}
+	Het implementeren van het systeem zal opgedeeld worden in vier perioden, waarbij een aantal stappen worden herhaald. De eerste iteratie begint op 30 maart en de laatste iteratie zal eindigen op 15 juni. Aan het begin van iedere iteratie wordt vastgesteld welke features zullen worden ge\"implementeerd, hoeveel uren er in ieder taak gaat zitten en wie welke taken zal implementeren. Deze informatie zal voor iedere iteratie worden vastgelegd in een document, zodat aan het eind van iedere iteratie kan worden gecontroleerd welke taken per feature zijn ge\"implementeerd en aan welke nog meer aandacht moet worden besteed.
+	
+	\subsubsection{Milestones}
+	\begin{itemize}
+		\item De eerste milestone zal bestaan uit een werkend systeem waarbij informatie uit de database wordt gehaald om monumenten op de kaart weer te geven of in overzichtsweergave te tonen, met een set selectiecriteria werkende.
+		\item Bij iedere iteratie beschreven in het iteratieplan worden eerst testcases geschreven. Wanneer aan een volledige testsuite bij een iteratie wordt voldaan, is een nieuwe volledige iteratie af. Deze iteraties leveren een werkend systeem. Per iteratie zijn er meerdere milestones, deze zijn als volgt:
+		\begin{itemize}
+			\item tests zijn af
+			\item alpha: \hspace{.2cm}alle features zijn ge\"implementeerd
+			\item beta: \hspace{.2cm} alle Unit Tests slagen
+			\item done: \hspace{.2cm} alle integratie- \& acceptatietests slagen
+		\end{itemize}
+	\end{itemize}
+
+	\subsection{Unit testen}
+	Losse Unit Tests zullen geschreven worden voor de implementatie van de ‘units’, de classes en functies in zowel de front-end en back-end. Het uitvoeren van deze tests gebeurt vrijwel continu tijdens het implementeren.
+	
+		\subsubsection{QUnit - voor front-end}
+		Met QUnit\footnote{http://docs.jquery.com/QUnit} worden unit tests geschreven voor de front-end in JavaScript. De tests worden tijdens de ontwikkeling uitgevoerd op het systeem van de programmeur en na het completeren van de ‘unit’ wordt deze ook op de verschillende systemen en browsers getest.
+		\subsubsection{PHPUnit - voor back-end}
+		Met PHPUnit\footnote{https://github.com/sebastianbergmann/phpunit} worden unit tests geschreven voor de back-end die op de server draait. Deze Unit Tests worden uitgevoerd tijdens de implementatie en aan de hand van de uitslag van de tests zal de code worden uitgebreid of aangepast.
+		
+		\begin{itemize}
+			\item Alle klassen die in de ORM voorkomen zullen met behulp van PHPUnit getest worden. Voor iedere functie wordt vooraf een unit-test geschreven. 
+			\item Harvesters zullen aan de hand van Unit tests worden getest. Er zal getest worden of de functies aanroepbaar zijn en goede output genereren.
+			\item De users component bevat login functies die aan de hand van unit tests op correctheid worden getest.
+		\end{itemize}
+		
+		\subsubsection{Integratietesten}
+		Wanneer een ‘unit’ is voltooid zal telkens een integratie test worden uitgevoerd. De losse componenten worden zo ook tezamen met de andere componenten getest. Voor het eind van de iteratie moet de integratie test slagen, anders wordt alsnog de code ge-updated. De tests op de back-end worden wederom met behulp van PHPUnit geschreven, daar de losse componenten tezamen ook als gezamenlijke unit gezien kunnen worden en als zodanig kunnen worden getest.
+		\subsubsection{Acceptatietesten}
+		Het systeem zal getest worden door de Use Cases en andere taken die een user normaal doet na te bootsen met het programma Windmill\footnote{http://www.getwindmill.com/}. Windmill werkt met javascript en python en kan interactie met een website opnemen en nabootsen.
+		
+\section{Risico analyse}
+Het risico van Test Driven Development is dat wanneer alle test cases slagen er wordt aangenomen dat er geen fouten in de code zitten. Dit kan ertoe leiden dat grove fouten die niet door de testcases worden gedetecteerd live gaan.
+
+Met het gebruik van een database en externe sources is het lastig features als categorisering of data-verzameling te testen. Deze features zijn afhankelijk van data die in een unit test niet kunnen worden nagebootst. Het nabootsen van deze data en/of informatie dekt niet altijd de lading.
+
+\end{document}
