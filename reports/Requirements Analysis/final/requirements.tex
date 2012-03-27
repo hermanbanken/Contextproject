@@ -73,7 +73,7 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
             \item Op de detailpagina wordt de weersverwachting rond het monument getoond.
             \end{itemize}
                 
-            \subsection{Faciliteiten rond locatie}
+            \subsection{Faciliteiten rond monument-locatie}
             Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de kaart wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
             \begin{itemize}
             \item Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/} kan ophalen.
@@ -85,12 +85,9 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
                 
             \subsection{Implementeren thesaurus}
             De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
-        
+
             \subsection{Kaarten}
             De gebruiker zal de mogelijkheid hebben om monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} te bekijken. De monumenten worden als spelden op de kaart geplaatst. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt dit ook op de kaart getoond.
-            
-            \subsection{Locatie gebonden functies}
-            Wanneer de locatie van de gebruiker bekend is, kan een lijst getoond worden met monumenten in de buurt. Sociale functies zoals een FourSquare- en Tweet-knop worden dan ook getoond.
             
             \subsection{OpenID en Facebook}
             Gebruikers kunnen inloggen met behulp van inlogsystemen van derden. OpenID en Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een gebruiker geen extra gegevens hoeft te onthouden.
