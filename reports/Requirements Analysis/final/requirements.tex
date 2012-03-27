@@ -76,13 +76,21 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
             \subsection{Faciliteiten rond locatie}
             Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de kaart wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
             \begin{itemize}
-            \item Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/} kan ophalen.
-            \item Op de detailpagina kan door de gebruiker worden aangeven welke categorien faciliteiten getoond moeten worden op het kaartje.
+            \item Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places kan ophalen.
+            \item Op de detailpagina worden faciliteiten getoond op een kaartje van de omgeving rondom het monument.
+	  \item  Op de overzichtspagina worden faciliteiten getoond. De toerist kan aangeven welke categorie\"en faciliteiten getoond moeten worden op het kaartje.
             \end{itemize}
                 
             \subsection{Monumenten vergelijken aan de hand van foto's}
-            De gebruiker zal de mogelijkheid hebben om, als de gebruiker een bepaald monument interessant of mooi vindt, meerdere visueel gelijkende monumenten te vinden. Het systeem zal alle monumenten met elkaar vergelijken met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}, welke gebruik maakt van de plugin ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}. Hiermee kunnen verbanden worden gevonden tussen verschillende afbeeldingen en ook tussen verschillende groepen afbeeldingen.
-                
+	  \begin{itemize}
+		\item Er is een lokaal systeem dat nog niet geanalyseerde foto's kan ophalen van de webserver en deze kan analyseren met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}.
+		\item Het lokale systeem kan de resultaten van de analyse uploaden naar de webserver.
+		\item De webserver kan zoeken in de resultaten van de analyse om bij \'e\'en afbeelding andere afbeeldingen te vinden die gelijkend zijn.
+		\item Het lokale systeem kan de resultaten van de analyse visueel uitzetten met behulp van de Java-tool  ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
+		\item Vanuit het lokale systeem zijn nog niet gecategoriseerde monumenten snel handmatig in te delen in categorie\"en door ze te groeperen aan de hand van de resultaten van de visuele analyse.
+		\item De toerist kan onderaan de detailpagina visueel vergelijkbare monumenten bekijken.
+	  \end{itemize}
+	                
             \subsection{Implementeren thesaurus}
             De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
 \begin{itemize}
@@ -310,6 +318,7 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
 		front-end & de kant van het systeem die de gebruiker ziet.\\
 		geo-tag & aan een foto gekoppelde locatiegegevens.\\
 		user-interactie-informatie& informatie vergaard aan de hand van acties van een gebruiker.\\
+		venue & locatie op Foursquare\\
 		Wikimedia Commons& website waar miljoenen multimedia bestanden staan verzameld, \\
 			& deze zijn door iedereen vrij te gebruiken.\\
 		\end{tabular}
