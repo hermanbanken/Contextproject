@@ -44,58 +44,58 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
 		\clearpage
 		\section{Functional requirements}
             \subsection{Zoeken van relevante Flickr-foto's}
-            \begin{itemize}
+            \begin{enumerate}
                 \item Er is een systeemcomponent dat live foto's kan ophalen van Flickr\footnote{http://www.flickr.com/services/api/} aan de hand van de geografische locatie, tags en zoektermen.
                 \item De website toont foto's uit de buurt van het monument van Flickr wanneer een toerist de detailpagina van een monument bezoekt. Deze foto's worden opgehaald bij het bezoeken van de detailpagina en alleen de url van de foto's worden opgeslagen.
-            \end{itemize}
+            \end{enumerate}
             
             \subsection{Completeren dataset}
-            \begin{itemize}
+            \begin{enumerate}
                 \item Foto's kunnen offline worden geanalyseerd door middel van visuele analyse. Hiervoor wordt ImageJ\footnote{http://rsbweb.nih.gov/ij/} gebruikt. De resultaten van de analyse worden naar de server ge-upload.
                 \item Tekst kan online worden geanalyseerd met Naive Bayesiaanse filters. Indien er een dienst wordt gevonden die dit kan doen (uClassify.com is een kandidaat) dan wordt deze gebruikt, zo niet dan wordt dit ge\"implementeerd.
                 \item Aan de hand van de resultaten van de visuele en textuele analyse worden monumenten gekoppeld aan bestaande categorie\"en, namelijk die van andere monumenten.
                 \item De toerist kan zoeken naar vergelijkbare monumenten. De resultaten van de visuele en textuele analyse tellen mee in de volgorde van de resultaten. Ook de locatie, titel en categorie en gebruikers-interactie-informatie speelt mee.
-            \end{itemize}
+            \end{enumerate}
     
             \subsection{Foursquare}
-            \begin{itemize}
+            \begin{enumerate}
                 \item Het systeem kan controleren of er voor een monument een FourSquare 'venue' (de naam van een locatie op FourSquare) bestaat.
                 \item Het systeem kan een FourSquare venue aanmaken indien dit voor een monument nog niet bestaat.
                 \item De website toont het aantal check-ins bij de venue.
                 \item De website slaat bij het bezoeken van de detailpagina van een monument het meest recente aantal check-ins op FourSquare op.
                 \item Een beheerder kan voor een hele set toegevoegde monumenten FourSquare locaties aan laten maken en check-ins laten controleren. Dit kan ook ingepland worden.
-            \end{itemize}
+            \end{enumerate}
                 
             \subsection{Weersinformatie}
             Op de detail pagina zal een weersverwachting staan van de omgeving rond de locatie van het betreffende monument. Deze weersverwachting zal worden opgehaald van Wunderground waar de longitude en latitude van het monument aan mee zal worden gegeven.
-            \begin{itemize}
+            \begin{enumerate}
             \item Er is een systeemcomponent welke live door middel van het meegeven van de longitude en latitude van een locatie de weersverwachting voor deze locatie kan ophalen van Wunderground\footnote{http://dutch.wunderground.com/weather/api/}.
             \item Op de detailpagina wordt de weersverwachting rond het monument getoond.
-            \end{itemize}
+            \end{enumerate}
                 
             \subsection{Faciliteiten rond monument-locatie}
             Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De gebruiker kan aangeven wat voor categorie\"en hij op de kaart wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
-            \begin{itemize}
+            \begin{enumerate}
             \item Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places kan ophalen.
             \item Op de detailpagina worden faciliteiten getoond op een kaartje van de omgeving rondom het monument.
 	  \item  Op de overzichtspagina worden faciliteiten getoond. De toerist kan aangeven welke categorie\"en faciliteiten getoond moeten worden op het kaartje.
-            \end{itemize}
+            \end{enumerate}
                 
             \subsection{Monumenten vergelijken aan de hand van foto's}
-	  \begin{itemize}
+	  \begin{enumerate}
 		\item Er is een lokaal systeem dat nog niet geanalyseerde foto's kan ophalen van de webserver en deze kan analyseren met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}.
 		\item Het lokale systeem kan de resultaten van de analyse uploaden naar de webserver.
 		\item De webserver kan zoeken in de resultaten van de analyse om bij \'e\'en afbeelding andere afbeeldingen te vinden die gelijkend zijn.
 		\item Het lokale systeem kan de resultaten van de analyse visueel uitzetten met behulp van de Java-tool  ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
 		\item Vanuit het lokale systeem zijn nog niet gecategoriseerde monumenten snel handmatig in te delen in categorie\"en door ze te groeperen aan de hand van de resultaten van de visuele analyse.
 		\item De toerist kan onderaan de detailpagina visueel vergelijkbare monumenten bekijken.
-	  \end{itemize}
+	  \end{enumerate}
 	                
             \subsection{Implementeren thesaurus}
             De nader te bepalen methode van tekstuele analyse wordt nauwkeuriger door het gebruik van een thesaurus, bijvoorbeeld Cornetto\footnote{http://semanticweb.cs.vu.nl/europeana/browse/list\_graph?graph=http://purl.org/vocabularies/cornetto/cornetto-wn30.ttl.gz}. Tekstueel niet gelijkende woorden kunnen zeer relevant zijn. Zonder thesaurus kunnen deze links niet worden gelegd, met thesaurus kunnen hierdoor teksten op een hoger niveau worden geanalyseerd en kan er nauwkeurigere informatie worden gegeven door het systeem.
-\begin{itemize}
+\begin{enumerate}
 \item Er zal een systeem component zijn welke links kan leggen tussen woorden welke textueel niet gelijkend zijn maar toch erg relevant. Een woord zal worden meegegeven aan dit component en mocht deze bepaalde links hebben opgeslagen met dit woord een lijstje relevante woorden terug geven.
-\end{itemize}
+\end{enumerate}
         
             \subsection{Kaarten}
 			De gebruiker moet monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} kunnen bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de gebruiker ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
@@ -119,12 +119,12 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
 			
             \subsection{Inloggen}
             Gebruikers kunnen inloggen met behulp van inlogsystemen van derden. OpenID en Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een gebruiker geen extra gegevens hoeft te onthouden.
-\begin{itemize}
+\begin{enumerate}
 \item Touristen kunnen op het systeem inloggen via hun Facebook account. Dit gebeurd door de facebook gebruikersnaam en wachtwoord naar de api van facebook te sturen.
 \item Touristen kunnen op het systeem inloggen via hun OpenID account. Dit gebeurd door de OpenID gebruikersnaam en wachtwoord naar de api van OpenID te sturen.
 \item Touristen kunnen een eigen cultuurapp account aanmaken op het systeem door hun email adres en een wachtwoord in te vullen.
 \item Toeristen kunnen op het systeem inloggen met hun cultuurapp account. Dit gebeurd door de cultuurapp account naam en wachtwoord te verifieren door het systeem.
-\end{itemize}
+\end{enumerate}
 		
 		\clearpage
 		\section{Nonfunctional requirements}
