@@ -98,8 +98,25 @@ Het systeem zal gebruikers op een aantrekkelijke manier van zo nuttig mogelijke 
 \end{itemize}
         
             \subsection{Kaarten}
-            De gebruiker zal de mogelijkheid hebben om monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} te bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de gebruiker ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
-            
+			De gebruiker moet monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} kunnen bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de gebruiker ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de gebruiker wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
+
+			\subsection{Overzichtsweergave}
+			De gebruiker moet monumenten in een overzichtsweergave kunnen bekijken. De monumenten worden als rijen getoond informatie getoond. Hierin staat een thumbnail van het monument, de titel en een korte beschrijving. Wanneer de gebruiker op een rij klikt komt hij op de detailpagina.
+			Aan de hand van de door de gebruiker ingevoerde selectiecriteria wordt een set monumenten geselecteerd.  Beschikbare sorteercriteria voor de lijst monumenten:
+			\begin{enumerate}
+			\item Afstand tot  locatie
+			\begin{itemize}
+			\item Afstand tot huidige locatie (indien beschikbaar)
+			\item Afstand tot door de gebruiker gespecificeerde locatie
+			\end{itemize}
+			\item Naam
+			\item Populariteit
+			\begin{itemize}
+			\item De populariteit van een monument wordt berekend aan de hand van het aantal Foursquare checkins, aantal maal bekeken op de website en het aantal maal gefavoriet. 
+			\end{itemize}
+			\item Jaartal
+			\end{enumerate}
+			
             \subsection{Inloggen}
             Gebruikers kunnen inloggen met behulp van inlogsystemen van derden. OpenID en Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een gebruiker geen extra gegevens hoeft te onthouden.
 \begin{itemize}
