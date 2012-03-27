@@ -96,6 +96,14 @@ Het systeem zal toeristen op een aantrekkelijke manier van zo nuttig mogelijke i
 \begin{enumerate}
 \item Er zal een systeem component zijn welke links kan leggen tussen woorden welke textueel niet gelijkend zijn maar toch erg relevant. Een woord zal worden meegegeven aan dit component en mocht deze bepaalde links hebben opgeslagen met dit woord een lijstje relevante woorden terug geven.
 \end{enumerate}
+
+	\subsection{Monumenten filteren}
+	\begin{enumerate}
+		\item Toeristen kunnen monumenten filteren op aftand tot hun huidige locatie. De toerist geeft een bepaalde afstand aan waardoor alle monumenten die buiten deze aftand tot de huidige locatie weg gefilterd worden. Deze filter methode is alleen toegankelijk wanneer het opvragen van de huidige locatie door het systeem is geslaagd.
+		\item Toeristen kunnen monumenten filteren op afstand tot een opgegeven locatie. De toerist geeft een locatie op in de vorm van een adres en geeft vervolgens een bepaalde afstand aan. Alle monumenten buiten deze afstand tot het adres worden weg gefilterd.
+		\item Toeristen kunnen monumenten filteren op naam. De toerist zal een tekst opgeven waardoor vervolgens alleen de monumenten overblijven waar deze tekst volledig of deels voorkomt in de monument naam. Deze monumenten zullen gesorteerd worden op textueele relevantie.
+		\item Toeristen kunnen monumenten filteren op Populariteit. De toerist geeft een bepaald populariteits niveau op en alle monumenten welke hier buitenvallen worden weg gefilterd. De overgebleven monumenten worden gesorteerd op populariteit mits er niet gefilterd word op naam. 
+	\end{enumerate}
         
             \subsection{Kaarten}
 			De toerist moet monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} kunnen bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de toerist ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de toerist wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
