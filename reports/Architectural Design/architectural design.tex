@@ -104,7 +104,7 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 				\caption{Component Diagram Analysis \label{componentdiagramanalysis}}
 				\end{figure}
 			\item Harvesters (zie figuur \ref{componentdiagramharvesters}) $\Rightarrow$
-				\begin{itemize}}
+				\begin{itemize}
 					\item Flickr-harvester $\Rightarrow$ datacommunicatie met Flickr.
 					\item 4SQ-harvester $\Rightarrow$ datacommunicatie met Foursquare.
 					\item Twitter-harvester $\Rightarrow$ datacommunicatie met Twitter.
@@ -154,7 +154,7 @@ Soorten actoren:
 		\item Anonieme gebruiker
 		\item Ingelogde gebruikers
 	\end{itemize}
-	\\
+
 Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen, anonieme gebruikers kunnen dit niet. Bij het toevoegen van data wordt gecontroleerd of er een gebruiker is ingelogd, zo niet dan lukt het toevoegen niet en zal de gebruiker eerst worden gevraagd in te loggen via een van de vele beschreven authenticatie providers.
 
 	\subsection{Concurrency}
@@ -182,7 +182,7 @@ Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen,
 		\subsubsection{Front-end}
 		\textit{Javascript (figuur \ref{componentdiagramfrontend}, pagina \pageref{componentdiagramfrontend})} \\
 		Mocht javascript bij de client niet werken werkt onze hele front-end niet. Deze kan dan namelijk niet communiceren met onze back-end. Het is dus erg essentieel dat javascript wel werkt bij de client. Dit is over het algemeen wel het geval.
-		\subsubsection{Java / Compiled back-end} \\
+		\subsubsection{Java / Compiled back-end}
 		\textit{Image-processing (PC-Processing Unit) (figuur \ref{componentdiagramprocessing}, pagina \pageref{componentdiagramprocessing})} \\
 		Visuele kenmerken plaatjes construeren. Dit is geen kritiek proces. Om de zoveel tijd zal er offline een analyse gemaakt worden van images en aan het systeem worden toegevoegd. Dit systeem kan dus niet uitvallen omdat het niet standaard draait.	
 	
