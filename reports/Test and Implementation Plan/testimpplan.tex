@@ -43,9 +43,9 @@ Rutger Plak \and 4014774 \\
 \subsection{Must} 
 \begin{itemize}
 	\item \textbf{Kaart} zie de requirements bij sectie 3.1.1. 
-	\item \textbf{Lijstsweergave} zie de requirements bij sectie 3.1.2. 
+	\item \textbf{Lijstweergave} zie de requirements bij sectie 3.1.2. 
 	\item \textbf{Detailpagina} zie de requirements bij sectie 3.1.3. 
-	\item \textbf{Filtering} zie de requirements bij sectie 3.2. 
+	\item \textbf{filteren en zoeken} zie de requirements bij sectie 3.2. 
 	\item \textbf{Sortering} zie de requirements bij sectie 3.3. 
 \end{itemize}
 \subsection{Should} 
@@ -88,9 +88,9 @@ Rutger Plak \and 4014774 \\
 	\item \textbf{Iteratie 1}
 		\begin{itemize}
 			\item Een factory per object type waaraan informatie kan worden opgevraagd uit en opgeslagen in de database. Zonder deze factory's kunnen de andere features niet worden geïmplementeerd doordat deze gebruik maken van informatie in de database. 
-			\item \textbf{Filtering} zie de requirements bij sectie 3.2. (\emph{behalve requirement \#16})
+			\item \textbf{filteren en zoeken} zie de requirements bij sectie 3.2. (\emph{behalve requirement \#16})
 			\item \textbf{Kaart} zie de requirements bij sectie 3.1.1. 
-			\item \textbf{Sortering} zie de requirements bij sectie 3.3. 
+			\item \textbf{Sortering} zie de requirements bij sectie 3.3. (\emph{behalve requirement \#20})
 			\item \textbf{Lijstsweergave} zie de requirements bij sectie 3.1.2. 
 			\item \textbf{Detailpagina} zie de requirements bij sectie 3.1.3. 
 
@@ -114,6 +114,7 @@ Rutger Plak \and 4014774 \\
 			\item \textbf{Zoeken relevante Flickr-foto's} zie de requirements bij sectie 3.8.
 			\item \textbf{Favorieten toevoegen} zie de requirements bij sectie 3.11.
 			\item \textbf{Populariteit} zie de requirements bij sectie 3.18
+			\item requirement \#16
 			\item \textbf{Foto's toevoegen} zie de requirements bij sectie 3.10.
     			\item \textbf{Gebruikers interactie} zie de requirements bij sectie 3.12.
 		\end{itemize}
@@ -127,17 +128,9 @@ Rutger Plak \and 4014774 \\
 		\end{itemize}
 \end{itemize}
 
-\subsubsection{Milestones} 
-\begin{itemize}
-	\item De eerste milestone zal bestaan uit een werkend systeem waarbij informatie uit de database wordt gehaald om monumenten op de kaart weer te geven of in overzichtsweergave te tonen, met een set selectiecriteria werkende. 
-	\item Bij iedere iteratie beschreven in het iteratieplan worden eerst testcases geschreven. Wanneer aan een volledige testsuite bij een iteratie wordt voldaan, is een nieuwe volledige iteratie af. Deze iteraties leveren een werkend systeem. Per iteratie zijn er meerdere milestones, deze zijn als volgt: 
-	\begin{itemize}
-		\item tests zijn af 
-		\item alpha: \hspace{.2cm}alle features zijn ge\"implementeerd 
-		\item beta: \hspace{.2cm} alle Unit Tests slagen 
-		\item done: \hspace{.2cm} alle integratie- \& acceptatietests slagen 
-	\end{itemize}
-\end{itemize}
+\subsubsection{Milestones}
+De CultuurApp wordt dermate snel ontwikkeld dat er een grote milestone kan worden aangegeven: het systeem is af. Er is over gesproken meerdere kleinere milestones te maken maar de verandering zijn dan te klein om als milestone aan te merken.
+
 \subsection{Unit testen} Losse Unit Tests zullen geschreven worden voor de implementatie van de ‘units’, de classes en functies in zowel de front-end en back-end. Het uitvoeren van deze tests gebeurt vrijwel continu tijdens het implementeren. 
 \subsubsection{QUnit - voor front-end} Met QUnit\footnote{http://docs.jquery.com/QUnit} worden unit tests geschreven voor de front-end in JavaScript. De tests worden tijdens de ontwikkeling uitgevoerd op het systeem van de programmeur en na het completeren van de ‘unit’ wordt deze ook op de verschillende systemen en browsers getest. 
 \subsubsection{PHPUnit - voor back-end} Met PHPUnit\footnote{https://github.com/sebastianbergmann/phpunit} worden unit tests geschreven voor de back-end die op de server draait. Deze Unit Tests worden uitgevoerd tijdens de implementatie en aan de hand van de uitslag van de tests zal de code worden uitgebreid of aangepast. 
