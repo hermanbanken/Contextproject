@@ -18,10 +18,8 @@
 \newcounter{rreqno}
 \setcounter{rreqno}{0}
 \newcommand{\rreq}[1]{\refstepcounter{rreqno}\label{#1}}
-\newcommand{\reqitem}[1]{\rreq{#1}\item[(Req \therreqno.)]}
-\newcommand{\reqref}[1]{
-	requirement \ref{#1}
-}
+\newcommand{\reqitem}[1]{\rreq{#1}\item[(req \therreqno)]}
+\newcommand{\reqref}[1]{requirement \ref{#1}}
 
 \begin{document}
 
@@ -68,124 +66,126 @@ Het systeem zal toeristen op een aantrekkelijke manier van zo nuttig mogelijke i
 \rsection{Functional requirements}
 \rsubsection{Zoeken van relevante Flickr-foto's}
 \begin{enumerate}
-\item Er is een systeemcomponent dat live foto's kan ophalen van Flickr\footnote{http://www.flickr.com/services/api/} aan de hand van de geografische locatie, tags en zoektermen.
-\item De website toont foto's uit de buurt van het monument van Flickr wanneer een toerist de detailpagina van een monument bezoekt. Deze foto's worden opgehaald bij het bezoeken van de detailpagina en alleen de url van de foto's worden opgeslagen.
+	\reqitem{harvest-flickr} Er is een systeemcomponent dat live foto's kan ophalen van Flickr\footnote{http://www.flickr.com/services/api/} aan de hand van de geografische locatie, tags en zoektermen.
+	\reqitem{detail-flickr} De website toont foto's uit de buurt van het monument van Flickr wanneer een toerist de detailpagina van een monument bezoekt. Deze foto's worden opgehaald bij het bezoeken van de detailpagina en alleen de url van de foto's worden opgeslagen.
 \end{enumerate}
             
 \rsubsection{Completeren dataset}
 \begin{enumerate}
-\item Foto's kunnen offline worden geanalyseerd door middel van visuele analyse. Hiervoor wordt ImageJ\footnote{http://rsbweb.nih.gov/ij/} gebruikt. De resultaten van de analyse worden naar de server ge-upload.
- \item Tekst kan online worden geanalyseerd met Naive Bayesiaanse filters. Indien er een dienst wordt gevonden die dit kan doen (uClassify.com is een kandidaat) dan wordt deze gebruikt, zo niet dan wordt dit ge\"implementeerd.
-\item Aan de hand van de resultaten van de visuele en textuele analyse worden monumenten gekoppeld aan bestaande categorie\"en, namelijk die van andere monumenten.
-\item De toerist kan zoeken naar vergelijkbare monumenten. De resultaten van de visuele en textuele analyse tellen mee in de volgorde van de resultaten. Ook de locatie, titel en categorie en gebruikers-interactie-informatie speelt mee.
+	\reqitem{analyse-offline-images} Foto's kunnen offline worden geanalyseerd door middel van visuele analyse. Hiervoor wordt ImageJ\footnote{http://rsbweb.nih.gov/ij/} gebruikt. De resultaten van de analyse worden naar de server ge-upload. Zie ook \reqref{analyse-offline-fetch} en \reqref{analyse-offline-push}.
+ 	\reqitem{analyse-online-text} Tekst kan online worden geanalyseerd met Naive Bayesiaanse filters. Indien er een dienst wordt gevonden die dit kan doen (uClassify.com is een kandidaat) dan wordt deze gebruikt, zo niet dan wordt dit ge\"implementeerd.
+	\reqitem{analyse-coupling} Aan de hand van de resultaten van de visuele en textuele analyse worden monumenten gekoppeld aan bestaande categorie\"en, namelijk die van andere monumenten uit de data-set. Zie ook \reqref{analyse-offline-categorize}.
+	\reqitem{search-analyse} De toerist kan zoeken naar 'aanbevolen' (vergelijkbare) monumenten. De resultaten van de visuele en textuele analyse tellen mee in de sortering van de resultaten. Ook de locatie, titel en categorie en gebruikers-interactie-informatie speelt mee. Zie ook \reqref{analyse-online-use} en \reqref{overview-gps}.
 \end{enumerate}
     
 \rsubsection{Foursquare}
 \begin{enumerate}
-\item Het systeem kan controleren of er voor een monument een FourSquare 'venue' (de naam van een locatie op FourSquare) bestaat.
-\item Het systeem kan een FourSquare venue aanmaken indien dit voor een monument nog niet bestaat.
-\item \label{4sq-checkins} De website toont het aantal check-ins bij de venue (zie ook \ref{views-checkins}).
-\item De website slaat bij het bezoeken van de detailpagina van een monument het meest recente aantal check-ins op FourSquare op.
-\item Een beheerder kan voor een hele set toegevoegde monumenten FourSquare locaties aan laten maken en check-ins laten controleren. Dit kan ook ingepland worden.
+	\reqitem{4sq-check} Het systeem kan controleren of er voor een monument een FourSquare 'venue' (de naam van een locatie op FourSquare) bestaat.
+	\reqitem{4sq-make} Het systeem kan een FourSquare venue aanmaken indien dit voor een monument nog niet bestaat.
+	\reqitem{4sq-checkins} De website toont het aantal check-ins bij de venue (zie ook \reqref{views-checkins}).
+	\reqitem{detail-4sq} De website slaat bij het bezoeken van de detailpagina van een monument het meest recente aantal check-ins op FourSquare op.
+	\reqitem{harvest-4sq} Een beheerder kan voor een hele set toegevoegde monumenten FourSquare locaties aan laten maken en check-ins laten controleren. Dit kan ook ingepland worden.
 \end{enumerate}
                 
 \rsubsection{Weersinformatie}
 \begin{enumerate}
-\item Er is een systeemcomponent welke live door middel van het meegeven van de longitude en latitude van een locatie de weersverwachting voor deze locatie kan ophalen van Wunderground\footnote{http://dutch.wunderground.com/weather/api/}.
-\item Op de detailpagina wordt de weersverwachting rond het monument getoond.
+	\reqitem{harvest-weather} Er is een systeemcomponent welke live door middel van het meegeven van de longitude en latitude van een locatie de weersverwachting voor deze locatie kan ophalen van Wunderground\footnote{http://dutch.wunderground.com/weather/api/}. 
+	\reqitem{harvest-detail-weather} Op de detailpagina wordt de weersverwachting rond het monument getoond. Zie ook \reqref{detail-weather}.
 \end{enumerate}
                 
 \rsubsection{Faciliteiten rond monument-locatie}
 Op de detail pagina zal de optie zijn faciliteiten in de buurt van het betreffende monument op het kaartje te weergeven. Deze faciliteiten worden opgevraagd bij Google Places\footnote{http://code.google.com/apis/maps/documentation/places/}. Hier zal weer de longitude en de latitude van het monument aan worden meegegeven. De toerist kan aangeven wat voor categorie\"en hij op de kaart wil zien verschijnen. De categorie\"en waaruit gekozen kan worden zijn nader te bepalen.
 \begin{enumerate}
-\item Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places kan ophalen.
-\item Op de detailpagina worden faciliteiten getoond op een kaartje van de omgeving rondom het monument.
-	  \item  Op de overzichtspagina worden faciliteiten getoond. De toerist kan aangeven welke categorie\"en faciliteiten getoond moeten worden op het kaartje.
+	\reqitem{harvest-places} Er is een systeemcomponent welke door middel van het meegeven van een longitude en latitude van een locatie en een faciliteit categorie faciliteiten in de buurt van deze locatie bij Google Places kan ophalen.
+	\reqitem{detail-places} Op de detailpagina worden faciliteiten getoond op een kaartje van de omgeving rondom het monument.
+	\reqitem{overview-places}  Op de overzichtspagina worden faciliteiten getoond. De toerist kan aangeven welke categorie\"en faciliteiten getoond moeten worden op het kaartje.
 \end{enumerate}
                 
 \rsubsection{Monumenten vergelijken aan de hand van foto's}
 \begin{enumerate}
-		\item Er is een lokaal systeem dat nog niet geanalyseerde foto's kan ophalen van de webserver en deze kan analyseren met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}.
-		\item Het lokale systeem kan de resultaten van de analyse uploaden naar de webserver.
-		\item De webserver kan zoeken in de resultaten van de analyse om bij \'e\'en afbeelding andere afbeeldingen te vinden die gelijkend zijn.
-		\item Het lokale systeem kan de resultaten van de analyse visueel uitzetten met behulp van de Java-tool  ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
-		\item Vanuit het lokale systeem zijn nog niet gecategoriseerde monumenten snel handmatig in te delen in categorie\"en door ze te groeperen aan de hand van de resultaten van de visuele analyse.
-		\item De toerist kan onderaan de detailpagina visueel vergelijkbare monumenten bekijken.
+		\reqitem{analyse-offline-fetch} Er is een lokaal systeem dat nog niet geanalyseerde foto's kan ophalen van de webserver en deze kan analyseren met behulp van de Java-tool ImageJ\footnote{http://rsbweb.nih.gov/ij/}.
+		\reqitem{analyse-offline-push} Het lokale systeem kan de resultaten van de analyse uploaden naar de webserver.
+		\reqitem{analyse-online-use} De webserver kan zoeken in de resultaten van de analyse om bij \'e\'en afbeelding andere afbeeldingen te vinden die gelijkend zijn.
+		\reqitem{analyse-offline-visualize} Het lokale systeem kan de resultaten van de analyse visueel uitzetten met behulp van de Java-tool  ImagePlot\footnote{http://lab.softwarestudies.com/p/imageplot.html}.
+		\reqitem{analyse-offline-categorize} Vanuit het lokale systeem zijn nog niet gecategoriseerde monumenten snel handmatig in te delen in categorie\"en door ze te groeperen aan de hand van de resultaten van de visuele analyse.
+		\reqitem{detail-analyse} De toerist kan onderaan de detailpagina visueel vergelijkbare monumenten bekijken.
 \end{enumerate}
 	                
 \rsubsection{Implementeren thesaurus}
 \begin{enumerate}
-\item Het systeem bevat een component welke een Thesaurus bevat, bijvoorbeeld Cornetto.
-\item Wanneer een component in het systeem de Thesaurus aanroept en een (lijst van) woord(en) geeft, zal een lijst van relevante woorden worden teruggegeven.
+	\reqitem{thesau} Het systeem bevat een component welke een Thesaurus bevat, bijvoorbeeld Cornetto.
+	\reqitem{thesau-getter} Wanneer een component in het systeem de Thesaurus aanroept en een (lijst van) woord(en) geeft, zal een lijst van relevante woorden worden teruggegeven.
 \end{enumerate}
 
 	\rsubsection{Filtering}
 	\label{filtering}
 	\begin{enumerate}
-		\item Toeristen kunnen monumenten filteren op een bepaalde afstand van een zoeklocatie\footnote{\label{zoeklocatie}De zoeklocatie is een tekstvak op de webpagina waar een locatie in de vorm van een adres of door google maps herkende plaatsaanduiding kan worden ingegeven. Deze kan eventueel automatisch worden ingevuld met de locatie die de browser aanbiedt.}.
-		\item Toeristen kunnen monumenten filteren op trefwoorden.	
-\item Toeristen kunnen monumenten filteren op bouwjaar.
-\item Toeristen kunnen monumenten filteren op de categorie\"en uit de dataset.
-		\item Toeristen kunnen de lengte van de lijst met monumenten limiteren. De monumenten met de hoogste sortering blijven dan staan.
+		\reqitem{filter-distance} Toeristen kunnen monumenten filteren op een bepaalde afstand van een zoeklocatie\footnote{\label{zoeklocatie}De zoeklocatie is een tekstvak op de webpagina waar een locatie in de vorm van een adres of door google maps herkende plaatsaanduiding kan worden ingegeven. Deze kan eventueel automatisch worden ingevuld met de locatie die de browser aanbiedt.}.
+		\reqitem{filter-keywords} Toeristen kunnen monumenten filteren op trefwoorden.	
+		\reqitem{filter-year} Toeristen kunnen monumenten filteren op bouwjaar.
+		\reqitem{filter-category} Toeristen kunnen monumenten filteren op de categorie\"en uit de dataset.
+		\reqitem{filter-limit} Toeristen kunnen de lengte van de lijst met monumenten limiteren. De monumenten met de hoogste sortering blijven dan staan.
 	\end{enumerate}
 		
 \rsubsection{Sortering}
 \label{sortering}
 \begin{enumerate}
-\item Toeristen kunnen monumenten sorteren op populariteit.
-	\item Toeristen kunnen monumenten sorteren op afstand vanaf de gegeven zoeklocatie$^{\ref{zoeklocatie}}$.
-\item Toeristen kunnen monumenten sorteren op bouwjaar.
+	\reqitem{sort-popularity} Toeristen kunnen monumenten sorteren op populariteit.
+	\reqitem{sort-distance} Toeristen kunnen monumenten sorteren op afstand vanaf de gegeven zoeklocatie$^{\ref{zoeklocatie}}$.
+	\reqitem{sort-year} Toeristen kunnen monumenten sorteren op bouwjaar.
 \end{enumerate}
 		
 	\rsubsection{Weergaves}
-\rsubsubsection{Kaart}
-			De toerist moet monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} kunnen bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de toerist ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de toerist wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
-			\begin{enumerate}
-				\item Het systeem moet de gefilterde monumenten als spelden weergeven op een Google Maps\footnote{\label{googlemaps} http://code.google.com/apis/maps/index.html} kaart.
-				\item Het systeem moet de locatie van de de toerist op de Google Maps$^{\ref{googlemaps}}$ kaart aangeven, mits deze beschikbaar is. 
-			\end{enumerate}
-		\rsubsubsection{Overzichtsweergave} \label{sec:views-detail}
-\begin{enumerate}
-				\item De overzichtsweergave toont een lijst met op iedere rij een monument.
-\item Bij ieder monument staat een thumbnail, de titel, een korte beschrijving en categorie\"en.
-\item Wanneer de toerist op een rij klikt komt hij op de detailpagina.
-\item De getoonde set monumenten wordt bepaald door de door de toerist gekozen filtering en sortering als beschreven in \ref{filtering} \& \ref{sortering}.
-			\end{enumerate}
-		\rsubsubsection{Detailpagina} \label{sec:views-detail}
-			\begin{enumerate}
-				\item De detailpagina toont de naam, omschrijving, afbeelding, locatie, provincie, gemeente, stad, postcode en de categorie van het monument.
-				\item De detailpagina toont Flickrfoto's uit de buurt van het monument.
-		\item \label{views-checkins} De detailpagina toont het recente aantal checkins op Foursquare (zie ook \ref{4sq-checkins}).
-				\item De detailpagina toont de weersverwachting rond het monument.
-				\item De detailpagina toont faciliteiten in de buurt van het monument in een kaartje.
-				\item De detailpagina toont visueel gelijkende monumenten.
-				\item De detailpagina bevat een knop waarmee een CultuurApp-gebruiker het monument aan zijn favorietenlijst kan toevoegen.
-			\end{enumerate}
+	\rsubsubsection{Kaart}
+	De toerist moet monumenten op een kaart van Google Maps\footnote{http://code.google.com/apis/maps/index.html} kunnen bekijken. De monumenten worden als spelden op de kaart geplaatst. Aan de hand van de door de toerist ingevoerde selectiecriteria wordt een set monumenten geselecteerd. Van deze set wordt aan Google Maps de GPS locaties gegeven. Google Maps retourneert een kaart met de betreffende spelden. De locatie van de toerist wordt opgevraagd, indien deze beschikbaar is wordt deze locatie ook op de kaart getoond.
+	\begin{enumerate}
+		\reqitem{overview-maps} Het systeem moet de gefilterde monumenten als spelden weergeven op een Google Maps\footnote{\label{googlemaps} http://code.google.com/apis/maps/index.html} kaart.	
+		\reqitem{overview-gps} Het systeem moet de locatie van de de toerist op de Google Maps$^{\ref{googlemaps}}$ kaart aangeven, mits deze beschikbaar is. 
+	\end{enumerate}
+	
+	\rsubsubsection{Overzichtsweergave} \label{sec:views-detail}
+	\begin{enumerate}
+		\reqitem{overview-list} De overzichtsweergave toont een lijst met op iedere rij een monument.
+		\reqitem{overview-info} Bij ieder monument staat een thumbnail, de titel, een korte beschrijving en categorie\"en.
+		\reqitem{overview-click} Wanneer de toerist op een rij klikt komt hij op de detailpagina.
+		\reqitem{overview-order-filter} De getoonde set monumenten wordt bepaald door de door de toerist gekozen filtering en sortering als beschreven in \ref{filtering} \& \ref{sortering}.
+	\end{enumerate}
+	
+	\rsubsubsection{Detailpagina} \label{sec:views-detail}
+	\begin{enumerate}
+		\reqitem{detail-info} De detailpagina toont de naam, omschrijving, afbeelding, locatie, provincie, gemeente, stad, postcode en de categorie van het monument.
+		\reqitem{detail-flickr} De detailpagina toont Flickrfoto's uit de buurt van het monument.
+		\reqitem{detail-4sq} \label{views-checkins} De detailpagina toont het recente aantal checkins op Foursquare (zie ook \ref{4sq-checkins}).
+		\reqitem{detail-weather} De detailpagina toont de weersverwachting rond het monument.
+		\reqitem{detail-places} De detailpagina toont faciliteiten in de buurt van het monument in een kaartje.
+		\reqitem{detail-analyse} De detailpagina toont visueel gelijkende monumenten.
+		\reqitem{detail-favorize} De detailpagina bevat een knop waarmee een CultuurApp-gebruiker het monument aan zijn favorietenlijst kan toevoegen.
+	\end{enumerate}
 			
 \rsubsection{Inloggen en registreren}
 Toeristen kunnen inloggen met behulp van inlogsystemen van derden. OpenID en Facebook zullen in ieder geval worden ondersteund. Dit verlaagt de drempel voor het maken van een account omdat een toerist geen extra gegevens hoeft te onthouden.
 \begin{enumerate}
-\item Een toerist kan op het systeem inloggen via hun Facebook account.
-\item Een toerist kan op het systeem inloggen via hun OpenID account.
-\item Een toerist kan een eigen CultuurApp-account aanmaken op het systeem door hun email adres en een wachtwoord in te vullen.
-\item Een toerist kan op het systeem inloggen met hun CultuurApp-account. 
+	\reqitem{login-fb} Een toerist kan op het systeem inloggen via hun Facebook account.
+	\reqitem{login-openid} Een toerist kan op het systeem inloggen via hun OpenID account.
+	\reqitem{login-capp1} Een toerist kan een eigen CultuurApp-account aanmaken op het systeem door hun email adres en een wachtwoord in te vullen.
+	\reqitem{login-capp2} Een toerist kan op het systeem inloggen met hun CultuurApp-account. 
 \end{enumerate}
 
 \rsubsection{Foto's toevoegen}
 De CultuurApp-gebruiker moet foto's kunnen toevoegen van een monument.
 \begin{enumerate}
-	\item Een CultuurApp-gebruiker kan een foto uploaden naar het systeem en daarbij aangeven om welk monument het gaat
-	\item Een CultuurApp-gebruiker kan een beschrijving meegeven aan de geuploadde foto.
-	\item Een CultuurApp-gebruiker kan trefwoorden meegeven aan de ge\"uploadde foto.
-	\item Een beheerder moet een ge\"uploadde foto kunnen verwijderen uit het systeem.
+	\reqitem{upload} Een CultuurApp-gebruiker kan een foto uploaden naar het systeem en daarbij aangeven om welk monument het gaat
+	\reqitem{upload-desc} Een CultuurApp-gebruiker kan een beschrijving meegeven aan de geuploadde foto.
+	\reqitem{upload-keywords} Een CultuurApp-gebruiker kan trefwoorden meegeven aan de ge\"uploadde foto.
+	\reqitem{upload-delete} Een beheerder moet een ge\"uploadde foto kunnen verwijderen uit het systeem.
 \end{enumerate}
 
 \rsubsection{Favorieten toevoegen}
 \begin{enumerate}
-	\item Een CultuurApp-gebruiker kan monumenten toevoegen aan zijn favorietenlijst.
-	\item Een CultuurApp-gebruiker kan monumenten verwijderen aan zijn favorietenlijst.
-	\item Een CultuurApp-gebruiker kan zijn favorietenlijst openbaar maken.
-	\item Een CultuurApp-gebruiker kan zijn favorietenlijst prive maken.
+	\reqitem{detail-favorize} Een CultuurApp-gebruiker kan monumenten toevoegen aan zijn favorietenlijst.
+	\reqitem{defavorize} Een CultuurApp-gebruiker kan monumenten verwijderen aan zijn favorietenlijst.
+	\reqitem{favorize-public} Een CultuurApp-gebruiker kan zijn favorietenlijst openbaar maken.
+	\reqitem{favorize-private} Een CultuurApp-gebruiker kan zijn favorietenlijst prive maken.
 \end{enumerate}
 		
 \clearpage
