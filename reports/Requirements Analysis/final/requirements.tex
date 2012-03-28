@@ -50,7 +50,6 @@
 \author{Sjoerd van Bekhoven\\ Tim Eversdijk \\ Herman Blanken \\ Rutger Plak \and 4014774 \\ 4005562 \\ 4078624 \\ 1358375}
 
 \maketitle
-\setcounter{page}{0}
 \thispagestyle{empty}
 \vspace{10cm}
 \begin{figure}[ht!]
@@ -58,6 +57,9 @@
 	\includegraphics[width=\textwidth]{cultuurapp-logo.png}
 \end{figure}
 \clearpage
+\setcounter{page}{0}
+\thispagestyle{empty}
+\
 \clearpage
 \tableofcontents
 
@@ -76,32 +78,30 @@ Het systeem \glossary{name={Systeem},description={de backend en\/of frontend}} z
 				
 	\rsubsection{Back-end}
 \glossary{name={Back-end},description={het deel van het systeem dat niet zichtbaar is voor de toerist}}
-	De back-end focust zich op het vergaren van nieuwe informatie voor ons systeem. Dit gebeurt op meerdere manieren:
+	De back-end focust zich op het vergaren van nieuwe en doorgeven aan de front-end van informatie. Dit gebeurt onder andere op de volgende manieren:
 	\begin{itemize}
-		\item Niet alle monumenten hebben standaard een categorie aan zich gelinkt. De back-end zal door middel van beeld- en tekstanalyse bepalen in welke categorie het monument ingedeeld moet worden.
-		\item Foto's van de monumenten zullen van Flickr en Wikimedia Commons gehaald worden.
+		\item Het completeren van de database door textuele en visuele analyse.
+		\item Het zoeken relevante foto's van Flickr en Wikimedia Commons.
 \glossary{name={Wikimedia Commons},description={website waar miljoenen multimedia bestanden verzameld zijn, welke door iedereen vrij te gebruiken zijn}}
 \glossary{name={Flickr},description={een website waarop mensen foto's kunnen uploaden en delen}}
-		\item Data en foto's worden via de API \glossary{name={API},description={een schil die functies en data van het desbetreffende systeem beschikbaar stelt voor de buitenwereld via gedocumenteerde functies
-}} van rijksmonumenten.nl opgehaald.
-		\item Er wordt user-interactie-informatie bijgehouden.
-		\item User-interactie-informatie wordt verwerkt tot bruikbare informatie, zoals bijvoorbeeld voorkeuren van users of applicatie brede aanbevelingen en sorteringen.
+		\item Het aanvullen van data van de monumenten door het koppelen van externe databronnen. \glossary{name={API},description={een schil die functies en data van het desbetreffende systeem beschikbaar stelt voor de buitenwereld via gedocumenteerde functies}}
+		\item Het bijhouden van gebruikersinteractie en deze te gebruiken bij aanbevelingen aan toeristen.
 	\end{itemize}
-
+	
 \rsection{Functional requirements}
 \rsubsection{Weergaves}
-	\rsubsubsection{Kaart}
+	\rsubsubsection{Kaartweergave}
 	\begin{enumerate}
-		\reqitem{overview-maps} Het systeem moet de gefilterde monumenten (beschreven in \ref{sec:sub:Filtering}) als spelden weergeven op een Google Maps\footnote{\label{googlemaps} http://code.google.com/apis/maps/index.html} kaart.	
+		\reqitem{overview-maps} Het systeem moet de gefilterde monumenten (beschreven in \ref{sec:sub:Filteren en zoeken}) als spelden weergeven op een Google Maps\footnote{\label{googlemaps} http://code.google.com/apis/maps/index.html} kaart.	
 		\reqitem{overview-gps} Het systeem moet de locatie van de de toerist op de Google Maps$^{\ref{googlemaps}}$ kaart aangeven, mits deze beschikbaar is. 
 	\end{enumerate}
 	
-	\rsubsubsection{Overzichtsweergave} \label{sec:views-detail}
+	\rsubsubsection{Lijstweergave} \label{sec:views-detail}
 	\begin{enumerate}
-		\reqitem{overview-list} De overzichtsweergave toont een lijst met op iedere rij een monument.
+		\reqitem{overview-list} De lijstweergave toont een lijst met op iedere rij een monument.
 		\reqitem{overview-info} Bij ieder monument staat een thumbnail, de titel, een korte beschrijving en categorie\"en.
 		\reqitem{overview-click} Wanneer de toerist op een rij klikt komt hij op de detailpagina.
-\reqitem{overview-order-filter} De getoonde set monumenten wordt bepaald door de door de toerist gekozen filtering en sortering als beschreven in \ref{filtering} \& \ref{sortering}.
+\reqitem{overview-order-filter} De getoonde set monumenten wordt bepaald door de door de toerist gekozen filtering en sortering als beschreven in \ref{sec:sub:Filteren en zoeken} \& \ref{sortering}.
 	\end{enumerate}
 	
 	\rsubsubsection{Detailpagina} \label{sec:views-detail}
@@ -115,10 +115,10 @@ Het systeem \glossary{name={Systeem},description={de backend en\/of frontend}} z
 \reqitem{detail-places-select} De toerist heeft de mogelijkheid om te selecteren welke faciliteiten rondom de monument-locatie worden getoond.
 \reqitem{detail-analyse} De detailpagina toont visueel gelijkende monumenten. Zie ook \ref{sec:sub:Monumenten vergelijken aan de hand van foto's}.
 		\reqitem{detail-favorize} De detailpagina bevat een knop waarmee een CultuurApp-gebruiker het monument aan zijn favorietenlijst kan toevoegen. Zie ook \ref{sec:sub:Favorieten toevoegen}.	
+\glossary{name={CultuurApp-gebruiker},description={een ingelogde gebruiker van het systeem}}
 \end{enumerate}
 
-\rsubsection{Filtering}
-\label{filtering}
+\rsubsection{Filteren en zoeken}
 \begin{enumerate}
 	\reqitem{filter-distance} Toeristen kunnen monumenten filteren op een bepaalde afstand van een zoeklocatie\footnote{\label{zoeklocatie}De zoeklocatie is een tekstvak op de webpagina waar een locatie in de vorm van een adres of door google maps herkende plaatsaanduiding kan worden ingegeven. Deze kan eventueel automatisch worden ingevuld met de locatie die de browser aanbiedt.}.
 	\reqitem{filter-keywords} Toeristen kunnen monumenten filteren op trefwoorden.	
@@ -131,7 +131,7 @@ Het systeem \glossary{name={Systeem},description={de backend en\/of frontend}} z
 \rsubsection{Sortering}
 \label{sortering}
 \begin{enumerate}
-\reqitem{sort-popularity} Toeristen kunnen monumenten sorteren op populariteit.
+\reqitem{sort-popularity} Toeristen kunnen monumenten sorteren op populariteit. Zie ook \ref{sec:sub:Populariteit}.
 \reqitem{sort-distance} Toeristen kunnen monumenten sorteren op afstand vanaf de gegeven zoeklocatie$^{\ref{zoeklocatie}}$.
 \reqitem{sort-year} Toeristen kunnen monumenten sorteren op bouwjaar.
 \end{enumerate}
@@ -143,6 +143,7 @@ Het systeem \glossary{name={Systeem},description={de backend en\/of frontend}} z
 	\reqitem{4sq-checkins} De website toont het aantal check-ins bij de venue (zie ook \reqref{views-checkins}).
 	\reqitem{detail-4sq} De website slaat bij het bezoeken van de detailpagina van een monument het meest recente aantal check-ins op FourSquare op.
 	\reqitem{harvest-4sq} Een beheerder kan voor een hele set toegevoegde monumenten FourSquare locaties aan laten maken en check-ins laten controleren. Dit kan ook ingepland worden.
+	\glossary{name={Beheerder},description={de ontwikkelaars van de applicatie}}
 \end{enumerate}
                 
 \rsubsection{Weersinformatie}
@@ -219,140 +220,139 @@ De CultuurApp-gebruiker moet foto's kunnen toevoegen van een monument.
 
 \rsubsection{Completeren dataset}
 \begin{enumerate}
-	\reqitem{completing-dataset} Het systeem kan de categorie-specifieke informatie filteren uit de afbeeldingen en beschrijvingen van moumenten met behulp van visuele en textuele analyse. Zie ook \ref{sec:sub:Visuele analyse} en \ref{sec:sub:Textuele analyse}.
+	\reqitem{completing-dataset} Het systeem kan de categorie-specifieke informatie filteren uit de afbeeldingen en beschrijvingen van monumenten met behulp van visuele en textuele analyse. Zie ook \ref{sec:sub:Visuele analyse} en \ref{sec:sub:Textuele analyse}.
 	\reqitem{completing-dataset-coupling} Het systeem kan met behulp van de verworven categorie-specifieke informatie de ongecategoriseerde monumenten indelen in een visueel en textueel gelijkende categorie.
 \end{enumerate}
 
+\rsubsection{Aanbevelingen}
+\begin{enumerate}
+	\reqitem{recom-general} Het systeem kan aanbevelingen geven aan toeristen aan de hand van het profiel dat aan de toerist of CultuurApp-gebruiker is toegewzen. Zie ook \ref{sec:sub:User profiler}.
+	\reqitem{recom-general} Het systeem neemt in de aanbevelingen ook de algemene populariteit mee. Zie ook \ref{sec:sub:Populariteit}.
+\end{enumerate}
 
-		
-\clearpage
+\rsubsection{Populariteit}
+\begin{enumerate}
+	\reqitem{popularity} Het systeem kan de algemene populariteit van een monument bepalen door de volgende dingen mee te nemen in een gewogen functie:
+\begin{enumerate}
+\item het aantal views
+\item het aantal foursquare check-ins Zie ook \ref{sec:sub:Foursquare}.
+\item het aantal keer op de favorietenlijst van CultuurApp-gebruikers. Zie ook \ref{sec:sub:Favorieten toevoegen}.
+	\end{enumerate}
+\end{enumerate}
+
+\rsubsection{User profiler}
+\begin{enumerate}
+	\reqitem{profiler-general} Het systeem kan toeristen en CultuurApp-gebruikers indelen in verschillende clusters aan de hand van handelingen van gebruikers. Zie ook \ref{sec:sub:Gebruikers interactie}.
+\end{enumerate}
 
 \rsection{Quality requirements}	
 		 	 	 		
-\begin{enumerate}			
-
-\item{Toegankelijkheid}
+\rsubsection{Toegankelijkheid}
 	\begin{enumerate}
 		\reqitem{toegankelijkheid-client} De client heeft slechts een webkit of Gecko internetbrowser met een javascript engine. Dit betekent dat het op iedere computer / handheld met een gerenomeerde webbrowser (Google Chrome, Mozilla Firefox, Safari) werkt. Op een handheld device, zoals een iPhone of Android toestel, zal het systeem ook werken. 
 		\reqitem{toegankelijkheid-locatie} Een toerist kan het systeem thuis gebruiken, maar ook op locatie (mits verbonden met internet).
 \end{enumerate}
 
-\item{Prestaties / Efficientie}
+\rsubsection{Prestaties / Efficientie}
 \begin{enumerate}	
-		\reqitem{perf-php} 
 	\reqitem{perf-js} De client berekent zelf de weergaves en de server wordt hier niet mee belast. Op deze manier wordt voorkomen dat kostbare resources worden verspilt.
 \end{enumerate}
 
-\item{Onderhoudbaarheid}
+\rsubsection{Onderhoudbaarheid}
 	\begin{enumerate}
 		\reqitem{maint-pieces}Alle verbindingen met externe of interne data wordt aan de hand van kleine stukken code gemaakt. Deze kleine stukken code zijn eenvoudig te onderhouden.
 		\reqitem{maint-repo}De updates kunnen eenvoudig op de webserver worden geinstalleerd door een nieuwe checkout van de code-repository te doen.
 		\reqitem{maint-lokaal}Het lokaal ontwikkelen maakt het mogelijk nieuwe software uitvoerig te testen voor het online te zetten.
 	\end{enumerate}
 
-\item{Betrouwbaarheid en beschikbaarheid}
+\rsubsection{Betrouwbaarheid en beschikbaarheid}
 \begin{enumerate}
 	\reqitem{avail-git} Door de manier van ontwikkelen is de server bij het updaten van de server slechts luttele seconden offline.
 	\reqitem{relia-test} De betrouwbaarheid van de updates wordt gegarandeerd door de update eerst uitvoerig te testen op lokale systemen die hetzelfde zijn geconfigureerd als de webserver.
 	\reqitem{avail-extern} Door het gebruik van verschillende externe databron valt bij het niet beschikbaar zijn van zo'n databron slechts (een deel van) een module uit.
 	\reqitem{avail-maps} De kaarten Google Maps$^{\ref{googlemaps}}$ zijn een kritiek component, indien Google Maps niet beschikbaar is, is het systeem onbruikbaar. Google Maps heeft echter een up-time van minimaal 99,9\%\footnote{http://www.google.com/enterprise/earthmaps/maps-sla.html}. Dat komt neer op maximaal 90 seconden per dag, in de praktijk merkt een toerist hier niets van.
+	\reqitem{avail-backup} Het systeem maakt elke nacht een back-up van alle opgeslagen data op een andere server.
 \end{enumerate}
 
-\item{Security} 
+\rsubsection{Security} 
 \begin{enumerate}
 \reqitem{sec-SQL} Het framework Kohana voorkomt sql-injections wanneer queries worden geseraliseerd via dit framework.
-\reqitem{sec-} 
 \end{enumerate}
-\item{Precisie and Accuraatheid} 
+\rsubsection{Precisie and Accuraatheid} 
 	\begin{enumerate}
 		\reqitem{prec-aanbevelingen} De aanbevelingen worden door het systeem op volgorde van relevantie getoond. Wanneer toeristen consequent niet de nummer 1 aanbeveling van een monument aanklikken, zal dit betekenen dat de aanbeveling niet correct is.
 \end{enumerate} 
-\end{enumerate}
 
-\rsection{Design requirements}	
-
-\begin{enumerate}		 	 	 		
-\item{Constraints based on the type of users} 
+\rsection{Design requirements}		 	 	 		
+\rsubsection{Constraints based on the type of users} 
 	\begin{enumerate}
-		\reqitem{upload-CA-user} CultuurApp-gebruikers kunnen foto's uploaden.
-		\reqitem{upload-tourist} Toeristen kunnen geen foto's uploaden.
-		\reqitem{favorites-CA-user} CultuurApp-gebruikers kunnen een favorietenlijstje bijhouden.
-		\reqitem{favorites-tourist} Toeristen kunnen geen favorietenlijstje bijhouden.
-		\reqitem{recom-CA-user} CultuurApp-gebruikers krijgen recommendation gebaseerd op hun eerder verzamelde data en dus ook van voorgaande bezoeken aan het systeem.
-		\reqitem{recom-tourist} Toeristen krijgen of geen recommendation of recommendations gebaseerd op hun net verzamelde data.
+		\reqitem{upload-CA-user} CultuurApp-gebruikers kunnen foto's uploaden. Zie ook \ref{sec:sub:Foto's toevoegen}.
+		\reqitem{upload-tourist} Toeristen kunnen geen foto's uploaden. Zie ook \ref{sec:sub:Foto's toevoegen}.
+		\reqitem{favorites-CA-user} CultuurApp-gebruikers kunnen een favorietenlijstje bijhouden. Zie ook \ref{sec:sub:Favorieten toevoegen}.
+		\reqitem{favorites-tourist} Toeristen kunnen geen favorietenlijstje bijhouden. Zie ook \ref{sec:sub:Favorieten toevoegen}.
+		\reqitem{recom-CA-user} CultuurApp-gebruikers krijgen recommendation gebaseerd op hun eerder verzamelde data en dus ook van voorgaande bezoeken aan het systeem. Zie ook \ref{sec:sub:Aanbevelingen}.
+		\reqitem{recom-tourist} Toeristen krijgen of geen recommendation of recommendations gebaseerd op hun net verzamelde data. Zie ook \ref{sec:sub:Aanbevelingen}.
 	\end{enumerate}
-
-\end{enumerate}
 	
 \rsection{Process requirements}	
-
-\begin{enumerate}
 		 	 	 		
-\item{Ontwikkelingsmethode}
+\rsubsection{Ontwikkelingsmethode}
 	\begin{enumerate}
 		\reqitem{methodology} SCRUM wordt gebruikt bij het ontwikkelen van het systeem.
 	\end{enumerate}
-\item{Kosten en opleveringsdatum}
+\rsubsection{Kosten en opleveringsdatum}
 	\begin{enumerate}
 		\reqitem{dev-enddate} Het systeem wordt 15 juni 2012 opgeleverd.
 		\reqitem{dev-costs} Het systeem wordt gratis opgeleverd.
 	\end{enumerate}
-\item{Documentation}
 
-\end{enumerate}
-
-	\rsubsection{Constraints}
-	\begin{itemize}
-		\reqitem De back-end van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeori\"enteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van verzoeken van de client wordt de programmeertaal PHP gebruikt.
-		\reqitem Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt JavaScript gebruikt.
-\end{itemize}
+	\rsection{Constraints}
+	\begin{enumerate}
+		\reqitem{constraints-backend} De back-end van de software zal draaien op een Debian Linux machine met een Apache webserver. Visuele gelijkenissen en verschillen worden onderzocht met de objectgeori\"enteerde programmeertaal Java. De data zal worden opgeslagen in een (My)SQL database. Voor het afhandelen van verzoeken van de client wordt de programmeertaal PHP gebruikt.
+		\reqitem{constraints-frontend} Aan de kant van de client wordt data opgehaald in HTML formaat. Hierin wordt de website opgebouwd met behulp van CSS. Om dynamisch dingen op de site te tonen of veranderen wordt JavaScript gebruikt.
+	\end{enumerate}
 		
 	\clearpage
 	\rsection{Analysis models}
 	\rsubsection{Use case models,descriptions and scenarios}
-		\rsubsubsection{Use case: selecteren}
+		\rsubsubsection{Use case: monumenten zoeken}
 		\begin{usecase}
-		\addheading{Actor}{Toerist} g
-			\addrow{Doel}{Het doel is de toerist op een eenvoudige wijze monumenten te laten zoeken aan de hand van verschillende criteria. De toerist moet aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.}
-			\addrow{Triggers}{Deze use case wordt getriggerd zodra de toerist een of meerdere selectiecriteria invult.}
-			\addrow{Preconditie}{De set met getoonde monumenten is de set van alle monumenten.}
-			\addrow{Postconditie}{De input van de toerist wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de overzichtsweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.}
+		\addheading{Actor}{Toerist}
+			\addrow{Doel}{De toerist kan op eenvoudige wijze monumenten zoeken aan de hand van verschillende criteria. De toerist kan aan de hand van zijn interesses de hoeveelheid monumenten verlagen zodat eenvoudig de interesses naar voren komen in de getoonde monumenten.}
+			\addrow{Triggers}{De toerist maakt \'e\'en of meerdere selecties.}
+			\addrow{Preconditie}{De toerist heeft een bepaalde selectie gemaakt.}
+			\addrow{Stappen}{
+\begin{enumerate}
+\item De toerist maakt een selectie. 
+\item De selectie wordt naar de server verstuurd. 
+\item De data die de gebruiker heeft opgevraagd worden weergegeven aan de toerist.
+\end{enumerate}}	
+			\addrow{Postconditie}{De selectie van de toerist wordt omgezet naar een set monumenten die aan de selectie voldoen. In de kaartweergave zal dit betekenen dat de hoeveelheid spelden verminderd. In de lijstweergave zal dit betekenen dat de hoeveelheid informatierijen verminderd.}
 			\addrow{Samenvatting}{"Als toerist wil ik aan de hand van verschillende selectiecriteria de monumenten in de resultaatpagina beperken:
 				\begin{itemize}
 					\item Wanneer ik kaartweergave gebruik, moeten spelden verdwijnen of verschijnen afhankelijk van of de monumenten die deze spelden verantwoorden aan deze selectiecriteria voldoen.
-					\item Wanneer ik overzichtsweergave gebruik, moeten rijen informatie verdwijnen of verschijnen afhankelijk vam of de monumenten die deze rijen informatie verantwoorden aan deze selectiecriteria voldoen."
-				\end{itemize}
-			}
+					\item Wanneer ik lijstweergave gebruik, moeten rijen informatie verdwijnen of verschijnen afhankelijk vam of de monumenten die deze rijen informatie verantwoorden aan deze selectiecriteria voldoen."
+				\end{itemize}}
 			\end{usecase}
 
-			\rsubsubsection{Use case: informatie}
+			\rsubsubsection{Use case: Lijstweergave}
 			\begin{usecase} 
 			\addheading{Actor}{Toerist} 
-			\addrow{Doel}{Het doel is de toerist op een overzichtelijke en natuurlijke manier van informatie over het geselecteerde monument te voorzien. De toerist moet nuttige informatie te zien krijgen. Ook moet hij informatie te zien krijgen die hem kunnen helpen bij het bezoeken van het monument.}
-			\addrow{Triggers}{Deze use case beschrijft de situatie waarin de toerist een monument selecteert. In de overzichtsweergave gebeurt dit wanneer een informatierij die een monument vertegenwoordigt aangeklikt wordt. In de kaartweergave gebeurt dit bij het aanklikken van een speld die een monument vertegenwoordigt.}
-			\addrow{Preconditie}{De toerist weet niets van het geselecteerde monument.}
-			\addrow{Postconditie}{De toerist weet veel over het monument en heeft alle informatie die de toerist nodig heeft wanneer de toerist het monument zou willen bezoeken.}
-			\addrow{Samenvatting}{"Als toerist wil ik wanneer ik op een speld op de kaart, of informatierij in de overzichtsweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in figuur \ref{interface3} op pagina \pageref{interface3} te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart wil ik in een straal van x kilometer hotels kunnen zoeken, evenals restaurants, barretjes en andere monumenten. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in ge\"interesseerd ben."}
+			\addrow{Doel}{De toerist op een overzichtelijke manier van informatie over het geselecteerde monument te voorzien. De toerist moet nuttige informatie te zien krijgen. Ook moet hij informatie te zien krijgen die hem kan helpen bij het bezoeken van het monument.}
+			\addrow{Triggers}{De toerist klikt op een speld op de kaart of op een rij in de lijstweergave.}
+			\addrow{Preconditie}{Er is een monument geselecteerd.}
+			\addrow{Postconditie}{De informatie beschreven in \ref{sec:sub:sub:Lijstweergave} wordt weergegeven.}
+			\addrow{Samenvatting}{"Als toerist wil ik wanneer ik op een speld op de kaart, of informatierij in de lijstweergave klik, verwezen worden naar de pagina met informatie over het monument die de speld of informatierij verantwoord. Op deze pagina wil ik de informatie beschreven in figuur \ref{interface3} op pagina \pageref{interface3} te zien krijgen. Ik wil een kaartje te zien krijgen waarin is ingezoomd op het monument. Op de kaart worden restaurants, barretjes en andere monumenten in de buurt weergeven. Ik wil dat het systeem mijn interesses bepaald en aan de hand van mijn interesses monumenten aanraadt waar ik in ge\"interesseerd ben."}
 			\end{usecase}	
-
-			\rsubsubsection{Use case: mobiliteit}
-			\begin{usecase} 
-			\addheading{Actor}{Toerist} 
-			\addrow{Doel}{De toerist op locatie voorzien van informatie en het mogelijk maken foto's toe te voegen aan het systeem.}
-			\addrow{Triggers}{De toerist gebruikt zijn mobiele apparaat om een monument te selecteren. Dit kan aan de hand van de selectieprocedure beschreven in use case 1, maar ook aan de hand van een lijst favoriete monumenten die aangemaakt kan worden zoals beschreven in use case 4.}
-			\addrow{Preconditie}{De toerist is onderweg en wil informatie opzoeken. De toerist heeft op zijn mobiele apparaat een internetverbinding waarmee de toerist het systeem kan raadplegen.}
-			\addrow{Postconditie}{De toerist heeft op locatie toegang tot informatie. Het systeem heeft extra foto's.}
-			\addrow{Samenvatting}{"Als toerist wil ik wanneer ik op de plaats van bestemming ben aangekomen met behulp van mijn mobiele apparaat een foto kunnen uploaden / twitteren die door het systeem wordt toegevoegd aan de foto's die bij het monument horen. Ik wil hierbij steekwoorden kunnen meegeven die door het systeem worden herkend. Wanneer ik via dit mobiele systeem een monument, hotel, bar, of ander point of interest selecteer, wil ik dat het navigatieprogramma van mijn mobiele apparaat automatisch opent, zodat ik hier eenvoudig naar toe geleid wordt."	}
-			\end{usecase}
 
 			\rsubsubsection{Use case: favorieten}
 			\begin{usecase} 
 			\addheading{Actor}{Toerist} 
-			\addrow{Doel}{De toerist zijn favoriete monumenten eenvoudig terug te laten vinden.}
+			\addrow{Doel}{De toerist kan zijn favoriete monumenten eenvoudig terugvinden.}
 			\addrow{Triggers}{De toerist voegt een monument toe aan zijn favorieten.}
-			\addrow{Preconditie}{De toerist heeft monumenten gevonden.}
-			\addrow{Postconditie}{De toerist kan inloggen om zijn lijst favoriete monumenten te raadplegen.}
-			\addrow{Samenvatting}{"Als toerist wil ik wanneer ik een monument heb gevonden dat ik graag zou willen bezoeken of op een later tijdstip nogmaals wil bekijken, dat ik dit monument aan een lijst kan toevoegen. Deze lijst wil ik altijd kunnen raadplegen na inloggen met mijn gebruikersnaam en wachtwoord of OpenID. Wanneer ik onderweg ben, wil ik op mijn mobiele apparaat kunnen inloggen en alle beschikbare informatie over dit monument kunnen zien. Wel wil ik zelf kunnen bepalen of andere toeristen mijn lijst met monumenten kunnen bekijken."}
+			\addrow{Preconditie}{De toerist heeft een interessant monument gevonden.}
+			\addrow{Postconditie}{De toerist is ingelogd en heeft het monument toegevoegd aan zijn favorieten.}
+			\addrow{Samenvatting}{"Als toerist wil ik wanneer ik een monument heb gevonden dat ik graag zou willen bezoeken of op een later tijdstip nogmaals wil bekijken, dat ik dit monument aan een lijst kan toevoegen. Deze lijst wil ik altijd kunnen raadplegen na inloggen met mijn gebruikersnaam/wachtwoord of een andere login-service."}
 			\end{usecase}	
 			
 			\rsubsubsection{Use case: toevoegen foto's}
@@ -360,50 +360,54 @@ De CultuurApp-gebruiker moet foto's kunnen toevoegen van een monument.
 			\addheading{Actor}{Toerist}
 \addrow{Doel}{De toerist extra foto's laten toevoegen aan de database.}
 \addrow{Triggers}{De toerist upload een foto.}
-			\addrow{Precondities}{De toerist is bij het monument en maakt een foto.}
+			\addrow{Precondities}{De toerist heeft een foto van een monument gemaakt.}
 			\addrow{Post condities}{De foto is toegevoegd aan de database van foto's die bij het monument horen.}
 			\addrow{Samenvatting}{"Als toerist wil ik als ik bij een monument ben een foto kunnen maken en deze op kunnen slaan in de database. Dit wil ik doen door vanuit de mobiele applicatie een foto te maken en te uploaden. Ook kan een toerist zodra hij of zij thuis komt foto's van een monument uploaden."}
 			\end{usecase}
 		
 \rsubsection{Business object model}
-		Het "Business object model" is het object model van ons systeem. Dit model is uitgebeeld in figuur \ref{bom}.
+		Het "Business object model" is een globaal object model van ons systeem. Dit model is uitgebeeld in figuur \ref{bom}.
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\textwidth]{BusinessObjectModel.png}
 			\caption{Business Object Model \label{bom}}
 		\end{figure}
 		\rsubsection{Dynamische modellen}
-			\rsubsubsection{Overzichtspagina}
-			In figuur \ref{sequence1} is beschreven hoe de overzichtspagina tot stand komt. Hierin is ook te zien hoe de informatie die op de kaart moet worden weergeven naar een externe server wordt gestuurd, waarna er een kaartje met spelden wordt teruggestuurd. Zie ook \ref{sec:sub:sub:Kaart} en \ref{sec:sub:sub:Overzichtsweergave}.
+			\rsubsubsection{Kaartweergave}
+			In figuur \ref{sequence1} is beschreven hoe de kaartweergave tot stand komt. Hierin is ook te zien hoe de informatie die op de kaart moet worden weergeven naar een externe server wordt gestuurd, waarna er een kaartje met spelden wordt teruggestuurd. Zie ook \ref{sec:sub:sub:Kaartweergave}.
 \begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\textwidth]{sequence1.png}
-				\caption{Sequence Diagram 1 \label{sequence1}}
-			\end{figure}
-			\rsubsubsection{Sequence diagram 2}
+				\caption{Sequence Diagram van de lijstweergave \label{sequence1}}
+			\end{figure}			
+
+			\rsubsubsection{Detailpagina}
+In figuur \ref{sequence1} is beschreven hoe de detailpagina tot stand komt. Hierin is ook te zien dat eerst het op de server beschikbare deel wordt ingeladen en daarna de informatie uit externe data-sources als deze niet zijn opgeslagen op de server. Zie ook \ref{sec:sub:sub:Detailpagina}.
 			figuur \ref{sequence2}.
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\textwidth]{sequence2.png}
-				\caption{Sequence Diagram 2 \label{sequence2}}
+				\caption{Sequence Diagram van de detailpagina \label{sequence2}}
 			\end{figure}		
 		\clearpage			
 		\rsection{User interface}
+		In figuur \ref{interface1} is een globaal overzicht van de kaartweergave te zien, zoals beschreven in \ref{sec:sub:sub:Kaartweergave}. Hierin is duidelijk te zien hoe monumenten met speld worden aangeduid in de kaart en hoe enkele aanbevelingen worden gegeven aan de gebruiker.
 			\begin{figure}[ht!]
 			\centering
-			\includegraphics[height=10cm]{interface1.png}
-			\caption{Kaart met monumenten \label{interface1}}
+			\includegraphics[height=9cm]{interface1.png}
+			\caption{Globale kaartweergave \label{interface1}}
 			\end{figure}
-	
+		In figuur \ref{interface2} is een globaal overzicht van de lijstweergave te zien, zoals beschreven in \ref{sec:sub:sub:Lijstweergave}. Hierin is duidelijk te zien hoe monumenten met speld worden aangeduid in de kaart en hoe enkele aanbevelingen worden gegeven aan de gebruiker.
 			\begin{figure}[ht!]
 				\centering
-				\includegraphics[height=10cm]{interface2.png}
-				\caption{Overzichtspagina met monumenten \label{interface2}}
+				\includegraphics[height=8cm]{interface2.png}
+				\caption{Globale lijstweergave \label{interface2}}
 			\end{figure}
+			In figuur \ref{interface3} is een globaal overzicht van de detailpagina te zien, zoals beschreven in \ref{sec:sub:sub:Detailpagina}.
 			\begin{figure}[ht!]
 				\centering
-				\includegraphics[height=10cm]{interface3.png}
-				\caption{Detailpagina monument \label{interface3}}
+				\includegraphics[height=9cm]{interface3.png}
+				\caption{Globale detailpagina \label{interface3}}
 			\end{figure}
 	
 	\clearpage

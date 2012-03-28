@@ -3,31 +3,49 @@
 \BOOKMARK [2][-]{subsection.2.1}{Front-end}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Back-end}{section.2}% 4
 \BOOKMARK [1][-]{section.3}{Functional requirements}{}% 5
-\BOOKMARK [2][-]{subsection.3.1}{Zoeken van relevante Flickr-foto's}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.2}{Completeren dataset}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.3}{Foursquare}{section.3}% 8
-\BOOKMARK [2][-]{subsection.3.4}{Weersinformatie}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.5}{Faciliteiten rond monument-locatie}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.6}{Monumenten vergelijken aan de hand van foto's}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.7}{Implementeren thesaurus}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.8}{Kaarten}{section.3}% 13
-\BOOKMARK [2][-]{subsection.3.9}{Overzichtsweergave}{section.3}% 14
-\BOOKMARK [2][-]{subsection.3.10}{Inloggen}{section.3}% 15
-\BOOKMARK [1][-]{section.4}{Nonfunctional requirements}{}% 16
-\BOOKMARK [1][-]{section.5}{Constraints \("Pseudo requirements"\)}{}% 17
-\BOOKMARK [1][-]{section.6}{Analysis models}{}% 18
-\BOOKMARK [2][-]{subsection.6.1}{Use case models, descriptions and scenarios}{section.6}% 19
-\BOOKMARK [3][-]{subsubsection.6.1.1}{Use case: selecteren}{subsection.6.1}% 20
-\BOOKMARK [3][-]{subsubsection.6.1.2}{Use case: informatie}{subsection.6.1}% 21
-\BOOKMARK [3][-]{subsubsection.6.1.3}{Use case: mobiliteit}{subsection.6.1}% 22
-\BOOKMARK [3][-]{subsubsection.6.1.4}{Use case: favorieten}{subsection.6.1}% 23
-\BOOKMARK [3][-]{subsubsection.6.1.5}{Use case: toevoegen foto's}{subsection.6.1}% 24
-\BOOKMARK [2][-]{subsection.6.2}{Business object model}{section.6}% 25
-\BOOKMARK [2][-]{subsection.6.3}{Dynamische modellen}{section.6}% 26
-\BOOKMARK [3][-]{subsubsection.6.3.1}{Sequence diagram 1}{subsection.6.3}% 27
-\BOOKMARK [3][-]{subsubsection.6.3.2}{Sequence diagram 2}{subsection.6.3}% 28
-\BOOKMARK [3][-]{subsubsection.6.3.3}{Sequence diagram 3}{subsection.6.3}% 29
-\BOOKMARK [1][-]{section.7}{User interface}{}% 30
-\BOOKMARK [2][-]{subsection.7.1}{Interface 1}{section.7}% 31
-\BOOKMARK [2][-]{subsection.7.2}{Interface 2}{section.7}% 32
-\BOOKMARK [1][-]{section.8}{Glossary}{}% 33
+\BOOKMARK [2][-]{subsection.3.1}{Weergaves}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Kaartweergave}{subsection.3.1}% 7
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Lijstweergave}{subsection.3.1}% 8
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Detailpagina}{subsection.3.1}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Filteren en zoeken}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Sortering}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.4}{Foursquare}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.5}{Weersinformatie}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.6}{Faciliteiten rond monument-locatie}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.7}{Monumenten vergelijken aan de hand van foto's}{section.3}% 15
+\BOOKMARK [2][-]{subsection.3.8}{Zoeken van relevante Flickr-foto's}{section.3}% 16
+\BOOKMARK [2][-]{subsection.3.9}{Inloggen en registreren}{section.3}% 17
+\BOOKMARK [2][-]{subsection.3.10}{Foto's toevoegen}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.11}{Favorieten toevoegen}{section.3}% 19
+\BOOKMARK [2][-]{subsection.3.12}{Gebruikers interactie}{section.3}% 20
+\BOOKMARK [2][-]{subsection.3.13}{Visuele analyse}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.14}{Textuele analyse}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.15}{Thesaurus}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.16}{Completeren dataset}{section.3}% 24
+\BOOKMARK [2][-]{subsection.3.17}{Aanbevelingen}{section.3}% 25
+\BOOKMARK [2][-]{subsection.3.18}{Populariteit}{section.3}% 26
+\BOOKMARK [2][-]{subsection.3.19}{User profiler}{section.3}% 27
+\BOOKMARK [1][-]{section.4}{Quality requirements}{}% 28
+\BOOKMARK [2][-]{subsection.4.1}{Toegankelijkheid}{section.4}% 29
+\BOOKMARK [2][-]{subsection.4.2}{Prestaties / Efficientie}{section.4}% 30
+\BOOKMARK [2][-]{subsection.4.3}{Onderhoudbaarheid}{section.4}% 31
+\BOOKMARK [2][-]{subsection.4.4}{Betrouwbaarheid en beschikbaarheid}{section.4}% 32
+\BOOKMARK [2][-]{subsection.4.5}{Security}{section.4}% 33
+\BOOKMARK [2][-]{subsection.4.6}{Precisie and Accuraatheid}{section.4}% 34
+\BOOKMARK [1][-]{section.5}{Design requirements}{}% 35
+\BOOKMARK [2][-]{subsection.5.1}{Constraints based on the type of users}{section.5}% 36
+\BOOKMARK [1][-]{section.6}{Process requirements}{}% 37
+\BOOKMARK [2][-]{subsection.6.1}{Ontwikkelingsmethode}{section.6}% 38
+\BOOKMARK [2][-]{subsection.6.2}{Kosten en opleveringsdatum}{section.6}% 39
+\BOOKMARK [1][-]{section.7}{Constraints}{}% 40
+\BOOKMARK [1][-]{section.8}{Analysis models}{}% 41
+\BOOKMARK [2][-]{subsection.8.1}{Use case models,descriptions and scenarios}{section.8}% 42
+\BOOKMARK [3][-]{subsubsection.8.1.1}{Use case: monumenten zoeken}{subsection.8.1}% 43
+\BOOKMARK [3][-]{subsubsection.8.1.2}{Use case: Lijstweergave}{subsection.8.1}% 44
+\BOOKMARK [3][-]{subsubsection.8.1.3}{Use case: favorieten}{subsection.8.1}% 45
+\BOOKMARK [3][-]{subsubsection.8.1.4}{Use case: toevoegen foto's}{subsection.8.1}% 46
+\BOOKMARK [2][-]{subsection.8.2}{Business object model}{section.8}% 47
+\BOOKMARK [2][-]{subsection.8.3}{Dynamische modellen}{section.8}% 48
+\BOOKMARK [3][-]{subsubsection.8.3.1}{Kaartweergave}{subsection.8.3}% 49
+\BOOKMARK [3][-]{subsubsection.8.3.2}{Detailpagina}{subsection.8.3}% 50
+\BOOKMARK [1][-]{section.9}{User interface}{}% 51
