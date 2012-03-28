@@ -6,6 +6,8 @@
 \title{TI2800 Contextproject - My Cultural Heritage\\ Architectural Design}
 \author{Sjoerd van Bekhoven\\ Tim Eversdijk \\ Herman Blanken \\ Rutger Plak \and 4014774 \\ 4005562 \\ 4078624 \\ 1358375}
 
+\newcommand{\itemb}[1]{\item \textbf{#1}}
+
 \maketitle
 \setcounter{page}{0}
 \renewcommand*\contentsname{Inhoudsopgave}
@@ -20,17 +22,16 @@
 
 \tableofcontents
 \clearpage
-
+\clearpage
 \section{Introductie}
 In dit document wordt de structuur van de software, bestaande uit verschillende softwarecomponenten uitgewerkt. De relaties tussen deze componenten, communicatie tussen deze componenten en de eigenschappen van deze componenten worden gegeven. Dit gebeurt aan de hand van de externe kenmerken van de verschillende softwarecomponenten.
 
 	\subsection{Doel van het systeem}
 	Het systeem heeft als doel om gebruikers de mogelijkheid te geven:
 	\begin{itemize}
-		\item Monumenten te zoeken en deze met elkaar te vergelijken.
-		\item Daarbij wordt toegespitst op de scheiding tussen monumenten die bij een bepaald weertype interessant zijn om te bezoeken.
-		\item Monumenten met een categorisch of visuele gelijkenis moeten ontdekt kunnen worden.
-		\item Daarnaast moet het mogelijk zijn om in de buurt van een bepaald monument te zoeken naar faciliteiten als caf\'e’s, restaurants e.d..
+		\item Monumenten te zoeken en deze met elkaar te vergelijken. [Req:3.2]
+		\item Monumenten met een categorisch of visuele gelijkenis moeten ontdekt kunnen worden. [Req:3.13\&3.14]
+		\item Daarnaast moet het mogelijk zijn om in de buurt van een bepaald monument te zoeken naar faciliteiten als caf\'eÃ­s, restaurants e.d..[Req:3.6]
 	\end{itemize}
 	
 	\subsection{Definities, acroniemen en afkortingen}
@@ -59,12 +60,48 @@ In dit document wordt de structuur van de software, bestaande uit verschillende 
 \section{Voorgestelde software architectuur}
 Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt per onderdeel toegelicht welke taken dit deel heeft en waar het weer uit bestaat. Voor het overzicht van het hele diagram zie appendix A figuur \ref{componentdiagramoverview}.
 
-	\subsection{Overzicht (figuur \ref{componentdiagramhighlevel})}
+	\subsection{Ontwerppatroon}
+	\begin{itemize}
+		\itemb{HMVC} 
+Het systeem wordt ontwikkeld volgens een HMVC-patroon. Dit staat voor een Hierarchical-Model-View-Controller-patroon. Kohana\footnote{http://kohanaframework.org/}, een PHP-framework, maakt gebruik van dit patroon en het CultuurApp-systeem bouwt daar op voort. Een HMVC-patroon schrijft voor dat de modellen (de daadwerkelijke data), de weergave en de controllers in gescheiden bestanden en mappen worden geprogrammeerd. Op deze manier is het terugvinden van specifieke code makkelijker en de code zelf blijft ook overzichtelijker. In het CultuurApp-systeem worden de modellen en controllers zelfs volledig gescheiden van de views daar de views op de client worden opgebouwd.
+		\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=8cm]{MVC-HMVC.png}
+		\caption{\label{hmvc}HMVC, bron ibuildings.com\footnote{http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/}}
+		\end{figure}
+	
+\itemb{Client-server model}
+		Door veel javascript te gebruiken aan de kant van de client, wordt veel rekenwerk van de server verplaatst naar de kant van de client. Dit ontlast de server. Externe foto's worden niet gedownload maar de locatie van de afbeelding wordt slechts doorgegeven aan de client. De javascript op de client side zorgt voor de afhandeling en het downloaden van de afbeelding. Dit mindert het dataverkeer van de server.
+	
+\itemb{Pipe-and-filter model}
+		Image processing wordt op drie processing units synchroon uitgevoerd. Deze informatie wordt gecombineerd. Deze drie processing units verdelen de belasting. Er worden voor de image processing nauwelijks webserver-resources gebruikt, slechts voor het downloaden van de locaties van de afbeeldingen en het uploaden van de resultaten van de image processing.
+	\end{itemize}
+
+	\subsection{Ontwerpprincipes}
+		\begin{enumerate}
+			\itemb{Divide and conquer}
+			Om iedere database-tabel komt een PHP-klasse. Door de verschillende componenten in de database onder te verdelen in verschillende klassen, blijft de ORM Factory overzichtelijk en zijn de verschillende klassen onafhankelijk van elkaar te ontwikkelen. Voor iedere externe databron bestaan aparte harvesters. Deze verschillende harvesters zorgen ervoor dat onafhankelijke databronnen elkaar niet in de weg zitten. Tevens kunnen de harvesters onafhankelijk van elkaar ontwikkeld worden.
+					 	 	 		
+\itemb{Reduce coupling where possible}
+Tussen externa databronnen en de rest van het systeem zitten harvesters. Door gebruik van deze harvesters kunnen eventuele fouten in de externe data worden afgevangen en is de rest van het systeem niet afhankelijk van de externe databronnen omdat de harvesters altijd een verwacht antwoord kunnen geven.
+
+\itemb{Increase reusability where possible}
+Door tussen de database en de verschillende gebruikers van data uit de database een ORM factory te cre\"eeren kunnen (nog) niet bestaande componenten eenvoudig deze ORM factory gebruiken om data uit de database te halen. Aan de hand van deze API het eenvoudig om het systeem te gebruiken of uit te breiden.
+
+\itemb{Design for flexibility}
+Door op de zojuist beschreven manier data van datagebruikende scripts te scheiden kunnen componenten op een flexibele manier, zonder dat andere componenten daar last van hebben, aangepast worden.
+
+\itemb{Design for testability}
+Voor de implementatie wordt gestart worden voor elke methode sluitende test-cases geschreven.
+		\end{enumerate}
+
+	\subsection{Systeemcomponenten (figuur \ref{componentdiagramhighlevel})}
 	\begin{itemize}
 		\item Front-end $\Rightarrow$ Draait op Javascript op de computer / handheld van de gebruiker van het systeem.
 		\item Back-end $\Rightarrow$ Debian server waarop PHP en MySQL draaien.
 		\item Processing-end $\Rightarrow$ Dit deel van het systeem verwerkt de afbeeldingen uit de data-set en upload deze naar de back-end. De processing vindt plaats op aparte machines, onafhankelijk van de server voor de back-end.
-		\item External Sources $\Rightarrow$ Externe servers, zoals die van Google en Facebook.
+		\item External Sources $\Rightarrow$ Externe servers, zoals die van Google en Facebook.[Req:3.1.1\&3.4\&3.5\&3.6\&3.8\&3.9]
+
 	\end{itemize}
 	\begin{figure}[ht!]
 	\centering
@@ -88,7 +125,8 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 	
 		\subsubsection{PHP back-end}
 		\begin{itemize}
-			\item Users (zie figuur \ref{componentdiagramuser}) $\Rightarrow$ De identiy-combiner zorgt ervoor dat facebook en OpenID gekoppeld kan worden aan de gebruikers van het systeem. De acties van de gebruiker worden opgeslagen in de database door de Logger.
+			\item Users (zie figuur \ref{componentdiagramuser}) $\Rightarrow$ De identiy-combiner zorgt ervoor dat facebook en OpenID [Req:3.9]
+ gekoppeld kan worden aan de gebruikers van het systeem. De acties van de gebruiker worden opgeslagen in de database door de Logger.
 				\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=8.5cm]{componentDiagram_user.png}
@@ -96,8 +134,8 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 				\end{figure}
 			
 			\item ORMfactory (zie figuur \ref{componentdiagramanalysis}) $\Rightarrow$ Alle communicatie tussen PHP en de database in de vorm van objecten zal plaats vinden in de ORMfactory.
-			\item Textual-linker (zie figuur \ref{componentdiagramanalysis}) $\Rightarrow$ tekstuele vergelijkingen maken met gebruik van tags, omschrijvingen en een thesaurus. Hiervan wordt gebruikgemaakt bij het zoeken naar relevante foto’s op Flickr.
-			\item User-profiler (zie figuur \ref{componentdiagramanalysis}) $\Rightarrow$ plaatst gebruikers in een bepaalde groep door analyse van de opgeslagen logs en social-media profiel.
+			\item Textual-linker (zie figuur \ref{componentdiagramanalysis}) $\Rightarrow$ tekstuele vergelijkingen maken met gebruik van tags, omschrijvingen en een thesaurus [Req:3.14]. Hiervan wordt gebruikgemaakt bij het zoeken naar relevante fotoÃ­s op Flickr.
+			\item User-profiler (zie figuur \ref{componentdiagramanalysis}) $\Rightarrow$ plaatst gebruikers in een bepaalde groep door analyse van de opgeslagen logs en social-media profiel [Req:3.12].
 				\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=8.5cm]{componentDiagram_analysis.png}
@@ -105,10 +143,9 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 				\end{figure}
 			\item Harvesters (zie figuur \ref{componentdiagramharvesters}) $\Rightarrow$
 				\begin{itemize}
-					\item Flickr-harvester $\Rightarrow$ datacommunicatie met Flickr.
-					\item 4SQ-harvester $\Rightarrow$ datacommunicatie met Foursquare.
-					\item Twitter-harvester $\Rightarrow$ datacommunicatie met Twitter.
-					\item Weather-dataharvester $\Rightarrow$ datacommunicatie met Wunderground. 
+					\item Flickr-harvester $\Rightarrow$ datacommunicatie met Flickr [Req:3.8].
+					\item 4SQ-harvester $\Rightarrow$ datacommunicatie met Foursquare [Req:3.4].
+					\item Weather-dataharvester $\Rightarrow$ datacommunicatie met Wunderground [Req:3.5]. 
 				\end{itemize}
 				\begin{figure}[ht!]
 				\centering
@@ -120,7 +157,7 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 		
 		\subsubsection{Java / Compiled back-end (figuur \ref{componentdiagramprocessing})}
 			\begin{itemize}
-				\item Java / Image $\Rightarrow$ Vergelijken van afbeeldingen uit de database.Hiervan wordt gebruikgemaakt bij het completeren van de dataset en het vergelijken van monumenten.
+				\item Java / Image $\Rightarrow$ Vergelijken van afbeeldingen uit de database.Hiervan wordt gebruikgemaakt bij het completeren van de dataset en het vergelijken van monumenten [Req:3.13].
 				\item PC-Processing Unit (x3) $\Rightarrow$ Machines waarop de java applicaties draaien.
 			\end{itemize}
 				\begin{figure}[ht!]
@@ -130,7 +167,7 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 				\end{figure}
 		
 	\subsection{Hardware/Software mapping (figuur \ref{hardwarediagram})}
-	De webserver zal bestaan uit \'e\'en machine met Apache en MySQL. Image-processing gebeurt op drie externe machines (Processing Units). Vanuit diverse externe databronnen wordt extra informatie gehaald. De informatie zal aan de kant van de gebruiker van het systeem op zijn webbrowser of handheld getoond worden.
+	De webserver zal bestaan uit \'e\'en machine met Apache en MySQL. Image-processing [Req:3.13] gebeurt op drie externe machines (Processing Units). Vanuit diverse externe databronnen wordt extra informatie gehaald. De informatie zal aan de kant van de gebruiker van het systeem op zijn webbrowser of handheld getoond worden [Req\#56].
 	\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=15cm]{hardwareDiagram.png}
@@ -138,8 +175,8 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 	\end{figure}
 	
 	\subsection{Persistent Data Management}
-	Foto’s van externe bronnen worden niet opgeslagen, enkel een kleine versie wordt lokaal opgeslagen. De geüploade foto’s worden wel lokaal op het ext4 bestandsysteem van de Debian server bewaard. De data-set die is aangeleverd door de opdrachtgever wordt opgeslagen in de database. Ook wanneer van externe bronnen data wordt opgehaald - zoals van FourSquare, Twitter en Flickr - wordt deze data opgeslagen.\\ \\
-De persoongegevens van gebruikers worden na opvragen van de authenticatie provider opgeslagen in de database. Meerdere identiteiten (van verschillende providers) kunnen worden gekoppeld aan \'e\'en gebruiker.
+	FotoÃ­s van externe bronnen worden niet opgeslagen, enkel een kleine versie wordt lokaal opgeslagen [Req\#31]. De ge\"uploade foto's [Req\#36] worden wel lokaal op het ext4 bestandsysteem van de Debian server bewaard. De data-set die is aangeleverd door de opdrachtgever wordt opgeslagen in de database. Ook wanneer van externe bronnen data wordt opgehaald - zoals van FourSquare, Twitter en Flickr - wordt deze data opgeslagen [Req:3.4].\\ \\
+De persoongegevens van gebruikers worden na opvragen van de authenticatie provider opgeslagen in de database. Meerdere identiteiten (van verschillende providers) kunnen worden gekoppeld aan \'e\'en gebruiker [Req\#32\&33].
 	\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=15cm]{entityRelationshipDiagram.png}
@@ -148,24 +185,24 @@ De persoongegevens van gebruikers worden na opvragen van de authenticatie provid
 
 	\subsection{Global Resource Handling en Access Control voor verschillende actoren}
 	Het systeem bestaat uit drie delen waarvan twee op systemen draaien op beheerde machines. De back-end zal continue data moeten kunnen leveren. Omdat MySQL schaalbaar is en het systeem op meerdere machines kan tegelijk draaien is het mogelijk om zeer grote pieken op te vangen met meerdere servers. Bij de ontwikkeling van het systeem wordt er echter vanuit gegaan dat er met \'e\'en server genoeg gebruikers kunnen worden bediend.\\ \\
-De machines voor processing verwerken data onafhankelijk van de back-end en zijn niet gevoelig voor pieken in de bezoekersaantallen. Bij de initi\"ele verwerking van de data-set zullen veel resources (werkgeheugen en opslag) en processorkracht nodig zijn, hiervoor zullen meerdere machines worden gebruikt. Later is een enkele machine genoeg om de toegevoegde data te verwerken.\\ \\
+De machines voor processing verwerken data onafhankelijk van de back-end en zijn niet gevoelig voor pieken in de bezoekersaantallen. Bij de initi\"ele verwerking van de data-set zullen veel resources (werkgeheugen en opslag) en processorkracht nodig zijn, hiervoor zullen meerdere machines worden gebruikt. Later is een enkele machine genoeg om de toegevoegde data te verwerken [Req\#54\&47].\\ \\
 Soorten actoren:
 	\begin{itemize}
 		\item Anonieme gebruiker
 		\item Ingelogde gebruikers
 	\end{itemize}
 
-Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen, anonieme gebruikers kunnen dit niet. Bij het toevoegen van data wordt gecontroleerd of er een gebruiker is ingelogd, zo niet dan lukt het toevoegen niet en zal de gebruiker eerst worden gevraagd in te loggen via een van de vele beschreven authenticatie providers.
+Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen, anonieme gebruikers kunnen dit niet. Bij het toevoegen van data wordt gecontroleerd of er een gebruiker is ingelogd, zo niet dan lukt het toevoegen niet en zal de gebruiker eerst worden gevraagd in te loggen via een van de vele beschreven authenticatie providers [Req:3.9].
 
 	\subsection{Concurrency}
 		\subsubsection{Websitebezoek}
 		Wanneer een gebruiker het systeem gebruikt zal deze diverse aanroepen naar de PHP back-end doen. De PHP back-end zal vervolgens weer gebruik maken van de database. De front-end draait bij de systeemgebruiker op zijn handheld / computer.
 		
 		\subsubsection{Image-processing}
-		De machines voor image-processing draaien enkele keren per dag, wanneer er nieuwe data is om te verwerken. 
+		De machines voor image-processing draaien enkele keren per dag, wanneer er nieuwe data is om te verwerken [Req\#47]. 
 		
 		\subsubsection{Back-up}
-		Aangezien het systeem vooral Nederlandse gebruikers zal hebben zullen de pieken in de bezoekersaantallen vooral overdag voorkomen (+1 GMT). ‘s Nachts zal de server veelal idle zijn en kan er dan ge-back-upt worden zonder dat de server daar hinder van ondervindt. Wanneer het systeem in productie gaat is het slim om te kijken op welke momenten er weinig bezoekers zijn. De back-ups kunnen het beste in deze dalen van bezoekersaantallen gemaakt worden.
+		Aangezien het systeem vooral Nederlandse gebruikers zal hebben zullen de pieken in de bezoekersaantallen vooral overdag voorkomen (+1 GMT). Ã«s Nachts zal de server veelal idle zijn en kan er dan ge-back-upt worden zonder dat de server daar hinder van ondervindt. Wanneer het systeem in productie gaat is het slim om te kijken op welke momenten er weinig bezoekers zijn. De back-ups kunnen het beste in deze dalen van bezoekersaantallen gemaakt worden. [Req\#71]
 		
 		\subsubsection{Harvesting}
 		De harvesters zullen niet continu data ophalen van de externe bronnen. Specifieke data kan worden opgevraagd wanneer een bezoeker deze aanvraagt, algemene updates van de content worden echter uitgevoerd aan de hand van een planning. Afhankelijk van hoe hoog de druk op de server is zal het vergaren van data worden uitgesteld of eerder worden ingepland. De individuele gebruiker kan een algehele harvest niet starten.
@@ -173,7 +210,7 @@ Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen,
 	\subsection{Randvoorwaarden}
 		\subsubsection{Back-end}
 		\textit{Users (figuur \ref{componentdiagramuser}, pagina \pageref{componentdiagramuser})} \\
-		Het authenticatie gedeelte van het gebruikers-systeem zou kunnen crashen/falen als de service van OpenID, Facebook of onze eigen inlog service wegvalt. In dit geval valt automatisch ook het gebruiker specifieke logging gedeelte uit en word er alleen nog maar gelogd voor anonymus gebruikers. Ook zullen alle gebruikers specifieke services zoals favorieten en profiel gerelateerde voorkeuren niet gebruikt kunnen worden. Dit is dus niet echt een essentieel component omdat het grootste gedeelte van het systeem het nog gewoon naar behoren doet.\\ 
+		Het authenticatie gedeelte van het gebruikers-systeem zou kunnen crashen/falen als de service van OpenID, Facebook of onze eigen inlog service wegvalt [Req:3.9]. In dit geval valt automatisch ook het gebruiker specifieke logging gedeelte uit en word er alleen nog maar gelogd voor anonieme gebruikers [Req\#46]. Ook zullen alle gebruikers specifieke services zoals favorieten [Req:3.11] en profiel gerelateerde voorkeuren [Req:3.17] niet gebruikt kunnen worden. Dit is dus niet echt een essentieel component omdat het grootste gedeelte van het systeem het nog gewoon naar behoren doet.\\ 
 		\\ \textit{Database} \\
 		Mocht de ORMfactory of de Database uitvallen is het niet meer mogelijk data op te halen of op te slaan en doet het hele systeem het niet meer. Dit zijn dus erg essenti\"ele componenten. Wel blijft de front-end gewoon draaien welke in de huis-stijl een foutmelding zal weergeven.\\ 
 		\\ \textit{Harvesters (figuur \ref{componentdiagramharvesters}, pagina \pageref{componentdiagramuser})} \\

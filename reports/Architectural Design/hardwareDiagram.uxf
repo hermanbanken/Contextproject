@@ -110,18 +110,6 @@ center:FourSquare</panel_attributes>
       <h>50</h>
     </coordinates>
     <panel_attributes>center:&lt;&lt;external&gt;&gt;
-center:Twitter</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Node</type>
-    <coordinates>
-      <x>740</x>
-      <y>170</y>
-      <w>160</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>center:&lt;&lt;external&gt;&gt;
 center:Flickr</panel_attributes>
     <additional_attributes/>
   </element>
@@ -129,7 +117,7 @@ center:Flickr</panel_attributes>
     <type>com.umlet.element.custom.Node</type>
     <coordinates>
       <x>740</x>
-      <y>230</y>
+      <y>170</y>
       <w>160</w>
       <h>50</h>
     </coordinates>
@@ -233,17 +221,6 @@ booking.com
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>650</x>
-      <y>170</y>
-      <w>110</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.&gt;&gt;</panel_attributes>
-    <additional_attributes>30;30;90;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>650</x>
       <y>110</y>
       <w>110</w>
       <h>50</h>
@@ -266,7 +243,7 @@ booking.com
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>650</x>
-      <y>230</y>
+      <y>170</y>
       <w>110</w>
       <h>50</h>
     </coordinates>
