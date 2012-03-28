@@ -9,7 +9,6 @@
 \newcommand{\itemb}[1]{\item \textbf{#1}}
 
 \maketitle
-\setcounter{page}{0}
 \renewcommand*\contentsname{Inhoudsopgave}
 
 \thispagestyle{empty}
@@ -19,10 +18,14 @@
 				\includegraphics[width=\textwidth]{cultuurapp-logo.png}
 			\end{figure}
 \clearpage
-
+\setcounter{page}{0} 
+\thispagestyle{empty} 
+\ 
+\clearpage
 \tableofcontents
 \clearpage
-\clearpage
+
+
 \section{Introductie}
 In dit document wordt de structuur van de software, bestaande uit verschillende softwarecomponenten uitgewerkt. De relaties tussen deze componenten, communicatie tussen deze componenten en de eigenschappen van deze componenten worden gegeven. Dit gebeurt aan de hand van de externe kenmerken van de verschillende softwarecomponenten.
 
@@ -47,8 +50,9 @@ In dit document wordt de structuur van de software, bestaande uit verschillende 
 	
 		\subsubsection{Definities}
 		\begin{tabular}{ l | l }
-			Client & Een applicatie of een computersysteem met toegang tot het systeem. \\
-			User/Gebruiker & Een gebruiker van het in dit systeem beschreven systeem.
+			Client & Een computerssysteem dat toegang heeft tot de\\& webserver van CultuurApp. \\
+			(CultuurApp-)User/Gebruiker & Een gebruiker van de CultuurApp.\\
+Toerist & Een anonieme bezoeker van de CultuurApp.
 		\end{tabular}
 		
 	\subsection{Referenties}
@@ -66,7 +70,7 @@ Het systeem bestaat op het hoogste niveau uit drie delen. In dit hoofdstuk wordt
 Het systeem wordt ontwikkeld volgens een HMVC-patroon. Dit staat voor een Hierarchical-Model-View-Controller-patroon. Kohana\footnote{http://kohanaframework.org/}, een PHP-framework, maakt gebruik van dit patroon en het CultuurApp-systeem bouwt daar op voort. Een HMVC-patroon schrijft voor dat de modellen (de daadwerkelijke data), de weergave en de controllers in gescheiden bestanden en mappen worden geprogrammeerd. Op deze manier is het terugvinden van specifieke code makkelijker en de code zelf blijft ook overzichtelijker. In het CultuurApp-systeem worden de modellen en controllers zelfs volledig gescheiden van de views daar de views op de client worden opgebouwd.
 		\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=8cm]{MVC-HMVC.png}
+		\includegraphics[width=12cm]{MVC-HMVC.png}
 		\caption{\label{hmvc}HMVC, bron ibuildings.com\footnote{http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/}}
 		\end{figure}
 	
@@ -100,7 +104,7 @@ Voor de implementatie wordt gestart worden voor elke methode sluitende test-case
 		\item Front-end $\Rightarrow$ Draait op Javascript op de computer / handheld van de gebruiker van het systeem.
 		\item Back-end $\Rightarrow$ Debian server waarop PHP en MySQL draaien.
 		\item Processing-end $\Rightarrow$ Dit deel van het systeem verwerkt de afbeeldingen uit de data-set en upload deze naar de back-end. De processing vindt plaats op aparte machines, onafhankelijk van de server voor de back-end.
-		\item External Sources $\Rightarrow$ Externe servers, zoals die van Google en Facebook.[Req:3.1.1\&3.4\&3.5\&3.6\&3.8\&3.9]
+		\item External Sources $\Rightarrow$ Externe servers, zoals die van Google en Facebook. [Req:3.1.1 \& 3.4 \& 3.5 \& 3.6 \& 3.8 \& 3.9]
 
 	\end{itemize}
 	\begin{figure}[ht!]
@@ -188,8 +192,8 @@ De persoongegevens van gebruikers worden na opvragen van de authenticatie provid
 De machines voor processing verwerken data onafhankelijk van de back-end en zijn niet gevoelig voor pieken in de bezoekersaantallen. Bij de initi\"ele verwerking van de data-set zullen veel resources (werkgeheugen en opslag) en processorkracht nodig zijn, hiervoor zullen meerdere machines worden gebruikt. Later is een enkele machine genoeg om de toegevoegde data te verwerken [Req\#54\&47].\\ \\
 Soorten actoren:
 	\begin{itemize}
-		\item Anonieme gebruiker
-		\item Ingelogde gebruikers
+		\item Toerist (anonieme gebruiker)
+		\item CultuurApp-gebruiker (ingelogde gebruikers)
 	\end{itemize}
 
 Wanneer de gebruikers bij het systeem zijn ingelogd kunnen ze content toevoegen, anonieme gebruikers kunnen dit niet. Bij het toevoegen van data wordt gecontroleerd of er een gebruiker is ingelogd, zo niet dan lukt het toevoegen niet en zal de gebruiker eerst worden gevraagd in te loggen via een van de vele beschreven authenticatie providers [Req:3.9].
