@@ -53,7 +53,7 @@ data</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>390</x>
-      <y>210</y>
+      <y>200</y>
       <w>160</w>
       <h>70</h>
     </coordinates>
@@ -65,31 +65,7 @@ request</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>390</x>
-      <y>230</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-data</panel_attributes>
-    <additional_attributes>30;50;140;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>390</x>
-      <y>300</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.
-request</panel_attributes>
-    <additional_attributes>140;50;30;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>390</x>
-      <y>320</y>
+      <y>220</y>
       <w>160</w>
       <h>70</h>
     </coordinates>
@@ -101,24 +77,12 @@ data</panel_attributes>
     <type>com.umlet.element.custom.Node</type>
     <coordinates>
       <x>220</x>
-      <y>330</y>
+      <y>230</y>
       <w>200</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>center:&lt;&lt;Harvesters&gt;&gt;
 center:Harvester::Weather</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Node</type>
-    <coordinates>
-      <x>220</x>
-      <y>240</y>
-      <w>200</w>
-      <h>60</h>
-    </coordinates>
-    <panel_attributes>center:&lt;&lt;Harvesters&gt;&gt;
-center:Harvester::Twitter</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -151,7 +115,7 @@ center:Harvester::Flickr</panel_attributes>
       <x>190</x>
       <y>20</y>
       <w>240</w>
-      <h>380</h>
+      <h>310</h>
     </coordinates>
     <panel_attributes>Harvesters</panel_attributes>
     <additional_attributes/>
@@ -160,7 +124,7 @@ center:Harvester::Flickr</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>330</x>
-      <y>360</y>
+      <y>260</y>
       <w>50</w>
       <h>110</h>
     </coordinates>
@@ -171,7 +135,7 @@ center:Harvester::Flickr</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>340</x>
-      <y>360</y>
+      <y>260</y>
       <w>96</w>
       <h>110</h>
     </coordinates>
@@ -183,7 +147,7 @@ cache</panel_attributes>
     <type>com.umlet.element.custom.Database</type>
     <coordinates>
       <x>310</x>
-      <y>450</y>
+      <y>350</y>
       <w>110</w>
       <h>40</h>
     </coordinates>
@@ -218,19 +182,7 @@ center:FourSquare</panel_attributes>
     <type>com.umlet.element.custom.Node</type>
     <coordinates>
       <x>530</x>
-      <y>240</y>
-      <w>160</w>
-      <h>60</h>
-    </coordinates>
-    <panel_attributes>center:&lt;&lt;External Source&gt;&gt;
-center:Twitter</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Node</type>
-    <coordinates>
-      <x>530</x>
-      <y>330</y>
+      <y>230</y>
       <w>160</w>
       <h>60</h>
     </coordinates>
@@ -272,17 +224,5 @@ store</panel_attributes>
     <panel_attributes>lt=&lt;&lt;
 store</panel_attributes>
     <additional_attributes>30;100;120;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>100</x>
-      <y>140</y>
-      <w>140</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;
-store</panel_attributes>
-    <additional_attributes>30;30;120;130</additional_attributes>
   </element>
 </diagram>

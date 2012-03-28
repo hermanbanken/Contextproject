@@ -41,19 +41,7 @@ center:Harvester::FourSquare</panel_attributes>
     <type>com.umlet.element.custom.Node</type>
     <coordinates>
       <x>610</x>
-      <y>660</y>
-      <w>200</w>
-      <h>60</h>
-    </coordinates>
-    <panel_attributes>center:&lt;&lt;Harvesters&gt;&gt;
-center:Harvester::Twitter</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Node</type>
-    <coordinates>
-      <x>610</x>
-      <y>750</y>
+      <y>650</y>
       <w>200</w>
       <h>60</h>
     </coordinates>
@@ -101,19 +89,7 @@ center:Flickr</panel_attributes>
     <type>com.umlet.element.custom.Node</type>
     <coordinates>
       <x>920</x>
-      <y>660</y>
-      <w>160</w>
-      <h>60</h>
-    </coordinates>
-    <panel_attributes>center:&lt;&lt;External Source&gt;&gt;
-center:Twitter</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.custom.Node</type>
-    <coordinates>
-      <x>920</x>
-      <y>750</y>
+      <y>650</y>
       <w>160</w>
       <h>60</h>
     </coordinates>
@@ -149,19 +125,7 @@ data</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>780</x>
-      <y>650</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-data</panel_attributes>
-    <additional_attributes>30;50;140;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>780</x>
-      <y>740</y>
+      <y>640</y>
       <w>160</w>
       <h>70</h>
     </coordinates>
@@ -197,19 +161,7 @@ request</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>780</x>
-      <y>630</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.
-request</panel_attributes>
-    <additional_attributes>140;50;30;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>780</x>
-      <y>720</y>
+      <y>620</y>
       <w>160</w>
       <h>70</h>
     </coordinates>
@@ -242,22 +194,10 @@ store</panel_attributes>
     <additional_attributes>30;40;120;50</additional_attributes>
   </element>
   <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>490</x>
-      <y>560</y>
-      <w>140</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;
-store</panel_attributes>
-    <additional_attributes>30;30;120;130</additional_attributes>
-  </element>
-  <element>
     <type>com.umlet.element.custom.Database</type>
     <coordinates>
       <x>700</x>
-      <y>870</y>
+      <y>770</y>
       <w>110</w>
       <h>40</h>
     </coordinates>
@@ -268,7 +208,7 @@ store</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>730</x>
-      <y>780</y>
+      <y>680</y>
       <w>96</w>
       <h>110</h>
     </coordinates>
@@ -429,7 +369,7 @@ POST</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>720</x>
-      <y>780</y>
+      <y>680</y>
       <w>50</w>
       <h>110</h>
     </coordinates>
@@ -442,11 +382,11 @@ POST</panel_attributes>
       <x>770</x>
       <y>260</y>
       <w>310</w>
-      <h>590</h>
+      <h>470</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;
 GET</panel_attributes>
-    <additional_attributes>290;30;290;80;130;140;130;570;30;550</additional_attributes>
+    <additional_attributes>290;30;290;80;130;140;130;450;30;450</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.custom.Node</type>
@@ -759,7 +699,7 @@ bg=</panel_attributes>
       <x>580</x>
       <y>440</y>
       <w>240</w>
-      <h>380</h>
+      <h>310</h>
     </coordinates>
     <panel_attributes>Harvesters</panel_attributes>
     <additional_attributes/>
