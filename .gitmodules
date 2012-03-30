@@ -1,3 +1,6 @@
-[submodule "lib/bootstrap"]
-	path = lib/bootstrap
+[submodule "public/lib/bootstrap"]
+	path = public/lib/bootstrap
 	url = https://github.com/twitter/bootstrap.git
+[submodule "kohana"]
+	path = kohana
+	url = https://github.com/kohana/core.git
