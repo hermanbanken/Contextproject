@@ -3,7 +3,7 @@
 class Controller_Welcome extends Controller {
 	
 	public function action_index(){
-		echo "Hello World";
+		echo "Sjoerd is homo!";
 	}
 	
 }
