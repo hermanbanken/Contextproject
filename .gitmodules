@@ -3,4 +3,4 @@
 	url = https://github.com/twitter/bootstrap.git
 [submodule "kohana"]
 	path = kohana
-	url = git://github.com/kohana/core.git
+	url = https://github.com/kohana/core.git
