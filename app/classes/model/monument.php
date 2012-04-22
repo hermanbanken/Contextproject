@@ -12,8 +12,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
-	  	`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	  	`title` varchar(80) NOT NULL,
+	  	`id_monument` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	  	`id_category` int(10) unsigned  NULL,
+	  	`id_subcategory` int(10) unsigned  NULL,
+	  	`name` varchar(80) NOT NULL,
 	  	`wiki_url` varchar(200) NOT NULL,
 	  	`province` varchar(12) NOT NULL,
 	  	`municipality` varchar(50) NOT NULL,
@@ -25,6 +27,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	  	`description` text NULL,
 	  	`lng` double(10, 5) NULL,
 	  	`lat` double(10, 5) NULL,
-	  	PRIMARY KEY (`id`)
+	  	PRIMARY KEY (`id_monument`)
 	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";	
 }
+?>
