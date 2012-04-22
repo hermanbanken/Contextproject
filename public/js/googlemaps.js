@@ -15,6 +15,7 @@ function initialize() {
         };
         map = new google.maps.Map(document.getElementById("kaart"),
             myOptions);
+        
       }
  
 /**
@@ -57,14 +58,16 @@ function initialize() {
 		        position: new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]),
 		        map: map
 		      });
-			   
+			 
 			   var infowindow = new google.maps.InfoWindow();
 
-			   
+			  
 		      markersArray.push(marker);
 		      google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
-		        	infowindow.setContent(locations[i]["description"].substring(0,200)+"<a href='id/"+locations[i]["id"]+"'>Meer</a>");
+		        	infowindow.setContent("<h2>"+locations[i]["name"]+"</h2>"
+		        							+locations[i]["description"].substring(0,200)
+		        							+"<a href='id/"+locations[i]["id"]+"'> Meer</a>");
 		        	infowindow.open(map, marker);
 		        }
 		      })(marker, i));

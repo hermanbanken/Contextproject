@@ -45,6 +45,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$_return[] = array("description" => $monument->description, 
 								"longitude" => $monument->lng,
 								"latitude" => $monument->lat,
+								"name" => $monument->name,
 								"id" => $monument->id_monument);
 			} else {
 				$_return[] = array("description" => $monument->description, 
