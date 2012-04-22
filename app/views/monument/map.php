@@ -3,8 +3,7 @@
 		<p class="lead">Llorem ipsum blablablalablablablablablablabla</p>
 	</header>
 
-	<div class="span8" id="kaart" style="margin:0; 0;height: 800px;">
-
+	<div class="span8" id="kaart" style="margin:0; height: 800px;">
 	</div>
 	
 	<div class="span4" id="filter">

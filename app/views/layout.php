@@ -15,10 +15,10 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/css/docs.css" rel="stylesheet">
-    <link href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap.css'); ?>" rel="stylesheet">
+    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap-responsive.css'); ?>" rel="stylesheet">
+    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/docs.css'); ?>" rel="stylesheet">
+    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap.css'); ?>" rel="stylesheet">
 
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/jquery.min.js" ></script>
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/googlemaps.js" ></script>
@@ -30,10 +30,10 @@
     <![endif]-->
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/ico/favicon.ico">
-    <link rel="apple-touch-icon" href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/ico/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/ico/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo URL::base(); ?>lib/bootstrap/docs/assets/ico/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="<?php echo URL::site('lib/bootstrap/docs/assets/ico/favicon.ico'); ?>">
+    <link rel="apple-touch-icon" href="<?php URL::site('lib/bootstrap/docs/assets/ico/apple-touch-icon.png'); ?>">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php URL::site('lib/bootstrap/docs/assets/ico/apple-touch-icon-72x72.png'); ?>">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php echo URL::site('lib/bootstrap/docs/assets/ico/apple-touch-icon-114x114.png'); ?>">
 </head>
 
 <body data-spy="scroll" data-target=".subnav" data-offset="50" onLoad="initialize()">
