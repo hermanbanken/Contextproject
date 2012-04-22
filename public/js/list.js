@@ -2,9 +2,9 @@
 var html = "";
 
 $(document).ready(function() {
-	//updatePins();
-	$('#categories').bind('change', function() {
-		updatePins();
+	updatePins();
+	$('#filter_list #categories').bind('change', function() {
+		updateList();
 	});
 });
 
@@ -13,9 +13,9 @@ $(document).ready(function() {
  * functie om de spelden te updaten aan de hand van de selectiecriteria
  * @returns helemaal niks!
  */
- function updatePins() {
+ function updateList() {
 	 // alle huidige markers weggooien
-	html = "";
+	$('#monument_list').val('');
 	
 	 /*
 	 // uit de selectiecriteria een array bouwen met geselecteerde opties
@@ -26,29 +26,17 @@ $(document).ready(function() {
 	 }*/
 	 
 	 // locaties ophalen met ajax
-	 $.post('getmonumenten', {category: $('#categories').val()}, succes = function(data) {
+	 $.post('getmonumenten', {category: $('#filter_list #categories').val()}, succes = function(data) {
 		 
 		 locations = data;
 		 
-		 /*
-		  zo moet de ajax data geintepreteerd worden om dit te laten werken
-		  var locations = [
-		                  ['Test1', 52.469397, 5.509644],
-		                  ['Test1', 52.569397, 5.609644],
-		                  ...
-		                  ['Testn', long, lat]
-			            ];
-		 */
-		 // voor alle locaties een nieuwe speld aanmaken
+		 
 		 for (i = 0; i < locations.length; i++) {  
-			   			   
-			   //alert(locations[i]["description"]);
-			   html = html+'<tr><td class="span2"><div style="height:100px; overflow:hidden;">' + locations[i]['name'] + '</div></td><td class="span5"><div style="height:100px; overflow:hidden;">' + locations[i]['description'] + '</div></td><td class="span1"><div style="height:100px; overflow:hidden;"><img src="http://placehold.it/100x100" alt=""></div></td></tr>';
-		      
-		      
+			   var tr = '<tr><td class="span2"><div style="height:100px; overflow:hidden;">' + locations[i]['name'] + '</div></td><td class="span5"><div style="height:100px; overflow:hidden;">' + locations[i]['description'] + '</div></td><td class="span1"><div style="height:100px; overflow:hidden;"><img src="http://placehold.it/100x100" alt=""></div></td></tr>';
+		       $('#monument_list').append(html);
 		    }
 			
-			$('#monument_list').append(html);
+			
 	 }, "json");
 	 
  }

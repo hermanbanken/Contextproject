@@ -35,10 +35,15 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$monuments = ORM::factory('monument');
 		
 		if(isset($post['category']) AND $post['category'] >= 0) $monuments = $monuments->where('id_category', '=', $post['category']);
+		$monuments = $monuments->limit(20);
+		if(isset($post['town']) AND $post['town'] != 'stad' && $post['town'] != '') $monuments = $monuments->where('town','=',$post['town']);
+		if(isset($post['street']) AND $post['street'] != 'straat' && $post['street'] != '') $monuments = $monuments->where('street','=',$post['street']);
 		if(isset($post['limit'])) $monuments = $monuments->limit($post['limit']);
 		if(isset($post['offset']) AND isset($post['offset'])) $monuments = $monuments->offset($post['offset']);
 	
-		if($map) $monuments = $monuments->order_by(DB::expr('RAND()'));
+		if(!$map) $monuments = $monuments->limit(20);
+		$monuments = $monuments->order_by(DB::expr('RAND()'));
+		
 		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
 		$monuments = $monuments->find_all();
 		$_return = array();

@@ -10,8 +10,8 @@
 		<div class="span4" id="filter">
 			<h1>Selecteren</h1>
 			<input id="search" type="text" value="zoeken" /> 
-			<input id="stad" type="text" value="stad" /> 
-			<input id="straat" type="text" value="straat" /> 
+			<input id="town" type="text" value="stad" /> 
+			<input id="street" type="text" value="straat" /> 
 			<select id="categories">
 				<option value='-1'>-- Categorie</option>
 				<?php 

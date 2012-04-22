@@ -3,7 +3,10 @@ var markersArray = [];
 
 $(document).ready(function() {
 	updatePins();
-	$('#categories').bind('change', function() {
+	$('#filter select').bind('change', function() {
+		updatePins();
+	})
+	$('#filter input').bind('blur', function() {
 		updatePins();
 	});
 });
@@ -39,7 +42,14 @@ function initialize() {
 	 }*/
 	 
 	 // locaties ophalen met ajax
-	 $.post('getmonumenten', {category: $('#categories').val(), limit: 500}, succes = function(data) {
+	 $.post('getmonumenten', {
+		 	category: $('#categories').val(),
+		 	limit: 500,
+		 	town: $('#town').val(),
+		 	search: $('#search').val(),
+		 	street: $('#street').val()
+		 	
+		 	}, succes = function(data) {
 		 
 		 locations = data;
 		 
