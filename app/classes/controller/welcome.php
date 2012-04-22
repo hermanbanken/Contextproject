@@ -1,9 +1,10 @@
-<?php
+<?php defined('SYSPATH') or die('No direct access allowed.');
 
 class Controller_Welcome extends Controller {
 	
 	public function action_index(){
-		echo "Hello World";
+		$v = View::factory("splash");
+		$this->response->body($v);
 	}
 	
 }
