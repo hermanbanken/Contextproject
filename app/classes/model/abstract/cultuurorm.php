@@ -11,8 +11,9 @@ abstract class Model_Abstract_Cultuurorm extends ORM {
 	 */
 	public static function schema(){
 		$prefix = Kohana::$config->load('database.default.table_prefix');
-		$sql = sprintf(static::$schema_sql, $prefix.static::$entity."s");
+		$sql = sprintf(static::$schema_sql, Inflector::plural($prefix.static::$entity));
 		return $sql;
 	}
 	
 }
+?>
