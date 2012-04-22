@@ -1,7 +1,7 @@
 # Turn on URL rewriting
 RewriteEngine On
 
-# Installation directory
+# Installation directory relative to the localhost (ie. http://localhost<RewriteBase>/)
 RewriteBase /
 
 # Protect hidden files from being viewed
