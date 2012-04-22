@@ -22,6 +22,7 @@
 
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/jquery.min.js" ></script>
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/googlemaps.js" ></script>
+    <script type="text/javascript" src="<?php echo URL::base(); ?>js/list.js" ></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk&sensor=true">
     </script>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
