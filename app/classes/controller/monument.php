@@ -28,16 +28,32 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 	
-	public function action_getpins() {
-		die(var_dump($this->request->current()));
-		$categorie = 1;
-		$subcategorie = 2;
+	public function action_getmonumenten() {
+		$post = $this->request->post();
+		$map = preg_match('/map/',$this->request->initial()->referrer());
+		$category = $post['category'];
 		
-		$monumenten = ORM::factory('monument');
+		$monuments = ORM::factory('monument');
 		
-		if(isset($categorie)) $monumenten = $monumenten->where('id_category','=',$categorie);
+		if(isset($category) AND $category >= 0) $monuments = $monuments->where('id_category', '=', $category);
 		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
-		die($monumenten = $monumenten->count_all());
+		$monuments = $monuments->find_all();
+		$_return = array();
+		foreach($monuments as $key=>$monument) {
+			//echo $monument->lng.",".$monument->lat;
+			if($map) {
+				$_return[] = array("description" => $monument->description, 
+								"longitude" => $monument->lng,
+								"latitude" => $monument->lat,
+								"id" => $monument->id_monument);
+			} else {
+				$_return[] = array("description" => $monument->description, 
+								"name" => $monument->name,
+								"id" => $monument->id_monument);	
+			}
+		}
+		die(json_encode($_return));
+		
 	}
 }
 ?>
