@@ -28,17 +28,41 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 	
+	public function action_getsteden() {
+		$monuments = ORM::factory('monument')
+		->group_by('town')
+		->find_all();
+		
+		$towns = array();
+		foreach ($monuments AS $monument) {
+			$towns[] = $monument->town;
+		}
+		
+		die(json_encode($towns));
+	}
+	
 	public function action_getmonumenten() {
 		$post = $this->request->post();
 		$map = preg_match('/map/',$this->request->initial()->referrer());
 		
+		foreach($post as $key=>$value) {
+			${$key} = $value;
+		}
+		
 		$monuments = ORM::factory('monument');
 		
 		if(isset($post['category']) AND $post['category'] >= 0) $monuments = $monuments->where('id_category', '=', $post['category']);
+		$monuments = $monuments->limit(20);
+		if(isset($post['town']) AND $post['town'] != 'stad' && $post['town'] != '') $monuments = $monuments->where('town','=',$post['town']);
 		if(isset($post['limit'])) $monuments = $monuments->limit($post['limit']);
 		if(isset($post['offset']) AND isset($post['offset'])) $monuments = $monuments->offset($post['offset']);
 	
-		if($map) $monuments = $monuments->order_by(DB::expr('RAND()'));
+		if(!$map) $monuments = $monuments->limit(20);
+		if(isset($limit)) $monuments = $monuments->limit($limit);
+		if(isset($limit) AND isset($offset)) $monuments = $monuments->offset($offset);
+	
+		$monuments = $monuments->order_by(DB::expr('RAND()'));
+		
 		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
 		$monuments = $monuments->find_all();
 		$_return = array();

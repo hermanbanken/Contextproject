@@ -1,12 +1,25 @@
-var map = null; 
+var map = null;
 var markersArray = [];
+var bounds = null;
 
-$(document).ready(function() {
-	updatePins();
-	$('#categories').bind('change', function() {
-		updatePins();
-	});
-});
+$(document).ready(		
+		function() {
+
+			$("#kaart").height($(window).height() - 40);
+			
+			updatePins();
+			$('#filter').submit(function (e) {
+				e.preventDefault();
+				updatePins();
+			});
+
+			$.post('getsteden', {categorie: "hoi"}, succes = function(towns) {
+				$("#town").autocomplete({
+					source : towns
+				});
+			}, "json");
+		});
+
 function initialize() {
         var myOptions = {
           center: new google.maps.LatLng(52.469397, 5.509644),
@@ -15,13 +28,16 @@ function initialize() {
         };
         map = new google.maps.Map(document.getElementById("kaart"),
             myOptions);
+        bounds = new google.maps.LatLngBounds();
         
       }
  
 /**
  * functie om de spelden te updaten aan de hand van de selectiecriteria
+ * 
  * @returns helemaal niks!
  */
+
  function updatePins() {
 	 // alle huidige markers weggooien
 	 if (markersArray) {
@@ -39,9 +55,16 @@ function initialize() {
 	 }*/
 	 
 	 // locaties ophalen met ajax
-	 $.post('getmonumenten', {category: $('#categories').val(), limit: 500}, succes = function(data) {
+	 $.post('getmonumenten', {
+		 	category: $('#categories').val(),
+		 	limit: 100,
+		 	town: $('#town').val(),
+		 	street: $('#street').val()
+		 	
+		 	}, succes = function(data) {
 		 
 		 locations = data;
+		 bounds = new google.maps.LatLngBounds();
 		 
 		 /*
 		  zo moet de ajax data geintepreteerd worden om dit te laten werken
@@ -53,11 +76,13 @@ function initialize() {
 			            ];
 		 */
 		 // voor alle locaties een nieuwe speld aanmaken
-		 for (i = 0; i < locations.length; i++) {  
+		 for (i = 0; i < locations.length; i++) {
+			 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
 			   marker = new google.maps.Marker({
-		        position: new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]),
+		        position: longlat,
 		        map: map
 		      });
+			   bounds.extend(longlat);
 			 
 			   var infowindow = new google.maps.InfoWindow();
 
@@ -65,13 +90,15 @@ function initialize() {
 		      markersArray.push(marker);
 		      google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
-		        	infowindow.setContent("<h2>"+locations[i]["name"]+"</h2>"
+		        	infowindow.setContent("<a href='id/"+locations[i]["id"]+"'><img src=\"/public/photos/"+locations[i]["id"]+".jpg\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
 		        							+locations[i]["description"].substring(0,200)
-		        							+"<a href='id/"+locations[i]["id"]+"'> Meer</a>");
+		        							+" <a href='id/"+locations[i]["id"]+"'>Meer</a>");
 		        	infowindow.open(map, marker);
 		        }
 		      })(marker, i));
 		    }
-	 }, "json");
+	      map.fitBounds(bounds);
+
+		 }, "json");
 	 
  }
