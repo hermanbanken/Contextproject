@@ -10,7 +10,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 */
 	public function action_map(){
 		$v = View::factory(static::$entity.'/map');
-		$this->template->body = $v;	
+		
+		$this->template->body = $v;
+	}
+	
+	/**
+	 * action_id
+	 * Action for getting one particular object by id in single view
+	 */
+	public function action_id(){
+		$v = View::factory('monument/single');
+		$id = $this->request->param('id');
+		
+// 		echo $id;
+		
+		$monument = ORM::factory('monument')
+		->where('id_monument', '=', $id)
+		->find();
+		
+		$v->bind('monument', $monument);
+		$this->template->body = $v;
 	}
 	
 	public function action_getpins() {
@@ -25,5 +44,4 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die($monumenten = $monumenten->count_all());
 	}
 }
-
 ?>

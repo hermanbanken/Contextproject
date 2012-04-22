@@ -17,6 +17,15 @@ class Controller_Abstract_Object extends Controller_Template {
 	}
 	
 	/**
+	 * action_index
+	 * Action for listing all objects of type
+	 */
+	public function action_list(){
+		$v = View::factory(static::$entity.'/list');
+		$this->template->body = $v;
+	}
+	
+	/**
 	 * action_id
 	 * Action for getting one particular object by id in single view
 	 */
