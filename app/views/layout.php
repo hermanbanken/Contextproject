@@ -45,7 +45,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="./index.html">CultuurApp</a>
+          <a class="brand" href="<?php echo URL::base(); ?>index.php">CultuurApp</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active">
@@ -59,6 +59,7 @@
         </div>
       </div>
     </div>
+    <div class="container">
 	<?php 
 	echo $body;
  	?>
