@@ -1,11 +1,15 @@
 var map = null; 
 var markersArray = [];
+var bounds = null;
 
 $(document).ready(function() {
 	updatePins();
 	$('#filter select').bind('change', function() {
 		updatePins();
 	})
+	$('#filter input').bind('click', function() {
+		$(this).focus().select();
+	});
 	$('#filter input').bind('blur', function() {
 		updatePins();
 	});
@@ -18,6 +22,7 @@ function initialize() {
         };
         map = new google.maps.Map(document.getElementById("kaart"),
             myOptions);
+        bounds = new google.maps.LatLngBounds();
         
       }
  
@@ -44,7 +49,7 @@ function initialize() {
 	 // locaties ophalen met ajax
 	 $.post('getmonumenten', {
 		 	category: $('#categories').val(),
-		 	limit: 500,
+		 	limit: 100,
 		 	town: $('#town').val(),
 		 	search: $('#search').val(),
 		 	street: $('#street').val()
@@ -52,6 +57,7 @@ function initialize() {
 		 	}, succes = function(data) {
 		 
 		 locations = data;
+		 bounds = new google.maps.LatLngBounds();
 		 
 		 /*
 		  zo moet de ajax data geintepreteerd worden om dit te laten werken
@@ -63,11 +69,13 @@ function initialize() {
 			            ];
 		 */
 		 // voor alle locaties een nieuwe speld aanmaken
-		 for (i = 0; i < locations.length; i++) {  
+		 for (i = 0; i < locations.length; i++) {
+			 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
 			   marker = new google.maps.Marker({
-		        position: new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]),
+		        position: longlat,
 		        map: map
 		      });
+			   bounds.extend(longlat);
 			 
 			   var infowindow = new google.maps.InfoWindow();
 
@@ -82,6 +90,8 @@ function initialize() {
 		        }
 		      })(marker, i));
 		    }
-	 }, "json");
+	      map.fitBounds(bounds);
+
+		 }, "json");
 	 
  }
