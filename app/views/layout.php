@@ -45,14 +45,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<?php echo URL::base(); ?>index.php">CultuurApp</a>
+          <a class="brand" href="<?php echo URL::site(''); ?>">CultuurApp</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active">
-                <a href="<?php echo URL::base(); ?>index.php/monument/map">Kaart</a>
+                <a href="<?php echo URL::site('monument/map'); ?>">Kaart</a>
               </li>
               <li class="">
-                <a href="<?php echo URL::base(); ?>index.php/monument/list">Lijst</a>
+                <a href="<?php echo URL::site('monument/list'); ?>">Lijst</a>
               </li>
             </ul>
           </div>
