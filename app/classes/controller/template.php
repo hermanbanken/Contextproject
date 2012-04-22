@@ -57,7 +57,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		// Prepare javascript includes
 		$js_foot = array();
 		$js_head = array();
-		foreach($js as $name => $j){
+		foreach($this->js as $name => $j){
 			$n = sprintf("<script src='%s'></script>", $j['src']);
 			if($j['head']) $js_head[] = $n;
 			else $js_food[] = $n;

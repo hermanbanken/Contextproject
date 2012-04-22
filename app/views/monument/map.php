@@ -1,4 +1,3 @@
-
 <div class="container">
 
     <header class="jumbotron subhead" id="overview">
@@ -28,5 +27,3 @@
     </form>
 
 </div>
-
-
