@@ -10,6 +10,16 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
         ),
 	);
 	protected $_primary_key = 'id_monument';
+	protected $_belongs_to = array(
+		'category'=> array(
+			'model' => 'category',
+			'foreign_key' => 'id_category',
+		),
+		'subcategory'=> array(
+			'model' => 'subcategory',
+			'foreign_key' => 'id_subcategory',
+		),
+	);
 	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
