@@ -1,5 +1,4 @@
-var map = null; 
-var markersArray = [];
+
 var html = "";
 
 $(document).ready(function() {
@@ -16,12 +15,8 @@ $(document).ready(function() {
  */
  function updatePins() {
 	 // alle huidige markers weggooien
-	 if (markersArray) {
-		    for (i in markersArray) {
-		      markersArray[i].setMap(null);
-		    }
-		    markersArray.length = 0;
-		  }
+	html = "";
+	
 	 /*
 	 // uit de selectiecriteria een array bouwen met geselecteerde opties
 	 var options = [];
