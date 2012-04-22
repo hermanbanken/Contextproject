@@ -2,7 +2,7 @@ var map = null;
 var markersArray = [];
 
 $(document).ready(function() {
-	//updatePins();
+	updatePins();
 	$('#categories').bind('change', function() {
 		updatePins();
 	});
@@ -39,7 +39,7 @@ function initialize() {
 	 }*/
 	 
 	 // locaties ophalen met ajax
-	 $.post('getmonumenten', {category: $('#categories').val()}, succes = function(data) {
+	 $.post('getmonumenten', {category: $('#categories').val(), limit: 500}, succes = function(data) {
 		 
 		 locations = data;
 		 
