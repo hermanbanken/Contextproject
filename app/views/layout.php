@@ -22,6 +22,7 @@
 
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/jquery.min.js" ></script>
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/googlemaps.js" ></script>
+    <script type="text/javascript" src="<?php echo URL::base(); ?>js/list.js" ></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk&sensor=true">
     </script>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -45,14 +46,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<?php echo URL::base(); ?>index.php">CultuurApp</a>
+          <a class="brand" href="<?php echo URL::site(''); ?>">CultuurApp</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active">
-                <a href="<?php echo URL::base(); ?>index.php/monument/map">Kaart</a>
+                <a href="<?php echo URL::site('monument/map'); ?>">Kaart</a>
               </li>
               <li class="">
-                <a href="<?php echo URL::base(); ?>index.php/monument/list">Lijst</a>
+                <a href="<?php echo URL::site('monument/list'); ?>">Lijst</a>
               </li>
             </ul>
           </div>
