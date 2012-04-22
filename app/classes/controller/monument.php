@@ -28,6 +28,19 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 	
+	public function action_getsteden() {
+		$monuments = ORM::factory('monument')
+		->group_by('town')
+		->find_all();
+		
+		$towns = array();
+		foreach ($monuments AS $monument) {
+			$towns[] = $monument->town;
+		}
+		
+		die(json_encode($towns));
+	}
+	
 	public function action_getmonumenten() {
 		$post = $this->request->post();
 		$map = preg_match('/map/',$this->request->initial()->referrer());
@@ -37,7 +50,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if(isset($post['category']) AND $post['category'] >= 0) $monuments = $monuments->where('id_category', '=', $post['category']);
 		$monuments = $monuments->limit(20);
 		if(isset($post['town']) AND $post['town'] != 'stad' && $post['town'] != '') $monuments = $monuments->where('town','=',$post['town']);
-		if(isset($post['street']) AND $post['street'] != 'straat' && $post['street'] != '') $monuments = $monuments->where('street','=',$post['street']);
 		if(isset($post['limit'])) $monuments = $monuments->limit($post['limit']);
 		if(isset($post['offset']) AND isset($post['offset'])) $monuments = $monuments->offset($post['offset']);
 	

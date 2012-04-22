@@ -3,15 +3,11 @@
 		<p class="lead">Llorem ipsum blablablalablablablablablablabla</p>
 	</header>
 
-	<div class="row">
-		<div class="span8" id="kaart" style="height: 800px;">
-		</div>
 		
-		<div class="span4" id="filter">
-			<h1>Selecteren</h1>
+		<div style="position: absolute; top: 40px; left: 100px; width: 220px; z-index: 2; padding: 20px; background: #1E1E1E;">
+			<form method="post" action=""  id="filter" style="margin-bottom: 0;">
 			<input id="search" type="text" value="zoeken" /> 
 			<input id="town" type="text" value="stad" /> 
-			<input id="street" type="text" value="straat" /> 
 			<select id="categories">
 				<option value='-1'>-- Categorie</option>
 				<?php 
@@ -20,7 +16,8 @@
 					echo "<option value=".$category->id_category.">".$category->name."</option>";
 				}
 				?>
-			</select>
+			</select><br />
+			<input type="submit" value="Filter" />
 			</form>
 		</div>
-	</div>
+	<div id="kaart" style="position: absolute; z-index: 1; top: 40px; left: 0; width: 100%; height: 100%;"></div>
