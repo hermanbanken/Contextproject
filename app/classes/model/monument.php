@@ -9,6 +9,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
             'max_length' => array(50),
         ),
 	);
+	protected $_primary_key = 'id_monument';
 	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
