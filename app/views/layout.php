@@ -60,11 +60,13 @@
         </div>
       </div>
     </div>
+	<div class='page'>
     <div class="container">
 	<?php 
 	echo $body;
  	?>
     </div>
+	</div>
 </div>
 </body>
 </html>

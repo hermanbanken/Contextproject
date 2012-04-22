@@ -9,6 +9,11 @@ class Controller_Welcome extends Controller_Template {
 		$this->template->body = $v;
 	}
 	
+	public function action_splash(){
+		$v = View::factory("scratch");
+		$this->template->body = $v;
+	}
+	
 }
 
 ?>
