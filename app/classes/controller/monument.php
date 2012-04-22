@@ -3,7 +3,6 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
-	protected $_primary_key = 'monument_id';
 	
 	/**
 	 * action_map
@@ -23,7 +22,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$v = View::factory('monument/single');
 		$id = $this->request->param('id');
 		
-		$monument = ORM::factory('monument')->find($id);
+		$monument = ORM::factory('monument', $id);
 		
 		$v->bind('monument', $monument);
 		$this->template->body = $v;
