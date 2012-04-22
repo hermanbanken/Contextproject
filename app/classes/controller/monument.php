@@ -41,6 +41,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if(isset($post['limit'])) $monuments = $monuments->limit($post['limit']);
 		if(isset($post['offset']) AND isset($post['offset'])) $monuments = $monuments->offset($post['offset']);
 	
+		if(!$map) $monuments = $monuments->limit(20);
 		$monuments = $monuments->order_by(DB::expr('RAND()'));
 		
 		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
