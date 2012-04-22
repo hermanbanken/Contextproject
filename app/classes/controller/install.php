@@ -4,13 +4,13 @@ class Controller_Install extends Controller {
 
 	/**
 	 * create_tables
+	 * Make a table in the database for each monument that has a schema inside
 	 */
 	public static function create_tables(){
 		$result = array();
 		foreach(self::get_schemas() as $sql){
 			$result[] = DB::query(Database::UPDATE, $sql)->execute();
 		}
-		return $result;
 	}
 
 	/**
