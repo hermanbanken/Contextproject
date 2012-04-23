@@ -46,7 +46,8 @@ $(document).ready(function() {
 			   			'</td>'+
 			   			'<td class="span5">'+
 			   				'<div style="height:100px; overflow:hidden;">'+
-			   					locations[i]['description']+
+			   					locations[i]['description'].substring(0,300)+
+			   					'... <a href="id/'+locations[i]['id']+'">Lees meer</a>'+
 			   				'</div></td><td class="span1">'+
 				   			'<div style="height:100px; overflow:hidden;">'+
 				   				'<a style="display: block; text-align: center;" href="id/'+locations[i]['id']+'">'+
