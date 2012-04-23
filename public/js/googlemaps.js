@@ -5,8 +5,8 @@ var initialLocation;
 
 $(document).ready(		
 		function() {
-			$('#filter_list #town').click(function() { this.select(); })
-			$('#filter_list #search').click(function() { this.select(); })
+			$('#town').click(function() { this.select(); })
+			$('#search').click(function() { this.select(); })
 
 			if($('#kaart').size()>0) {
 				var myOptions = {
