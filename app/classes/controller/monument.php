@@ -63,7 +63,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$monuments = $monuments->order_by(DB::expr('RAND()'));
 			
 		} else {
-			$monuments = $monuments->order_by(isset($sort)&&$sort>0?$sort:'name');
+			$monuments = $monuments->order_by(isset($sort)&&$sort>0?$sort:'street');
 			
 		}
 		

@@ -80,7 +80,7 @@ function initialize() {
 	 // locaties ophalen met ajax
 	 $.post('getmonumenten', {
 		 	category: $('#categories').val(),
-		 	limit: 500,
+		 	limit: 1000,
 		 	town: $('#town').val(),
 		 	street: $('#street').val()
 		 	
