@@ -81,6 +81,7 @@ function initialize() {
 	 $.post('getmonumenten', {
 		 	category: $('#categories').val(),
 		 	limit: 1000,
+		 	search: $('#search').val(),
 		 	town: $('#town').val(),
 		 	street: $('#street').val()
 		 	

@@ -56,6 +56,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if(isset($category) AND $category >= 0) $monuments = $monuments->where('id_category', '=', $category);
 		// town
 		if(isset($town) AND $town != 'stad' AND $town != '') $monuments = $monuments->where('town','=',$town);
+		// search
+		if(isset($search) AND $search !== 'zoeken' AND $search !== '') $monuments = $monuments->where('description','like','%'.$search.'%');
+		
 		
 		// DIE TOTAL IF NEEDED
 		if(isset($findtotal)) die($monuments->count_all());
