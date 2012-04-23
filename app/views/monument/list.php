@@ -1,9 +1,12 @@
-<div class="row-fluid">   
-    <div class="span10">
+<div class="row-fluid">
+    <div class="span10" style="position: relative;">
+    	<div style="position: absolute; top: 12px; right: 5px; font-size: 25px;">
+    		<a class="prev" href="#">&laquo;</a> <a class="next" href="#">&raquo;</a>
+    	</div>
         <table class="table table-striped table-condensed">
             <thead>
                 <tr>
-                    <th><h1>Monumenten</h1></th>
+                    <th><h1 style="margin-bottom: 10px;">Monumenten</h1></th>
                 </tr>
             </thead>
             <tbody id="monument_list">
@@ -11,7 +14,8 @@
         </table>
     </div>  
     
-    <div style="position: fixed; top:0; right: 50px; width: 220px; z-index: 2; padding: 20px; padding-top:60px; background: #1E1E1E;-webkit-border-radius: 20px;border-radius: 20px;">
+    <div class="span2">
+    		<h2 style="margin-top: 10px; margin-bottom: 10px;">Selectie</h2>
 			<form method="post" action=""  id="filter_list" style="margin-bottom: 0;">
 			<input id="search" type="text" value="zoeken" /> 
 			<input id="town" type="text" value="stad" /> 
