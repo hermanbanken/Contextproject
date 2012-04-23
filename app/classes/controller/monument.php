@@ -59,11 +59,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if(!$map) $monuments = $monuments->limit(1);
 		if(isset($limit)) $monuments = $monuments->limit($limit);
 		if(isset($limit) AND isset($offset)) $monuments = $monuments->offset($offset);
-		if(!isset($sort) OR $sort==0) {
+		if($map) {
 			$monuments = $monuments->order_by(DB::expr('RAND()'));
 			
 		} else {
-			$monuments = $monuments->order_by($sort);
+			$monuments = $monuments->order_by(isset($sort)&&$sort>0?$sort:'name');
 			
 		}
 		
