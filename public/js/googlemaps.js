@@ -26,7 +26,7 @@ $(document).ready(
 				});
 			}
 
-			$.post('getsteden', {}, succes = function(towns) {
+			$.post('monument/getsteden', {}, succes = function(towns) {
 				$("#town").autocomplete({
 					source : towns
 				});
@@ -78,7 +78,7 @@ function initialize() {
 		  }
 	 
 	 // locaties ophalen met ajax
-	 $.post('getmonumenten', {
+	 $.post('monument/getmonumenten', {
 		 	category: $('#categories').val(),
 		 	limit: 1000,
 		 	search: $('#search').val(),
@@ -106,9 +106,9 @@ function initialize() {
 		      markersArray.push(marker);
 		      google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
-		        	infowindow.setContent("<a href='id/"+locations[i]["id"]+"'><img src=\"/public/photos/"+locations[i]["id"]+".jpg\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
+		        	infowindow.setContent("<a href='monument/id/"+locations[i]["id"]+"'><img src=\"/photos/"+locations[i]["id"]+".jpg\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
 		        							+locations[i]["description"].substring(0,200)
-		        							+" <a href='id/"+locations[i]["id"]+"'>Meer</a>");
+		        							+" <a href='monument/id/"+locations[i]["id"]+"'>Meer</a>");
 		        	infowindow.open(map, marker);
 		        }
 		      })(marker, i));

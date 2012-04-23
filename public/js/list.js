@@ -66,7 +66,7 @@ function updateList(datachanged) {
 	// locaties ophalen met ajax
 	$
 			.post(
-					'getmonumenten',
+					'monument/getmonumenten',
 					{
 						category : $('#categories').val(),
 						limit : mpp,
@@ -79,7 +79,7 @@ function updateList(datachanged) {
 
 						locations = data;
 
-						$.post('getmonumenten', {
+						$.post('monument/getmonumenten', {
 							search: $('#search').val(),
 								category : $('#categories').val(),
 							town : $('#town').val(),
@@ -99,7 +99,7 @@ function updateList(datachanged) {
 							var tr = '<tr>'
 									+ '<td class="span2">'
 									+ '<div style="height:100px; overflow:hidden;">'
-									+ '<a href="id/'
+									+ '<a href="monument/id/'
 									+ locations[i]['id']
 									+ '">'
 									+ locations[i]['name']
@@ -110,15 +110,15 @@ function updateList(datachanged) {
 									+ '<div style="height:100px; overflow:hidden;">'
 									+ locations[i]['description'].substring(0,
 											300)
-									+ '... <a href="id/'
+									+ '... <a href="monument/id/'
 									+ locations[i]['id']
 									+ '">Lees meer</a>'
 									+ '</div></td><td class="span1">'
 									+ '<div style="height:100px; overflow:hidden;">'
-									+ '<a style="display: block; text-align: center;" href="id/'
+									+ '<a style="display: block; text-align: center;" href="monument/id/'
 									+ locations[i]['id']
 									+ '">'
-									+ '<img src="/public/photos/'
+									+ '<img src="photos/'
 									+ locations[i]['id']
 									+ '.jpg" style="max-width: 100px; max-height: 100px;" alt="">'
 									+ '</a>' + '</div>' + '</td>' + '</tr>';

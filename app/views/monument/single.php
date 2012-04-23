@@ -6,7 +6,7 @@
     	<div class="span9">
 		    <div class="row">
 		    	<div class="span3">
-		   			<img style="width: 100%; margin-right: 20px;" src="/public/photos/<?php echo $monument->id_monument; ?>.jpg" alt="<?php echo $monument->name; ?>" />	
+		   			<img style="width: 100%; margin-right: 20px;" src="<?php echo $monument->photo(); ?>" alt="<?php echo $monument->name; ?>" />	
 		   		</div>
 		   		<div class="span6">
 		    	<?php 
@@ -30,7 +30,7 @@
 		->find_all();
 		foreach ($monuments AS $monument) {
 			echo '<div style="text-align: center; width: 170px; float: left;">';
-			echo '<a href="'.URL::site('monument/id/'.$monument->id_monument).'"><img style="max-width: 150px; max-height: 150px; margin-top: 20px;" src="/public/photos/'.$monument->id_monument.'.jpg" alt="'.$monument->name.'" /></a>';
+			echo '<a href="'.URL::site('monument/id/'.$monument->id_monument).'"><img style="max-width: 150px; max-height: 150px; margin-top: 20px;" src="'.$monument->photo().'" alt="'.$monument->name.'" /></a>';
 			echo '</div>';
 		}
 		?>  		
