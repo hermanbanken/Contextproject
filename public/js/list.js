@@ -70,6 +70,7 @@ function updateList(datachanged) {
 					{
 						category : $('#categories').val(),
 						limit : mpp,
+						search: $('#search').val(),
 						offset : (mpp * (page - 1)),
 						town : $('#town').val(),
 						sort : $('#sort').val()
@@ -79,7 +80,8 @@ function updateList(datachanged) {
 						locations = data;
 
 						$.post('getmonumenten', {
-							category : $('#categories').val(),
+							search: $('#search').val(),
+								category : $('#categories').val(),
 							town : $('#town').val(),
 							sort : $('#sort').val(),
 							findtotal : true
