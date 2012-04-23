@@ -69,7 +69,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		
 		// ORDER AT RANDOM FOR MAPS, OTHERWISE ORDER BY STREET / GIVEN ORDER
 		if($map) $monuments = $monuments->order_by(DB::expr('RAND()'));
-		else	 $monuments = $monuments->order_by(isset($sort)&&$sort>0?$sort:'street');
+		else	 $monuments = $monuments->order_by(isset($sort)&&$sort!=='0'?$sort:'street');
 		
 		
 		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
