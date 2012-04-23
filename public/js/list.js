@@ -1,11 +1,9 @@
-
 var html = "";
 
 $(document).ready(function() {
 	updateList();
-	$('#filter_list #categories').bind('change', function() {
-		updateList();
-	});
+	$('#filter_list #town').click(function() { this.select(); })
+	$('#filter_list #search').click(function() { this.select(); })
 	$('#filter_list').submit(function (e) {
 		e.preventDefault();
 		updateList();
@@ -15,6 +13,7 @@ $(document).ready(function() {
  
 /**
  * functie om de spelden te updaten aan de hand van de selectiecriteria
+ * 
  * @returns helemaal niks!
  */
  function updateList() {
@@ -33,8 +32,12 @@ $(document).ready(function() {
 		 
 		 locations = data;
 		 
+		 if (locations.length == 0) {
+			 var tr = '<tr><td class="span12">Er zijn geen monumenten gevonden met deze selectie.</td></tr>';
+		       $('#monument_list').append(tr);
+		 }
 		 
-		 for (i = 0; i < locations.length; i++) {  
+		 for (i = 0; i < locations.length; i++) {
 			   var tr = '<tr>'+
 				   		'<td class="span2">'+
 			   				'<div style="height:100px; overflow:hidden;">'+
@@ -46,14 +49,14 @@ $(document).ready(function() {
 			   					locations[i]['description']+
 			   				'</div></td><td class="span1">'+
 				   			'<div style="height:100px; overflow:hidden;">'+
-				   				'<a href="id/'+locations[i]['id']+'"><img src="http://cdn.babble.com/being-pregnant/files/2012/02/church-100x100.jpg" alt=""></a>'+
+				   				'<a style="display: block; text-align: center;" href="id/'+locations[i]['id']+'">'+
+				   					'<img src="/public/photos/'+locations[i]['id']+'.jpg" style="max-width: 100px; max-height: 100px;" alt="">'+
+			   					'</a>'+
 				   			'</div>'+
 				   		'</td>'+
 				   	'</tr>';
 		       $('#monument_list').append(tr);
 		    }
-			
-			
 	 }, "json");
 	 
  }
