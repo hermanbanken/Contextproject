@@ -20,7 +20,6 @@
     <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/docs.css'); ?>" rel="stylesheet">
     <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap.css'); ?>" rel="stylesheet">
     <link href="<?php echo URL::site('css/jquery-ui-1.8.19.custom.css'); ?>" rel="stylesheet">
-
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/jquery.min.js" ></script>
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/jquery-ui-1.8.19.custom.min.js" ></script>
 	<script type="text/javascript" src="<?php echo URL::base(); ?>js/googlemaps.js" ></script>
@@ -50,10 +49,10 @@
           <a class="brand" href="<?php echo URL::site(''); ?>">CultuurApp</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active">
+              <li <?php if(preg_match('/map/i',Request::detect_uri())) echo 'class="active"'?>>
                 <a href="<?php echo URL::site('monument/map'); ?>">Kaart</a>
               </li>
-              <li class="">
+              <li <?php if(preg_match('/list/i',Request::detect_uri())) echo 'class="active"'?>>
                 <a href="<?php echo URL::site('monument/list'); ?>">Lijst</a>
               </li>
             </ul>
