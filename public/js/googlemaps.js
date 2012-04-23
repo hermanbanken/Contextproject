@@ -5,6 +5,8 @@ var initialLocation;
 
 $(document).ready(		
 		function() {
+			$('#filter_list #town').click(function() { this.select(); })
+			$('#filter_list #search').click(function() { this.select(); })
 
 			if($('#kaart').size()>0) {
 				var myOptions = {
@@ -78,7 +80,7 @@ function initialize() {
 	 // locaties ophalen met ajax
 	 $.post('getmonumenten', {
 		 	category: $('#categories').val(),
-		 	limit: 100,
+		 	limit: 500,
 		 	town: $('#town').val(),
 		 	street: $('#street').val()
 		 	

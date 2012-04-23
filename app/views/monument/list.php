@@ -25,8 +25,8 @@
 				?>
 			</select><br />
 			<select id="sort">
-			<option value="0">Sort random</option>
-			<option value="name">Sort by Name</option>
+				<option value="0">-- Sorteer</option>
+				<option value="name">Op Naam</option>
 			</select>
 			<input type="submit" value="Filter" />
 			</form>
