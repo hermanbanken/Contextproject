@@ -1,34 +1,61 @@
 var map = null;
 var markersArray = [];
 var bounds = null;
+var initialLocation;
 
 $(document).ready(		
 		function() {
 
-			$("#kaart").height($(window).height() - 40);
-			
-			updatePins();
-			$('#filter').submit(function (e) {
-				e.preventDefault();
+			if($('#kaart').size()>0) {
+				var myOptions = {
+				          center: new google.maps.LatLng(52.469397, 5.509644),
+				          zoom: 8,
+				          mapTypeId: google.maps.MapTypeId.ROADMAP
+				        };
+				        map = new google.maps.Map(document.getElementById("kaart"),
+				            myOptions);
+				        bounds = new google.maps.LatLngBounds();
+				$("#kaart").height($(window).height() - 40);
+				
 				updatePins();
-			});
+				$('#filter').submit(function (e) {
+					e.preventDefault();
+					updatePins();
+				});
+			}
 
-			$.post('getsteden', {categorie: "hoi"}, succes = function(towns) {
+			$.post('getsteden', {}, succes = function(towns) {
 				$("#town").autocomplete({
 					source : towns
 				});
 			}, "json");
+
 		});
 
+function goLocal() {
+	if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+          map.setCenter(initialLocation);
+          map.setZoom(15);
+        }, function() {
+          handleNoGeolocation(browserSupportFlag);
+        });
+      // Try Google Gears Geolocation
+      } else if (google.gears) {
+        browserSupportFlag = true;
+        var geo = google.gears.factory.create('beta.geolocation');
+        geo.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.latitude,position.longitude);
+          map.setCenter(initialLocation);
+          map.setZoom(15);
+	              }, function() {
+          handleNoGeoLocation(browserSupportFlag);
+        });
+      }
+}
 function initialize() {
-        var myOptions = {
-          center: new google.maps.LatLng(52.469397, 5.509644),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        map = new google.maps.Map(document.getElementById("kaart"),
-            myOptions);
-        bounds = new google.maps.LatLngBounds();
         
       }
  
@@ -39,6 +66,7 @@ function initialize() {
  */
 
  function updatePins() {
+	 
 	 // alle huidige markers weggooien
 	 if (markersArray) {
 		    for (i in markersArray) {
@@ -46,13 +74,6 @@ function initialize() {
 		    }
 		    markersArray.length = 0;
 		  }
-	 /*
-	 // uit de selectiecriteria een array bouwen met geselecteerde opties
-	 var options = [];
-	 var elements = document.getElementById('selectie').elements;
-	 for(i=0; i < elements.length; i++) {
-		if(elements[i].value != '') options.push([elements[i].name,elements[i].value]); 
-	 }*/
 	 
 	 // locaties ophalen met ajax
 	 $.post('getmonumenten', {
@@ -66,15 +87,6 @@ function initialize() {
 		 locations = data;
 		 bounds = new google.maps.LatLngBounds();
 		 
-		 /*
-		  zo moet de ajax data geintepreteerd worden om dit te laten werken
-		  var locations = [
-		                  ['Test1', 52.469397, 5.509644],
-		                  ['Test1', 52.569397, 5.609644],
-		                  ...
-		                  ['Testn', long, lat]
-			            ];
-		 */
 		 // voor alle locaties een nieuwe speld aanmaken
 		 for (i = 0; i < locations.length; i++) {
 			 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
@@ -82,11 +94,12 @@ function initialize() {
 		        position: longlat,
 		        map: map
 		      });
+			   // pin toevoegen voor de zoom
 			   bounds.extend(longlat);
-			 
+			   // infowindow aanmaken
 			   var infowindow = new google.maps.InfoWindow();
 
-			  
+			  // marker toevoegen aan array en google maps
 		      markersArray.push(marker);
 		      google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
@@ -97,6 +110,7 @@ function initialize() {
 		        }
 		      })(marker, i));
 		    }
+		 // zoomen!
 	      map.fitBounds(bounds);
 
 		 }, "json");

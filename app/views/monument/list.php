@@ -1,56 +1,35 @@
 <div class="row-fluid">   
-    <div class="span8">
+    <div class="span10">
         <table class="table table-striped table-condensed">
             <thead>
                 <tr>
-                    
-                    <th>Monumenten</th>
-                    
+                    <th><h1>Monumenten</h1></th>
                 </tr>
-                
             </thead>
             <tbody id="monument_list">
-      
-                <?php 
-				
-				/*
-				
-				
-				
-				
-				
-				$rutgersarray = null;
-                foreach($rutgersarray as $element){
-					
-				echo '
-                <tr>
-                    <td class="span2"><div style="height:100px; overflow:hidden;">' . $element["name"] .'</div></td>
-                    <td class="span5"><div style="height:100px; overflow:hidden;">' . $element["description"] . '</div></td>
-                    <td class="span1"><div style="height:100px; overflow:hidden;"><img src="http://placehold.it/100x100" alt=""></div></td>
-                    
-                </tr>';
-				*/
-				?>
-
             </tbody>
         </table>
     </div>  
     
-    <div class="span4" id="filter">
-		<h1>Selecteren</h1>
-		<input id="search" type="text" value="zoeken" /> 
-		<input id="stad" type="text" value="stad" /> 
-		<input id="straat" type="text" value="straat" /> 
-		<select id="categories">
-			<option value='-1'>-- Categorie</option>
-			<?php 
-			$categories = ORM::factory('category')->find_all();
-			foreach($categories AS $category) {
-				echo "<option value=".$category->id_category.">".$category->name."</option>";
-			}
-			?>
-		</select>
-		</form>
-	</div>  
+    <div style="position: fixed; top:0; right: 50px; width: 220px; z-index: 2; padding: 20px; padding-top:60px; background: #1E1E1E;-webkit-border-radius: 20px;border-radius: 20px;">
+			<form method="post" action=""  id="filter_list" style="margin-bottom: 0;">
+			<input id="search" type="text" value="zoeken" /> 
+			<input id="town" type="text" value="stad" /> 
+			<select id="categories">
+				<option value='-1'>-- Categorie</option>
+				<?php 
+				$categories = ORM::factory('category')->find_all();
+				foreach($categories AS $category) {
+					echo "<option value=".$category->id_category.">".$category->name."</option>";
+				}
+				?>
+			</select><br />
+			<select id="sort">
+			<option value="0">Sort random</option>
+			<option value="name">Sort by Name</option>
+			</select>
+			<input type="submit" value="Filter" />
+			</form>
+		</div>  
 </div>
 
