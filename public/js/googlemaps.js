@@ -31,35 +31,80 @@ $(document).ready(
 					source : towns
 				});
 			}, "json");
+			
+			$('#local').bind('click', function() {
+				goLocal();
+			})
 
 		});
 
 function goLocal() {
+	var latitude = null;
+	var longitude = null;
+	
 	if(navigator.geolocation) {
         browserSupportFlag = true;
         navigator.geolocation.getCurrentPosition(function(position) {
-          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-          map.setCenter(initialLocation);
-          map.setZoom(15);
-        }, function() {
-          handleNoGeolocation(browserSupportFlag);
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+          closest(latitude,longitude);
         });
       // Try Google Gears Geolocation
       } else if (google.gears) {
         browserSupportFlag = true;
         var geo = google.gears.factory.create('beta.geolocation');
         geo.getCurrentPosition(function(position) {
-          initialLocation = new google.maps.LatLng(position.latitude,position.longitude);
-          map.setCenter(initialLocation);
-          map.setZoom(15);
-	              }, function() {
-          handleNoGeoLocation(browserSupportFlag);
-        });
+          latitude = position.latitude;
+          longitude = position.longitude;
+          closest(latitude,longitude);
+         });
       }
 }
+
+function closest(latitude,longitude) {
+	$.post('monument/closestby', {
+		 	limit: 50,
+		 	longitude: latitude,
+    		latitude: longitude
+		 }, succes = function(data) {
+		 // locations
+		 locations = data;
+		 // placingp pins
+		 placePins(locations);
+		 // huidige pin toevoegen
+		 var longlat = new google.maps.LatLng(latitude, longitude);
+		   marker = new google.maps.Marker({
+	        position: longlat,
+	        icon: new google.maps.MarkerImage('http://cdn-img.easyicon.cn/png/5526/552649.png'),
+	        map: map
+	      });
+		   // pin toevoegen voor de zoom
+		   bounds.extend(longlat);
+		   // infowindow aanmaken
+		   var infowindow = new google.maps.InfoWindow();
+
+		  // marker toevoegen aan array en google maps
+	      markersArray.push(marker);
+	      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+	        return function() {
+	        	infowindow.setContent("Huidige locatie");
+	        	infowindow.open(map, marker);
+	        }
+	      })(marker, i));
+	   // Add a Circle overlay to the map.
+	        var circle = new google.maps.Circle({
+	          map: map,
+	          strokeColor: '#66CCFF',
+	          fillColor: '#66CCFF',
+	          radius: 1609 // 3000 km
+	        });
+	        circle.bindTo('center', marker, 'position');
+	    }, "json");
+}
+	
 function initialize() {
         
-      }
+}
  
 /**
  * functie om de spelden te updaten aan de hand van de selectiecriteria
@@ -68,14 +113,6 @@ function initialize() {
  */
 
  function updatePins() {
-	 
-	 // alle huidige markers weggooien
-	 if (markersArray) {
-		    for (i in markersArray) {
-		      markersArray[i].setMap(null);
-		    }
-		    markersArray.length = 0;
-		  }
 	 
 	 // locaties ophalen met ajax
 	 $.post('monument/getmonumenten', {
@@ -88,34 +125,46 @@ function initialize() {
 		 	}, succes = function(data) {
 		 
 		 locations = data;
-		 bounds = new google.maps.LatLngBounds();
 		 
-		 // voor alle locaties een nieuwe speld aanmaken
-		 for (i = 0; i < locations.length; i++) {
-			 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
-			   marker = new google.maps.Marker({
-		        position: longlat,
-		        map: map
-		      });
-			   // pin toevoegen voor de zoom
-			   bounds.extend(longlat);
-			   // infowindow aanmaken
-			   var infowindow = new google.maps.InfoWindow();
-
-			  // marker toevoegen aan array en google maps
-		      markersArray.push(marker);
-		      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-		        return function() {
-		        	infowindow.setContent("<a href='monument/id/"+locations[i]["id"]+"'><img src=\"/photos/"+locations[i]["id"]+".jpg\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
-		        							+locations[i]["description"].substring(0,200)
-		        							+" <a href='monument/id/"+locations[i]["id"]+"'>Meer</a>");
-		        	infowindow.open(map, marker);
-		        }
-		      })(marker, i));
-		    }
-		 // zoomen!
-	      map.fitBounds(bounds);
-
+		 placePins(locations);
+		 
 		 }, "json");
 	 
+ }
+ 
+ function placePins(locations) {
+	// alle huidige markers weggooien
+	 if (markersArray) {
+		    for (i in markersArray) {
+		      markersArray[i].setMap(null);
+		    }
+		    markersArray.length = 0;
+		  }
+	 
+	 bounds = new google.maps.LatLngBounds();
+	 // voor alle locaties een nieuwe speld aanmaken
+	 for (i = 0; i < locations.length; i++) {
+		 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
+		   marker = new google.maps.Marker({
+	        position: longlat,
+	        map: map
+	      });
+		   // pin toevoegen voor de zoom
+		   bounds.extend(longlat);
+		   // infowindow aanmaken
+		   var infowindow = new google.maps.InfoWindow();
+
+		  // marker toevoegen aan array en google maps
+	      markersArray.push(marker);
+	      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+	        return function() {
+	        	infowindow.setContent("<a href='monument/id/"+locations[i]["id"]+"'><img src=\"/photos/"+locations[i]["id"]+".jpg\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
+	        							+locations[i]["description"].substring(0,200)
+	        							+" <a href='monument/id/"+locations[i]["id"]+"'>Meer</a>");
+	        	infowindow.open(map, marker);
+	        }
+	      })(marker, i));
+	    }
+	// zoomen!
+    map.fitBounds(bounds);
  }

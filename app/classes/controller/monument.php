@@ -89,24 +89,18 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$db = Database::instance();
 		$monuments = $db->query(Database::SELECT,$sql,TRUE);
 		
-		$this->monumentsToJSON($monuments,$map);
+		$this->monumentsToJSON($monuments);
 	}
 	
-	public function monumentsToJSON($monuments,$map=true) {
+	public function monumentsToJSON($monuments) {
 		$_return = array();
 		foreach($monuments as $key=>$monument) {
 			//echo $monument->lng.",".$monument->lat;
-			if($map) {
-				$_return[] = array("description" => $monument->description, 
+			$_return[] = array("description" => $monument->description, 
 								"longitude" => $monument->lng,
 								"latitude" => $monument->lat,
 								"name" => $monument->name,
 								"id" => $monument->id_monument);
-			} else {
-				$_return[] = array("description" => $monument->description, 
-								"name" => $monument->name,
-								"id" => $monument->id_monument);	
-			}
 		}
 		die(json_encode($_return));
 	}
@@ -160,7 +154,23 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
 		$monuments = $monuments->find_all();
 		// set to json 
-		$this->monumentsToJSON($monuments,$map);
+		$this->monumentsToJSON($monuments);
+	}
+	
+	public function action_closestby() {
+		// extract post values
+		$post = $this->request->post();
+		$longitude = $post['longitude'];
+		$latitude = $post['latitude'];
+		$limit = isset($limit)?$limit:20;
+		$offset = isset($offset)?$offset:0;
+		$distance = isset($distance)?$distance:1;	
+		// KILLER query
+		$sql = " SELECT *,((ACOS(SIN(".$latitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$latitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$longitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM dev_monuments HAVING distance<=".$distance." ORDER BY distance ASC limit ".$limit;
+		$db = Database::instance();
+		$monuments = $db->query(Database::SELECT,$sql,TRUE);
+		
+		$this->monumentsToJSON($monuments);
 	}
 }
 ?>
