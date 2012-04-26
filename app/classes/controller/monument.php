@@ -41,23 +41,103 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode($towns));
 	}
 	
-	public function action_getmonumenten() {
-		$post = $this->request->post();
+	/**
+	 * 
+	 * Funtion to look for monuments with a search string, prioritizing the resultset
+	 * @param array $values, postvalues originated from the form
+	 */
+	public function searchmonuments($values) {
+		// check if we're in a map or not
 		$map = preg_match('/map/',$this->request->initial()->referrer());
 		
-		foreach($post as $key=>$value) {
-			${$key} = $value;
+		// extract post values and ignore if they're default input values
+		$defaults = array('zoeken','stad','-1','');
+		foreach($values as $key=>$value) {
+			if(!in_array($value,$defaults)) {
+				${$key} = $value;
+			}
 		}
 		
+		if(!isset($limit)) {
+			$limit = $map?500:20;
+		}
+		// prepare sql statement
+		$sql = "SELECT * 
+				FROM dev_monuments 
+				WHERE 1 AND ";
+		// add category search
+		if(isset($category)) $sql.="id_category = ".$category." ";
+		// add town search
+		if(isset($town))	  $sql.="town = ".$town." ";
+		
+		// add string search 
+		$sql.="CONCAT(name,description) LIKE '%".$search."%' ";
+		// prioritize resultset
+		$sql.="ORDER BY CASE 
+				WHEN name LIKE '".$search."%' THEN 0
+				WHEN name LIKE '% ".$search." %' THEN 1
+				WHEN name LIKE '%".$search."%' THEN 2
+               	WHEN description LIKE '% ".$search." %' THEN 4
+				WHEN description LIKE '%".$search."%' THEN 5
+	            ELSE 6
+	        END, name ";
+		// add the limit
+		$sql.="LIMIT ".$limit." ";
+		// add the offset
+		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
+		// execute the query
+		$db = Database::instance();
+		$monuments = $db->query(Database::SELECT,$sql,TRUE);
+		
+		$this->monumentsToJSON($monuments);
+	}
+	
+	public function monumentsToJSON($monuments) {
+		$_return = array();
+		foreach($monuments as $key=>$monument) {
+			//echo $monument->lng.",".$monument->lat;
+			$_return[] = array("description" => $monument->description, 
+								"longitude" => $monument->lng,
+								"latitude" => $monument->lat,
+								"name" => $monument->name,
+								"id" => $monument->id_monument);
+		}
+		die(json_encode($_return));
+	}
+	
+	/**
+	 * getmonumenten is een actie om monumenten op te halen
+	 * in de post kunnen verschillende waarden worden meegegeven
+	 */
+	public function action_getmonumenten() {
+		// extract post values
+		$post = $this->request->post();
+		
+		// if a search is being committed, searchmonuments must be called
+		if(isset($post['search']) && $post['search'] != 'zoeken' && $post['search'] != '') {
+			return $this->searchmonuments($post);
+		}
+		
+		// check if we're in a map or not
+		$map = preg_match('/map/',$this->request->initial()->referrer());
+		
+		// extract post values and ignore if they're default input values
+		$defaults = array('zoeken','stad','-1','');
+		foreach($post as $key=>$value) {
+			if(!in_array($value,$defaults)) {
+				${$key} = $value;
+			}
+		}
+	
 		$monuments = ORM::factory('monument');
 		
 		// WHERE CLAUSE
 		// category
-		if(isset($category) AND $category >= 0) $monuments = $monuments->where('id_category', '=', $category);
+		if(isset($category)) $monuments = $monuments->where('id_category', '=', $category);
 		// town
-		if(isset($town) AND $town != 'stad' AND $town != '') $monuments = $monuments->where('town','=',$town);
+		if(isset($town)) $monuments = $monuments->where('town','=',$town);
 		// search
-		if(isset($search) AND $search !== 'zoeken' AND $search !== '') $monuments = $monuments->where('description','like','%'.$search.'%');
+		if(isset($search)) $monuments = $monuments->where('name' , 'like','%'.$search.'%')->or_where('description','like','%'.$search.'%');
 		
 		
 		// DIE TOTAL IF NEEDED
@@ -71,26 +151,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if($map) $monuments = $monuments->order_by(DB::expr('RAND()'));
 		else	 $monuments = $monuments->order_by(isset($sort)&&$sort!=='0'?$sort:'street');
 		
-		
-		//if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
+		// if(isset($subcategorie)) $monumenten = $monumenten->where('id_subcategory','=',$subcategorie);
 		$monuments = $monuments->find_all();
-		$_return = array();
-		foreach($monuments as $key=>$monument) {
-			//echo $monument->lng.",".$monument->lat;
-			if($map) {
-				$_return[] = array("description" => $monument->description, 
-								"longitude" => $monument->lng,
-								"latitude" => $monument->lat,
-								"name" => $monument->name,
-								"id" => $monument->id_monument);
-			} else {
-				$_return[] = array("description" => $monument->description, 
-								"name" => $monument->name,
-								"id" => $monument->id_monument);	
-			}
-		}
-		die(json_encode($_return));
+		// set to json 
+		$this->monumentsToJSON($monuments);
+	}
+	
+	public function action_closestby() {
+		// extract post values
+		$post = $this->request->post();
+		$longitude = $post['longitude'];
+		$latitude = $post['latitude'];
+		$limit = isset($limit)?$limit:20;
+		$offset = isset($offset)?$offset:0;
+		$distance = isset($distance)?$distance:1;	
+		// KILLER query
+		$sql = " SELECT *,((ACOS(SIN(".$latitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$latitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$longitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM dev_monuments HAVING distance<=".$distance." ORDER BY distance ASC limit ".$limit;
+		$db = Database::instance();
+		$monuments = $db->query(Database::SELECT,$sql,TRUE);
 		
+		$this->monumentsToJSON($monuments);
 	}
 }
 ?>

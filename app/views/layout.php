@@ -2,6 +2,8 @@
 <html>
 <head>
   <title></title>
+  <base href="<?php echo URL::base(); ?>" />
+
   <meta name="description" content="Vind monumenten in heel het land" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />

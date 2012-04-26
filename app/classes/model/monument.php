@@ -21,6 +21,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		),
 	);
 	
+	public function photo(){
+		return URL::site('photos/'.$this->id_monument).".jpg";
+	}
+	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	  	`id_monument` int(10) unsigned NOT NULL AUTO_INCREMENT,
