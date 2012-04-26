@@ -1,0 +1,14 @@
+<div class='monument'>
+	<div class='row'>
+		<h2>{{name}}</h2>
+		<p class='desc'>{{description}}</p>
+	</div>
+	<div class='row photostream'>
+		<ul>{{#photos}}
+			<li class='thumb'>
+				<img src='{{src}}' alt='{{name}}' />
+				<p>{{description}}</p>
+			</li>
+		{{/photos}}</ul>
+	</div>
+</div>

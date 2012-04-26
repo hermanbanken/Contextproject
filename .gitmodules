@@ -4,3 +4,21 @@
 [submodule "kohana"]
 	path = kohana
 	url = https://github.com/kohana/core.git
+[submodule "app/modules/orm"]
+	path = app/modules/orm
+	url = https://github.com/kohana/orm.git
+[submodule "app/modules/auth"]
+	path = app/modules/auth
+	url = https://github.com/kohana/auth.git
+[submodule "app/modules/userguide"]
+	path = app/modules/userguide
+	url = https://github.com/kohana/userguide.git
+[submodule "app/modules/unittest"]
+	path = app/modules/unittest
+	url = https://github.com/kohana/unittest.git
+[submodule "app/modules/database"]
+	path = app/modules/database
+	url = https://github.com/kohana/database.git
+[submodule "app/modules/image"]
+	path = app/modules/image
+	url = https://github.com/kohana/image.git

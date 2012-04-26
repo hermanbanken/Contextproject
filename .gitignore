@@ -28,3 +28,5 @@ test/monument.sql
 reports/Requirements Analysis/final/requirements.out
 
 reports/Requirements Analysis/final/requirements.toc
+
+/public/.htaccess
