@@ -30,7 +30,7 @@ foreach(array_merge($rewrite, $store) as $name => $config){
 }
 if(!$proceed) die("You need to fix these permissions first before we can proceed. Try: <pre>".implode('', $suggest)."</pre>");
 
-if(isset($_POST['install']))
+if(isset($_POST['install']) || !empty($_SERVER['SHELL']))
 {
 	foreach($rewrite as $name => $config){
 		if(!file_exists($config['default'])) die("Default config for $config not found");
@@ -39,6 +39,11 @@ if(isset($_POST['install']))
 			$file = str_replace(":$key", value($name, $key), $file);
 		}
 		file_put_contents($config['custom'], $file);
+	}
+
+	if(!empty($_SERVER['SHELL'])){
+		echo "Working...\nCustomized your installation. Happy developing!\n";
+		exit;
 	}
 
 }
@@ -77,6 +82,17 @@ function value($name, $key){
 	return isset($config->$name->$key) ? $config->$name->$key : '';
 }
 
+/// OUTPUT
+
+if(!empty($_SERVER['SHELL'])){
+	echo "To install the app, please enter the following details in json format in custom_settings.json: \n";
+	foreach($rewrite as $name => $config){
+		foreach($config['fields'] as $key){
+			echo $name."[$key]: $key\n";
+		}
+	}
+	exit;
+}
 ?>
 <h1>Install</h1>
 <form method="post"><table>
