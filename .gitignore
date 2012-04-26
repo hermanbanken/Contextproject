@@ -1,3 +1,6 @@
+### Custom webserver settings
+custom_settings.json
+
 ### LaTeX
 *.aux
 *.log

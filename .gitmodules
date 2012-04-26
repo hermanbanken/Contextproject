@@ -22,3 +22,12 @@
 [submodule "app/modules/image"]
 	path = app/modules/image
 	url = https://github.com/kohana/image.git
+[submodule "app/modules/kostache"]
+	path = app/modules/kostache
+	url = https://github.com/zombor/KOstache.git
+[submodule "app/modules/pagination"]
+	path = app/modules/pagination
+	url = https://github.com/kloopko/kohana-pagination.git
+[submodule "app/modules/bonafide"]
+	path = app/modules/bonafide
+	url = https://github.com/shadowhand/bonafide.git

@@ -80,8 +80,8 @@ if (isset($_SERVER['KOHANA_ENV']))
  * - boolean  caching     enable or disable internal caching                 FALSE
  */
 Kohana::init(array(
-	'base_url'   => '/',
-    'index_file' => FALSE,
+	'base_url' => ':baseurl',
+	'index_file' => FALSE,
 ));
 
 /**
@@ -104,6 +104,9 @@ Kohana::modules(array(
 	 'database'   => MODPATH.'database',   // Database access
 	 'image'      => MODPATH.'image',      // Image manipulation
 	 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
+	 'kostache'   => MODPATH.'kostache',   // Kostache
+	 'pagination' => MODPATH.'pagination', // Pagination
+	 'bonafide'   => MODPATH.'bonafide',   // Bonafide
 	 'unittest'   => MODPATH.'unittest',   // Unit testing
 	 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
 	));
