@@ -1,0 +1,146 @@
+\documentclass[a4paper,10pt]{article} 
+\usepackage{graphicx,wrapfig,hyperref} 
+\usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry} \begin{document} 
+\title{TI2800 Contextproject - My Cultural Heritage\\
+Test- en implentatieplan} 
+\author{Sjoerd van Bekhoven\\
+Tim Eversdijk \\
+Herman Blanken \\
+Rutger Plak \and 4014774 \\
+4005562 \\
+4078624 \\
+1358375} 
+\maketitle \setcounter{page}{0} 
+\renewcommand*\contentsname{Inhoudsopgave} \thispagestyle{empty} \vspace{10cm} 
+\begin{figure}
+	[ht!] \centering 
+	\includegraphics[width=
+	\textwidth]{../Artwork/cultuurapp-logo.png} 
+\end{figure}
+
+
+\clearpage
+\setcounter{page}{0}
+\thispagestyle{empty}
+\ 
+\clearpage
+\tableofcontents
+\clearpage
+
+
+\section{Introductie} Dit is het Test en Implementatie Plan van het systeem. Hier zal worden uitgelegd hoe het systeem ge\"mplementeerd wordt en hoe het systeem tijdens ontwikkelingsfase en daarna getest zal worden. 
+\subsection{Afkortingen} 
+\begin{tabular}
+	{ l | l } DB & Database \\
+	HTML & Hyper Text Markup Language \\
+	ext4 & Fourth Extended File System \\
+	PHP & Pre- Hypertext Processor \\
+	SQL & Structured Query Language \\
+	XML & Extended Markup Language\\
+	ORM & Object Relational Mapping\\
+\end{tabular}
+\section{Requirements met MoSCoW} De requirements zijn niet allemaal even kritiek voor het systeem, daarom hebben we een ordening gemaakt met behulp van MoSCoW\footnote{http://nl.wikipedia.org/wiki/MoSCoW-methode}. De requirements die essentieel zijn vallen onder de "Must"-kop. Requirements die voorlopig niet haalbaar en essentieel zijn vallen onder de "Won’t"-kop. De koppen "Should" en "Could" zitten hier tussen in en geven respectievelijk aan dat het onderdeel er in moet komen wanneer de "Must" onderdelen zijn ge\"implementeerd en wanneer de "Should" onderdelen zijn ge\"implementeerd. 
+\subsection{Must} 
+\begin{itemize}
+	\item \textbf{Kaart} zie de requirements bij sectie 3.1.1. 
+	\item \textbf{Lijstweergave} zie de requirements bij sectie 3.1.2. 
+	\item \textbf{Detailpagina} zie de requirements bij sectie 3.1.3. 
+	\item \textbf{filteren en zoeken} zie de requirements bij sectie 3.2. 
+	\item \textbf{Sortering} zie de requirements bij sectie 3.3. 
+\end{itemize}
+\subsection{Should} 
+\begin{itemize}
+	\item \textbf{Foursquare} zie de requirements bij sectie 3.4. 
+	\item \textbf{Weersinformatie} zie de requirements bij sectie 3.5. 
+	\item \textbf{Faciliteiten rond monument-locatie} zie de requirements bij sectie 3.6. 
+	\item \textbf{Zoeken relevante Flickr-foto's} zie de requirements bij sectie 3.8. 
+	\item \textbf{Inloggen en registreren} zie de requirements bij sectie 3.9. 
+	\item \textbf{Foto's toevoegen} zie de requirements bij sectie 3.10. 
+	\item \textbf{Favorieten toevoegen} zie de requirements bij sectie 3.11. 
+	\item \textbf{Gebruikers interactie} zie de requirements bij sectie 3.12. 
+	\item \textbf{Visuele analyse} zie de requirements bij sectie 3.13. 
+	\item \textbf{Textuele analyse} zie de requirements bij sectie 3.14. 
+	\item \textbf{Completeren dataset} zie de requirements bij sectie 3.16.
+\item \textbf{Aanbevelingen} zie de requirements bij sectie 3.17
+\item \textbf{Populariteit} zie de requirements bij sectie 3.18 
+\item \textbf{Userprofiling} zie de requirements bij sectie 3.19  
+\end{itemize}
+\subsection{Could} 
+\begin{itemize}
+	\item \textbf{Monumenten vergelijken aan de hand van foto's} zie de requirements bij sectie 3.7.
+	\item \textbf{Thesaurus} zie de requirements bij sectie 3.15. 
+ \end{itemize}
+
+\subsection{Won't} 
+
+\section{Implementatie en tests} Tijdens de implementatiefase zal Test Driven Design (TDD) worden toegepast. Het volgende schema wordt bij de ontwikkeling aangehouden: 
+\begin{itemize}
+	\item Er wordt besloten welke klasse of functie ontwikkeld gaat worden. 
+	\item Er wordt een interface (prototype) gemaakt aan de hand van het Architectural Design. 
+	\item Er worden tests geschreven voor de functies van de klasse. 
+	\item De interface wordt ge\"implementeerd. 
+	\item De tests worden uitgevoerd en de code wordt herschreven om te voldoen aan de tests. 
+\end{itemize}
+\subsection{Volgorde voor het implementeren van de features} Het implementeren van het systeem gebeurt per feature. Omdat sommige features afhankelijk zijn van andere features zullen deze in volgorde moeten worden ge\"implementeerd. Elke feature beslaat weer een aantal taken. Voor elke iteratie zal worden bepaald hoeveel features er worden ge\"implementeerd, welke taken hiervoor voltooid moeten worden en wie deze taken gaat uitvoeren. 
+\subsubsection{Iteraties} Het implementeren van het systeem zal opgedeeld worden in vier perioden, waarbij een aantal stappen worden herhaald. De eerste iteratie begint op 30 maart en de laatste iteratie zal eindigen op 15 juni. Aan het begin van iedere iteratie wordt vastgesteld welke features zullen worden ge\"implementeerd, hoeveel uren er in ieder taak gaat zitten en wie welke taken zal implementeren. Deze informatie zal voor iedere iteratie worden vastgelegd in een document, zodat aan het eind van iedere iteratie kan worden gecontroleerd welke taken per feature zijn ge\"implementeerd en aan welke nog meer aandacht moet worden besteed. 
+
+\begin{itemize}
+	\item \textbf{Iteratie 1}
+		\begin{itemize}
+			\item Een factory per object type waaraan informatie kan worden opgevraagd uit en opgeslagen in de database. Zonder deze factory's kunnen de andere features niet worden geïmplementeerd doordat deze gebruik maken van informatie in de database. 
+			\item \textbf{filteren en zoeken} zie de requirements bij sectie 3.2. (\emph{behalve requirement \#16})
+			\item \textbf{Kaart} zie de requirements bij sectie 3.1.1. 
+			\item \textbf{Sortering} zie de requirements bij sectie 3.3. (\emph{behalve requirement \#20})
+			\item \textbf{Lijstsweergave} zie de requirements bij sectie 3.1.2. 
+			\item \textbf{Detailpagina} zie de requirements bij sectie 3.1.3. 
+
+			
+\end{itemize}
+
+	\item \textbf{Iteratie 2}
+		\begin{itemize}
+			\item \textbf{Textuele analyse} zie de requirements bij sectie 3.14. (\emph{behalve requirement \#51})
+			\item Requirement \#16
+			\item \textbf{Visuele analyse} zie de requirements bij sectie 3.13.
+			\item \textbf{Completeren dataset} zie de requirements bij sectie 3.16.
+\item \textbf{Inloggen en registreren} zie de requirements bij sectie 3.9.
+\item \textbf{Foursquare} zie de requirements bij sectie 3.4.
+		\end{itemize}
+
+	\item \textbf{Iteratie 3}
+		\begin{itemize}
+			\item \textbf{Weersinformatie} zie de requirements bij sectie 3.5.
+			\item \textbf{Faciliteiten rond monument-locatie} zie de requirements bij sectie 3.6.
+			\item \textbf{Zoeken relevante Flickr-foto's} zie de requirements bij sectie 3.8.
+			\item \textbf{Favorieten toevoegen} zie de requirements bij sectie 3.11.
+			\item \textbf{Populariteit} zie de requirements bij sectie 3.18
+			\item requirement \#16
+			\item \textbf{Foto's toevoegen} zie de requirements bij sectie 3.10.
+    			\item \textbf{Gebruikers interactie} zie de requirements bij sectie 3.12.
+		\end{itemize}
+	\item \textbf{Iteratie 4}
+		\begin{itemize}
+			\item \textbf{Userprofiling} zie de requirements bij sectie 3.19
+\item \textbf{Aanbevelingen} zie de requirements bij sectie 3.17 
+			\item \textbf{Monumenten vergelijken aan de hand van foto's} zie de requirements bij sectie 3.7.
+			\item \textbf{Thesaurus} zie de requirements bij sectie 3.15.
+			\item Requirement \#51
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Milestones}
+De CultuurApp wordt dermate snel ontwikkeld dat er een grote milestone kan worden aangegeven: het systeem is af. Er is over gesproken meerdere kleinere milestones te maken maar de verandering zijn dan te klein om als milestone aan te merken.
+\subsection{Documentatie}
+Het systeem zal doormiddel van PHPDoc, JSDoc en JavaDoc worden gedocumenteerd op het niveau van methodes binnen klasses. 
+
+\subsection{Unit testen} Losse Unit Tests zullen geschreven worden voor de implementatie van de ‘units’, de classes en functies in zowel de front-end en back-end. Het uitvoeren van deze tests gebeurt vrijwel continu tijdens het implementeren. 
+\subsubsection{QUnit - voor front-end} Met QUnit\footnote{http://docs.jquery.com/QUnit} worden unit tests geschreven voor de front-end in JavaScript. De tests worden tijdens de ontwikkeling uitgevoerd op het systeem van de programmeur en na het completeren van de ‘unit’ wordt deze ook op de verschillende systemen en browsers getest. 
+\subsubsection{PHPUnit - voor back-end} Met PHPUnit\footnote{https://github.com/sebastianbergmann/phpunit} worden unit tests geschreven voor de back-end die op de server draait. Deze Unit Tests worden uitgevoerd tijdens de implementatie en aan de hand van de uitslag van de tests zal de code worden uitgebreid of aangepast. 
+\begin{itemize}
+	\item Alle klassen die in de ORM voorkomen zullen met behulp van PHPUnit getest worden. Voor iedere functie wordt vooraf een unit-test geschreven. 
+	\item Harvesters zullen aan de hand van Unit tests worden getest. Er zal getest worden of de functies aanroepbaar zijn en goede output genereren. 
+	\item De users component bevat login functies die aan de hand van unit tests op correctheid worden getest. 
+\end{itemize}
+\subsubsection{Integratietesten} Wanneer een ‘unit’ is voltooid zal telkens een integratie test worden uitgevoerd. De losse componenten worden zo ook tezamen met de andere componenten getest. Voor het eind van de iteratie moet de integratie test slagen, anders wordt alsnog de code ge-updated. De tests op de back-end worden wederom met behulp van PHPUnit geschreven, daar de losse componenten tezamen ook als gezamenlijke unit gezien kunnen worden en als zodanig kunnen worden getest. 
+\subsubsection{Acceptatietesten} Het systeem zal getest worden door de Use Cases en andere taken die een user normaal doet na te bootsen met het programma Windmill\footnote{http://www.getwindmill.com/}. Windmill werkt met javascript en python en kan interactie met een website opnemen en nabootsen. 
+\section{Risico analyse} Het risico van Test Driven Development is dat wanneer alle test cases slagen er wordt aangenomen dat er geen fouten in de code zitten. Dit kan ertoe leiden dat grove fouten die niet door de testcases worden gedetecteerd live gaan. Met het gebruik van een database en externe sources is het lastig features als categorisering of data-verzameling te testen. Deze features zijn afhankelijk van data die in een unit test niet kunnen worden nagebootst. Het nabootsen van deze data en/of informatie dekt niet altijd de lading. \end{document} 

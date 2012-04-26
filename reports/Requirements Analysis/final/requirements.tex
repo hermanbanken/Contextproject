@@ -1,6 +1,49 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage{graphicx,wrapfig,hyperref}
 \usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry}
+\usepackage{glossary}
+\makeglossary
+
+% GLOSSARY
+% eerst pdf maken
+% dan dit uitvoeren in je terminal: makeindex requirements.glo -s requirements.ist -t requirements.glg -o requirements.gls
+% dan nog een keer pdf maken
+
+% Automatisch labelen van sections
+\newcommand{\rsection}[1]{
+\section{#1}\label{sec:#1}
+}
+\newcommand{\rsubsection}[1]{
+\subsection{#1}\label{sec:sub:#1}
+}
+\newcommand{\rsubsubsection}[1]{
+\subsubsection{#1}\label{sec:sub:sub:#1}
+}
+
+% Deze counter is voor requirements, ipv \item gebruik je \reqitem{req naam}.
+% Om te referencen naar deze requirement schrijf je \reqref{req naam}.
+\newcounter{rreqno}
+\setcounter{rreqno}{0}
+\newcommand{\rreq}[1]{\refstepcounter{rreqno}\label{#1}}
+\newcommand{\reqitem}[1]{\rreq{#1}\item[(req \therreqno)]}
+\newcommand{\reqref}[1]{requirement \ref{#1}}
+
+% Use Cases
+\newcommand\addrow[2]{#1 &#2\\ }
+
+\newcommand\addheading[2]{#1 &#2\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{| lp{12cm} |}
+\hline
+}
+
+\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}% 
+   &\begin{minipage}[t][][t]{8cm}
+    \begin{enumerate} #2   \end{enumerate}
+    \end{minipage}\\ }
+
+\newenvironment{usecase}{\tabularhead}{\hline\end{tabular}}
+% End use cases
+
 \begin{document}
 
 \title{TI2800 Contextproject - My Cultural Heritage\\ Requirements Analysis and Design}
