@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Installation directory relative to the localhost (ie. http://localhost<RewriteBase>/)
-RewriteBase /
+RewriteBase :baseurl
 
 # Protect hidden files from being viewed
 <Files .*>
