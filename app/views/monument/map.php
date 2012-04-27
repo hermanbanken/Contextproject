@@ -1,6 +1,5 @@
 	<header class="jumbotron subhead" id="overview">
 		<h1>Kaartweergave</h1>
-		<p class="lead">Llorem ipsum blablablalablablablablablablabla</p>
 	</header>
 
 		
