@@ -60,7 +60,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// prepare sql statement
 		$sql = "SELECT * ";
 		// search for distance if needed
-		if(isset($distance) && $distance!='0') {
+		if((isset($distance) AND $distance!='0') OR isset($sort) AND $sort ==  'distance') {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance ";
 		}
 		// from dev_monuments
@@ -85,24 +85,31 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 		// ordering
 		$sql.= " ORDER BY ";
-		$order=isset($order)?$order:"default";
-		switch($order) {
+		$sort=isset($sort)?$sort:"default";
+		switch($sort) {
 			case "relevance":
 				// prioritize resultset by relevance
-				$sql.=" CASE
-					WHEN name LIKE '".$search."%' THEN 0
-					WHEN name LIKE '% ".$search." %' THEN 1
-					WHEN name LIKE '%".$search."%' THEN 2
-	               	WHEN description LIKE '% ".$search." %' THEN 4
-					WHEN description LIKE '%".$search."%' THEN 5
-		            ELSE 6
-	        	END, name ";
+				if(isset($search)) {
+					$sql.=" CASE
+						WHEN name LIKE '".$search."%' THEN 0
+						WHEN name LIKE '% ".$search." %' THEN 1
+						WHEN name LIKE '%".$search."%' THEN 2
+		               	WHEN description LIKE '% ".$search." %' THEN 4
+						WHEN description LIKE '%".$search."%' THEN 5
+			            ELSE 6
+		        	END, name ";
+				} else {
+					$sql.= " RAND() ";
+				}
 				break;
 			case "name":
 				$sql.= " name ";
 				break;
 			case "distance":
 				$sql.= " distance ASC ";
+				break;
+			case "street":
+				$sql.= " street ";
 				break;
 			default:
 				$sql.= " RAND() ";
@@ -136,7 +143,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$_return = array();
 		foreach($monuments as $key=>$monument) {
 			//echo $monument->lng.",".$monument->lat;
-			$_return[] = array("description" => $monument->description,
+			$_return[] = array("distance" => isset($monument->distance)?$monument->distance:0,
+								"description" => $monument->description,
 								"longitude" => $monument->lng,
 								"latitude" => $monument->lat,
 								"name" => $monument->name,

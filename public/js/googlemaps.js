@@ -8,7 +8,6 @@ var latitude = null;
 $(document).ready(function() {
 			$('#town').click(function() { this.select(); })
 			$('#search').click(function() { this.select(); })
-			getCoordinates();
 		
 			if($('#kaart').size()>0) {
 				$("#kaart").height($(window).height() - 40);
@@ -22,6 +21,7 @@ $(document).ready(function() {
 				        bounds = new google.maps.LatLngBounds();
 				
 				updatePins();
+				getCoordinates();
 				$('#filter').submit(function (e) {
 					e.preventDefault();
 					updatePins();
