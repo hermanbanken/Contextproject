@@ -162,9 +162,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$post = $this->request->post();
 		$longitude = $post['longitude'];
 		$latitude = $post['latitude'];
-		$limit = isset($limit)?$limit:20;
-		$offset = isset($offset)?$offset:0;
-		$distance = isset($distance)?$distance:1;	
+		$limit = isset($post['limit'])?$post['limit']:1000;
+		$offset = isset($post['offset'])?$post['offset']:0;
+		$distance = isset($post['distance'])?$post['distance']:1;	
 		// KILLER query
 		$sql = " SELECT *,((ACOS(SIN(".$latitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$latitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$longitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance FROM dev_monuments HAVING distance<=".$distance." ORDER BY distance ASC limit ".$limit;
 		$db = Database::instance();

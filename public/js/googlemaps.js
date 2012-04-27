@@ -3,7 +3,7 @@ var markersArray = [];
 var bounds = null;
 var initialLocation;
 
-$(document).ready(		
+$(document).ready(	
 		function() {
 			$('#town').click(function() { this.select(); })
 			$('#search').click(function() { this.select(); })
@@ -25,7 +25,13 @@ $(document).ready(
 					updatePins();
 				});
 			}
-
+			$('#distance').slider({
+				min: 25,
+				max: 300,
+				value:150
+			}).bind('slidestop', function() {
+				goLocal();
+			});
 			$.post('monument/getsteden', {}, succes = function(towns) {
 				$("#town").autocomplete({
 					source : towns
@@ -62,8 +68,10 @@ function goLocal() {
 }
 
 function closest(latitude,longitude) {
+	var distance = $('#distance').size()>0?($('#distance').slider('value')/100):2;
 	$.post('monument/closestby', {
-		 	limit: 50,
+		 	limit: 1000,
+		 	distance: distance,
 		 	longitude: latitude,
     		latitude: longitude
 		 }, succes = function(data) {
@@ -96,9 +104,10 @@ function closest(latitude,longitude) {
 	          map: map,
 	          strokeColor: '#66CCFF',
 	          fillColor: '#66CCFF',
-	          radius: 1609 // 3000 km
+	          radius: 1609*distance
 	        });
 	        circle.bindTo('center', marker, 'position');
+	        markersArray.push(circle);
 	    }, "json");
 }
 	
