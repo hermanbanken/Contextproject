@@ -66,14 +66,14 @@ class Controller_Monument extends Controller_Abstract_Object {
 				FROM dev_monuments 
 				WHERE 1 AND ";
 		// add category search
-		if(isset($category)) $sql.="id_category = ".$category." ";
+		if(isset($category)) $sql .= "id_category = ".$category." ";
 		// add town search
-		if(isset($town))	  $sql.="town = ".$town." ";
+		if(isset($town))	  $sql .= "town = ".$town." ";
 		
 		// add string search 
-		$sql.="CONCAT(name,description) LIKE '%".$search."%' ";
+		$sql .= "CONCAT(name,description) LIKE '%".$search."%' ";
 		// prioritize resultset
-		$sql.="ORDER BY CASE 
+		$sql .= "ORDER BY CASE 
 				WHEN name LIKE '".$search."%' THEN 0
 				WHEN name LIKE '% ".$search." %' THEN 1
 				WHEN name LIKE '%".$search."%' THEN 2
@@ -82,9 +82,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 	            ELSE 6
 	        END, name ";
 		// add the limit
-		$sql.="LIMIT ".$limit." ";
+		$sql .= "LIMIT ".$limit." ";
 		// add the offset
-		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
+		$sql .= "OFFSET ".(isset($offset)?$offset:'0').";";
 		// execute the query
 		$db = Database::instance();
 		$monuments = $db->query(Database::SELECT,$sql,TRUE);
