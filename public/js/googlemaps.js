@@ -154,16 +154,18 @@ function getCoordinates() {
     if(locations.length == 0) {
     	alert("Er zijn geen monumenten gevonden die voldoen aan uw zoekcriteria.");
     }
-	 
+	 //  Create a new viewpoint bound for location based search
+	 var bounds = new google.maps.LatLngBounds ();
 	 // add a pin for all locations
 	 for (i = 0; i < locations.length; i++) {
 		 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
 		   marker = new google.maps.Marker({
 	        position: longlat
 	      });
+		   //  And increase the bounds to take this point
+		   bounds.extend (longlat);
 		   // create infowindow for the pin
 		   var infowindow = new google.maps.InfoWindow();
-
 		  // add the marker to the markerarray
 	      markersArray.push(marker);
 	      
@@ -181,6 +183,7 @@ function getCoordinates() {
 	 
 	 // If the client uses location based search, a circle has to be added
 	 if($('#nearby').is(':checked')) {
+
 		// add current location
 		 var longlat = new google.maps.LatLng(latitude, longitude);
 		   marker = new google.maps.Marker({
@@ -188,6 +191,8 @@ function getCoordinates() {
 	        icon: new google.maps.MarkerImage('http://cdn-img.easyicon.cn/png/5526/552649.png'),
 	        map: map
 	      });
+		   //  And increase the bounds to take this point
+		   bounds.extend (longlat);
 		   // create infowindow for the current location
 		   var infowindow = new google.maps.InfoWindow();
 
@@ -211,10 +216,14 @@ function getCoordinates() {
 	      circle.bindTo('center', marker, 'position');
 	      markersArray.push(circle);
 	 }
-	// create the markercluster
-    markerClusterer = new MarkerClusterer(map, markersArray, {
+	 var maxZoom = $('#nearby').is(':checked')?1:16;
+	// autozoom
+     map.fitBounds(bounds);
+
+	 // create the markercluster
+     markerClusterer = new MarkerClusterer(map, markersArray, {
     	// when zoomlevel reaches 16, just show the pins instead of the clusters
-    	maxZoom: 16,
+    	maxZoom: maxZoom,
     	styles: [
 	    	{
 	    		height: 100,
@@ -224,4 +233,5 @@ function getCoordinates() {
 	    	}
     	]
     });
+     
  }

@@ -184,6 +184,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function monumentsToJSON($monuments) {
 		$_return = array();
 		foreach($monuments as $key=>$monument) {
+			if($monument->lng == 0 OR $monument->lat == 0 OR $monument->lng > 57.5) continue;
 			//echo $monument->lng.",".$monument->lat;
 			$_return[] = array("distance" => isset($monument->distance)?$monument->distance:0,
 								"description" => $monument->description,
