@@ -50,4 +50,17 @@ class Model_User_Identity extends ORM {
 			$validation->error($field, 'identity_available', array($validation[$field]));
 		}
 	}
+	
+	public static function schema(){
+		return Model_Abstract_Cultuurorm::schema(static::$entity, static::$schema_sql);
+	}
+	
+	protected static $entity = "user_identity";
+	protected static $schema_sql = "CREATE TABLE `%s` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `user_id` int(11) NOT NULL,
+	  `provider` varchar(255) NOT NULL,
+	  `identity` varchar(255) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;";
 }
