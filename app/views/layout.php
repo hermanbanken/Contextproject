@@ -10,18 +10,18 @@
   <!--[if lt IE 8]>
   <![endif]-->
   
-  <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8" />
+  <title>Bootstrap, from Twitter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
 
     <!-- Le styles -->
-    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap.css'); ?>" rel="stylesheet">
-    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap-responsive.css'); ?>" rel="stylesheet">
-    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/docs.css'); ?>" rel="stylesheet">
-    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/bootstrap.css'); ?>" rel="stylesheet">
-    <link href="<?php echo URL::site('css/jquery-ui-1.8.19.custom.css'); ?>" rel="stylesheet">
+    <link href="<?php echo URL::site('lib/bootstrap/docs/assets/css/docs.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo URL::site('lib/bootstrap/less/bootstrap.less'); ?>" rel="stylesheet/less" type="text/css" />
+    <link href="<?php echo URL::site('lib/bootstrap/less/responsive.less'); ?>" rel="stylesheet/less" type="text/css" />
+    <script type="text/javascript" src="<?php echo URL::site('js/less.js'); ?>" ></script>
+    <link href="<?php echo URL::site('css/jquery-ui-1.8.19.custom.css'); ?>" rel="stylesheet" />
 	<script type="text/javascript" src="<?php echo URL::site('js/jquery.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo URL::site('js/jquery-ui-1.8.19.custom.min.js'); ?>" ></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk&sensor=true"></script>
@@ -79,6 +79,19 @@
 	echo $body;
  	?>
     </div>
+	</div>
+	<div class="modal" id="loginModal">
+	  <div class="modal-header">
+	    <button class="close" data-dismiss="modal">×</button>
+	    <h3>Login to CultuurApp.nl</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>One fine body…</p>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#" class="">Forgot password</a> |
+	    <a href="#" class="">Signup</a>
+	  </div>
 	</div>
 </div>
 </body>
