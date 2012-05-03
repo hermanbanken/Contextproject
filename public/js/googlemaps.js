@@ -10,6 +10,8 @@ var longitude = null;
 var latitude = null;
 // markerclusterer which clusters the markers
 var markerClusterer = null;
+// bounds for auto-zooming on search
+var bounds = null;
 
 /**
  * On document ready, initialize functions and triggers
@@ -139,6 +141,8 @@ function getCoordinates() {
   * function to place fetched pins on the map
   */
  function placePins(locations) {
+	// store if the user wants to search nearby
+	 var nearby = $('#nearby').is(':checked');
 	// remove all current markers
 	 if (markersArray) {
 		    for (i in markersArray) {
@@ -155,7 +159,7 @@ function getCoordinates() {
     	alert("Er zijn geen monumenten gevonden die voldoen aan uw zoekcriteria.");
     }
 	 //  Create a new viewpoint bound for location based search
-	 var bounds = new google.maps.LatLngBounds ();
+	 bounds = new google.maps.LatLngBounds ();
 	 // add a pin for all locations
 	 for (i = 0; i < locations.length; i++) {
 		 var longlat = new google.maps.LatLng(locations[i]["longitude"], locations[i]["latitude"]);
@@ -163,7 +167,7 @@ function getCoordinates() {
 	        position: longlat
 	      });
 		   //  And increase the bounds to take this point
-		   bounds.extend (longlat);
+		   bounds.extend(longlat);
 		   // create infowindow for the pin
 		   var infowindow = new google.maps.InfoWindow();
 		  // add the marker to the markerarray
@@ -179,11 +183,12 @@ function getCoordinates() {
 	        	infowindow.open(map, marker);
 	        }
 	      })(marker, i));
+	      // if the client uses location based search, there's no need for clustering
+	      if(nearby) marker.setMap(map);
 	    }
 	 
 	 // If the client uses location based search, a circle has to be added
-	 if($('#nearby').is(':checked')) {
-
+	 if(nearby) {
 		// add current location
 		 var longlat = new google.maps.LatLng(latitude, longitude);
 		   marker = new google.maps.Marker({
@@ -216,12 +221,13 @@ function getCoordinates() {
 	      circle.bindTo('center', marker, 'position');
 	      markersArray.push(circle);
 	 }
-	 var maxZoom = $('#nearby').is(':checked')?1:16;
+	 // if the client wants location based search there's no need for clustering
+	 var maxZoom = nearby?1:16;
 	// autozoom
      map.fitBounds(bounds);
 
 	 // create the markercluster
-     markerClusterer = new MarkerClusterer(map, markersArray, {
+     if(!nearby) markerClusterer = new MarkerClusterer(map, markersArray, {
     	// when zoomlevel reaches 16, just show the pins instead of the clusters
     	maxZoom: maxZoom,
     	styles: [
