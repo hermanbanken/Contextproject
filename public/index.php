@@ -105,7 +105,14 @@ require APPPATH.'bootstrap'.EXT;
  * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
  * If no source is specified, the URI will be automatically detected.
  */
-echo Request::factory()
-	->execute()
-	->send_headers()
-	->body();
+
+//echo " test: " . Kohana::TESTING; 
+if (Kohana::$environment !== Kohana::TESTING)
+//if ( ! defined('SUPPRESS_REQUEST'))
+
+{ 
+	echo Request::factory()
+		->execute()
+		->send_headers()
+		->body();
+}
