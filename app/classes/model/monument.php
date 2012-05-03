@@ -25,6 +25,23 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		return URL::site('photos/'.$this->id_monument).".jpg";
 	}
 	
+	public function similars($limit) {
+		$sql = "SELECT *,
+		sqrt(
+			POW(`color` - ".$this->color.", 2) 
+			+ POW(`composition` - ".$this->composition.", 2) 
+			+ POW(`orientation` - ".$this->orientation.", 2) 
+			+ POW(`texture` - ".$this->texture.", 2)
+		) AS p
+		FROM monument
+		ORDER BY p ASC
+		LIMIT ".$limit;
+		
+		$monuments = DB::query(Database::SELECT, $sql, TRUE);
+		
+		return $this->monumentsToJSON($monuments);
+	}
+	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	  	`id_monument` int(10) unsigned AUTO_INCREMENT,
