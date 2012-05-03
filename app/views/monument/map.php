@@ -1,6 +1,5 @@
 	<header class="jumbotron subhead" id="overview">
 		<h1>Kaartweergave</h1>
-		<p class="lead">Llorem ipsum blablablalablablablablablablabla</p>
 	</header>
 
 		
@@ -17,6 +16,10 @@
 				}
 				?>
 			</select><br />
+			<label style="color:white" for="nearby"><input type="checkbox" id="nearby" style="float:left"/>In de buurt zoeken</label>
+			<div id="distancecontainer" style="display:none">
+			<span style="color:white">Afstand vanaf huidige locatie</span>
+			<div id="distance"></div></div>
 			<input type="submit" value="Filter" />
 			</form>
 		</div>

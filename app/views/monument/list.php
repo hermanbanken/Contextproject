@@ -29,8 +29,10 @@
 				?>
 			</select><br />
 			<select id="sort">
-				<option value="0">-- Sorteer</option>
-				<option value="name">Op Naam</option>
+				<option value="street">--Sorteer</option>
+				<option value="relevance">Relevantie</option>
+				<option value="name">Naam</option>
+				<option value="distance">Afstand tot huidige locatie</option>
 			</select>
 			<input type="submit" value="Filter" />
 			</form>

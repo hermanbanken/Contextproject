@@ -2,6 +2,8 @@ var html = "";
 var mpp = 8;
 var page = 1;
 var total = 0;
+var longitude = null;
+var latitude = null;
 
 $(document).ready(function() {
 	updateList(true);
@@ -51,7 +53,7 @@ function updateArrows() {
 }
 
 /**
- * functie om de spelden te updaten aan de hand van de selectiecriteria
+ * functie om de entries te updaten aan de hand van de selectiecriteria
  * 
  * @returns helemaal niks!
  */
@@ -60,13 +62,30 @@ function updateList(datachanged) {
 		total = 0;
 		page = 1;
 	}
-
-	// alle huidige markers weggooien
-	$('#monument_list').fadeOut(function() {
-			$('#monument_list').html('');
-	
+	if(longitude == null || latitude == null) {
+		if(navigator.geolocation) {
+	        browserSupportFlag = true;
+	        navigator.geolocation.getCurrentPosition(function(position) {
+	          latitude = position.coords.latitude;
+	          longitude = position.coords.longitude;
+	          updateList(true);
+	        });
+	      // Try Google Gears Geolocation
+	      } else if (google.gears) {
+	        browserSupportFlag = true;
+	        var geo = google.gears.factory.create('beta.geolocation');
+	        geo.getCurrentPosition(function(position) {
+	          latitude = position.latitude;
+	          longitude = position.longitude;
+	          updateList(true);
+	         });
+	      }
+		return;
+	}
 		// locaties ophalen met ajax
 		$.post('monument/getmonumenten',{
+			longitude: longitude,
+			latitude: latitude,
 			category : $('#categories').val(),
 			limit : mpp,
 			search: $('#search').val(),
@@ -77,53 +96,69 @@ function updateList(datachanged) {
 			succes = function(data) {
 	
 				locations = data;
-	
-				$.post('monument/getmonumenten', {
-					search: $('#search').val(),
-						category : $('#categories').val(),
-					town : $('#town').val(),
-					sort : $('#sort').val(),
-					findtotal : true
-				}, succes = function(count) {
-					total = count;
-					updateArrows();
-				});
-	
-				if (locations.length == 0) {
-					var tr = '<tr><td class="span12">Er zijn geen monumenten gevonden met deze selectie.</td></tr>';
-					$('#monument_list').append(tr);
-				}
-	
-				for (i = 0; i < locations.length; i++) {
-					var tr = '<tr>'
-							+ '<td class="span2">'
-							+ '<div style="height:100px; overflow:hidden;">'
-							+ '<a href="monument/id/'
-							+ locations[i]['id']
-							+ '">'
-							+ locations[i]['name']
-							+ '</a>'
-							+ '</div>'
-							+ '</td>'
-							+ '<td class="span5">'
-							+ '<div style="height:100px; overflow:hidden;">'
-							+ locations[i]['description'].substring(0,
-									300)
-							+ '... <a href="monument/id/'
-							+ locations[i]['id']
-							+ '">Lees meer</a>'
-							+ '</div></td><td class="span1">'
-							+ '<div style="height:100px; overflow:hidden;">'
-							+ '<a style="display: block; text-align: center;" href="monument/id/'
-							+ locations[i]['id']
-							+ '">'
-							+ '<img src="photos/'
-							+ locations[i]['id']
-							+ '.jpg" style="max-width: 100px; max-height: 100px;" alt="">'
-							+ '</a>' + '</div>' + '</td>' + '</tr>';
-					$('#monument_list').append(tr);
-				}
+				updateEntries(locations);
+				
 			}, "json");
+}
+
+
+function updateEntries(locations) {
+	// checken hoeveel pagina's er nodig zijn
+	$.post('monument/getmonumenten', {
+		search: $('#search').val(),
+		category : $('#categories').val(),
+		town : $('#town').val(),
+		sort : $('#sort').val(),
+		findtotal : true
+	}, succes = function(count) {
+		total = count;
+		updateArrows();
+	});
+	
+	// alle huidige markers weggooien
+	$('#monument_list').fadeOut(function() {
+			$('#monument_list').html('');
+	
+	
+		if (locations.length == 0) {
+			var tr = '<tr><td class="span12">Er zijn geen monumenten gevonden met deze selectie.</td></tr>';
+			$('#monument_list').append(tr);
+		}
+
+		for (i = 0; i < locations.length; i++) {
+			var tr = '<tr>'
+					+ '<td class="span2">'
+					+ '<div style="height:100px; overflow:hidden;">'
+					+ '<a href="monument/id/'
+					+ locations[i]['id']
+					+ '">'
+					+ locations[i]['name']
+					+ '</a>'
+					+ '<span style="display:block">'+(locations[i]['distance']==0?'':Math.round(locations[i]['distance']*1000)+' meter')+'</span>'
+					+ '</div>'
+					+ '</td>'
+					+ '<td class="span5">'
+					+ '<div style="height:100px; overflow:hidden;">'
+					+ locations[i]['description'].substring(0,
+							300)
+					+ '... <a href="monument/id/'
+					+ locations[i]['id']
+					+ '">Lees meer</a>'
+					+ '</div></td><td class="span1">'
+					+ '<div style="height:100px; overflow:hidden;">'
+					+ '<a style="display: block; text-align: center;" href="monument/id/'
+					+ locations[i]['id']
+					+ '">'
+					+ '<img src="photos/'
+					+ locations[i]['id']
+					+ '.jpg" style="max-width: 100px; max-height: 100px;" alt="">'
+					+ '</a>' + '</div>' + '</td>' + '</tr>';
+			$('#monument_list').append(tr);
+		}
 		$('#monument_list').fadeIn();
 	});
+
+	// alle huidige markers weggooien
+	$('#monument_list').hide();
+
 }
