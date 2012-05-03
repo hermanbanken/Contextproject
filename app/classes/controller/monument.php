@@ -68,6 +68,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 				${$key} = $value;
 			}
 		}
+		
+		//die(var_dump($bounds));
 
 		// extract synonyms
 		if(isset($search)) {
