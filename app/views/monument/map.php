@@ -3,7 +3,7 @@
 	</header>
 
 		
-		<div id="searchdiv" style="position: absolute; top: 0; left: 100px; width: 220px; z-index: 2; padding: 20px; padding-top:60px; background: #1E1E1E;-webkit-border-radius: 20px;border-radius: 20px;">
+		<div id="searchdiv" style="position: absolute; top: 40px; left: 100px; width: 220px; z-index: 2; padding: 20px; background: #1E1E1E;-webkit-border-bottom-left-radius: 20px;-webkit-border-bottom-right-radius: 20px;border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
 			<form method="post" action=""  id="filter" style="margin-bottom: 0;">
 			<input id="search" type="text" value="zoeken" /> 
 			<input id="town" type="text" value="stad" /> 
