@@ -27,9 +27,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
-	  	`id_monument` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	  	`id_category` int(10) unsigned  NULL,
-	  	`id_subcategory` int(10) unsigned  NULL,
+	  	`id_monument` int(10) unsigned AUTO_INCREMENT,
+	  	`id_category` int(11),
+	  	`id_subcategory` int(11),
 	  	`name` varchar(80) NOT NULL,
 	  	`wiki_url` varchar(200) NOT NULL,
 	  	`province` varchar(12) NOT NULL,
@@ -40,8 +40,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	  	`zipCode` varchar(7) NOT NULL,
 	  	`function` varchar(50) NULL,
 	  	`description` text NULL,
-	  	`lng` double(10, 5) NULL,
-	  	`lat` double(10, 5) NULL,
+	  	`lng` double(10,5) NULL,
+	  	`lat` double(10,5) NULL,
 	  	PRIMARY KEY (`id_monument`)
 	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";	
 }

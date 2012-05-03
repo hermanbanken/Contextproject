@@ -32,6 +32,9 @@ if(!$proceed) die("You need to fix these permissions first before we can proceed
 
 if(isset($_POST['install']) || !empty($_SERVER['SHELL']))
 {
+	if(!empty($_SERVER['SHELL'])) 
+		echo "Working...\n";
+	
 	foreach($rewrite as $name => $config){
 		if(!file_exists($config['default'])) die("Default config for $config not found");
 		$file = file_get_contents($config['default']);
@@ -40,12 +43,16 @@ if(isset($_POST['install']) || !empty($_SERVER['SHELL']))
 		}
 		file_put_contents($config['custom'], $file);
 	}
+	
+	if(!empty($_SERVER['SHELL']))
+		echo "Updating tables...\n";
+		
+	$_SERVER['KOHANA_ENV'] = 'TESTING';
+	include 'public/index.php';
+	Controller_Install::update_tables();
 
-	if(!empty($_SERVER['SHELL'])){
-		echo "Working...\nCustomized your installation. Happy developing!\n";
-		exit;
-	}
-
+	if(!empty($_SERVER['SHELL']))
+		die("Customized your installation. Happy developing!\n");
 }
 
 /*if(isset($_POST['file'])){

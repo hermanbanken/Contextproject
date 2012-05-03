@@ -6,12 +6,16 @@ abstract class Model_Abstract_Cultuurorm extends ORM {
 	protected static $entity = "abstract";
 	
 	/**
-	 * schema
+	 * Get the SQL schema of the model table for the database. Handles the database prefix and plural name of the entity.
 	 * @return string : database schema of class
 	 */
-	public static function schema(){
+	public static function schema($entity = null, $schema = null){
+		// Use static values if no parameters are set.
+		$entity = $entity == null ? static::$entity : $entity;
+		$schema = $schema == null ? static::$schema_sql : $schema;
+		
 		$prefix = Kohana::$config->load('database.default.table_prefix');
-		$sql = sprintf(static::$schema_sql, Inflector::plural($prefix.static::$entity));
+		$sql = sprintf($schema, $prefix.Inflector::plural($entity));
 		return $sql;
 	}
 	
