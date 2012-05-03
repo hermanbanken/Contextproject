@@ -173,5 +173,5 @@ function getCoordinates() {
 	        markersArray.push(circle);
 	 }
 	// zoomen!
-    map.fitBounds(bounds);
+    if(markersArray.length > 0) map.fitBounds(bounds);
  }
