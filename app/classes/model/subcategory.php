@@ -18,7 +18,7 @@ class Model_SubCategory extends Model_Abstract_Cultuurorm {
 		'category' => array(
 			'foreign_key' => 'id_category'
 		)
-	)
+	);
 	
 	protected static $entity = "subcategory";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
