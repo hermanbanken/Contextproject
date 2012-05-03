@@ -12,12 +12,12 @@ var latitude = null;
 var markerClusterer = null;
 // bounds for auto-zooming on search
 var bounds = null;
-
+// keep track of the distance circle (for removing
+var circle = null;
 /**
  * On document ready, initialize functions and triggers
  */
 $(document).ready(function() {
-	
 			// The townbar and searchbar have to be completely selected once clicked on
 			$('#town, #search').click(function() { 
 				this.select(); 
@@ -54,9 +54,15 @@ $(document).ready(function() {
 			
 			// initialize slider for the distance
 			$('#distance').slider({
-				min: 25,
-				max: 300,
-				value:150
+				min: 1,
+				max: 100,
+				value:2,
+                slide: function(data) {
+                    $('#distanceindicator').html(Math.round($(this).slider('value'))+" kilometer");
+                },
+                change: function(data) {
+                    $('#distanceindicator').html(Math.round($(this).slider('value'))+" kilometer");
+                }
 			});
 			
 			// autocomplete needs a list of cities
@@ -111,7 +117,7 @@ function getCoordinates() {
 	 // get the locations using AJAX with the criteria
 	 $.post('monument/getmonumenten', {
 			 	// distance from current client location
-			 	distance: distance>0?(distance/100):0,
+			 	distance: distance>0?(distance):0,
 			    // longitude of current client location
 			 	longitude: longitude,
 			 	// latitude of current client location
@@ -153,6 +159,9 @@ function getCoordinates() {
 	 if (markerClusterer) {
 		    markerClusterer.clearMarkers();
 	 }
+     if (circle) {
+         circle.setMap(null);
+     }
 	 
 	// if no monument is found, notify the user
     if(locations.length == 0) {
@@ -184,7 +193,7 @@ function getCoordinates() {
 	        }
 	      })(marker, i));
 	      // if the client uses location based search, there's no need for clustering
-	      if(nearby) marker.setMap(map);
+//	      if(nearby) marker.setMap(map);
 	    }
 	 
 	 // If the client uses location based search, a circle has to be added
@@ -211,33 +220,26 @@ function getCoordinates() {
 	        }
 	      })(marker, i));
 	      // Add a Circle overlay to the map.
-	      var circle = new google.maps.Circle({
+	      circle = new google.maps.Circle({
 	          map: map,
-	          strokeColor: '#66CCFF',
+              strokeColor: '#66CCFF',
 	          fillColor: '#66CCFF',
-	          radius: 1609*($('#distance').slider('value')/100)
+	          radius: 1000*$('#distance').slider('value')
 	      });
 	      // add the circle to the map
 	      circle.bindTo('center', marker, 'position');
-	      markersArray.push(circle);
+	     // markersArray.push(circle);
 	 }
-	 // if the client wants location based search there's no need for clustering
-	 var maxZoom = nearby?1:16;
+	 // if the client wants location based search there's no need for late clustering
+	 var maxZoom = nearby?14:16;
 	// autozoom
      map.fitBounds(bounds);
 
 	 // create the markercluster
-     if(!nearby) markerClusterer = new MarkerClusterer(map, markersArray, {
+     if(true || !nearby) markerClusterer = new MarkerClusterer(map, markersArray, {
     	// when zoomlevel reaches 16, just show the pins instead of the clusters
     	maxZoom: maxZoom,
-    	styles: [
-	    	{
-	    		height: 100,
-	    		width: 47,
-	    		opt_anchor: [50, 64],
-	    		url: "images/redpin.png"
-	    	}
-    	]
+
     });
      
  }

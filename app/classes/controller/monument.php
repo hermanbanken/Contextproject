@@ -79,7 +79,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$sql = "SELECT * ";
 		// search for distance if needed
 		if((isset($distance) AND $distance!='0') OR isset($sort) AND $sort ==  'distance') {
-			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS distance ";
+			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
 		// from dev_monuments
 		$sql.= " FROM dev_monuments ";
