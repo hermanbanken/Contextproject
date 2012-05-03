@@ -3,18 +3,49 @@
 class Controller_Install extends Controller {
 
 	/**
-	 * create_tables
-	 * Make a table in the database for each monument that has a schema inside
+	 * Make a table in the database for each monument that has a schema inside.
 	 */
-	public static function create_tables(){
+	public static function update_tables(){
 		$result = array();
-		foreach(self::get_schemas() as $sql){
-			$result[] = DB::query(Database::UPDATE, $sql)->execute();
+		$deltas = self::get_deltas();
+		if(!empty($deltas['sql']))
+			DB::query(Database::UPDATE, $deltas['sql'])->execute();
+	}
+	
+	/**
+	 * Find deltas of the table definitions in the current 
+	 * database versus the defined schemas in the model classes.
+	 * @return array : Array with SQL statement that can update the tables and an array with a description of the changes
+	 */
+	public static function get_deltas(){
+		include Kohana::find_file('vendor', 'wordpress/dbdelta');
+		$deltas = '';
+		$messages = array();
+		foreach(self::get_schemas() as $new){
+			$messages[] = dbDelta($new, array('Controller_Install', 'query'), $deltas);
 		}
+		return array('sql'=>$deltas, 'messages'=>$messages);
+	}
+	
+	/**
+	 * Provide a callback for the vendor scripts to execute queries on the database.
+	 * @param string SQL to execute
+	 * @return array of row objects from the result
+	 */
+	public static function query($query){
+		try{
+			$r = DB::query(Database::SELECT, $query)->execute()->as_array();
+		} catch (Database_Exception $e){
+			return array();
+		}
+		foreach($r as $k => $a){
+			$r[$k] = (object) $a;
+		}
+		return $r;
 	}
 
 	/**
-	 * get_schemas
+	 * Find all schemas defined in the model classes.
 	 * @return string[] : SQL schemas of models that have a schema function
 	 */
 	public static function get_schemas(){
@@ -28,22 +59,33 @@ class Controller_Install extends Controller {
 	}
 
 	/**
-	 * find_models
+	 * Find all Models defined in the application
 	 * @return string[] : classname of the models found in directory structure
 	 */
 	public static function find_models(){
 		$names = array();
 		// Get filenames of model classes
-		$models = Kohana::list_files('classes/model');
+		$models = array_values(Kohana::list_files('classes/model'));
+		
+		// Flatten
+		for($i = 0; $i < count($models); $i++){
+			if(is_array($models[$i])){
+				$models = array_merge($models, array_values($models[$i]));
+				unset($models[$i]);
+			}
+		}
 		// Get classnames of models
 		foreach($models as $short => $m){
 			if(is_string($m) && file_exists($m))
 				$names = array_merge($names, self::file_get_php_classes($m));
 		}
+		
 		// Filter out non-ORM models
 		$names = array_filter($names, function($child){
-			return is_subclass_of($child, "ORM");
+			$class = new ReflectionClass($child);
+			return !$class->isAbstract() && $class->isSubClassOf("ORM");
 		});
+		
 		return $names;
 	}
 
