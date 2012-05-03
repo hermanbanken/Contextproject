@@ -21,7 +21,7 @@ class Model_User extends Model_Auth_User {
 	 * @param int $length
 	 * @return string
 	 */
-	function generate_password($length = 8) 
+	public function generate_password($length = 8) 
 	{
 		// start with a blank password
 		$password = "";
