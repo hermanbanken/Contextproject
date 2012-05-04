@@ -63,9 +63,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	}
 
 	public function extractcategory() {
-		// Calculate percentage per category
 		$cats = array();
 
+		// Count numbers of monuments in each category
 		$monuments = DB::query(Database::SELECT, 'SELECT * FROM dev_monuments NATURAL JOIN dev_photos')->execute();
 		foreach ($monuments AS $monument) {
 			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
@@ -74,17 +74,19 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			}
 		}
 
+		// Calculate percentages per category
 		$cats_perc = array();
 		foreach ($cats AS $cat => $value) {
 			$cats_perc[$cat] = $value / array_sum($cats);
 		}
 		
-		// Calculate percentage of similar monuments
 		$cats_sim = array();
 
+		// Get 400 similar monuments
 		$similars = $this->similars(400);
 		$monuments = $similars['monuments'];
 
+		// Count numbers of monuments in each category from the similars
 		foreach ($monuments AS $monument) {
 			if ($monument->subcategory->id_subcategory != NULL && $monument->subcategory->id_subcategory != 0) {
 				if (!isset($cats_sim[$monument->subcategory->id_subcategory])) $cats_sim[$monument->subcategory->id_subcategory] = 0;
@@ -92,43 +94,31 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			}
 		}
 
+		// Calculate percentages per category
 		$cats_sim_perc = array();
 		foreach ($cats_sim AS $cat_sim => $value) {
 			$cats_sim_perc[$cat_sim] = $value / array_sum($cats_sim);
 		}
 			
-		
-		echo 'Categorieverloop:<br />';
+		// Compare percentages
 		foreach ($cats_sim_perc AS $cat_sim => $value) {
 			if (!isset($max)) $max = $cats_perc[$cat_sim] - $value;
 			if (!isset($old_max)) $old_max = $cats_perc[$cat_sim] - $value;
 			if (!isset($final_cat)) $final_cat = $cat_sim;
 			
+			// Compare difference between percentages of normal and compared monuments
 			$max = max($cats_perc[$cat_sim] - $value, $max);
 			
-			echo $final_cat.' ';
+			// If the difference is bigger then previous, update final categorization
 			if ($max > $old_max) $final_cat = $cat_sim;
 			
 			$old_max = $max;
 		}
 		
-		echo '<br /><br />';
+		// If no final cat is set final categorization to false
+		if (!isset($final_cat)) $final_cat = false;
 		
-		if (isset($final_cat)) {	
-			$subcategory = ORM::factory('subcategory')->where('id_subcategory', '=', $final_cat)->find();
-			echo 'Gevonden informatie uit visuele analyse:<br />';
-			echo $subcategory->category->name.'<br />';
-			echo $subcategory->name.'<br /><br />';
-			echo 'Deze categorie gekozen door:<br />';
-			$i = 0;
-			foreach ($monuments AS $monument) {
-				if ($monument->subcategory->id_subcategory == $final_cat) {
-				$i++;
-					echo '<a href="'.URL::site('monument/id/'.$monument->id_monument).'"><img style="max-width: 80px; max-height: 80px; margin-top: 20px;" src="'.$monument->photo().'" alt="'.$monument->name.'" /></a>';
-				}
-				if ($i == 10) break;
-			}
-		}
+		return $final_cat;
 	}
 
 	protected static $entity = "monument";

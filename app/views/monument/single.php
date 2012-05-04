@@ -28,7 +28,6 @@
 		$similars = $monument->similars(5);
 		
 		if ($similars['euclidian']) {
-			$monument->extractcategory();
 			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
 		}
 		else {
