@@ -1,13 +1,3 @@
-<style>
-	body {
-		padding-top:40px;
-		background:url(<?php echo URL::site('images/texture.jpg'); ?>) repeat;
-	}
-	.page {
-		background:url(<?php echo URL::site('images/splash.jpg'); ?>) no-repeat center;
-		min-height:700px;
-	}
-</style>
 	<header class="jumbotron masthead">
 		<div class="inner">
 			<h1><img alt="CultuurApp" src="<?php echo URL::site('images/logo.png'); ?>" /></h1>
