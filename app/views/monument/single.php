@@ -14,8 +14,11 @@
 		    		echo $monument->province."<br />";
 		    		echo $monument->town."<br />";
 		    		echo $monument->street." ".$monument->streetNumber."<br />";
-		    		echo "<br />";
-		    		echo $monument->description;
+		    		echo '<br />';
+		    		echo $monument->description.'<br />';
+		    		echo '<br />';
+		    		echo 'Categorie: '.$monument->category->name.'<br />';
+		    		echo 'Subcategorie: '.$monument->subcategory->name;
 		    	?>
 		    	</div>
 		    </div>
@@ -25,7 +28,8 @@
 		$similars = $monument->similars(4);
 		
 		if ($similars['euclidian']) {
-			echo '<h2>Visueel gelijkende monumenten</h2>';
+			$monument->extractcategory();
+			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
 		}
 		else {
 			echo '<h2>Andere monumenten uit dezelfde categorie</h2>';

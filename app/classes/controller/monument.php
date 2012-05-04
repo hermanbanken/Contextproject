@@ -14,6 +14,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
+    
 	/**
 	 * action_id
 	 * Action for getting one particular object by id in single view
@@ -42,7 +43,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	}
 
 	
-	function getSynonyms($search) {
+	public static function getSynonyms($search) {
 		$sql = "select w2.word as synoniem 
 				from dev_thesaurus_words w1,
 				dev_thesaurus_words w2,
@@ -82,12 +83,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
 		// from dev_monuments
-		$sql.= " FROM dev_monuments ";
+		$sql.= "FROM dev_monuments ";
 		// prepare where clause
-		$sql.= " HAVING 1 ";
+		$sql.= "HAVING 1 ";
 		// search for distance if needed
 		if(isset($distance) && $distance!='0') {
-			$sql.= " AND distance < ".$distance." ";
+			$sql.= "AND distance < ".$distance." ";
 		}
 		// add category search
 		if(isset($category)) {
@@ -105,21 +106,21 @@ class Controller_Monument extends Controller_Abstract_Object {
 				foreach($synonyms as $syn) {
 					$syns.="|".$syn->synoniem;
 				}
-				$sql.= " AND CONCAT(name,description) REGEXP '".$syns."' ";
+				$sql.= "AND CONCAT(name,description) REGEXP '".$syns."' ";
 			} else {
 				// if not, a LIKE operator is enough
-				$sql.=" AND CONCAT(name,description) LIKE '%".$search."%' ";
+				$sql.="AND CONCAT(name,description) LIKE '%".$search."%' ";
 			}
 		}
 		// ordering
-		$sql.= " ORDER BY ";
+		$sql.= "ORDER BY ";
 		$sort=isset($sort)?$sort:"default";
 		switch($sort) {
 			case "relevance":
 				// prioritize resultset by relevance
 				if(isset($search)) {
 					if($synonyms) {
-						$sql.=" CASE
+						$sql.="CASE
 							WHEN name = '".$search."' THEN 0
 							WHEN name LIKE '".$search."%' THEN 1
 							WHEN name LIKE '%".$search."%' THEN 2
@@ -129,7 +130,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 							ELSE 6
 			        	END, name ";
 					} else {
-						$sql.=" CASE
+						$sql.="CASE
 							WHEN name = '".$search."' THEN 0
 							WHEN name LIKE '".$search."%' THEN 0
 							WHEN name LIKE '% ".$search." %' THEN 1
@@ -140,20 +141,20 @@ class Controller_Monument extends Controller_Abstract_Object {
 			        	END, name ";
 					}
 				} else {
-					$sql.= " RAND() ";
+					$sql.= "RAND() ";
 				}
 				break;
 			case "name":
-				$sql.= " name ";
+				$sql.= "name ";
 				break;
 			case "distance":
-				$sql.= " distance ASC ";
+				$sql.= "distance ASC ";
 				break;
 			case "street":
-				$sql.= " street ";
+				$sql.= "street ";
 				break;
 			default:
-				$sql.= " RAND() ";
+				$sql.= "RAND() ";
 				break;
 			
 		}
