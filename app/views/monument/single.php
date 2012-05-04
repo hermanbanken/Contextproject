@@ -25,12 +25,11 @@
 		    <div class="row">
 		    	<div class="span9" style="margin-top: 30px;">  
 		<?php 
-		$monument->extractcategory();
-		
 		$similars = $monument->similars(4);
 		
 		if ($similars['euclidian']) {
-			echo '<h2>Visueel gelijkende monumenten</h2>';
+			$monument->extractcategory();
+			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
 		}
 		else {
 			echo '<h2>Andere monumenten uit dezelfde categorie</h2>';

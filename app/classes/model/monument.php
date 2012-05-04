@@ -97,6 +97,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			$cats_sim_perc[$cat_sim] = $value / array_sum($cats_sim);
 		}
 			
+		
+		echo 'Categorieverloop:<br />';
 		foreach ($cats_sim_perc AS $cat_sim => $value) {
 			if (!isset($max)) $max = $cats_perc[$cat_sim] - $value;
 			if (!isset($old_max)) $old_max = $cats_perc[$cat_sim] - $value;
@@ -104,16 +106,28 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			
 			$max = max($cats_perc[$cat_sim] - $value, $max);
 			
+			echo $final_cat.' ';
 			if ($max > $old_max) $final_cat = $cat_sim;
 			
 			$old_max = $max;
 		}
 		
-		if (isset($final_cat)) {
+		echo '<br /><br />';
+		
+		if (isset($final_cat)) {	
 			$subcategory = ORM::factory('subcategory')->where('id_subcategory', '=', $final_cat)->find();
 			echo 'Gevonden informatie uit visuele analyse:<br />';
 			echo $subcategory->category->name.'<br />';
-			echo $subcategory->name.'<br />';
+			echo $subcategory->name.'<br /><br />';
+			echo 'Deze categorie gekozen door:<br />';
+			$i = 0;
+			foreach ($monuments AS $monument) {
+				if ($monument->subcategory->id_subcategory == $final_cat) {
+				$i++;
+					echo '<a href="'.URL::site('monument/id/'.$monument->id_monument).'"><img style="max-width: 80px; max-height: 80px; margin-top: 20px;" src="'.$monument->photo().'" alt="'.$monument->name.'" /></a>';
+				}
+				if ($i == 10) break;
+			}
 		}
 	}
 
