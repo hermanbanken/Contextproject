@@ -14,7 +14,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
-    
 	/**
 	 * action_id
 	 * Action for getting one particular object by id in single view
