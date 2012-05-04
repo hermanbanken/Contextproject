@@ -14,6 +14,8 @@ var markerClusterer = null;
 var bounds = null;
 // keep track of the distance circle (for removing
 var circle = null;
+// check if the map is fully loaded for the first time
+var loaded = false;
 /**
  * On document ready, initialize functions and triggers
  */
@@ -30,9 +32,9 @@ $(document).ready(function() {
         // initialize options for google maps
         var myOptions = {
           // center of holland
-          center: new google.maps.LatLng(52.469397, 5.509644),
+          center: new google.maps.LatLng(52.003695,4.361444),
           // default zoomlevel 8
-          zoom: 8,
+          zoom: 15,
           // maptype road
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -232,7 +234,8 @@ if(navigator.geolocation) {
 	 // if the client wants location based search there's no need for late clustering
 	 var maxZoom = nearby?14:16;
 	// autozoom
-     if(markersArray.length>0 && !(markersArray.length==1 && nearby)) map.fitBounds(bounds);
+     if(loaded && markersArray.length>0 && !(markersArray.length==1 && nearby)) map.fitBounds(bounds);
+     else if(!loaded) loaded = true;
 
 	 // create the markercluster
      if(true || !nearby) markerClusterer = new MarkerClusterer(map, markersArray, {
