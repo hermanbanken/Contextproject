@@ -69,11 +69,13 @@
 	<div class='page'>
     <div class="container">
 	<?php
+	/*
 	$messages = Message::pull();
 	var_dump($messages);
 	foreach($messages as $m){
 		echo "<div class='alert alert-$m[type]'>$m[message]</div>";
 	}
+	*/
 	?>
 	<?php 
 	echo $body;
