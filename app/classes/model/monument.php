@@ -38,7 +38,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		if ($photo->total == NULL) {
 			// For now we're searching for random monuments in the same category when no photo is found
 			$monuments = ORM::factory('monument')
-			->where('id_category', '=', $this->id_category)
+			->where('id_subcategory', '=', $this->id_subcategory)
 			->order_by(DB::expr('RAND()'))
 			->limit($limit)
 			->find_all();
