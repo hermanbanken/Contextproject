@@ -8,3 +8,4 @@
 			</p>
 			</div>
 	</header>
+	<a class='torn' href='monument/map'></a>

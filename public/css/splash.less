@@ -1,9 +1,25 @@
 .page {
-	background:url(../images/splash.jpg) no-repeat center;
+	background:url(../images/splash.jpg) no-repeat top center;
 	min-height:700px;
 }
 
+html {
+	background: #333;
+}
 body {
 	padding-top:40px;
-	background:url(../images/texture.jpg) repeat;
+	/*background:url(../images/texture.jpg) repeat;*/
+	border-bottom:2px solid green;
+	box-shadow: 0 5px 5px solid black;
+}
+
+.torn {
+	background:url(../images/torn.png);
+	width:200px;
+	height:200px;
+	display:block;
+	position:absolute;
+	bottom:0;
+	right:0;
+	z-index:1;
 }
