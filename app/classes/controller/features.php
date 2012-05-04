@@ -68,5 +68,24 @@ class Controller_Features extends Controller_Abstract_Object {
 
 		$this->template->body = $v;
 	}
+	
+	public function action_check() {
+		$v = View::factory('features');
+		
+		$monuments = ORM::factory('monument')
+		->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
+		->where('id_category', '!=', 0)
+		->and_where('id_category', '!=', NULL)
+		->find_all();
+		
+		set_time_limit(0);			
+		$fp = fopen('data.txt', 'w+');
+		
+		foreach ($monuments AS $monument) {
+			fwrite($fp, $monument->id_monument.",".$monument->extractcategory().",".$monument->id_subcategory."\n");
+		}
+		
+		$this->template->body = $v;
+	}
 }
 ?>
