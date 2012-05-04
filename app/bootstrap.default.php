@@ -98,6 +98,7 @@ Kohana::$config->attach(new Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
+	 'cultuuruser'=> MODPATH.'cultuuruser',// CultuurApp user module
 	 'auth'       => MODPATH.'auth',       // Basic authentication
 	// 'cache'      => MODPATH.'cache',    // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',// Benchmarking tool
@@ -109,7 +110,6 @@ Kohana::modules(array(
 	 'bonafide'   => MODPATH.'bonafide',   // Bonafide
 	 'unittest'   => MODPATH.'unittest',   // Unit testing
 	 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
-	 'cultuuruser'=> MODPATH.'cultuuruser',// CultuurApp user module
 	));
 
 /**
