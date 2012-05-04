@@ -14,23 +14,31 @@
 		    		echo $monument->province."<br />";
 		    		echo $monument->town."<br />";
 		    		echo $monument->street." ".$monument->streetNumber."<br />";
-		    		echo "<br />";
-		    		echo $monument->description;
+		    		echo '<br />';
+		    		echo $monument->description.'<br />';
+		    		echo '<br />';
+		    		echo 'Categorie: '.$monument->category->name.'<br />';
+		    		echo 'Subcategorie: '.$monument->subcategory->name;
 		    	?>
 		    	</div>
 		    </div>
 		    <div class="row">
 		    	<div class="span9" style="margin-top: 30px;">  
-		    		<h2>Andere monumenten uit dezelfde categorie</h2>
 		<?php 
-		$monuments = ORM::factory('monument')
-   		->where('id_category', '=', $monument->id_category)
-   		->order_by(DB::expr('RAND()'))
-        ->limit(4)
-		->find_all();
-		foreach ($monuments AS $monument) {
+		$similars = $monument->similars(5);
+		
+		if ($similars['euclidian']) {
+			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
+		}
+		else {
+			echo '<h2>Andere monumenten uit dezelfde categorie</h2>';
+			
+		}
+		
+		$monuments = $similars['monuments'];
+		foreach ($monuments AS $monument_s) {
 			echo '<div style="text-align: center; width: 170px; float: left;">';
-			echo '<a href="'.URL::site('monument/id/'.$monument->id_monument).'"><img style="max-width: 150px; max-height: 150px; margin-top: 20px;" src="'.$monument->photo().'" alt="'.$monument->name.'" /></a>';
+			echo '<a href="'.URL::site('monument/id/'.$monument_s->id_monument).'"><img style="max-width: 150px; max-height: 150px; margin-top: 20px;" src="'.$monument_s->photo().'" alt="'.$monument_s->name.'" /></a>';
 			echo '</div>';
 		}
 		?>  		

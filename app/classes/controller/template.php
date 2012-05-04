@@ -6,6 +6,7 @@ class Controller_Template extends Kohana_Controller_Template {
 	
 	// Name of template, before resets this to the actual template
 	public $template = "layout";
+	public $page_title = "Template Title";
 
 	private $css = array();
 	private $js = array();
@@ -19,6 +20,29 @@ class Controller_Template extends Kohana_Controller_Template {
 		
 		$this->template->header = new View('header');
 		$this->template->footer = new View('footer');
+		
+        View::bind_global('page_title', $this->page_title);
+		
+		$googlekey = "AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk";
+		$this
+			->less('lib/bootstrap/less/bootstrap.less')
+			->less('lib/bootstrap/less/responsive.less')
+			->css('css/jquery-ui-1.8.19.custom.css')
+			->less('lib/bootstrap/docs/assets/css/docs.css')
+			->less('css/app.less')
+			->js('Less.js', 'js/less-1.3.0.min.js', true)
+			->js('jquery', 'js/jquery.min.js', true)
+			->js('jquery-ui', 'js/jquery-ui-1.8.19.custom.min.js', true)
+			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&sensor=true', true)
+			->js('ca-gmaps', 'js/googlemaps.js', true)
+			->js('ca-clusterer', 'js/markerclusterer.js', true)
+			->js('ca-list', 'js/list.js', true)
+			->js('bootstrap-alert', 'lib/bootstrap/js/bootstrap-alert.js')
+			->js('bootstrap-dropdown', 'lib/bootstrap/js/bootstrap-dropdown.js')
+			->js('bootstrap-collapse', 'lib/bootstrap/js/bootstrap-collapse.js')
+			->js('bootstrap-transition', 'lib/bootstrap/js/bootstrap-transition.js')
+			->js('bootstrap-modal', 'lib/bootstrap/js/bootstrap-modal.js')
+			->js('ca-forms', 'js/forms.js');
 	}
 	
 	/**
@@ -27,9 +51,12 @@ class Controller_Template extends Kohana_Controller_Template {
 	 * @param file: url relative to public
 	 * @param media: media attribute for link
 	 * @param rel: rel attribute for link 
+	 * @return Controller $this - for chainability
 	 */
 	public function css($file, $media = 'screen', $rel = 'stylesheet'){
-		$this->css[] = array('href'=>URL::site($file), 'media'=>$media, 'rel'=>$rel);
+		$href = file_exists(DOCROOT.$file) ? URL::site($file) : $file;
+		$this->css[] = array('href'=>$href, 'media'=>$media, 'rel'=>$rel);
+		return $this;
 	}
 	
 	/**
@@ -38,6 +65,7 @@ class Controller_Template extends Kohana_Controller_Template {
 	 */
 	public function less($file, $media = 'screen', $rel = 'stylesheet/less'){
 		$this->css($file, $media, $rel);
+		return $this;
 	}
 	
 	/**
@@ -48,9 +76,12 @@ class Controller_Template extends Kohana_Controller_Template {
 	 * @param head: to include the script in the head, otherwise it's in the footer
 	 * @param depends[]: array of scripts this new script depends on
 	 * @todo dependencies not yet implemented 
+	 * @return Controller $this - for chainability
 	 */
 	public function js($name, $file, $head = false, $depends = null){
-		$this->js[$name] = array('src'=>URL::site($file), 'head'=>$head, 'dependson'=>$depends);
+		$src = file_exists(DOCROOT.$file) ? URL::site($file) : $file;
+		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
+		return $this;
 	} 
 	
 	public function after(){
@@ -59,19 +90,25 @@ class Controller_Template extends Kohana_Controller_Template {
 		$js_head = array();
 		foreach($this->js as $name => $j){
 			$n = sprintf("<script src='%s'></script>", $j['src']);
-			if($j['head']) $js_head[] = $n;
-			else $js_food[] = $n;
+			if($j['head']) 
+				$js_head[] = $n;
+			else 
+				$js_foot[] = $n;
 		}
 		
 		// Prepare css includes
 		$css = array();
-		foreach($css as $c){
+		foreach($this->css as $c){
 			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href'], $c['media']);
 		}
 		
-		View::set_global('js_head', implode('\n', $js_head));
-		View::set_global('js_foot', implode('\n', $js_foot));
-		View::set_global('css', 	implode('\n', $css));
+		$js_head = implode("\n", $js_head);
+		$js_foot = implode("\n", $js_foot);
+		$css = implode("\n", $css);
+		
+		View::set_global('js_head', $js_head);
+		View::set_global('js_foot', $js_foot);
+		View::set_global('css', $css);
 		
 		parent::after();
 	}

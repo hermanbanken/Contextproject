@@ -76,12 +76,6 @@ define('SYSPATH', realpath($system).DIRECTORY_SEPARATOR);
 // Clean up the configuration vars
 unset($application, $modules, $system);
 
-if (file_exists('install'.EXT))
-{
-	// Load the installation check
-	return include 'install'.EXT;
-}
-
 /**
  * Define the start time of the application, used for profiling.
  */
@@ -105,6 +99,7 @@ require APPPATH.'bootstrap'.EXT;
  * Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
  * If no source is specified, the URI will be automatically detected.
  */
+if(Kohana::$environment !== Kohana::TESTING)
 echo Request::factory()
 	->execute()
 	->send_headers()
