@@ -48,10 +48,12 @@
 	<div class='page'>
     <div class="container">
 	<?php
+	/*
 	$messages = Message::pull();
 	foreach($messages as $m){
 		echo "<div class='alert alert-$m[type]'>$m[message]</div>";
 	}
+	*/
 	?>
 	<?php 
 	echo $body;
