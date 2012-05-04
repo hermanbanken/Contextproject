@@ -13,12 +13,7 @@
 			</ul>
   		
   		<?php } else { ?>
-  			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Account
-  			<b class="caret"></b></a>
-			<ul class="dropdown-menu pull-right">
-				<li><a href="user/login">Login</a></li>
-				<li><a href="user/create">Register</a></li>
-			</ul>
+  			<a href="#">Login/register</a>
 		<?php } ?>
 		</li>
 	</ul>

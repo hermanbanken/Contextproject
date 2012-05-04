@@ -42,7 +42,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	}
 
 	
-	function getSynonyms($search) {
+	public static function getSynonyms($search) {
 		$sql = "select w2.word as synoniem 
 				from dev_thesaurus_words w1,
 				dev_thesaurus_words w2,
