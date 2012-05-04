@@ -10,14 +10,14 @@ class Message {
 	public static function add($type, $message){
 		$messages = self::all();
 		$messages[] = array('type'=>$type, 'message'=>$message);
-		Session::instance()->set(self::KEY, $messages);
+		Session::instance('database')->set(self::KEY, $messages);
 	}
 	
 	/**
 	 * Get all messages that are currently in queue
 	 */
 	private static function all(){
-		return Session::instance()->get(self::KEY, array());
+		return Session::instance('database')->get(self::KEY, array());
 	}
 	
 	/**
@@ -25,7 +25,7 @@ class Message {
 	 */
 	public static function pull(){
 		$messages = self::all();
-		Session::instance()->delete(self::KEY);
+		Session::instance('database')->delete(self::KEY);
 		return $messages;
 	}
 }

@@ -1,9 +1,8 @@
-<phpunit colors="true" bootstrap="../../public/index.php">
-    <testsuites>
-        <testsuite name="Kohana Tests">
-            <directory>./classes</directory>
-        </testsuite>
-		<filter>
+<phpunit bootstrap="bootstrap.php" colors="true">
+    <testsuite name="ApplicationTestSuite">
+        <directory>./classes</directory>
+    </testsuite>
+    <filter>
         <whitelist>
             <directory suffix=".php">../tests</directory>
             <exclude>
@@ -15,10 +14,5 @@
             </exclude>
         </whitelist>
     </filter>
-    </testsuites>
-	<php>
-		<server name="KOHANA_ENV" value="TESTING" />
-	</php>	
 </phpunit>
- 
-    
+

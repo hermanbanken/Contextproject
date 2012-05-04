@@ -11,11 +11,10 @@ class Model_Thesaurus extends ORM {
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `word` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-CREATE TABLE `%s` (
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8; CREATE TABLE `%s` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `word` int(11) NOT NULL,
   `synonym` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1";
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8";
 }

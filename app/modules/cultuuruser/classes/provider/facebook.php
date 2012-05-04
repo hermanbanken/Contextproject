@@ -14,13 +14,14 @@ class Provider_Facebook extends Provider {
 
 	public function __construct()
 	{
-		include_once Kohana::find_file('vendor', 'facebook/src/facebook');
+		include_once Kohana::find_file('vendor', 'facebook/src/kohana_facebook');
 		// Create our Facebook SDK instance.
-		$this->facebook = new Facebook(array(
+		$this->facebook = new Kohana_Facebook(array(
 			'appId'  => Kohana::$config->load('facebook')->app_id, 
 			'secret' => Kohana::$config->load('facebook')->secret, 
-			'cookie' => true // enable optional cookie support
-		));
+			'cookie' => true, // enable optional cookie support
+			'fileUpload' => false,
+		), Session::instance('database'));
 	}
 
 	/**
@@ -30,9 +31,8 @@ class Provider_Facebook extends Provider {
 	public function redirect_url($return_url)
 	{
 		return $this->facebook->getLoginUrl(array(
-			'next'       => URL::site($return_url, true), 
-			'cancel_url' => URL::site($return_url, true), 
-			'req_perms'  => 'email'
+			'redirect_uri'  => URL::site($return_url, true), 
+			'scope'  		=> 'email,user_about_me'
 		));
 	}
 
@@ -42,11 +42,12 @@ class Provider_Facebook extends Provider {
 	 */
 	public function verify()
 	{
-		if ($this->facebook->getUser())
+		$user = $this->facebook->getUser();
+		if ($user)
 		{
 			try
 			{
-				$this->uid = $this->facebook->getUser();
+				$this->uid = $user;
 				// read user info as array from Graph API
 				$this->me = $this->facebook->api('/me');
 			}

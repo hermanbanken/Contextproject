@@ -4,7 +4,7 @@ class Controller_User extends Controller_Template {
  
     public function action_index()
     {
-        $this->template->body = View::factory('user/info')
+        $this->template->body = View::factory('user/profile')
             ->bind('user', $user);
          
         // Load the user information
@@ -21,10 +21,15 @@ class Controller_User extends Controller_Template {
     	$this->template = View::factory('user/menu')->bind('user', $user);
     	$user = Auth::instance()->get_user();
     }
+
+	public function action_profile(){
+		$this->template->body = View::factory('user/profile')->bind('user', $user);
+		$user = Auth::instance()->get_user();
+	}
  
-    public function action_create() 
+    public function action_register() 
     {
-        $this->template->body = View::factory('user/create')
+        $this->template->body = View::factory('user/register')
             ->bind('errors', $errors)
             ->bind('message', $message)
 			->set('post', $this->request->post());
@@ -110,11 +115,11 @@ class Controller_User extends Controller_Template {
 		{
 			Message::add('success', 'Already logged in.');
 			// redirect to the user account
-			$this->request->redirect('user/info');
+			$this->request->redirect('user/profile');
 		}
 		
 		$provider = Provider::factory($provider_name);
-		if ($this->request->query('code') && $this->request->query('state'))
+		if ($this->request->param('code') && $this->request->param('state'))
 		{
 			$this->action_provider_return($provider_name);
 			return;
@@ -126,18 +131,20 @@ class Controller_User extends Controller_Template {
 			return;
 		}
 		Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
-		die("Provider is not enabled; please select another provider or log in normally.");
+		
 		$this->request->redirect('user/login');
 		return;
 	}
 
-	function action_associate($provider_name = null)
-	{
-	if ($this->request->query('code') && $this->request->query('state'))
-	{
-		$this->action_associate_return($provider_name);
-		return;
-	}
+	function action_associate($provider_name = null){
+		
+		// Controller(param) is deprecated in Kohana 3.2
+		$provider_name = $this->request->param('provider', $provider_name);
+		
+		if ($this->request->param('code') && $this->request->param('state')){
+			$this->action_associate_return($provider_name);
+			return;
+		}
 		if (Auth::instance()->logged_in())
 		{
 			if (isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
@@ -159,7 +166,7 @@ class Controller_User extends Controller_Template {
 				if (isset($_POST['confirmation']))
 				{
 					Message::add('error', 'Please click Yes to confirm associating the account.');
-					$this->request->redirect('user/info');
+					$this->request->redirect('user/profile');
 					return;
 				}
 		}
@@ -191,8 +198,11 @@ class Controller_User extends Controller_Template {
 	 * prove that they want to trust that identity provider on your application.
 	 *
 	 */
-	function action_associate_return($provider_name = null)
-	{
+	function action_associate_return($provider_name = null){
+		
+		// Controller(param) is deprecated in Kohana 3.2
+		$provider_name = $this->request->param('provider', $provider_name);
+		
 		if (Auth::instance()->logged_in())
 		{
 			$provider = Provider::factory($provider_name);
@@ -237,6 +247,9 @@ class Controller_User extends Controller_Template {
 	 */
 	function action_provider_return($provider_name = null)
 	{
+		// Controller(param) is deprecated in Kohana 3.2
+		$provider_name = $this->request->param('provider', $provider_name);
+		
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -319,6 +332,7 @@ class Controller_User extends Controller_Template {
 					{
 						Message::add('error', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
 					}
+					
 					// in case the data for some reason fails, the user will still see something sensible:
 					// the normal registration form.
 					$view = View::factory('user/register');
@@ -329,15 +343,7 @@ class Controller_User extends Controller_Template {
 					// Pass on the old form values
 					$values['password'] = $values['password_confirm'] = '';
 					$view->set('defaults', $values);
-					if (Kohana::$config->load('useradmin')->captcha)
-					{
-						// FIXME: Is this the best place to include and use recaptcha?
-						include Kohana::find_file('vendor', 'recaptcha/recaptchalib');
-						$recaptcha_config = Kohana::$config->load('recaptcha');
-						$recaptcha_error = null;
-						$view->set('captcha_enabled', true);
-						$view->set('recaptcha_html', recaptcha_get_html($recaptcha_config['publickey'], $recaptcha_error));
-					}
+					
 					$this->template->content = $view;
 				}
 			}

@@ -8,7 +8,7 @@
   			</a>
 			<ul class="dropdown-menu pull-right">
 				<li><a href="user/profile">Profiel</a></li>
-				<li><a href="monument/fav">Favoriten</a></li>
+				<li><a href="monument/fav">Favorieten</a></li>
 				<li><a href="user/logout">Logout</a></li>
 			</ul>
   		
