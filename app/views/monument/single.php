@@ -14,14 +14,19 @@
 		    		echo $monument->province."<br />";
 		    		echo $monument->town."<br />";
 		    		echo $monument->street." ".$monument->streetNumber."<br />";
-		    		echo "<br />";
-		    		echo $monument->description;
+		    		echo '<br />';
+		    		echo $monument->description.'<br />';
+		    		echo '<br />';
+		    		echo 'Categorie: '.$monument->category->name.'<br />';
+		    		echo 'Subcategorie: '.$monument->subcategory->name;
 		    	?>
 		    	</div>
 		    </div>
 		    <div class="row">
 		    	<div class="span9" style="margin-top: 30px;">  
 		<?php 
+		$monument->extractcategory();
+		
 		$similars = $monument->similars(4);
 		
 		if ($similars['euclidian']) {
