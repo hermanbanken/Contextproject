@@ -1,9 +1,0 @@
-.page {
-	background:url(<?php echo URL::site('images/splash.jpg'); ?>) no-repeat center;
-	min-height:700px;
-}
-
-body {
-	padding-top:40px;
-	background:url(<?php echo URL::site('images/texture.jpg'); ?>) repeat;
-}

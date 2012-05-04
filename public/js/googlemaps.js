@@ -232,7 +232,7 @@ if(navigator.geolocation) {
 	 // if the client wants location based search there's no need for late clustering
 	 var maxZoom = nearby?14:16;
 	// autozoom
-     map.fitBounds(bounds);
+     if(markersArray.length>0 && !(markersArray.length==1 && nearby)) map.fitBounds(bounds);
 
 	 // create the markercluster
      if(true || !nearby) markerClusterer = new MarkerClusterer(map, markersArray, {

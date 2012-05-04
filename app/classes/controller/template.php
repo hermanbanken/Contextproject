@@ -25,11 +25,11 @@ class Controller_Template extends Kohana_Controller_Template {
 		
 		$googlekey = "AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk";
 		$this
-			->css('lib/bootstrap/less/bootstrap.less', null,'stylesheet/less')
-			->css('lib/bootstrap/less/responsive.less', null,'stylesheet/less')
-			->css('css/jquery-ui-1.8.19.custom.css')
-			->css('lib/bootstrap/docs/assets/css/docs.css', null, 'stylesheet/less')
-			->css('css/app.css')
+			->less('lib/bootstrap/less/bootstrap.less')
+			->less('lib/bootstrap/less/responsive.less')
+			->less('css/jquery-ui-1.8.19.custom.css')
+			->less('lib/bootstrap/docs/assets/css/docs.css')
+			->less('css/app.less')
 			->js('Less.js', 'js/less-1.3.0.min.js', true)
 			->js('jquery', 'js/jquery.min.js', true)
 			->js('jquery-ui', 'js/jquery-ui-1.8.19.custom.min.js', true)
@@ -87,8 +87,10 @@ class Controller_Template extends Kohana_Controller_Template {
 		$js_head = array();
 		foreach($this->js as $name => $j){
 			$n = sprintf("<script src='%s'></script>", $j['src']);
-			if($j['head']) $js_head[] = $n;
-			else $js_food[] = $n;
+			if($j['head']) 
+				$js_head[] = $n;
+			else 
+				$js_foot[] = $n;
 		}
 		
 		// Prepare css includes
