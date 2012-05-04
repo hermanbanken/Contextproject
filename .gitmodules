@@ -30,4 +30,4 @@
 	url = https://github.com/shadowhand/bonafide.git
 [submodule "app/modules/unittest"]
 	path = app/modules/unittest
-	url = https://github.com/pcraciunoiu/unittest.git
+	url = https://github.com/kohana/unittest.git
