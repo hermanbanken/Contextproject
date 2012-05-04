@@ -27,7 +27,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		$this
 			->less('lib/bootstrap/less/bootstrap.less')
 			->less('lib/bootstrap/less/responsive.less')
-			->less('css/jquery-ui-1.8.19.custom.css')
+			->css('css/jquery-ui-1.8.19.custom.css')
 			->less('lib/bootstrap/docs/assets/css/docs.css')
 			->less('css/app.less')
 			->js('Less.js', 'js/less-1.3.0.min.js', true)
