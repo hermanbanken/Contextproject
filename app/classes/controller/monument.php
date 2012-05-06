@@ -180,6 +180,14 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		$this->monumentsToJSON($monuments);
 	}
+	
+	public function action_photo() {
+		$post = $this->request->post();
+		
+		$monument = ORM::factory('monument', $post['id']);
+		
+		die(json_encode(array('url' => $monument->photo())));
+	}
 
 	public function monumentsToJSON($monuments) {
 		$_return = array();
