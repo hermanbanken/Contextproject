@@ -27,11 +27,6 @@
 		<?php 
 		$similars = $monument->similars400(5);
 		
-		$category = ORM::factory('subcategory')->where('id_subcategory', '=', $cid)->find();
-		
-		echo $category->category->name.'<br />';
-		echo $category->name;
-		
 		if ($similars['euclidian']) {
 			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
 		}
