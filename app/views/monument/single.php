@@ -25,10 +25,14 @@
 		    <div class="row">
 		    	<div class="span9" style="margin-top: 30px;">  
 		<?php 
-		$similars = $monument->similars(4);
+		$similars = $monument->similars400(5);
+		
+		$category = ORM::factory('subcategory')->where('id_subcategory', '=', $cid)->find();
+		
+		echo $category->category->name.'<br />';
+		echo $category->name;
 		
 		if ($similars['euclidian']) {
-			$monument->extractcategory();
 			echo '<h2 style="margin-top: 20px;">Visueel gelijkende monumenten</h2>';
 		}
 		else {

@@ -13,9 +13,6 @@
 [submodule "app/modules/userguide"]
 	path = app/modules/userguide
 	url = https://github.com/kohana/userguide.git
-[submodule "app/modules/unittest"]
-	path = app/modules/unittest
-	url = https://github.com/kohana/unittest.git
 [submodule "app/modules/database"]
 	path = app/modules/database
 	url = https://github.com/kohana/database.git
@@ -31,3 +28,6 @@
 [submodule "app/modules/bonafide"]
 	path = app/modules/bonafide
 	url = https://github.com/shadowhand/bonafide.git
+[submodule "app/modules/unittest"]
+	path = app/modules/unittest
+	url = https://github.com/kohana/unittest.git
