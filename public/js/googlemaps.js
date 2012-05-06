@@ -14,6 +14,8 @@ var markerClusterer = null;
 var bounds = null;
 // keep track of the distance circle (for removing
 var circle = null;
+// platform
+var isIpad = null;
 // check if the map is fully loaded for the first time
 var loaded = false;
 /**
@@ -54,18 +56,29 @@ $(document).ready(function() {
         else $('#distancecontainer').slideUp();
     });
 
-    // initialize slider for the distance
-    $('#distance').slider({
-        min: 1,
-        max: 100,
-        value:2,
-        slide: function(data) {
-            $('#distanceindicator').html(Math.round($(this).slider('value'))+" kilometer");
-        },
-        change: function(data) {
-            $('#distanceindicator').html(Math.round($(this).slider('value'))+" kilometer");
-        }
-    });
+    // is the platform an ipad?
+    isIpad = navigator.userAgent.match(/iPad/i) != null;
+
+    // initialize slider for the distance, depending on the platform
+    if(isIpad){
+        $('#distance').append("<input id='distanceslider' name='distance' value='2' type='range' min='1' max='100' />");
+        $('#distanceslider').bind('change', function() {
+            $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
+        });
+    } else {
+        $('#distance').slider({
+            min: 1,
+            max: 100,
+            value:2,
+            slide: function(data) {
+                $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
+            },
+            change: function(data) {
+                $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
+            }
+        });
+    }
+
 
     // autocomplete needs a list of cities
     $.post('monument/getsteden', {}, succes = function(towns) {
@@ -101,7 +114,16 @@ if(navigator.geolocation) {
      });
   }
 }
-
+/**
+ * function om de afstand te bepalen, afhankelijk van platform
+ */
+function getDistance() {
+    if(isIpad) {
+        return $('#distanceslider').val();
+    } else {
+        return $('#distance').slider('value');
+    }
+}
 /**
  * function to place the pins on the map
  */
@@ -114,7 +136,7 @@ if(navigator.geolocation) {
 			getCoordinates();
 			return;
 		}
-		distance = $('#distance').slider('value');
+		distance = getDistance();
 	 }
 	 // get the locations using AJAX with the criteria
 	 $.post('monument/getmonumenten', {
@@ -226,7 +248,7 @@ if(navigator.geolocation) {
 	          map: map,
               strokeColor: '#66CCFF',
 	          fillColor: '#66CCFF',
-	          radius: 1000*$('#distance').slider('value')
+	          radius: 1000*getDistance()
 	      });
 	      // add the circle to the map
 	      circle.bindTo('center', marker, 'position');

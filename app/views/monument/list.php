@@ -1,7 +1,6 @@
 <div class="row-fluid">
 	<div class="span10" style="position: relative;">
-		<div
-			style="position: absolute; top: 12px; right: 5px; font-size: 25px;">
+		<div style="position: absolute; top: 12px; right: 5px; font-size: 25px;">
 			<a class="prev" href="#">&laquo;</a> <a class="next" href="#">&raquo;</a>
 		</div>
 		<table class="table table-striped table-condensed">
@@ -33,9 +32,10 @@
 				<option value="street">--Sorteer</option>
 				<option value="relevance">Relevantie</option>
 				<option value="name">Naam</option>
-				<option value="distance">Afstand tot huidige locatie</option>
-			</select> <input type="submit" value="Filter" />
-		</form>
-	</div>
+				<option value="distance" selected="selected">Afstand tot huidige locatie</option>
+			</select>
+			<input type="submit" value="Filter" />
+			</form>
+		</div>
 </div>
 
