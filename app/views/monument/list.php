@@ -32,7 +32,7 @@
 				<option value="street">--Sorteer</option>
 				<option value="relevance">Relevantie</option>
 				<option value="name">Naam</option>
-				<option value="distance">Afstand tot huidige locatie</option>
+				<option value="distance" selected="selected">Afstand tot huidige locatie</option>
 			</select>
 			<input type="submit" value="Filter" />
 			</form>
