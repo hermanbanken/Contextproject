@@ -30,8 +30,8 @@
 	</div>
 	
 	<div class="span12">
-	      <h2>Visited monuments</h2>
-	      <p>This are the monuments you visited last on this website or in real life.</p>
+	      <h2>Advised monuments</h2>
+	      <p>You might like these monuments. This was determined by comparing your monument history against other users history.</p>
 	      <ul class="thumbnails">
 	        <li class="span3">
 	          <a href="#" class="thumbnail">
@@ -55,5 +55,32 @@
 	        </li>
 	      </ul>
 	    </div>
+	
+	<div class="span12">
+      <h2>Visited monuments</h2>
+      <p>This are the monuments you visited last on this website or in real life.</p>
+      <ul class="thumbnails">
+        <li class="span3">
+          <a href="#" class="thumbnail">
+            <img src="http://placehold.it/260x180" alt="">
+          </a>
+        </li>
+        <li class="span3">
+          <a href="#" class="thumbnail">
+            <img src="http://placehold.it/260x180" alt="">
+          </a>
+        </li>
+        <li class="span3">
+          <a href="#" class="thumbnail">
+            <img src="http://placehold.it/260x180" alt="">
+          </a>
+        </li>
+        <li class="span3">
+          <a href="#" class="thumbnail">
+            <img src="http://placehold.it/260x180" alt="">
+          </a>
+        </li>
+      </ul>
+    </div>
 	
 </div>
