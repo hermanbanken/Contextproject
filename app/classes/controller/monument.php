@@ -9,6 +9,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * Action for getting all monuments on a map view
 	 */
 	public function action_map(){
+		$this->less('css/map.less');
 		$v = View::factory(static::$entity.'/map');
 
 		$this->template->body = $v;

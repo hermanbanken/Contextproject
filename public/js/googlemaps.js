@@ -30,7 +30,7 @@ $(document).ready(function() {
     // If the map is on the page
     if($('#kaart').size()>0) {
         // Adjust height
-        $("#kaart").height($(window).height() - 40);
+        //$("#kaart").height($(window).height() - 40);
         // initialize options for google maps
         var myOptions = {
           // center of holland

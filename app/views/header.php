@@ -18,25 +18,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <script type="text/javascript">
-   (function(document,navigator,standalone) {
-       // prevents links from apps from oppening in mobile safari
-       // this javascript must be the first script in your <head>
-       if ((standalone in navigator) && navigator[standalone]) {
-           var curnode, location=document.location, stop=/^(a|html)$/i;
-           document.addEventListener('click', function(e) {
-               curnode=e.target;
-               while (!(stop).test(curnode.nodeName)) {
-                   curnode=curnode.parentNode;
-               }
-               // Condidions to do this only on links to your own app
-               // if you want all links, use if('href' in curnode) instead.
-               if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
-                   e.preventDefault();
-                   location.href = curnode.href;
-               }
-           },false);
-       }
-   })(document,window.navigator,'standalone');
+	$( document ).on(
+		"click",
+		"a",
+		function( event ){
+			if( event.target.href || event.target.href.length > 0 ){
+				event.preventDefault();
+				location.href = $( event.target ).attr( "href" );
+			}
+		}
+	);
 </script>
 
 <!-- Le styles -->
