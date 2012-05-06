@@ -39,7 +39,10 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('ca-list', 'js/list.js', true)
 			->js('bootstrap-alert', 'lib/bootstrap/js/bootstrap-alert.js')
 			->js('bootstrap-dropdown', 'lib/bootstrap/js/bootstrap-dropdown.js')
-			->js('bootstrap-collapse', 'lib/bootstrap/js/bootstrap-collapse.js');
+			->js('bootstrap-collapse', 'lib/bootstrap/js/bootstrap-collapse.js')
+			->js('bootstrap-transition', 'lib/bootstrap/js/bootstrap-transition.js')
+			->js('bootstrap-modal', 'lib/bootstrap/js/bootstrap-modal.js')
+			->js('ca-forms', 'js/forms.js');
 	}
 	
 	/**

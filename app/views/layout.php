@@ -60,19 +60,6 @@
  	?>
     </div>
 	</div>
-	<div class="modal" id="loginModal">
-	  <div class="modal-header">
-	    <button class="close" data-dismiss="modal">×</button>
-	    <h3>Login to CultuurApp.nl</h3>
-	  </div>
-	  <div class="modal-body">
-	    <p>One fine body…</p>
-	  </div>
-	  <div class="modal-footer">
-	    <a href="#" class="">Forgot password</a> |
-	    <a href="#" class="">Signup</a>
-	  </div>
-	</div>
 </div>	
 <?php echo $footer; ?>
 </body>
