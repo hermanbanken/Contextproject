@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="manifest.txt">
 <head>
   <title>CultuurApp.nl</title>
   <base href="<?php echo URL::base(); ?>" />
