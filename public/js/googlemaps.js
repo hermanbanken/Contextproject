@@ -209,11 +209,17 @@ function getDistance() {
         // make sure the infowindow pops up upon click
 	    google.maps.event.addListener(marker, 'click', (function(marker, i) {
 	        return function() {
-                // set the content of the infowindow
-                infowindow.setContent("<a href='monument/id/"+locations[i]["id"]+"'><img id=\"photo"+locations[i]["id"]+"\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
-                                            +locations[i]["description"].substring(0,200)
-                                            +" <a href='monument/id/"+locations[i]["id"]+"'>Meer</a>");
-                photo(locations[i]["id"], 'photo'+locations[i]["id"]);
+                // Add right source to image
+                $.post('monument/photo', {
+            		id : locations[i]["id"]
+            	}, succes = function(data) {
+                    // set the content of the infowindow
+                    infowindow.setContent("<a href='monument/id/"+locations[i]["id"]+"'><img id=\"photo"+locations[i]["id"]+"\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"+locations[i]["name"]+"</h2>"
+                                                +locations[i]["description"].substring(0,200)
+                                                +" <a href='monument/id/"+locations[i]["id"]+"'>Meer</a>");
+            		$("#photo"+locations[i]["id"]).attr('src', data.url);
+            	}, "json");
+                
                 infowindow.open(map, marker);
 	        }
 	    })(marker, i));
