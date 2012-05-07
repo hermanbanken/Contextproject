@@ -1,5 +1,5 @@
     <header class="jumbotron subhead" style="margin-bottom: 30px;" id="overview">
-            <h1><?php echo $monument->name; ?></h1>
+            <h1><?php echo $monument->name; ?> <small><a onclick="history.back(1);">Terug</a></small></h1>
     </header>
     
     <div class="row">
