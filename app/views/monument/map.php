@@ -10,7 +10,7 @@
 			<select id="categories">
 				<option value='-1'>-- Categorie</option>
 				<?php 
-				$categories = ORM::factory('category')->find_all();
+				$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 				foreach($categories AS $category) {
 					echo "<option value=".$category->id_category.">".$category->name."</option>";
 				}
