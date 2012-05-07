@@ -15,7 +15,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<?php echo URL::site(''); ?>">CultuurApp</a>
+          <a class="brand" href="<?php echo URL::site(''); ?>"><span style="color: #716658;">Cultuur</span><span style="color: #00AEEF;">App</span></a>
           <div class="nav-collapse">
             <ul class="nav">
               <li <?php if(preg_match('/map/i',Request::detect_uri())) echo 'class="active"'?>>
