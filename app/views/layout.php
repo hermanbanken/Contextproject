@@ -1,23 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html manifest="manifest.txt">
 <head>
   <title>CultuurApp.nl</title>
   <base href="<?php echo URL::base(); ?>" />
-
-  <meta name="description" content="Vind monumenten in heel het land" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-
-    <!-- Le styles -->
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 	<?php echo $header; ?>
 </head>
 
