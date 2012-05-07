@@ -12,7 +12,7 @@
 			</ul>
   		
   		<?php } else { ?>
-  			<a href="user/login" onclick="location.hash='#user/login';return false">Login/register</a>
+  			<a href="#user/login" onclick="location.hash='#user/login';return false">Login/register</a>
 		<?php } ?>
 		</li>
 	</ul>

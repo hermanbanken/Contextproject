@@ -22,7 +22,8 @@
 		"click",
 		"a",
 		function( event ){
-			if( event.target.href || event.target.href.length > 0 ){
+			if( !event.target.href || event.target.href.indexOf("#") == 0 ){
+			} else {
 				event.preventDefault();
 				location.href = $( event.target ).attr( "href" );
 			}
