@@ -24,7 +24,7 @@
 		    </div>
 		    <div class="row">
 		    	<div class="span9" style="margin-top: 30px;">  
-		<?php 
+		<?php
 		$similars = $monument->similars400(4);
 		
 		if ($similars['euclidian']) {

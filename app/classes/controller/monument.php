@@ -12,6 +12,19 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->less('css/map.less');
 		$v = View::factory(static::$entity.'/map');
 
+		// Get data from session or set default data
+		$session = Session::instance();
+		$session = $session->as_array();
+		if (isset($session['selection'])) {
+			$p = $session['selection'];
+		}
+		else {
+			$p = $this->getDefaults();
+		}
+
+		// Give variables to view
+		$v->set('post', $p);
+
 		$this->template->body = $v;
 	}
 
@@ -42,34 +55,65 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode($towns));
 	}
 
-	
+
 	public static function getSynonyms($search) {
-		$sql = "select w2.word as synoniem 
-				from dev_thesaurus_words w1,
-				dev_thesaurus_words w2,
-				dev_thesaurus_links l
-				where w1.id = l.word
-				and w2.id = l.synonym
-				and w1.word = '".$search."'";
+		$sql = "select w2.word as synoniem
+		from dev_thesaurus_words w1,
+		dev_thesaurus_words w2,
+		dev_thesaurus_links l
+		where w1.id = l.word
+		and w2.id = l.synonym
+		and w1.word = '".$search."'";
 		$db = Database::instance();
 		$synonyms = $db->query(Database::SELECT,$sql,TRUE);
 		if($synonyms->count()==0) return false;
 		return $synonyms->as_array();
 	}
-	
-	function buildQuery() {
-		
-		// extract post values
-		$post = $this->request->post();
-		
+
+	public function getDefaults() {
+		$defaults = array('search' => '',
+				'town' => '',
+				'category' => -1,
+				'sort' => 'street',
+				'latitude' => '',
+				'longitude' => '',
+				'distance' => 0,
+				'distance_show' => 0,
+				'limit' => 10,
+				'offset' => 0);
+
+		return $defaults;
+	}
+
+	function buildQuery($post = false) {
+		if (!$post) {
+			$post = $this->request->post();
+		}
+
+		// Save post-data to session
+		$not_in_session = array('limit', 'offset');
+		$session = Session::instance();
+		$session->delete('selection');
+		foreach ($this->getDefaults() AS $key => $value) {
+			if (!in_array($key, $not_in_session)) {
+				if (isset($post[$key])) {
+					$_SESSION['selection'][$key] = $post[$key];
+				}
+				else {
+					$_SESSION['selection'][$key] = $value;
+				}
+			}
+		}
+
 		// extract post values and ignore if they're default input values
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${$key} = $value;
+				${
+					$key} = $value;
 			}
 		}
-		
+
 		//die(var_dump($bounds));
 
 		// extract synonyms
@@ -121,24 +165,24 @@ class Controller_Monument extends Controller_Abstract_Object {
 				if(isset($search)) {
 					if($synonyms) {
 						$sql.="CASE
-							WHEN name = '".$search."' THEN 0
-							WHEN name LIKE '".$search."%' THEN 1
-							WHEN name LIKE '%".$search."%' THEN 2
-							WHEN name LIKE '% ".$search." %' THEN 3
-							WHEN name REGEXP '".$syns."' THEN 4
-							WHEN description REGEXP '".$syns."' THEN 5
-							ELSE 6
-			        	END, name ";
+						WHEN name = '".$search."' THEN 0
+						WHEN name LIKE '".$search."%' THEN 1
+						WHEN name LIKE '%".$search."%' THEN 2
+						WHEN name LIKE '% ".$search." %' THEN 3
+						WHEN name REGEXP '".$syns."' THEN 4
+						WHEN description REGEXP '".$syns."' THEN 5
+						ELSE 6
+						END, name ";
 					} else {
 						$sql.="CASE
-							WHEN name = '".$search."' THEN 0
-							WHEN name LIKE '".$search."%' THEN 0
-							WHEN name LIKE '% ".$search." %' THEN 1
-							WHEN name LIKE '%".$search."%' THEN 2
-			               	WHEN description LIKE '% ".$search." %' THEN 3
-							WHEN description LIKE '%".$search."%' THEN 4
-				            ELSE 5
-			        	END, name ";
+						WHEN name = '".$search."' THEN 0
+						WHEN name LIKE '".$search."%' THEN 0
+						WHEN name LIKE '% ".$search." %' THEN 1
+						WHEN name LIKE '%".$search."%' THEN 2
+						WHEN description LIKE '% ".$search." %' THEN 3
+						WHEN description LIKE '%".$search."%' THEN 4
+						ELSE 5
+						END, name ";
 					}
 				} else {
 					$sql.= "RAND() ";
@@ -156,15 +200,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 			default:
 				$sql.= "RAND() ";
 				break;
-			
+					
 		}
-		
+
 		// add the limit
-		$sql.="LIMIT ".(isset($limit)?$limit:'500')." ";
+		$sql.="LIMIT ".(isset($limit)?$limit:'40000')." ";
 		// add the offset
 		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
 		// return the query
 		//die($sql);
+
 		return $sql;
 	}
 	/**
@@ -181,12 +226,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		$this->monumentsToJSON($monuments);
 	}
-	
+
 	public function action_photo() {
 		$post = $this->request->post();
-		
+
 		$monument = ORM::factory('monument', $post['id']);
-		
+
 		die(json_encode(array('url' => $monument->photo())));
 	}
 
@@ -196,13 +241,67 @@ class Controller_Monument extends Controller_Abstract_Object {
 			if($monument->lng == 0 OR $monument->lat == 0 OR $monument->lng > 57.5) continue;
 			//echo $monument->lng.",".$monument->lat;
 			$_return[] = array("distance" => isset($monument->distance)?$monument->distance:0,
-								"description" => $monument->description,
-								"longitude" => $monument->lng,
-								"latitude" => $monument->lat,
-								"name" => $monument->name,
-								"id" => $monument->id_monument);
+					"description" => $monument->description,
+					"longitude" => $monument->lng,
+					"latitude" => $monument->lat,
+					"name" => $monument->name,
+					"id" => $monument->id_monument);
 		}
 		die(json_encode($_return));
+	}
+
+	/**
+	 * action_index
+	 * Action for listing all objects of type
+	 */
+	public function action_list(){
+		// Set view
+		$v = View::factory(static::$entity.'/list');
+
+		// Get post-data
+		$p = $this->request->post();
+
+		// If no post-data is set, get data from session or set default data
+		$session = Session::instance();
+		$session = $session->as_array();
+		if (count($p) == 0) {
+			if (isset($session['selection'])) {
+				$p = $session['selection'];
+			}
+			else {
+				$p = $this->getDefaults();
+			}
+		}
+
+		// Get query with post-data (without limit and offset)
+		$sql = $this->buildQuery($p);
+		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Create pagination (count query without limit and offset)
+		$pagination = Pagination::factory(array(
+				'total_items' => $monuments->count(),
+				'items_per_page' => 8,
+				'view' => '../../../views/pagination'
+		));
+
+		// Tell pagination where we are
+		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
+
+		// Set new limit and offset to post-data
+		$p['limit'] = $pagination->items_per_page;
+		$p['offset'] = $pagination->offset;
+
+		// Build new query with limit and offset
+		$sql = $this->buildQuery($p);
+		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Give variables to view
+		$v->set('post', $p);
+		$v->set('pagination', $pagination);
+		$v->bind('monuments', $monuments);
+
+		// Add view to template
+		$this->template->body = $v;
 	}
 }
 ?>

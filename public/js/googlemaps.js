@@ -16,8 +16,6 @@ var bounds = null;
 var circle = null;
 // platform
 var isIpad = null;
-// check if the map is fully loaded for the first time
-var loaded = false;
 /**
  * On document ready, initialize functions and triggers
  */
@@ -61,7 +59,7 @@ $(document).ready(function() {
 
     // initialize slider for the distance, depending on the platform
     if(isIpad){
-        $('#distance').append("<input id='distanceslider' name='distance' value='2' type='range' min='1' max='100' />");
+        $('#distance').append("<input id='distanceslider' name='distance' value='"+$('#distanceinput').val()+"' type='range' min='1' max='100' />");
         $('#distanceslider').bind('change', function() {
             $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
         });
@@ -69,12 +67,14 @@ $(document).ready(function() {
         $('#distance').slider({
             min: 1,
             max: 100,
-            value:2,
+            value: $('#distanceinput').val(),
             slide: function(data) {
                 $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
+                $('#distanceinput').val(Math.round(getDistance()));
             },
             change: function(data) {
                 $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
+                $('#distanceinput').val(Math.round(getDistance()));
             }
         });
     }
@@ -131,17 +131,22 @@ function getDistance() {
 	 var distance = 0;
 	 // if the client wants location based search, the distance have to be calculated
 	 // the callback of getCoordinates will re-run this function
+	 var distance_show = 0;
 	 if($('#nearby').is(':checked')) {
 		if(longitude==null || latitude==null) {
 			getCoordinates();
 			return;
 		}
 		distance = getDistance();
+		distance_show = 1;
 	 }
+	 
 	 // get the locations using AJAX with the criteria
 	 $.post('monument/getmonumenten', {
             // distance from current client location
             distance: distance>0?(distance):0,
+            // distance show
+            distance_show: distance_show,
             // longitude of current client location
             longitude: longitude,
             // latitude of current client location
@@ -263,8 +268,7 @@ function getDistance() {
 	 // if the client wants location based search there's no need for late clustering
 	 var maxZoom = nearby?14:16;
 	// autozoom
-     if(loaded && markersArray.length>0 && !(markersArray.length==1 && nearby)) map.fitBounds(bounds);
-     else if(!loaded) loaded = true;
+     map.fitBounds(bounds);
 
 	 // create the markercluster
      if(true || !nearby) markerClusterer = new MarkerClusterer(map, markersArray, {
