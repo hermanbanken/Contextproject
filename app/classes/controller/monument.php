@@ -84,7 +84,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 						// Array for the records of wikimedia in the form (name_in_file => name_in_database)
 						$wikimedia_array = array('monumentNumber' => 'id_monument',
 								'title' => 'name',
-								'description' => 'description',
+								'description' => 'description_commons',
 								'longitude' => 'lng',
 								'latitude' => 'lat',
 								'usageOnOtherWikis' => 'wiki',
@@ -104,16 +104,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 						}
 
 						// Array for the records of monumentregistry in the form (name_in_file => name_in_database)
-						$mr_array = array('province' => 'province',
-								'municipality' => 'municipality',
-								'town' => 'town',
-								'street' => 'street',
+						$mr_array = array('province' => 'id_province',
+								'municipality' => 'id_municipality',
+								'town' => 'id_town',
+								'street' => 'id_street',
 								'streetNumber' => 'streetNumber',
 								'zipCode' => 'zipCode',
 								'mainCategory' => 'id_category',
 								'subCategory' => 'id_subcategory',
-								'function' => 'function',
-								'description' => 'description2');
+								'function' => 'id_function',
+								'description' => 'description');
 
 						// Loop through data and save in link- or data-array
 						foreach ($mr_array AS $mr => $field) {

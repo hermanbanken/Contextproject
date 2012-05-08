@@ -35,6 +35,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'model' => 'province',
 					'foreign_key' => 'id_province',
 			),
+			'function'=> array(
+					'model' => 'function',
+					'foreign_key' => 'id_function',
+			),
 	);
 
 	public function photo(){
