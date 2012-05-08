@@ -19,6 +19,22 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'model' => 'subcategory',
 					'foreign_key' => 'id_subcategory',
 			),
+			'town'=> array(
+					'model' => 'town',
+					'foreign_key' => 'id_town',
+			),
+			'street'=> array(
+					'model' => 'street',
+					'foreign_key' => 'id_street',
+			),
+			'municipality'=> array(
+					'model' => 'municipality',
+					'foreign_key' => 'id_municipality',
+			),
+			'province'=> array(
+					'model' => 'province',
+					'foreign_key' => 'id_province',
+			),
 	);
 
 	public function photo(){
@@ -236,22 +252,29 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_monument` int(10) unsigned AUTO_INCREMENT,
-	`id_category` int(11),
-	`id_subcategory` int(11),
-	`name` varchar(80) NOT NULL,
-	`wiki_url` varchar(200) NOT NULL,
-	`province` varchar(12) NOT NULL,
-	`municipality` varchar(50) NOT NULL,
-	`town` varchar(15) NOT NULL,
-	`street` varchar(30) NOT NULL,
+	`id_category` int(11) NULL,
+	`id_subcategory` int(11) NULL,
+	`name` varchar(200) NULL,
+	`id_province` varchar(25) NULL,
+	`id_municipality` varchar(50) NULL,
+	`id_town` varchar(15) NULL,
+	`id_street` varchar(30) NULL,
 	`streetNumber` varchar(4) NULL,
-	`zipCode` varchar(7) NOT NULL,
-	`function` varchar(50) NULL,
+	`zipCode` varchar(7) NULL,
+	`id_function` varchar(50) NULL,
+	`description_commons` text NULL,
 	`description` text NULL,
 	`lng` double(10,5) NULL,
 	`lat` double(10,5) NULL,
 	`category_extracted` tinyint(4) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id_monument`)
+	PRIMARY KEY (`id_monument`),
+	KEY `id_category` (`id_category`),
+	KEY `id_subcategory` (`id_subcategory`),
+	KEY `id_province` (`id_province`),
+	KEY `id_municipality` (`id_municipality`),
+	KEY `id_town` (`id_town`),
+	KEY `id_street` (`id_street`),
+	KEY `id_function` (`id_function`)
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 }
 ?>

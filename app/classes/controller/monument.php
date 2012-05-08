@@ -42,17 +42,289 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
-	public function action_getsteden() {
-		$monuments = ORM::factory('monument')
-		->group_by('town')
-		->find_all();
+	/*
+	 * Import monuments from files stored in /public/files/monuments/
+	* Should be xml files with names like 1001.xml when id_monument = 1001
+	*/
+	public function action_import() {
+		// Set default view
+		$v = View::factory('default');
 
-		$towns = array();
-		foreach ($monuments AS $monument) {
-			$towns[] = $monument->town;
+		// Set time limit at unlimited (long import)
+		set_time_limit(0);
+
+		// Set counter
+		$i = 0;
+
+		// Make a list of id's from monument that are already stored
+		$ids = array();
+		$monuments_orm = ORM::factory('monument')->find_all();
+		foreach ($monuments_orm AS $monument) {
+			$ids[] = $monument->id_monument;
 		}
 
-		die(json_encode($towns));
+		// Loop through all files in the map /public/files/monuments
+		if ($monuments = opendir('files/monuments')) {
+			while (($monument_file = readdir($monuments)) !== false) {
+				// Check if file is xml-file
+				if (substr($monument_file, -3) == 'xml') {
+					// Set some basis arrays
+					$data = array();
+					$link = array();
+						
+					// Find id in filename
+					$monument_id = intval($monument_file);
+
+					// If it is an unparsed monument
+					if (!in_array($monument_id, $ids)) {
+
+						// Read file and parse into array
+						$info = $this->xml2array(@file_get_contents('files/monuments/'.$monument_id.'.xml'));
+
+						// Array for the records of wikimedia in the form (name_in_file => name_in_database)
+						$wikimedia_array = array('monumentNumber' => 'id_monument',
+								'title' => 'name',
+								'description' => 'description',
+								'longitude' => 'lng',
+								'latitude' => 'lat',
+								'usageOnOtherWikis' => 'wiki',
+								'usageOnWikiMediaCommons' => 'commons');
+
+						// Loop through data and save in link- or data-array
+						foreach ($wikimedia_array AS $wikimedia => $field) {
+							if (isset($info['Monument']['wikimediaCommons'][$wikimedia])) {
+								if ($wikimedia == 'usageOnOtherWikis' || $wikimedia == 'usageOnWikiMediaCommons') {
+									$link[$field] = $info['Monument']['wikimediaCommons'][$wikimedia];
+
+								}
+								else {
+									$data[$field] = urldecode($info['Monument']['wikimediaCommons'][$wikimedia]);
+								}
+							}
+						}
+
+						// Array for the records of monumentregistry in the form (name_in_file => name_in_database)
+						$mr_array = array('province' => 'province',
+								'municipality' => 'municipality',
+								'town' => 'town',
+								'street' => 'street',
+								'streetNumber' => 'streetNumber',
+								'zipCode' => 'zipCode',
+								'mainCategory' => 'id_category',
+								'subCategory' => 'id_subcategory',
+								'function' => 'function',
+								'description' => 'description2');
+
+						// Loop through data and save in link- or data-array
+						foreach ($mr_array AS $mr => $field) {
+							if (isset($info['Monument']['monumentRegistry'][$mr])) {
+								if (is_array($info['Monument']['monumentRegistry'][$mr])) {
+									$link[$field] = $info['Monument']['monumentRegistry'][$mr];
+								}
+								else {
+									$data[$field] = urldecode($info['Monument']['monumentRegistry'][$mr]);
+								}
+							}
+						}
+
+						// If category is present, find id or insert new category in database
+						if (isset($data['id_category'])) {
+							$category = ORM::factory('category')->where('name', '=', $data['id_category'])->find();
+							if ($category->name == NULL) {
+								$category->name = $data['id_category'];
+								try {
+									$category->save();
+								}
+								catch (Exception $e) {
+									echo $e->getMessage().'<br />';
+								}
+							}
+							$data['id_category'] = $category->id_category;
+
+							// If subcategory is present, find id or insert new category in database
+							if (isset($data['id_subcategory'])) {
+								$subcategory = ORM::factory('subcategory')->where('name', '=', $data['id_subcategory'])->find();
+								if ($subcategory->name == NULL) {
+									$subcategory->name = $data['id_subcategory'];
+									$subcategory->id_category = $category->id_category;
+									try {
+										$subcategory->save();
+									}
+									catch (Exception $e) {
+										echo $e->getMessage().'<br />';
+									}
+								}
+								$data['id_subcategory'] = $subcategory->id_subcategory;
+							}
+						}
+
+						// If province is present, find id or insert new category in database
+						if (isset($data['province'])) {
+							$province = ORM::factory('province')->where('name', '=', $data['province'])->find();
+							if ($province->name == NULL) {
+								$province->name = $data['province'];
+								try {
+									$province->save();
+								}
+								catch (Exception $e) {
+									echo $e->getMessage().'<br />';
+								}
+							}
+							$data['province'] = $province->id_province;
+								
+							// If municipality is present, find id or insert new category in database
+							if (isset($data['municipality'])) {
+								$municipality = ORM::factory('municipality')->where('name', '=', $data['municipality'])->find();
+								if ($municipality->name == NULL) {
+									$municipality->name = $data['municipality'];
+									$municipality->id_province = $province->id_province;
+									try {
+										$municipality->save();
+									}
+									catch (Exception $e) {
+										echo $e->getMessage().'<br />';
+									}
+								}
+								$data['municipality'] = $municipality->id_municipality;
+
+								// If town is present, find id or insert new category in database
+								if (isset($data['town'])) {
+									$town = ORM::factory('town')->where('name', '=', $data['town'])->find();
+									if ($town->name == NULL) {
+										$town->name = $data['town'];
+										$town->id_municipality = $municipality->id_municipality;
+										try {
+											$town->save();
+										}
+										catch (Exception $e) {
+											echo $e->getMessage().'<br />';
+										}
+									}
+									$data['town'] = $town->id_town;
+										
+									// If street is present, find id or insert new category in database
+									if (isset($data['street'])) {
+										$street = ORM::factory('street')->where('name', '=', $data['street'])->find();
+										if ($street->name == NULL) {
+											$street->name = $data['street'];
+											$street->id_town = $town->id_town;
+											try {
+												$street->save();
+											}
+											catch (Exception $e) {
+												echo $e->getMessage().'<br />';
+											}
+										}
+										$data['street'] = $street->id_street;
+									}
+								}
+							}
+						}
+
+						// If function is present, find id or insert new category in database
+						if (isset($data['function'])) {
+							$function = ORM::factory('function')->where('name', '=', $data['function'])->find();
+							if ($function->name == NULL) {
+								$function->name = $data['function'];
+								try {
+									$function->save();
+								}
+								catch (Exception $e) {
+									echo $e->getMessage().'<br />';
+								}
+							}
+							$data['function'] = $function->id_function;
+						}
+
+						// Insert new monument in database
+						$monument = ORM::factory('monument')->where('id_monument', '=', $data['id_monument'])->find();
+						if ($monument->id_monument == NULL) {
+							foreach ($data AS $key => $value) {
+								$monument->$key = $value;
+							}
+							try {
+								$monument->save();
+							}
+							catch (Exception $e) {
+								echo $e->getMessage().'<br />';
+							}
+						}
+
+						// Insert links in database
+						foreach ($link AS $key => $url) {
+							// Use recursive function (url depth is unknonw, sometimes 5 nodes)
+							$this->savelink($monument->id_monument, $url, $key);
+						}
+
+						$i++;
+					}
+				}
+			}
+		}
+
+		closedir($monuments);
+
+		$v->set('title', 'Monumenten Import');
+		$v->set('text', 'Er zijn '.$i.' monumenten geïmporteerd.');
+
+		$this->template->body = $v;
+
+	}
+
+	// Url sometimes has depth of 5 nodes, so recursive function is handy
+	function savelink($id_monument, $url, $name) {
+		if (is_array($url)) {
+			foreach ($url AS $value) {
+				$this->savelink($id_monument, $value, $name);
+			}
+		}
+		else {
+			// Look if link is already in database, otherwise insert new one
+			$link = ORM::factory('link')->where('url', '=', $url)->find();
+			if ($link->url == NULL) {
+				$link->url = $url;
+				$link->name = $name;
+				try {
+					$link->save();
+				}
+				catch (Exception $e) {
+					echo $e->getMessage().'<br />';
+				}
+			}
+
+			// Connect the inserted link to the monument it belongs to if not already done
+			if (DB::select()->from('monument_link')->where('id_monument', '=', $id_monument)->and_where('id_link', '=', $link->id_link)->execute()->count() == 0) {
+				DB::query(Database::INSERT, sprintf("INSERT INTO dev_monument_link VALUES (%d, %d)", $id_monument, $link->id_link))->execute();
+			}
+		}
+	}
+
+	public function action_getsteden() {
+		$towns = DB::select('id_town', 'name')
+		->from('towns')
+		->execute()
+		->as_array();
+		
+		$towns_array = array();
+		foreach ($towns AS $id => $town) {
+			$towns_array[$id] = $town['name'];
+		}
+		
+		die(json_encode($towns_array));
+	}
+
+	public function action_getprovincies() {
+		$provinces = DB::select('id_province', 'name')
+		->from('provinces')
+		->execute()
+		->as_array();
+		
+		$province_array = array();
+		foreach ($provinces AS $id => $province) {
+			$province_array[$id] = $province['name'];
+		}
+		
+		die(json_encode($province_array));
 	}
 
 
@@ -73,6 +345,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function getDefaults() {
 		$defaults = array('search' => '',
 				'town' => '',
+				'province' => '-1',
 				'category' => -1,
 				'sort' => 'street',
 				'latitude' => '',
@@ -126,16 +399,21 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// prepare where clause
 		$sql.= "HAVING 1 ";
 		// search for distance if needed
-		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
+		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1)) {
 			$sql.= "AND distance < ".$distance." ";
 		}
 		// add category search
 		if(isset($category)) {
 			$sql.="AND id_category = ".$category." ";
 		}
+		// add category search
+		if(isset($province)) {
+			$sql.="AND id_province = ".$province." ";
+		}
 		// add town search
 		if(isset($town)) {
-			$sql.="AND town = '".$town."' ";
+			$orm_town = ORM::factory('town')->where('name', '=', $town)->find();
+			$sql.="AND id_town = ".$orm_town->id_town." ";
 		}
 		// add string search
 		if(isset($search)) {
@@ -190,7 +468,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$sql.= "distance ASC ";
 				break;
 			case "street":
-				$sql.= "street ";
+				$sql.= "id_street ";
 				break;
 			default:
 				$sql.= "RAND() ";
@@ -301,6 +579,133 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// Add view to template
 		$this->template->body = $v;
+	}
+
+	/*
+	 * Function to parse xml in an array
+	*/
+	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
+		if(!$contents) return array();
+
+		if(!function_exists('xml_parser_create')) {
+			//print "'xml_parser_create()' function not found!";
+			return array();
+		}
+
+		//Get the XML parser of PHP - PHP must have this module for the parser to work
+		$parser = xml_parser_create('');
+		xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+		xml_parse_into_struct($parser, trim($contents), $xml_values);
+		xml_parser_free($parser);
+
+		if(!$xml_values) return;//Hmm...
+
+		//Initializations
+		$xml_array = array();
+		$parents = array();
+		$opened_tags = array();
+		$arr = array();
+
+		$current = &$xml_array; //Refference
+
+		//Go through the tags.
+		$repeated_tag_index = array();//Multiple tags with same name will be turned into an array
+		foreach($xml_values as $data) {
+			unset($attributes,$value);//Remove existing values, or there will be trouble
+
+			//This command will extract these variables into the foreach scope
+			// tag(string), type(string), level(int), attributes(array).
+			extract($data);//We could use the array by itself, but this cooler.
+
+			$result = array();
+			$attributes_data = array();
+
+			if(isset($value)) {
+				if($priority == 'tag') $result = $value;
+				else $result['value'] = $value; //Put the value in a assoc array if we are in the 'Attribute' mode
+			}
+
+			//Set the attributes too.
+			if(isset($attributes) and $get_attributes) {
+				foreach($attributes as $attr => $val) {
+					if($priority == 'tag') $attributes_data[$attr] = $val;
+					else $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
+				}
+			}
+
+			//See tag status and do the needed.
+			if($type == "open") {//The starting of the tag '<tag>'
+				$parent[$level-1] = &$current;
+				if(!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
+					$current[$tag] = $result;
+					if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
+					$repeated_tag_index[$tag.'_'.$level] = 1;
+
+					$current = &$current[$tag];
+
+				} else { //There was another element with the same tag name
+
+					if(isset($current[$tag][0])) {//If there is a 0th element it is already an array
+						$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+						$repeated_tag_index[$tag.'_'.$level]++;
+					} else {//This section will make the value an array if multiple tags with the same name appear together
+						$current[$tag] = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
+						$repeated_tag_index[$tag.'_'.$level] = 2;
+
+						if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
+							$current[$tag]['0_attr'] = $current[$tag.'_attr'];
+							unset($current[$tag.'_attr']);
+						}
+
+					}
+					$last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
+					$current = &$current[$tag][$last_item_index];
+				}
+
+			} elseif($type == "complete") { //Tags that ends in 1 line '<tag />'
+				//See if the key is already taken.
+				if(!isset($current[$tag])) { //New Key
+					$current[$tag] = $result;
+					$repeated_tag_index[$tag.'_'.$level] = 1;
+					if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
+
+				} else { //If taken, put all things inside a list(array)
+					if(isset($current[$tag][0]) and is_array($current[$tag])) {//If it is already an array...
+
+						// ...push the new element into that array.
+						$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+
+						if($priority == 'tag' and $get_attributes and $attributes_data) {
+							$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+						}
+						$repeated_tag_index[$tag.'_'.$level]++;
+
+					} else { //If it is not an array...
+						$current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
+						$repeated_tag_index[$tag.'_'.$level] = 1;
+						if($priority == 'tag' and $get_attributes) {
+							if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
+
+								$current[$tag]['0_attr'] = $current[$tag.'_attr'];
+								unset($current[$tag.'_attr']);
+							}
+
+							if($attributes_data) {
+								$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+							}
+						}
+						$repeated_tag_index[$tag.'_'.$level]++; //0 and 1 index is already taken
+					}
+				}
+
+			} elseif($type == 'close') { //End of tag '</tag>'
+				$current = &$parent[$level-1];
+			}
+		}
+
+		return($xml_array);
 	}
 }
 ?>

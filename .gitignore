@@ -9,27 +9,13 @@ custom_settings.json
 *.fdb_latexmk
 *.out
 *.toc
-
 reports/Requirements Analysis/.DS_Store
-
 reports/Requirements Analysis/final/requirements.out
-
 reports/Requirements Analysis/final/requirements.toc
-
 test/*
-
 .DS_Store
-
 test/test.php
-
-test/test.php
-
 test/monument.sql
-
 .gitignore
-
-reports/Requirements Analysis/final/requirements.out
-
-reports/Requirements Analysis/final/requirements.toc
-
 /public/.htaccess
+/.project

@@ -1,6 +1,15 @@
 <div id="searchdiv">
 	<form method="post" action="" id="filter" style="margin-bottom: 0;">
 		<input id="search" type="text" name="search" value="<?php echo $post['search']; ?>" placeholder="zoeken" /> 
+				<select id="provinces" name="province">
+					<option value='-1'>-- Provincie</option>
+					<?php 
+					$provinces = ORM::factory('province')->order_by('name')->find_all();
+					foreach($provinces AS $province) {
+						echo '<option value="'.$province->id_province.'"'; if ($post['province'] == $province->id_province) { echo ' selected="selected"'; } echo '>'.$province->name.'</option>';
+					}
+					?>
+				</select>
 		<input id="town" type="text" name="town" value="<?php echo $post['town']; ?>" placeholder="stad" /> 
 		<select id="categories">
 			<option value='-1'>-- Categorie</option>

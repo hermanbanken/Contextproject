@@ -172,6 +172,8 @@ function updatePins() {
 		latitude : latitude,
 		// category selected by the client
 		category : $('#categories').val(),
+		// category selected by the client
+		province : $('#provinces').val(),
 		// maximum number of locations
 		limit : 50000,
 		// searchbar value

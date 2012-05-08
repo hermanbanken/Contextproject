@@ -5,9 +5,9 @@ class Controller_Features extends Controller_Abstract_Object {
 	protected static $entity = 'monument';
 
 	public function action_index() {
+		$v = View::factory('default');
+		
 		set_time_limit(0);
-
-		$v = View::factory('features');
 
 		// Feature extraction types in array
 		$types = array('acq', 'gabor', 'hsv', 'light', 'rgb', 'segment', 'spatial', 'texture');
@@ -63,8 +63,12 @@ class Controller_Features extends Controller_Abstract_Object {
 
 				// Save photo
 				$photo->save();
+				$i++;
 			}
 		}
+		
+		$v->set('title', 'Feature Import');
+		$v->set('text', 'Er zijn '.$i.' foto-features geïmporteerd.');
 
 		$this->template->body = $v;
 	}
