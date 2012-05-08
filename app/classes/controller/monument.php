@@ -78,9 +78,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				'latitude' => '',
 				'longitude' => '',
 				'distance' => 0,
-				'distance_show' => 0,
-				'limit' => 10,
-				'offset' => 0);
+				'distance_show' => 0);
 
 		return $defaults;
 	}
@@ -91,17 +89,14 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// Save post-data to session
-		$not_in_session = array('limit', 'offset');
 		$session = Session::instance();
 		$session->delete('selection');
 		foreach ($this->getDefaults() AS $key => $value) {
-			if (!in_array($key, $not_in_session)) {
-				if (isset($post[$key])) {
-					$_SESSION['selection'][$key] = $post[$key];
-				}
-				else {
-					$_SESSION['selection'][$key] = $value;
-				}
+			if (isset($post[$key])) {
+				$_SESSION['selection'][$key] = $post[$key];
+			}
+			else {
+				$_SESSION['selection'][$key] = $value;
 			}
 		}
 
@@ -123,7 +118,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// prepare sql statement
 		$sql = "SELECT * ";
 		// search for distance if needed
-		if((isset($distance) AND $distance!='0') OR isset($sort) AND $sort ==  'distance') {
+		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
 		// from dev_monuments
@@ -131,7 +126,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// prepare where clause
 		$sql.= "HAVING 1 ";
 		// search for distance if needed
-		if(isset($distance) && $distance!='0') {
+		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= "AND distance < ".$distance." ";
 		}
 		// add category search
@@ -271,6 +266,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 			else {
 				$p = $this->getDefaults();
 			}
+		}
+
+		foreach ($this->getDefaults() AS $key => $value) {
+			if (!isset($p[$key])) $p[$key] = $value;
 		}
 
 		// Get query with post-data (without limit and offset)

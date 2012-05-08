@@ -60,7 +60,7 @@
 					<option value="distance" <?php if ($post['sort'] == 'distance') { echo ' selected="selected"'; } ?> >Afstand tot huidige locatie</option>
 				</select> 		
 				<label for="nearby">
-					<input type="checkbox" name="distance_show" value="1" id="nearby" style="float:left" <?php if ($post['distance_show'] != 0) { echo ' checked="checked"'; } ?> />&nbsp;&nbsp;In de buurt zoeken
+					<input type="checkbox"name="distance_show" value="1" id="nearby" style="float:left" <?php if ($post['distance_show'] != 0) { echo ' checked="checked"'; } ?> />&nbsp;&nbsp;In de buurt zoeken
 				</label>
 				<input type="hidden" id="distanceinput" name="distance" value="<?php echo $post['distance']; ?>" />
 				<div id="distancecontainer" <?php if ($post['distance_show'] == 0) { echo ' style="display:none"'; } ?>>
