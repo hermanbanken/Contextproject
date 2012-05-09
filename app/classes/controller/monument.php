@@ -21,9 +21,21 @@ class Controller_Monument extends Controller_Abstract_Object {
 		else {
 			$p = $this->getDefaults();
 		}
-
+		// Get provinces and categories for selection
+		$provinces = ORM::factory('province')->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+		
+		
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
+		
 		// Give variables to view
-		$v->set('post', $p);
+		$f->set('post', $p);
+		$f->set('provinces', $provinces);
+		$f->set('categories', $categories);
+		$f->set('formname', 'filter');
+		
+		$v->set('selection_form', $f);
 
 		$this->template->body = $v;
 	}
@@ -71,7 +83,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 					// Set some basis arrays
 					$data = array();
 					$link = array();
-						
+
 					// Find id in filename
 					$monument_id = intval($monument_file);
 
@@ -171,7 +183,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 								}
 							}
 							$data['province'] = $province->id_province;
-								
+
 							// If municipality is present, find id or insert new category in database
 							if (isset($data['municipality'])) {
 								$municipality = ORM::factory('municipality')->where('name', '=', $data['municipality'])->find();
@@ -201,7 +213,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 										}
 									}
 									$data['town'] = $town->id_town;
-										
+
 									// If street is present, find id or insert new category in database
 									if (isset($data['street'])) {
 										$street = ORM::factory('street')->where('name', '=', $data['street'])->find();
@@ -304,12 +316,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 		->from('towns')
 		->execute()
 		->as_array();
-		
+
 		$towns_array = array();
 		foreach ($towns AS $id => $town) {
 			$towns_array[$id] = $town['name'];
 		}
-		
+
 		die(json_encode($towns_array));
 	}
 
@@ -318,12 +330,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 		->from('provinces')
 		->execute()
 		->as_array();
-		
+
 		$province_array = array();
 		foreach ($provinces AS $id => $province) {
 			$province_array[$id] = $province['name'];
 		}
-		
+
 		die(json_encode($province_array));
 	}
 
@@ -361,15 +373,17 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$post = $this->request->post();
 		}
 
-		// Save post-data to session
-		$session = Session::instance();
-		$session->delete('selection');
-		foreach ($this->getDefaults() AS $key => $value) {
-			if (isset($post[$key])) {
-				$_SESSION['selection'][$key] = $post[$key];
-			}
-			else {
-				$_SESSION['selection'][$key] = $value;
+		if (!isset($post['not_in_session'])) {
+			// Save post-data to session
+			$session = Session::instance();
+			$session->delete('selection');
+			foreach ($this->getDefaults() AS $key => $value) {
+				if (isset($post[$key])) {
+					$_SESSION['selection'][$key] = $post[$key];
+				}
+				else {
+					$_SESSION['selection'][$key] = $value;
+				}
 			}
 		}
 
@@ -493,6 +507,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_getmonumenten() {
 		// build the query
 		$sql = $this->buildQuery();
+
 		// execute the query
 		$db = Database::instance();
 		$monuments = $db->query(Database::SELECT,$sql,TRUE);
@@ -527,7 +542,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * action_index
 	 * Action for listing all objects of type
 	 */
-	public function action_list(){
+	public function action_list() {
 		// Set view
 		$v = View::factory(static::$entity.'/list');
 
@@ -572,11 +587,24 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$sql = $this->buildQuery($p);
 		$monuments = DB::query(Database::SELECT, $sql)->execute();
 
+		// Get provinces and categories for selection
+		$provinces = ORM::factory('province')->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+	
+		
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
+		
 		// Give variables to view
-		$v->set('post', $p);
+		$f->set('post', $p);
+		$f->set('provinces', $provinces);
+		$f->set('categories', $categories);
+		$f->set('formname', 'filter_list');
+		
 		$v->set('pagination', $pagination);
+		$v->set('selection_form', $f);
 		$v->bind('monuments', $monuments);
-
+		
 		// Add view to template
 		$this->template->body = $v;
 	}

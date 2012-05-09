@@ -21,31 +21,6 @@ $(document).ready(function() {
 			update_position();
 		});
 	}
-	
-    // is the platform an ipad?
-    isIpad = navigator.userAgent.match(/iPad/i) != null;
-
-    // initialize slider for the distance, depending on the platform
-    if(isIpad){
-        $('#distance').append("<input id='distanceslider' name='distance' value='"+$('#distanceinput').val()+"' type='range' min='1' max='100' />");
-        $('#distanceslider').bind('change', function() {
-            $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
-        });
-    } else {
-        $('#distance').slider({
-            min: 1,
-            max: 100,
-            value: $('#distanceinput').val(),
-            slide: function(data) {
-                $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
-                $('#distanceinput').val(Math.round(getDistance()));
-            },
-            change: function(data) {
-                $('#distanceindicator').html(Math.round(getDistance())+" kilometer");
-                $('#distanceinput').val(Math.round(getDistance()));
-            }
-        });
-    }
 });
 
 function update_position() {
