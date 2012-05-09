@@ -21,13 +21,15 @@
 					}
 					?>
 				</select>
-				<br /> 
+				<?php if ($formname == 'filter_list') { ?>
+				<br />
 				<select class="span3" id="sort" name="sort">
 					<option value="street">--Sorteer</option>
 					<option value="relevance" <?php if ($post['sort'] == 'relevance') { echo ' selected="selected"'; } ?> >Relevantie</option>
 					<option value="name" <?php if ($post['sort'] == 'name') { echo ' selected="selected"'; } ?> >Naam</option>
 					<option value="distance" <?php if ($post['sort'] == 'distance') { echo ' selected="selected"'; } ?> >Afstand tot huidige locatie</option>
 				</select>
+				<?php } ?>
 				<label for="nearby">
 					<input type="checkbox"name="distance_show" value="1" id="nearby" style="float:left" <?php if ($post['distance_show'] != 0) { echo ' checked="checked"'; } ?> />&nbsp;&nbsp;In de buurt zoeken
 				</label>

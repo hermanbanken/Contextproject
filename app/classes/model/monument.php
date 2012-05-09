@@ -50,6 +50,17 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 		return $photo;
 	}
+	
+	public function extract_name() {
+		$name = $this->name;
+		
+		// Woningen
+		if ($this->category->id_category == 1 || preg_match('/'.$this->street->name.'/', $name)) {
+			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
+		}
+		
+		return $name;
+	}
 
 	public function similars400($limit) {
 		// Get photo info

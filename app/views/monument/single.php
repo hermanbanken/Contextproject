@@ -9,6 +9,11 @@
 		<div class="span6">
 			<table class="table table-bordered table-striped">
 				<tr>
+					<td>Extracted Name</td>
+					<td><?php echo $monument->extract_name(); ?>
+					</td>
+				</tr>
+				<tr>
 					<td>Adres</td>
 					<td><?php echo $monument->street->name.' '.$monument->streetNumber; ?>
 					</td>
