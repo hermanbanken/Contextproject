@@ -1,6 +1,6 @@
 			<form method="post" action="" id="<?php echo $formname; ?>">
-				<input class="span3" id="search" type="text" name="search" value="<?php echo $post['search']; ?>" placeholder="zoeken" /> 
-				<select class="span3" id="provinces" name="province">
+				<input id="search" type="text" name="search" value="<?php echo $post['search']; ?>" placeholder="zoeken" /> 
+				<select id="provinces" name="province">
 					<option value='-1'>-- Provincie</option>
 					<?php 
 					$provinces = ORM::factory('province')->order_by('name')->find_all();
@@ -9,10 +9,10 @@
 					}
 					?>
 				</select>
-				<input class="span3" id="town" type="text" name="town" value="<?php echo $post['town']; ?>" placeholder="stad" /> 
+				<input id="town" type="text" name="town" value="<?php echo $post['town']; ?>" placeholder="stad" />
 				<input type="hidden" name="longitude" id="longitude" value="" /> 
 				<input type="hidden" name="latitude" id="latitude" value="" /> 
-				<select class="span3" id="categories" name="category">
+				<select id="categories" name="category">
 					<option value='-1'>-- Categorie</option>
 					<?php 
 					$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
@@ -23,7 +23,7 @@
 				</select>
 				<?php if ($formname == 'filter_list') { ?>
 				<br />
-				<select class="span3" id="sort" name="sort">
+				<select id="sort" name="sort">
 					<option value="street">--Sorteer</option>
 					<option value="relevance" <?php if ($post['sort'] == 'relevance') { echo ' selected="selected"'; } ?> >Relevantie</option>
 					<option value="name" <?php if ($post['sort'] == 'name') { echo ' selected="selected"'; } ?> >Naam</option>

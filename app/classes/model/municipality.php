@@ -6,7 +6,11 @@ class Model_Municipality extends Model_Abstract_Cultuurorm {
 	);
 	
 	protected $_primary_key = "id_municipality";
-	protected $_has_many = array(
+	protected $_belongs_to = array(
+			'province'=> array(
+					'model' => 'province',
+					'foreign_key' => 'id_province',
+			),
 	);
 	
 	protected static $entity = "municipality";

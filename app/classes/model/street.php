@@ -6,7 +6,11 @@ class Model_Street extends Model_Abstract_Cultuurorm {
 	);
 	
 	protected $_primary_key = "id_street";
-	protected $_has_many = array(
+	protected $_belongs_to = array(
+			'town'=> array(
+					'model' => 'town',
+					'foreign_key' => 'id_town',
+			),
 	);
 	
 	protected static $entity = "street";

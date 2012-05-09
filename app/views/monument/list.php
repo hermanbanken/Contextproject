@@ -28,7 +28,18 @@
 					</div>
 					<div class="span3">
 						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"><?php echo $monument_s->name; ?>
-						</a> <span style="display: block"><?php echo (isset($monument['distance']) ? round($monument['distance'] * 1000).' meter' : ''); ?>
+						</a> 
+						<span style="display: block;"><?php 
+						if (isset($monument['distance'])) {
+							$union = 'meter';
+							$distance = round($monument['distance'] * 1000);
+							if ($distance > 1000) {
+								$distance = round($distance / 1000, 2);
+								$union = 'km';
+							}
+							echo $distance.' '.$union;
+						}
+						?>
 						</span>
 					</div>
 					<div class="span7">

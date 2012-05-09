@@ -23,10 +23,6 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'model' => 'town',
 					'foreign_key' => 'id_town',
 			),
-			'street'=> array(
-					'model' => 'street',
-					'foreign_key' => 'id_street',
-			),
 			'municipality'=> array(
 					'model' => 'municipality',
 					'foreign_key' => 'id_municipality',
@@ -34,6 +30,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			'province'=> array(
 					'model' => 'province',
 					'foreign_key' => 'id_province',
+			),
+			'street'=> array(
+					'model' => 'street',
+					'foreign_key' => 'id_street',
 			),
 			'function'=> array(
 					'model' => 'function',
@@ -267,16 +267,16 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_monument` int(10) unsigned AUTO_INCREMENT,
-	`id_category` int(11) NULL,
-	`id_subcategory` int(11) NULL,
+	`id_category` int(10) NULL,
+	`id_subcategory` int(10) NULL,
 	`name` varchar(200) NULL,
-	`id_province` varchar(25) NULL,
-	`id_municipality` varchar(50) NULL,
-	`id_town` varchar(15) NULL,
-	`id_street` varchar(30) NULL,
+	`id_street` int(10) NULL,
+	`id_town` int(10) NULL,
+	`id_municipality` int(10) NULL,
+	`id_province` int(10) NULL,
 	`streetNumber` varchar(4) NULL,
 	`zipCode` varchar(7) NULL,
-	`id_function` varchar(50) NULL,
+	`id_function` int(10) NULL,
 	`description_commons` text NULL,
 	`description` text NULL,
 	`lng` double(10,5) NULL,
@@ -285,9 +285,6 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 	PRIMARY KEY (`id_monument`),
 	KEY `id_category` (`id_category`),
 	KEY `id_subcategory` (`id_subcategory`),
-	KEY `id_province` (`id_province`),
-	KEY `id_municipality` (`id_municipality`),
-	KEY `id_town` (`id_town`),
 	KEY `id_street` (`id_street`),
 	KEY `id_function` (`id_function`)
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
