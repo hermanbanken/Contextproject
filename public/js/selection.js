@@ -1,7 +1,8 @@
+// is the platform an ipad?
+isIpad = navigator.userAgent.match(/iPad/i) != null;
+
 $(document).ready(
 		function() {
-			// is the platform an ipad?
-			isIpad = navigator.userAgent.match(/iPad/i) != null;
 
 			// initialize slider for the distance, depending on the platform
 			if (isIpad) {
@@ -51,17 +52,6 @@ $(document).ready(
 						})
 			}
 
-			/**
-			 * function om de afstand te bepalen, afhankelijk van platform
-			 */
-			function getDistance() {
-				if (isIpad) {
-					return $('#distanceslider').val();
-				} else {
-					return $('#distance').slider('value');
-				}
-			}
-
 			// Localisation of client
 			$('#nearby').bind('click', function() {
 				if (this.checked)
@@ -83,3 +73,14 @@ $(document).ready(
 				});
 			}, "json");
 		});
+
+/**
+ * function om de afstand te bepalen, afhankelijk van platform
+ */
+function getDistance() {
+	if (isIpad) {
+		return $('#distanceslider').val();
+	} else {
+		return $('#distance').slider('value');
+	}
+}
