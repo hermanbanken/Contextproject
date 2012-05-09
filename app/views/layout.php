@@ -6,7 +6,7 @@
 	<?php echo $header; ?>
 </head>
 
-<body data-spy="scroll" data-target=".subnav" data-offset="50" onLoad="initialize()">
+<body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">

@@ -19,92 +19,31 @@ var isIpad = null;
 /**
  * On document ready, initialize functions and triggers
  */
-$(document).ready(
-		function() {
-			// The townbar and searchbar have to be completely selected once
-			// clicked on
-			$('#town, #search').click(function() {
-				this.select();
-			});
-
-			// If the map is on the page
-			if ($('#kaart').size() > 0) {
-				// Adjust height
-				// $("#kaart").height($(window).height() - 40);
-				// initialize options for google maps
-				var myOptions = {
-					// center of holland
-					center : new google.maps.LatLng(52.003695, 4.361444),
-					// default zoomlevel 8
-					zoom : 15,
-					// maptype road
-					mapTypeId : google.maps.MapTypeId.ROADMAP
-				};
-				// create the map
-				map = new google.maps.Map(document.getElementById("kaart"),
-						myOptions);
-				// get the clients coordinates
-				getCoordinates();
-				// set pin update on filter submit
-				$('#filter').submit(function(e) {
-					e.preventDefault();
-					updatePins();
-				});
-			}
-			// Localisation of client
-			$('#nearby').bind('click', function() {
-				if (this.checked)
-					$('#distancecontainer').slideDown();
-				else
-					$('#distancecontainer').slideUp();
-			});
-
-			// is the platform an ipad?
-			isIpad = navigator.userAgent.match(/iPad/i) != null;
-
-			// initialize slider for the distance, depending on the platform
-			if (isIpad) {
-				$('#distance').append(
-						"<input id='distanceslider' name='distance' value='"
-								+ $('#distanceinput').val()
-								+ "' type='range' min='1' max='100' />");
-				$('#distanceslider').bind(
-						'change',
-						function() {
-							$('#distanceindicator').html(
-									Math.round(getDistance()) + " kilometer");
-						});
-			} else {
-				$('#distance').slider(
-						{
-							min : 1,
-							max : 100,
-							value : $('#distanceinput').val(),
-							slide : function(data) {
-								$('#distanceindicator').html(
-										Math.round(getDistance())
-												+ " kilometer");
-								$('#distanceinput').val(
-										Math.round(getDistance()));
-							},
-							change : function(data) {
-								$('#distanceindicator').html(
-										Math.round(getDistance())
-												+ " kilometer");
-								$('#distanceinput').val(
-										Math.round(getDistance()));
-							}
-						});
-			}
-
-			// autocomplete needs a list of cities
-			$.post('monument/getsteden', {}, succes = function(towns) {
-				$("#town").autocomplete({
-					source : towns
-				});
-			}, "json");
-
+$(document).ready(function() {
+	// If the map is on the page
+	if ($('#kaart').size() > 0) {
+		// Adjust height
+		// $("#kaart").height($(window).height() - 40);
+		// initialize options for google maps
+		var myOptions = {
+			// center of holland
+			center : new google.maps.LatLng(52.003695, 4.361444),
+			// default zoomlevel 8
+			zoom : 15,
+			// maptype road
+			mapTypeId : google.maps.MapTypeId.ROADMAP
+		};
+		// create the map
+		map = new google.maps.Map(document.getElementById("kaart"), myOptions);
+		// get the clients coordinates
+		getCoordinates();
+		// set pin update on filter submit
+		$('#filter').submit(function(e) {
+			e.preventDefault();
+			updatePins();
 		});
+	}
+});
 
 /**
  * function used to get the coordinates of the user
@@ -131,20 +70,14 @@ function getCoordinates() {
 		});
 	}
 }
-/**
- * function om de afstand te bepalen, afhankelijk van platform
- */
-function getDistance() {
-	if (isIpad) {
-		return $('#distanceslider').val();
-	} else {
-		return $('#distance').slider('value');
-	}
-}
+
 /**
  * function to place the pins on the map
  */
 function updatePins() {
+	$("#searchdiv").fadeTo('fast', 0.8);
+	$("#filter_button").val("Laden...");
+
 	var distance = 0;
 	// if the client wants location based search, the distance have to be
 	// calculated
@@ -187,10 +120,6 @@ function updatePins() {
 		locations = data;
 		placePins(locations);
 	}, "json");
-}
-
-function initialize() {
-
 }
 
 /**
@@ -327,4 +256,7 @@ function placePins(locations) {
 			// clusters
 			maxZoom : maxZoom
 		});
+
+	$("#searchdiv").fadeTo('fast', 1);
+	$("#filter_button").val("Filter");
 }
