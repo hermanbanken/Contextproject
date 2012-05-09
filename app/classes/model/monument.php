@@ -55,7 +55,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		$name = $this->name;
 		
 		// Woningen
-		if ($this->category->id_category == 1 || preg_match('/'.$this->street->name.'/', $name)) {
+		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
 			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
 		}
 		
