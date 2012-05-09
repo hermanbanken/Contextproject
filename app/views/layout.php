@@ -6,6 +6,14 @@
 	<?php echo $header; ?>
 </head>
 
+<?php
+
+	$menu = array(
+		'menu.map' => 'monument/map',
+		'menu.list' => 'monument/list',
+	);
+
+?>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -18,12 +26,14 @@
           <a class="brand" style="padding-top: 12px; padding-bottom: 9px;" href="<?php echo URL::site(''); ?>"><span class="brand_logo" style="background: url(<?php echo URL::site('images/logo-klein.png'); ?>) no-repeat;">CultuurApp</span></a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li <?php if(preg_match('/map/i',Request::detect_uri())) echo 'class="active"'?>>
-                <a href="<?php echo URL::site('monument/map'); ?>">Kaart</a>
-              </li>
-              <li <?php if(preg_match('/list/i',Request::detect_uri())) echo 'class="active"'?>>
-                <a href="<?php echo URL::site('monument/list'); ?>">Lijst</a>
-              </li>
+				<?php
+				foreach($menu as $label => $href){
+					$regex = "/".str_replace("/", "\/", $href)."/i";
+					$active = preg_match($regex,Request::detect_uri());
+					$class =  $active ? 'class="active"' : '';
+					echo "<li $class><a href='".URL::site($href)."'>".__($label)."</a></li>";
+				}
+				?>
             </ul>
           </div>
           <?php echo Request::factory("user/menu")->execute(); ?>

@@ -10,28 +10,28 @@
 			echo $message;
 		}
 	
-		echo Form::input('username', Request::current()->post('username'), array('placeholder'=>"Username")); 
-		echo Form::password('password', array('placeholder'=>"Password"));
+		echo Form::input('username', Request::current()->post('username'), array('placeholder'=>__("Username"))); 
+		echo Form::password('password', array('placeholder'=>__("Password")));
 	
-		echo Form::submit(NULL, 'Login', array('class'=>'btn btn-primary', 'style'=>'margin-bottom:.5em'));
+		echo Form::submit(NULL, __('Login'), array('class'=>'btn btn-primary', 'style'=>'margin-bottom:.5em'));
 		
-		echo Form::label('remember', Form::checkbox('remember').'Auto-login next time?', array('class'=>'help-block'));
+		echo Form::label('remember', Form::checkbox('remember').' '.__('Auto-login next time?'), array('class'=>'help-block'));
 	
 		echo Form::close();
 	?>
 		
 	</div>
   	<div class="modal-footer">
-		<p class="modal-footer-legend">-- or --</p>
+		<p class="modal-footer-legend">-- <?php echo __('or'); ?> --</p>
 		<div class="bs-links">
-			<p><a href="user/register">Register</a> if you don't have an account.</p>
+			<p><a href="user/register"><?php echo __('Register'); ?></a> <?php echo __("if you don't have an account."); ?></p>
 			<div class="btn-group">
 				<a class="btn btn-small btn-primary" href="user/provider/facebook">F</a>
-				<a class="btn btn-small btn-primary" href="user/provider/facebook">Login with Facebook</a>
+				<a class="btn btn-small btn-primary" href="user/provider/facebook"><?php echo __('Login with Facebook'); ?></a>
 			</div>
 			<div class="btn-group">
 				<a class="btn btn-small btn-info">T</a>
-				<a class="btn btn-small btn-info">Login with Twitter</a>
+				<a class="btn btn-small btn-info"><?php echo __('Login with Twitter'); ?></a>
 			</div>
 		</div>
 	</div>
