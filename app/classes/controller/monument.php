@@ -612,12 +612,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// add the limit
-		$sql.="LIMIT ".(isset($limit)?$limit:'40000')." ";
+		if (isset($limit)){
+			$sql.="LIMIT " . $limit ." ";
+		}
 		// add the offset
-		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
+		if (isset($offset)){
+			$sql.="OFFSET " . $offset." ";
+		}
 		// return the query
 		//die($sql);
-
+		$sql.=";";
 		return $sql;
 	}
 	/**

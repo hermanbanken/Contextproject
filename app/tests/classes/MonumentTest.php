@@ -21,14 +21,15 @@ class MonumentTest extends Kohana_UnitTest_TestCase
 	public function test_buildQuery()
 	{
 		$testCases = array(
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array()),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('' => 'zoeken', '' => 'stad', '' => '-1')),
-		array("SELECT * FROM dev_monuments HAVING 1 AND CONCAT(name,description) LIKE '%nothesaurus%' ORDER BY RAND() LIMIT 500 OFFSET 0;", array('search' => 'nothesaurus')),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('distance' => '0')),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('distance' => '1')),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('distance' => '1', 'longitude' => '1')),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('distance' => '1', 'latitude' => '1')),
-		array("SELECT * ,((ACOS(SIN(31 * PI() / 180) * SIN(lat * PI() / 180) + COS(31 * PI() / 180) * COS(lat * PI() / 180) * COS((32 - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance FROM dev_monuments HAVING 1 AND distance < 1 ORDER BY RAND() LIMIT 500 OFFSET 0;", array('distance' => '1', 'longitude' => '31', 'latitude' => '32'))
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array()),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('' => 'zoeken', '' => 'town', '' => '-1')),
+		array("SELECT * FROM dev_monuments HAVING 1 AND CONCAT(name,description) LIKE '%nothesaurus%' ORDER BY RAND() ;", array('search' => 'nothesaurus')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '0')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1', 'longitude' => '1')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1', 'latitude' => '1')),
+		array("SELECT * ,((ACOS(SIN(31 * PI() / 180) * SIN(lat * PI() / 180) + COS(31 * PI() / 180) * COS(lat * PI() / 180) * COS((32 - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance FROM dev_monuments HAVING 1 AND distance < 1 ORDER BY RAND() ;", array('distance' => '1', 'longitude' => '31', 'latitude' => '32', 'distance_show' => '1')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('category' => '1'))
 		);
 		
 		/*foreach($testCases as $testCase){
@@ -41,6 +42,7 @@ class MonumentTest extends Kohana_UnitTest_TestCase
 			echo "response:".$controller->buildQuery();
 			$this->assertEquals($response, $controller->buildQuery());
 		}
+		
 		*/
 		
 		$num = 0;

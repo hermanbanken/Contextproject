@@ -92,30 +92,9 @@ function updatePins() {
 		}
 	}
 	distance = getDistance();
-
+	
 	// get the locations using AJAX with the criteria
-	$.post('monument/getmonumenten', {
-		// distance from current client location
-		distance : distance,
-		// distance show
-		distance_show : distance_show,
-		// longitude of current client location
-		longitude : longitude,
-		// latitude of current client location
-		latitude : latitude,
-		// category selected by the client
-		category : $('#categories').val(),
-		// category selected by the client
-		province : $('#provinces').val(),
-		// maximum number of locations
-		limit : 50000,
-		// searchbar value
-		search : $('#search').val(),
-		// selected town
-		town : $('#town').val(),
-		// selected street
-		street : $('#street').val()
-	}, succes = function(data) {
+	$.post('monument/getmonumenten', 'longitude='+longitude+'&latitude='+latitude+'&'+$('#filter').serialize(), succes = function(data) {
 		// on ajax succes, the fetched locations have to be place on the map
 		locations = data;
 		placePins(locations);
