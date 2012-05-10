@@ -23,7 +23,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		
         View::bind_global('page_title', $this->page_title);
 		
-		$googlekey = "AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk";
+		$googlekey = "AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko";
 		$this
 			->less('lib/bootstrap/less/bootstrap.less')
 			->less('lib/bootstrap/less/responsive.less')
