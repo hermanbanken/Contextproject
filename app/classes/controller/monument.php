@@ -387,7 +387,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// prepare sql statement
-		$sql = "SELECT * ";
+		$sql = "SELECT SQL_CALC_FOUND_ROWS * ";
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
