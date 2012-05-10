@@ -24,17 +24,17 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
-		
-		
+
+
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
-		
+
 		// Give variables to view
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
 		$f->set('formname', 'filter');
-		
+
 		$v->set('selection_form', $f);
 
 		$this->template->body = $v;
@@ -216,7 +216,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 									// If street is present, find id or insert new category in database
 									if (isset($data['street'])) {
-										$street = ORM::factory('street')->where('name', '=', $data['street'])->find();
+										$street = ORM::factory('street')->where('name', '=', $data['street'])->and_where('id_town', '=', $town->id_town)->find();
 										if ($street->name == NULL) {
 											$street->name = $data['street'];
 											$street->id_town = $town->id_town;
@@ -277,7 +277,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		closedir($monuments);
 
 		$v->set('title', 'Monumenten Import');
-		$v->set('text', 'Er zijn '.$i.' monumenten geïmporteerd.');
+		$v->set('text', 'Er zijn een '.$i.' monumenten geïmporteerd.');
 
 		$this->template->body = $v;
 
@@ -396,39 +396,45 @@ class Controller_Monument extends Controller_Abstract_Object {
 			}
 		}
 
-		//die(var_dump($bounds));
-
 		// extract synonyms
 		if(isset($search)) {
 			$synonyms = $this->getSynonyms($search);
 		}
+
 		// prepare sql statement
 		$sql = "SELECT SQL_CALC_FOUND_ROWS * ";
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
+
 		// from dev_monuments
 		$sql.= "FROM dev_monuments ";
+
 		// prepare where clause
 		$sql.= "HAVING 1 ";
+
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1)) {
 			$sql.= "AND distance < ".$distance." ";
 		}
+
 		// add category search
 		if(isset($category)) {
 			$sql.="AND id_category = ".$category." ";
 		}
+
 		// add category search
 		if(isset($province)) {
 			$sql.="AND id_province = ".$province." ";
 		}
+
 		// add town search
 		if(isset($town)) {
 			$orm_town = ORM::factory('town')->where('name', '=', $town)->find();
 			$sql.="AND id_town = ".$orm_town->id_town." ";
 		}
+
 		// add string search
 		if(isset($search)) {
 			// if synonyms are found in the thesaurus, those synonyms have to be looked for.
@@ -443,6 +449,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$sql.="AND CONCAT(name,description) LIKE '%".$search."%' ";
 			}
 		}
+
 		// ordering
 		$sql.= "ORDER BY ";
 		$sort=isset($sort)?$sort:"default";
@@ -595,17 +602,17 @@ class Controller_Monument extends Controller_Abstract_Object {
 		
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
-		
+
 		// Give variables to view
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
 		$f->set('formname', 'filter_list');
-		
+
 		$v->set('pagination', $pagination);
 		$v->set('selection_form', $f);
 		$v->bind('monuments', $monuments);
-		
+
 		// Add view to template
 		$this->template->body = $v;
 	}
