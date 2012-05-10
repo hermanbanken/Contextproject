@@ -36,6 +36,7 @@
 				?>
             </ul>
           </div>
+	      <?php echo Request::factory("localize/menu")->execute(); ?>
           <?php echo Request::factory("user/menu")->execute(); ?>
       	</div>
 	  </div>
