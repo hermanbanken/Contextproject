@@ -52,7 +52,7 @@
 			</div>
 		</div>
 	</div>
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs single-nav">
 		<li class="active"><a href="#">Aanbevelingen</a>
 		</li>
 		<li><a href="#">Locatie</a>

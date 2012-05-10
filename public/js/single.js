@@ -11,13 +11,13 @@ cache['aanbevelingen'] = '';
  */
 $(document).ready(
 		function() {			
-			$(".nav li a").click(function (e) {
+			$(".single-nav li a").click(function (e) {
 				e.preventDefault();
 				
 				// Get tab
 				var tab = $(this).html().toLowerCase().replace("'", "");
 
-				$(".nav li").removeClass('active');
+				$(".single-nav li").removeClass('active');
 				$(this).parent().addClass('active');
 				
 
