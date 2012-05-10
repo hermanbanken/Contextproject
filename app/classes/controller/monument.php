@@ -4,6 +4,119 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
+
+    public function action_test() {
+        // stopwoorden
+        $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
+
+        // all the monuments
+        $limit = 26500;
+
+        // total occurrences
+        $totaloccurrences = array();
+
+        // number of monuments where the word occurs
+        $mixedoccurrences = array();
+
+        // relativity of a word
+        $relativeoccurrences = array();
+
+        // print header
+        echo "<h1>TEKSTUELE ANALYSE</h1>";
+
+        // collect all monuments
+        $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
+        $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        $sql = "";
+        // for each monument
+        foreach($monuments as $key=>$monument) {
+            // find the description, lowercase it, ignore encoding
+            if(!isset($monument['description'])) {
+                continue;
+            }
+            $description = strtolower(preg_replace('/[^a-zA-Z0-9\s]/','',$monument['description']));
+
+            // explode into array
+            $description = explode(' ',$description);
+            $a = array(17063,20019,23744,30638 ,30780 ,33813 ,38858 ,38880);
+            if(in_array($monument['id_monument'],$a)) echo var_dump($description)."</br></br>";
+            // importance of an occurrence
+            $percentage = 1/count($description);
+
+            $unique = array();
+            foreach($description as $des) {
+                $unique[$des] = true;
+            }
+            foreach($unique as $key=>$un) {
+                $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
+            }
+
+                // add occurrence to total and mixed
+            foreach($description as $des) {
+
+                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
+                $relativeoccurrences[$des] = isset($relativeoccurrences[$des])?($relativeoccurrences[$des]+$percentage):$percentage;
+            }
+        }
+
+        echo "<h2>Meest voorkomende woorden</h2>";
+
+        // sort by total occurrence
+        arsort($totaloccurrences);
+        echo "<table><thead><tr><td>Stopwoord</td><td>Relevantieniveau</td></tr></thead>";
+        // for each word
+        foreach($totaloccurrences as $key=>$occ) {
+
+            // check if data is set
+            if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
+
+            // check if really relevant
+            $jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
+            if($occ<2
+                OR (strlen($key)<5 AND !$jaartal)
+                OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
+                OR in_array($key,$stopwords)
+            ) continue;
+
+            // calculate level of importance
+            $niveau = 0;
+
+            // long words are usually more relevant
+            if(strlen($key)>5) $niveau+=0.1;
+
+            // years
+            if(preg_match('/^[0-9]{4}$/',$key)) $niveau+= 0.5;
+
+            // roman years
+            if(preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key)) $niveau+=0.5;
+
+            // calculate relative occurrence
+            $relocc = $totaloccurrences[$key]/$mixedoccurrences[$key];
+            // some strange descriptions contain the same word too much
+            $niveau += ($mixedoccurrences[$key]>1)?($relocc-1):0.5;
+
+            // the mean of the relative occurrence is weight 10%
+            $meanimportance = 100*$relativeoccurrences[$key]/$mixedoccurrences[$key];
+            $niveau+=$meanimportance/10;
+            $niveau+=(1-$mixedoccurrences[$key]/count($totaloccurrences));
+
+            // skip irrelevant words
+            if($niveau==0) continue;
+
+            $sql=" INSERT INTO dev_tags VALUES (0,'".$key."',".$niveau."); ";
+            DB::query(Database::INSERT,$sql)->execute();
+            // entry in table
+            echo "<tr style='border:1px solid black'><td>".$key." </td><td> ".($niveau)."</td></tr>";
+
+        }
+        echo "</table>";
+
+
+        $v = View::factory(static::$entity.'/test');
+
+        $this->template->body = $v;
+    }
+
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
@@ -277,7 +390,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		closedir($monuments);
 
 		$v->set('title', 'Monumenten Import');
-		$v->set('text', 'Er zijn een '.$i.' monumenten geïmporteerd.');
+		$v->set('text', 'Er zijn een '.$i.' monumenten geï¿½mporteerd.');
 
 		$this->template->body = $v;
 
