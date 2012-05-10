@@ -388,7 +388,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// prepare sql statement
 		$sql = "SELECT * ";
-
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
@@ -557,19 +556,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 			if (!isset($p[$key])) $p[$key] = $value;
 		}
 
-		// Get query with post-data (without limit and offset)
-		$sql = $this->buildQuery($p);
-		$monuments = DB::query(Database::SELECT, $sql)->execute();
-
-		// Create pagination (count query without limit and offset)
+		// Create pagination to find out limit and offset
 		$pagination = Pagination::factory(array(
-				'total_items' => $monuments->count(),
+				'total_items' => ORM::factory("monument")->count_all(),
 				'items_per_page' => 8,
-				'view' => '../../../views/pagination'
 		));
-
-		// Tell pagination where we are
-		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
 
 		// Set new limit and offset to post-data
 		$p['limit'] = $pagination->items_per_page;
@@ -578,6 +569,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Build new query with limit and offset
 		$sql = $this->buildQuery($p);
 		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Create pagination again with correct total
+		$total = DB::query(Database::SELECT, "SELECT FOUND_ROWS();")->execute()->get('FOUND_ROWS()');
+		$pagination = Pagination::factory(array(
+				'total_items' => $total,
+				'items_per_page' => 8,
+				'view' => '../../../views/pagination'
+		));
+		// Tell pagination where we are
+		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
 
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
