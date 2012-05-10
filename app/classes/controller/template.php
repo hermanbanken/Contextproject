@@ -18,8 +18,6 @@ class Controller_Template extends Kohana_Controller_Template {
 	public function before(){
 		parent::before();
 		
-		I18n::lang('nl');
-		
 		$this->template->header = new View('header');
 		$this->template->footer = new View('footer');
 		
