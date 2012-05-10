@@ -3,7 +3,6 @@ isIpad = navigator.userAgent.match(/iPad/i) != null;
 
 $(document).ready(
 		function() {
-
 			// initialize slider for the distance, depending on the platform
 			if (isIpad) {
 				$('#distance').remove();

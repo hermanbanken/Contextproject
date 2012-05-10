@@ -21,10 +21,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 		else {
 			$p = $this->getDefaults();
 		}
+		
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
-
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
@@ -325,21 +325,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode($towns_array));
 	}
 
-	public function action_getprovincies() {
-		$provinces = DB::select('id_province', 'name')
-		->from('provinces')
-		->execute()
-		->as_array();
-
-		$province_array = array();
-		foreach ($provinces AS $id => $province) {
-			$province_array[$id] = $province['name'];
-		}
-
-		die(json_encode($province_array));
-	}
-
-
 	public static function getSynonyms($search) {
 		$sql = "select w2.word as synoniem
 		from dev_thesaurus_words w1,
@@ -372,7 +357,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if (!$post) {
 			$post = $this->request->post();
 		}
-
+		
 		if (!isset($post['not_in_session'])) {
 			// Save post-data to session
 			$session = Session::instance();
@@ -500,10 +485,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// add the limit
 		$sql.="LIMIT ".(isset($limit)?$limit:'40000')." ";
+		
 		// add the offset
 		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
-		// return the query
-		//die($sql);
 
 		return $sql;
 	}
@@ -598,7 +582,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
-
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
