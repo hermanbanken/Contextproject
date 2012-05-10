@@ -8,8 +8,24 @@ class Controller_Install extends Controller {
 	public static function update_tables(){
 		$result = array();
 		$deltas = self::get_deltas();
-		if(!empty($deltas['sql']))
-			DB::query(Database::UPDATE, $deltas['sql'])->execute();
+		
+		// Update model definitions
+		if(!empty($deltas['sql'])){
+			$split = explode(";",$deltas['sql']);
+			foreach($split as $sql){
+				DB::query(Database::UPDATE, $sql)->execute();
+			}
+		}
+		
+		// Update single sql files
+		$sqls = self::get_sqls();
+		if(!empty($sqls)){
+			$split = explode(";",$sqls);
+			foreach($split as $sql){
+				if(!empty($sql))
+					DB::query(Database::UPDATE, $sql)->execute();
+			}
+		}
 	}
 	
 	/**
@@ -25,6 +41,29 @@ class Controller_Install extends Controller {
 			$messages[] = dbDelta($new, array('Controller_Install', 'query'), $deltas);
 		}
 		return array('sql'=>$deltas, 'messages'=>$messages);
+	}
+	
+	/**
+	 * Find sql files in model directory, also inserts prefixes denoted by %s
+	 * @return string : SQL
+	 */
+	public static function get_sqls(){
+		// Find all sql files in schemas folder
+		$files = Kohana::list_files('schemas');
+		$data = "";
+		
+		// Concat all queries
+		foreach($files as $file){
+			$sql = file_get_contents($file);
+			$data .= (empty($data) ? '' : ";") . $sql;
+		}
+		
+		// Replace prefixes
+		$prefixcount = substr_count($data, '%s');
+		$prefix = Kohana::$config->load('database.default.table_prefix');
+		$data = vsprintf($data, array_fill(0, $prefixcount, $prefix));
+
+		return $data;
 	}
 	
 	/**
@@ -70,10 +109,12 @@ class Controller_Install extends Controller {
 		// Flatten
 		for($i = 0; $i < count($models); $i++){
 			if(is_array($models[$i])){
-				$models = array_merge($models, array_values($models[$i]));
+				$tmp = $models[$i];
 				unset($models[$i]);
+				$models = array_merge($models, array_values($tmp));
 			}
 		}
+		
 		// Get classnames of models
 		foreach($models as $short => $m){
 			if(is_string($m) && file_exists($m))
