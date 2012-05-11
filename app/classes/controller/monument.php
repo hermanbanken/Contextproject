@@ -4,8 +4,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
-
-    public function action_test() {
+    /**
+     * textual analysis
+     */
+    public function action_indexwords() {
         // stopwoorden
         $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
 
@@ -117,12 +119,44 @@ class Controller_Monument extends Controller_Abstract_Object {
         $this->template->body = $v;
     }
 
+
+    /**
+     * @param $size size of the tagcloud measured in words
+     * @return array with tags and their size
+     */
+    public function getTagCloud($size) {
+
+        // get random tags
+        $limit = $size;
+        $sql = "select * from dev_tags where length(content) > 4 order by RAND() limit ".$limit;
+        $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
+
+        // convert to array
+        $tags = array();
+        foreach($tagset as $key=>$tag) {
+            $tags[$tag['importance']] = array('content' => $tag['content']);
+        }
+
+        // sort by importance and add fontsize
+        ksort($tags);
+        $i = 0;
+        foreach($tags as $key=>&$tag) {
+            $tag['fontsize'] = 12+$i;
+            $i+=1;
+        }
+        // sort alphabetically
+        asort($tags);
+
+       return $tags;
+
+    }
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
 	 */
 	public function action_map(){
 		$this->less('css/map.less');
+
 		$v = View::factory(static::$entity.'/map');
 
 		// Get data from session or set default data
@@ -142,7 +176,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
-		// Give variables to view
+        // add searchterm for external links
+        $search = $this->request->param('id');
+        if(isset($search) AND $search != '') $p['search'] = $search;
+
+        // Give variables to view
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
@@ -708,7 +746,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$p['limit'] = $pagination->items_per_page;
 		$p['offset'] = $pagination->offset;
 
-		// Build new query with limit and offset
+        // add searchterm for external links
+        $search = $this->request->param('id');
+        if(isset($search) AND $search != '') $p['search'] = $search;
+
+        // Build new query with limit and offset
 		$sql = $this->buildQuery($p);
 		$monuments = DB::query(Database::SELECT, $sql)->execute();
 
@@ -716,8 +758,15 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
+        $tags = $this->getTagCloud(20);
+        // create the view
+        $t = View::factory(static::$entity.'/tagcloud');
+        // bind the tags
+        $t->bind('tags',$tags);
+        // add tagcloud to page
+        $v->set('tagcloud',$t);
 
-		// Get view for form
+        // Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
 		// Give variables to view

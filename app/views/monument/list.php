@@ -54,9 +54,13 @@
 			<?php echo $pagination; ?>
 		</div>
 
-		<div class="span3">
-			<h2 style="margin-bottom: 10px; margin-top: 10px;">Selectie</h2>
-			<?php echo $selection_form; ?>
-		</div>
+        <div class="span3">
+            <h2 style="margin-bottom: 10px; margin-top: 10px;">Selectie</h2>
+            <?php echo $selection_form; ?>
+            <h2 style="margin-bottom: 10px; margin-top: 10px;">Tags</h2>
+            <div class="tagcloud">
+                <?php echo $tagcloud; ?>
+            </div>
+        </div>
 	</div>
 </div>
