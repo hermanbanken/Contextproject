@@ -53,13 +53,13 @@
 		</div>
 	</div>
 	<ul class="nav nav-tabs single-nav">
-		<li class="active"><a href="#">Aanbevelingen</a>
+		<li><a class="aanbevelingen" href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen">Aanbevelingen</a>
 		</li>
-		<li><a href="#">Locatie</a>
+		<li><a class="locatie" href="monument/id/<?php echo $monument->id_monument; ?>#locatie">Locatie</a>
 		</li>
-		<li><a href="#">Restaurants</a>
+		<li><a class="restaurants" href="monument/id/<?php echo $monument->id_monument; ?>#restaurants">Restaurants</a>
 		</li>
-		<li><a href="#">Cafe's</a>
+		<li><a class="cafes" href="monument/id/<?php echo $monument->id_monument; ?>#cafes">Cafe's</a>
 		</li>
 	</ul>
 
