@@ -4,12 +4,159 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
+    /**
+     * textual analysis
+     */
+    public function action_indexwords() {
+        // stopwoorden
+        $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
+
+        // all the monuments
+        $limit = 26500;
+
+        // total occurrences
+        $totaloccurrences = array();
+
+        // number of monuments where the word occurs
+        $mixedoccurrences = array();
+
+        // relativity of a word
+        $relativeoccurrences = array();
+
+        // print header
+        echo "<h1>TEKSTUELE ANALYSE</h1>";
+
+        // collect all monuments
+        $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
+        $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        $sql = "";
+        // for each monument
+        foreach($monuments as $key=>$monument) {
+            // find the description, lowercase it, ignore encoding
+            if(!isset($monument['description'])) {
+                continue;
+            }
+            $description = strtolower(preg_replace('/[^a-zA-Z0-9\s]/','',$monument['description']));
+
+            // explode into array
+            $description = explode(' ',$description);
+            $a = array(17063,20019,23744,30638 ,30780 ,33813 ,38858 ,38880);
+            if(in_array($monument['id_monument'],$a)) echo var_dump($description)."</br></br>";
+            // importance of an occurrence
+            $percentage = 1/count($description);
+
+            $unique = array();
+            foreach($description as $des) {
+                $unique[$des] = true;
+            }
+            foreach($unique as $key=>$un) {
+                $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
+            }
+
+                // add occurrence to total and mixed
+            foreach($description as $des) {
+
+                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
+                $relativeoccurrences[$des] = isset($relativeoccurrences[$des])?($relativeoccurrences[$des]+$percentage):$percentage;
+            }
+        }
+
+        echo "<h2>Meest voorkomende woorden</h2>";
+
+        // sort by total occurrence
+        arsort($totaloccurrences);
+        echo "<table><thead><tr><td>Stopwoord</td><td>Relevantieniveau</td></tr></thead>";
+        // for each word
+        foreach($totaloccurrences as $key=>$occ) {
+
+            // check if data is set
+            if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
+
+            // check if really relevant
+            $jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
+            if($occ<2
+                OR (strlen($key)<5 AND !$jaartal)
+                OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
+                OR in_array($key,$stopwords)
+            ) continue;
+
+            // calculate level of importance
+            $niveau = 0;
+
+            // long words are usually more relevant
+            if(strlen($key)>5) $niveau+=0.1;
+
+            // years
+            if(preg_match('/^[0-9]{4}$/',$key)) $niveau+= 0.5;
+
+            // roman years
+            if(preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key)) $niveau+=0.5;
+
+            // calculate relative occurrence
+            $relocc = $totaloccurrences[$key]/$mixedoccurrences[$key];
+            // some strange descriptions contain the same word too much
+            $niveau += ($mixedoccurrences[$key]>1)?($relocc-1):0.5;
+
+            // the mean of the relative occurrence is weight 10%
+            $meanimportance = 100*$relativeoccurrences[$key]/$mixedoccurrences[$key];
+            $niveau+=$meanimportance/10;
+            $niveau+=(1-$mixedoccurrences[$key]/count($totaloccurrences));
+
+            // skip irrelevant words
+            if($niveau==0) continue;
+
+            $sql=" INSERT INTO dev_tags VALUES (0,'".$key."',".$niveau."); ";
+            DB::query(Database::INSERT,$sql)->execute();
+            // entry in table
+            echo "<tr style='border:1px solid black'><td>".$key." </td><td> ".($niveau)."</td></tr>";
+
+        }
+        echo "</table>";
+
+
+        $v = View::factory(static::$entity.'/test');
+
+        $this->template->body = $v;
+    }
+
+
+    /**
+     * @param $size size of the tagcloud measured in words
+     * @return array with tags and their size
+     */
+    public function getTagCloud($size) {
+
+        // get random tags
+        $limit = $size;
+        $sql = "select * from dev_tags where length(content) > 4 order by RAND() limit ".$limit;
+        $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
+
+        // convert to array
+        $tags = array();
+        foreach($tagset as $key=>$tag) {
+            $tags[$tag['importance']] = array('content' => $tag['content']);
+        }
+
+        // sort by importance and add fontsize
+        ksort($tags);
+        $i = 0;
+        foreach($tags as $key=>&$tag) {
+            $tag['fontsize'] = 12+$i;
+            $i+=1;
+        }
+        // sort alphabetically
+        asort($tags);
+
+       return $tags;
+
+    }
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
 	 */
-	public function action_map() {
+	public function action_map(){
 		$this->less('css/map.less');
+
 		$v = View::factory(static::$entity.'/map');
 
 		// Get data from session or set default data
@@ -21,15 +168,19 @@ class Controller_Monument extends Controller_Abstract_Object {
 		else {
 			$p = $this->getDefaults();
 		}
-		
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
+
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
-		// Give variables to view
+        // add searchterm for external links
+        $search = $this->request->param('id');
+        if(isset($search) AND $search != '') $p['search'] = $search;
+
+        // Give variables to view
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
@@ -277,7 +428,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		closedir($monuments);
 
 		$v->set('title', 'Monumenten Import');
-		$v->set('text', 'Er zijn een '.$i.' monumenten geïmporteerd.');
+		$v->set('text', 'Er zijn een '.$i.' monumenten geï¿½mporteerd.');
 
 		$this->template->body = $v;
 
@@ -325,6 +476,21 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode($towns_array));
 	}
 
+	public function action_getprovincies() {
+		$provinces = DB::select('id_province', 'name')
+		->from('provinces')
+		->execute()
+		->as_array();
+
+		$province_array = array();
+		foreach ($provinces AS $id => $province) {
+			$province_array[$id] = $province['name'];
+		}
+
+		die(json_encode($province_array));
+	}
+
+
 	public static function getSynonyms($search) {
 		$sql = "select w2.word as synoniem
 		from dev_thesaurus_words w1,
@@ -357,7 +523,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		if (!$post) {
 			$post = $this->request->post();
 		}
-		
+
 		if (!isset($post['not_in_session'])) {
 			// Save post-data to session
 			$session = Session::instance();
@@ -387,7 +553,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// prepare sql statement
-		$sql = "SELECT SQL_CALC_FOUND_ROWS * ";
+		$sql = "SELECT * ";
+
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
@@ -483,11 +650,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// add the limit
-		$sql.="LIMIT ".(isset($limit)?$limit:'40000')." ";
-		
+		if (isset($limit)){
+			$sql.="LIMIT " . $limit ." ";
+		}
 		// add the offset
-		$sql.="OFFSET ".(isset($offset)?$offset:'0').";";
-
+		if (isset($offset)){
+			$sql.="OFFSET " . $offset." ";
+		}
+		// return the query
+		//die($sql);
+		$sql.=";";
 		return $sql;
 	}
 	/**
@@ -556,35 +728,45 @@ class Controller_Monument extends Controller_Abstract_Object {
 			if (!isset($p[$key])) $p[$key] = $value;
 		}
 
-		// Create pagination to find out limit and offset
+		// Get query with post-data (without limit and offset)
+		$sql = $this->buildQuery($p);
+		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Create pagination (count query without limit and offset)
 		$pagination = Pagination::factory(array(
-				'total_items' => ORM::factory("monument")->count_all(),
+				'total_items' => $monuments->count(),
 				'items_per_page' => 8,
+				'view' => '../../../views/pagination'
 		));
+
+		// Tell pagination where we are
+		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
 
 		// Set new limit and offset to post-data
 		$p['limit'] = $pagination->items_per_page;
 		$p['offset'] = $pagination->offset;
 
-		// Build new query with limit and offset
+        // add searchterm for external links
+        $search = $this->request->param('id');
+        if(isset($search) AND $search != '') $p['search'] = $search;
+
+        // Build new query with limit and offset
 		$sql = $this->buildQuery($p);
 		$monuments = DB::query(Database::SELECT, $sql)->execute();
-
-		// Create pagination again with correct total
-		$total = DB::query(Database::SELECT, "SELECT FOUND_ROWS();")->execute()->get('FOUND_ROWS()');
-		$pagination = Pagination::factory(array(
-				'total_items' => $total,
-				'items_per_page' => 8,
-				'view' => '../../../views/pagination'
-		));
-		// Tell pagination where we are
-		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
 
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-		// Get view for form
+        $tags = $this->getTagCloud(20);
+        // create the view
+        $t = View::factory(static::$entity.'/tagcloud');
+        // bind the tags
+        $t->bind('tags',$tags);
+        // add tagcloud to page
+        $v->set('tagcloud',$t);
+
+        // Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
 		// Give variables to view
