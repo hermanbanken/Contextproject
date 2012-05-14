@@ -2,19 +2,19 @@
 
 return array
 (
-		'English' => 'Engels',
-		'Dutch' => 'Nederlands',
-		'Discover monuments in the Netherlands!' => 'Vind monumenten in Nederland!',
-		'View map' => 'Toon kaart',
-		'Create an account' => 'Maak een account',
-		'free' => 'gratis',
-
 		'address' => 'Adres',
 		'city' => 'Stad',
 		'municipality' => 'Gemeente',
 		'province' => 'Provincie',
 		'category' => 'Hoofdcategorie',
 		'subcategory' => 'Subcategorie',
+		'english' => 'Engels',
+		'dutch' => 'Nederlands',
+		
+		'splash.text' => 'Ontdek monumenten in Nederland!',
+		'splash.show-map' => 'Toon kaart',
+		'splash.create-account' => 'Maak een account',
+		'splash.free' => 'gratis',
 
 		'single.recommendations' => 'Aanbevelingen',
 		'single.location' => 'Locatie',
