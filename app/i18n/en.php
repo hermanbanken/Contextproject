@@ -7,6 +7,13 @@ return array(
 		'province' => 'Province',
 		'category' => 'Maincategory',
 		'subcategory' => 'Subcategory',
+		'english' => 'English',
+		'dutch' => 'Netherlands',
+		
+		'splash.text' => 'Discover monuments in the Netherlands!',
+		'splash.show-map' => 'Show map',
+		'splash.create-account' => 'Create an account',
+		'splash.free' => 'Free',
 		
 		'single.recommendations' => 'Recommendations',
 		'single.location' => 'Location',

@@ -4,6 +4,10 @@ class Controller_Features extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
+	/**
+	 * Function to import MATLAB extracted featurues
+	 * in the folder "public/files/feature_extractions/dev1_*"
+	 */
 	public function action_index() {
 		$v = View::factory('default');
 		
@@ -73,6 +77,9 @@ class Controller_Features extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
+	/**
+	 * Function to create SQL for the feature-columns
+	 */
 	public function action_sql() {
 		$v = View::factory('features');
 
@@ -111,8 +118,8 @@ class Controller_Features extends Controller_Abstract_Object {
 
 
 	/**
-	 * action_index
-	 * Action for importing image features after pca
+	 * Function for importing PCA features
+	 * from the folder "public/files/feature_extractions/dev1_pca_*"
 	 */
 	public function action_pca() {
 		$v = View::factory('features');
@@ -170,25 +177,6 @@ class Controller_Features extends Controller_Abstract_Object {
 
 			// Save photo
 			$photo->save();
-		}
-
-		$this->template->body = $v;
-	}
-
-	public function action_check() {
-		$v = View::factory('features');
-
-		$monuments = ORM::factory('monument')
-		->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-		->where('id_category', '!=', 0)
-		->and_where('id_category', '!=', NULL)
-		->find_all();
-
-		set_time_limit(0);
-		$fp = fopen('data_newextract_median.txt', 'w+');
-
-		foreach ($monuments AS $monument) {
-			fwrite($fp, $monument->id_monument.",".$monument->extractcategory2().",".$monument->id_subcategory."\n");
 		}
 
 		$this->template->body = $v;

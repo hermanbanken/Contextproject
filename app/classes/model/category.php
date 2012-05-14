@@ -14,6 +14,9 @@ class Model_Category extends Model_Abstract_Cultuurorm {
 			'through' => 'monuments',
 		)
 	);
+	protected $_translated = array(
+		"name" => "nl",
+	);
 	
 	protected static $entity = "category";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
