@@ -23,6 +23,9 @@ class Controller_Monument extends Controller_Abstract_Object {
         // relativity of a word
         $relativeoccurrences = array();
 
+        // keep the original (unedited) tags
+        $originalkeywords = array();
+
         // print header
         echo "<h1>TEKSTUELE ANALYSE</h1>";
 
@@ -36,15 +39,20 @@ class Controller_Monument extends Controller_Abstract_Object {
             if(!isset($monument['description'])) {
                 continue;
             }
-            $description = strtolower(preg_replace('/[^a-zA-Z0-9\s]/','',$monument['description']));
 
-            // explode into array
-            $description = explode(' ',$description);
-            $a = array(17063,20019,23744,30638 ,30780 ,33813 ,38858 ,38880);
-            if(in_array($monument['id_monument'],$a)) echo var_dump($description)."</br></br>";
+            // filter unused characters
+            $description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']);
+
+            // explode original keywords into array
+            $originals = explode(' ',$description);
+
+            // explode search keywords into array
+            $description = explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description));
+
             // importance of an occurrence
             $percentage = 1/count($description);
 
+            // keep track of uniqueness
             $unique = array();
             foreach($description as $des) {
                 $unique[$des] = true;
@@ -54,8 +62,8 @@ class Controller_Monument extends Controller_Abstract_Object {
             }
 
                 // add occurrence to total and mixed
-            foreach($description as $des) {
-
+            foreach($description as $key=>$des) {
+                $originalkeywords[$des] = $originals[$key];
                 $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
                 $relativeoccurrences[$des] = isset($relativeoccurrences[$des])?($relativeoccurrences[$des]+$percentage):$percentage;
             }
@@ -105,10 +113,10 @@ class Controller_Monument extends Controller_Abstract_Object {
             // skip irrelevant words
             if($niveau==0) continue;
 
-            $sql=" INSERT INTO dev_tags VALUES (0,'".$key."',".$mixedoccurrences[$key].",".$niveau."); ";
+            $sql=" INSERT INTO dev_tags VALUES (0,'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$niveau."); ";
             DB::query(Database::INSERT,$sql)->execute();
             // entry in table
-            echo "<tr style='border:1px solid black'><td>".$key." </td><td> ".($niveau)."</td></tr>";
+            echo "<tr style='border:1px solid black'><td>".$originalkeywords[$key]." </td><td> ".($niveau)."</td></tr>";
 
         }
         echo "</table>";
