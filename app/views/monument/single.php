@@ -9,32 +9,32 @@
 		<div class="span7">
 			<table class="table table-bordered table-striped">
 				<tr>
-					<td>Adres</td>
+					<td><?php echo __('address'); ?></td>
 					<td><?php echo $monument->street->name.' '.$monument->streetNumber; ?>
 					</td>
 				</tr>
 				<tr>
-					<td>Stad</td>
+					<td><?php echo __('city'); ?></td>
 					<td><?php echo $monument->town->name; ?>
 					</td>
 				</tr>
 				<tr>
-					<td>Gemeente</td>
+					<td><?php echo __('municipality'); ?></td>
 					<td><?php echo $monument->municipality->name; ?>
 					</td>
 				</tr>
 				<tr>
-					<td>Provincie</td>
+					<td><?php echo __('province'); ?></td>
 					<td><?php echo $monument->province->name; ?>
 					</td>
 				</tr>
 				<tr>
-					<td>Hoofdcategorie</td>
+					<td><?php echo __('category'); ?></td>
 					<td><?php echo $monument->category->name; ?>
 					</td>
 				</tr>
 				<tr>
-					<td>Subcategorie</td>
+					<td><?php echo __('subcategory'); ?></td>
 					<td><?php echo $monument->subcategory->name; ?>
 					</td>
 				</tr>
@@ -53,13 +53,13 @@
 		</div>
 	</div>
 	<ul class="nav nav-tabs single-nav">
-		<li><a class="aanbevelingen" href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen">Aanbevelingen</a>
+		<li><a class="aanbevelingen" href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?></a>
 		</li>
-		<li><a class="locatie" href="monument/id/<?php echo $monument->id_monument; ?>#locatie">Locatie</a>
+		<li><a class="locatie" href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?></a>
 		</li>
-		<li><a class="restaurants" href="monument/id/<?php echo $monument->id_monument; ?>#restaurants">Restaurants</a>
+		<li><a class="restaurants" href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?></a>
 		</li>
-		<li><a class="cafes" href="monument/id/<?php echo $monument->id_monument; ?>#cafes">Cafe's</a>
+		<li><a class="cafes" href="monument/id/<?php echo $monument->id_monument; ?>#cafes"><?php echo __('single.bars'); ?></a>
 		</li>
 	</ul>
 

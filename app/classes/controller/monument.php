@@ -184,6 +184,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
+		$f->set('action', '');
 		$f->set('formname', 'filter');
 
 		$v->set('selection_form', $f);
@@ -714,7 +715,13 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         // add searchterm for external links
         $search = $this->request->param('id');
-        if(isset($search) AND $search != '') $p['search'] = $search;
+        if(isset($search) AND $search != '') {
+        	// If searching for tag, remove other filterings
+        	foreach ($p AS $key => $value) {
+        		unset($p[$key]);
+        	}
+        	$p['search'] = $search;
+        }
 
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
@@ -773,6 +780,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$f->set('post', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
+		$f->set('action', 'monument/list');
 		$f->set('formname', 'filter_list');
 
 		$v->set('pagination', $pagination);

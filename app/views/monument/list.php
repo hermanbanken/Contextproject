@@ -1,7 +1,7 @@
 <div class="container-fluid" id="list">
 	<div class="row-fluid">
 		<div class="span9">
-			<h1 style="margin-bottom: 10px;">Monumenten</h1>
+			<h1 style="margin-bottom: 10px;"><?php echo __('list.monuments'); ?></h1>
 			<?php echo $pagination; ?>
 			<div class="container-fluid list-container" style="padding: 0;">
 				<?php 
@@ -9,8 +9,7 @@
 					?>
 				<div class="row-fluid list-row"
 					style="padding: 5px 0; border-bottom: 1px #DDD solid;">
-					<span>Er zijn helaas geen monumenten gevonden met de opgegeven
-						criteria.</span>
+					<span><?php echo __('list.zero-results'); ?></span>
 				</div>
 				<?php
 				}
@@ -50,7 +49,7 @@
 		</div>
 
 		<div class="span3">
-			<h2 style="margin-bottom: 10px; margin-top: 10px;">Selectie</h2>
+			<h2 style="margin-bottom: 10px; margin-top: 10px;"><?php echo __('list.selection'); ?></h2>
 			<?php echo $selection_form; ?>
 			<h2 style="margin-bottom: 10px; margin-top: 10px;">Tags</h2>
 			<div class="tagcloud">
