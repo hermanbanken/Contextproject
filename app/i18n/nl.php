@@ -30,6 +30,9 @@ return array
 		'selection.search' => 'Zoeken',
 		'selection.search-in-neighbourhood' => 'Zoek in de buurt',
 		'selection.filter' => 'Filter',
+		'selection.name' => 'Naam',
+		'selection.relevance' => 'Relevantie',
+		'selection.distance' => 'Afstand',
 
 		'menu.map' => 'Kaart',
 		'menu.list' => 'Lijst',

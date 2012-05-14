@@ -39,6 +39,10 @@
 					</td>
 				</tr>
 				<tr>
+					<td>Tags</td>
+					<td><?php echo strtolower(implode(', ', $monument->getKeywords())); ?></td>
+				</tr>
+				<tr>
 					<td colspan="2"><?php echo $monument->description; ?>
 					</td>
 				</tr>

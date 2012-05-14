@@ -29,6 +29,9 @@ return array(
 		'selection.search' => 'Search',
 		'selection.search-in-neighbourhood' => 'Search in neighbourhood',
 		'selection.filter' => 'Filter',
+		'selection.name' => 'Naam',
+		'selection.relevance' => 'Relevantie',
+		'selection.distance' => 'Afstand',
 
 		'menu.map' => 'Map',
 		'menu.list' => 'List',

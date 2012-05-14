@@ -41,7 +41,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			),
 	);
 	protected $_translated = array(
-		"description" => "nl",
+			"description" => "nl",
 	);
 
 	public function photo(){
@@ -53,15 +53,15 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 		return $photo;
 	}
-	
+
 	public function extract_name() {
 		$name = $this->name;
-		
+
 		// Woningen
 		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
 			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
 		}
-		
+
 		return $name;
 	}
 
@@ -90,7 +90,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 				}
 			}
 			$euclidian .= ')';
-			
+				
 			// Find monuments based on photos (Euclidian distance!)
 			$monuments = ORM::factory('monument')
 			->select('*', array($euclidian, 'p'))
@@ -185,7 +185,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 			// Compare difference between percentages of normal and compared monuments
 			$max = max($value - $cats_perc[$cat_sim], $max);
-echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</td><td>'.$cats_perc[$cat_sim].'</td><td>'.($value - $cats_perc[$cat_sim]).'</td></tr>';
+			echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</td><td>'.$cats_perc[$cat_sim].'</td><td>'.($value - $cats_perc[$cat_sim]).'</td></tr>';
 			// If the difference is bigger then previous, update final categorization
 			if ($max > $old_max) $final_cat = $cat_sim;
 
@@ -198,25 +198,25 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 
 		return $final_cat;
 	}
-	
+
 	public function euclidian_distance($v1, $v2) {
 		$total = 0;
 		foreach ($v1 AS $key => $val1) {
 			$total += pow($val1 - $v2[$key], 2);
 		}
-		
+
 		return sqrt($total);
 	}
-	
+
 	public function extractcategory2() {
 		$cats = array();
-	
+
 		// Average of each category
 		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory FROM dev_monuments NATURAL JOIN dev_photos WHERE id_monument != '.$this->id_monument)->execute();
 		foreach ($monuments AS $monument) {
-			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {				
+			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
 				if (!isset($cats[$monument['id_subcategory']])) $cats[$monument['id_subcategory']] = array();
-				
+
 				$id_subcategory = $monument['id_subcategory'];
 				unset($monument['id_monument']);
 				unset($monument['id_subcategory']);
@@ -224,109 +224,109 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 				$cats[$id_subcategory][] = $monument;
 			}
 		}
-		
+
 		$cats_rev = array();
 		foreach ($cats AS $id_subcategory => $photos) {
 			foreach ($photos AS $photo => $features) {
 				foreach ($features AS $feature => $value) {
 					$cats_rev[$id_subcategory][$feature][$photo] = $value;
 				}
-			}	
+			}
 		}
-		
+
 		$cats_avg = array();
 		foreach ($cats_rev AS $id_subcategory => $features) {
 			foreach ($features AS $feature => $values) {
 				rsort($values);
 				$middle = round(count($values) / 2);
 				$total = $values[$middle-1];
-				
+
 				$cats_avg[$id_subcategory][$feature] = array_sum($values) / count($values);
 			}
 		}
-		
+
 		// Get photo info
 		$photo = $this->getphoto();
 		unset($photo->id_monument);
 		unset($photo->id);
-		
+
 		$photo = $photo->as_array();
-		
+
 		foreach ($cats_avg AS $id_subcategory => $values) {
 			$euclidian = $this->euclidian_distance($photo, $values);
-			
+				
 			if (!isset($min)) $min = $euclidian;
 			if (!isset($cid)) $cid = $id_subcategory;
-			
+				
 			if ($min > $euclidian) {
 				$min = $euclidian;
 				$cid = $id_subcategory;
 			}
 		}
-		
+
 		return $cid;
 	}
 
-    /**
-     * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
-     * @param int $limit number of keywords requested
-     * @return array with keywords
-     */
-    public function getKeywords($limit = 5) {
-        // stopwoorden
-        $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
+	/**
+	 * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
+	 * @param int $limit number of keywords requested
+	 * @return array with keywords
+	 */
+	public function getKeywords($limit = 5) {
+		// stopwoorden
+		$stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
 
-        // filter unused characters
-        $description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$this->description);
+		// filter unused characters
+		$description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$this->description);
 
-        // explode original keywords into array
-        $originals = explode(' ',$description);
+		// explode original keywords into array
+		$originals = explode(' ',$description);
 
-        // explode search keywords into array
-        $description = array_diff(explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description)), $stopwords);
+		// explode search keywords into array
+		$description = array_diff(explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description)), $stopwords);
 
-        // importance of an occurrence
-        $percentage = 1/count($description);
+		// importance of an occurrence
+		$percentage = 1/count($description);
 
-        $tf = array();
-        // add occurrence to total and mixed
-        foreach($description as $key=>$des) {
-            $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
-        }
+		$tf = array();
+		// add occurrence to total and mixed
+		foreach($description as $key=>$des) {
+			$tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+		}
 
-        // for each unique word
-        $tfidf = array();
-        foreach($description as $des) {
-            $tfidf[$des] = true;
-        }
-        // we calculate the tf/idf
-        foreach($tfidf as $key=>&$un) {
-            $sql = "SELECT occurrences FROM dev_tags WHERE content = '".$key."';";
-            $occ = DB::query(Database::SELECT,$sql,TRUE)->execute();
-            foreach($occ as $occur) {
-                $occurrences = $occur['occurrences'];
-            }
-            if(!isset($occurrences)) $occurrences = 0;
-            $tfidf[$key] = $tf[$key] * log(25500 / (1+$occurrences));
-        }
+		// for each unique word
+		$tfidf = array();
+		foreach($description as $des) {
+			$tfidf[$des] = true;
+		}
+		// we calculate the tf/idf
+		foreach($tfidf as $key=>&$un) {
+			$sql = "SELECT occurrences FROM dev_tags WHERE content = '".$key."';";
+			$occ = DB::query(Database::SELECT,$sql,TRUE)->execute();
+			foreach($occ as $occur) {
+				$occurrences = $occur['occurrences'];
+			}
+			if(!isset($occurrences)) $occurrences = 0;
+			$tfidf[$key] = $tf[$key] * log(25500 / (1+$occurrences));
+		}
 
-        // sort the array by importance
-        arsort($tfidf);
+		// sort the array by importance
+		arsort($tfidf);
 
-        //die(var_dump($tfidf));
+		//die(var_dump($tfidf));
 
-        // initialize return array
-        $keywords = array();
+		// initialize return array
+		$keywords = array();
 
 
-        foreach($tfidf as $key=>$occ) {
-            $keywords[] = $key;
-            if(count($keywords)==$limit) return $keywords;
-        }
+		foreach($tfidf as $key=>$occ) {
+			$keywords[] = $key;
+			if(count($keywords)==$limit) return $keywords;
+		}
 
-        return $keywords;
+		return $keywords;
 
-    }
+	}
 
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
