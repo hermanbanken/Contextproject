@@ -48,6 +48,11 @@ spl_autoload_register(array('Kohana', 'auto_load'));
  */
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 
+/**
+ * Read Environment
+ */
+$_SERVER['KOHANA_ENV'] = ":environment";
+
 // -- Configuration and initialization -----------------------------------------
 
 /**

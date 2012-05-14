@@ -4,7 +4,7 @@ $rewrite = array(
 	'bootstrap' => array(
 		'default'=>'./app/bootstrap.default.php', 
 		'custom' =>'./app/bootstrap.php', 
-		'fields'=>array("baseurl"),
+		'fields'=>array("baseurl", "environment"),
 	),
 	'htaccess' => array(
 		'default' => './public/default.htaccess',
