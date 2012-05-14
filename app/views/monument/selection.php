@@ -27,7 +27,7 @@
 					<option value="street">-- <?php echo __('selection.sort'); ?></option>
 					<option value="relevance" <?php if ($post['sort'] == 'relevance') { echo ' selected="selected"'; } ?> ><?php echo __('selection.relevance'); ?></option>
 					<option value="name" <?php if ($post['sort'] == 'name') { echo ' selected="selected"'; } ?> ><?php echo __('selection.name'); ?></option>
-					<option value="distance" <?php if ($post['sort'] == 'distance') { echo ' selected="selected"'; } ?> ><?php echo __('selection.sistance'); ?></option>
+					<option value="distance" <?php if ($post['sort'] == 'distance') { echo ' selected="selected"'; } ?> ><?php echo __('selection.distance'); ?></option>
 				</select>
 				<?php } ?>
 				<label for="nearby">
