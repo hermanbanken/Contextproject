@@ -1,14 +1,13 @@
-<div class="container-fluid">
+<div class="container-fluid" id="list">
 	<div class="row-fluid">
 		<div class="span9">
 			<h1 style="margin-bottom: 10px;">Monumenten</h1>
 			<?php echo $pagination; ?>
-			<div class="container-fluid"
-				style="padding: 0; border-top: 1px #DDD solid;">
+			<div class="container-fluid list-container" style="padding: 0;">
 				<?php 
 				if (count($monuments) == 0) {
 					?>
-				<div class="row-fluid"
+				<div class="row-fluid list-row"
 					style="padding: 5px 0; border-bottom: 1px #DDD solid;">
 					<span>Er zijn helaas geen monumenten gevonden met de opgegeven
 						criteria.</span>
@@ -18,18 +17,15 @@
 				foreach ($monuments AS $monument) {
 					$monument_s = ORM::factory('monument', $monument['id_monument']);
 					?>
-				<div class="row-fluid"
-					style="height: 100px; padding: 5px 0; border-bottom: 1px #DDD solid;">
+				<div class="row-fluid list-row">
 					<div class="span2">
 						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"> <img
-							src="<?php echo $monument_s->photo(); ?>"
-							style="max-width: 100px; max-height: 100px;" alt="">
+							src="<?php echo $monument_s->photo(); ?>" alt="">
 						</a>
 					</div>
 					<div class="span3">
 						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"><?php echo $monument_s->name; ?>
-						</a> 
-						<span style="display: block;"><?php 
+						</a> <span style="display: block;"><?php 
 						if (isset($monument['distance'])) {
 							$union = 'meter';
 							$distance = round($monument['distance'] * 1000);
@@ -39,8 +35,7 @@
 							}
 							echo $distance.' '.$union;
 						}
-						?>
-						</span>
+						?> </span>
 					</div>
 					<div class="span7">
 						<?php echo substr($monument_s->description, 0, 200) ?>
@@ -54,13 +49,13 @@
 			<?php echo $pagination; ?>
 		</div>
 
-        <div class="span3">
-            <h2 style="margin-bottom: 10px; margin-top: 10px;">Selectie</h2>
-            <?php echo $selection_form; ?>
-            <h2 style="margin-bottom: 10px; margin-top: 10px;">Tags</h2>
-            <div class="tagcloud">
-                <?php echo $tagcloud; ?>
-            </div>
-        </div>
+		<div class="span3">
+			<h2 style="margin-bottom: 10px; margin-top: 10px;">Selectie</h2>
+			<?php echo $selection_form; ?>
+			<h2 style="margin-bottom: 10px; margin-top: 10px;">Tags</h2>
+			<div class="tagcloud">
+				<?php echo $tagcloud; ?>
+			</div>
+		</div>
 	</div>
 </div>

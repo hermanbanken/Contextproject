@@ -720,6 +720,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get post-data
 		$p = $this->request->post();
 
+        // add searchterm for external links
+        $search = $this->request->param('id');
+        if(isset($search) AND $search != '') $p['search'] = $search;
+
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
@@ -753,10 +757,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Set new limit and offset to post-data
 		$p['limit'] = $pagination->items_per_page;
 		$p['offset'] = $pagination->offset;
-
-        // add searchterm for external links
-        $search = $this->request->param('id');
-        if(isset($search) AND $search != '') $p['search'] = $search;
 
         // Build new query with limit and offset
 		$sql = $this->buildQuery($p);
