@@ -20,7 +20,7 @@ class ORM extends Kohana_ORM {
 		if (isset($this->_translated[$column]))
 		{
 			return Translator::translate(
-				$model->_object_name,
+				$this->_object_name,
 				$this->pk(),
 				$column,
 				$val

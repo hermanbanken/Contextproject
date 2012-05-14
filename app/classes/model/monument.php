@@ -40,6 +40,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'foreign_key' => 'id_function',
 			),
 	);
+	protected $_translated = array(
+		"description" => "nl",
+	);
 
 	public function photo(){
 		return URL::site('photos/'.$this->id_monument).".jpg";
