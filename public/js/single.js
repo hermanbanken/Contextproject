@@ -57,7 +57,7 @@ function show_content(tab) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, cafe) {
 				html += '<tr>';
-				html += '<td>'+cafe.rating+'</td><td><a href="'+cafe.website+'">'+cafe.name+'</a></td><td>'+cafe.vicinity+'</td>';
+				html += '<td>'+cafe.rating+'</td><td><a href="'+cafe.website+'">'+cafe.name+'</a></td><td>'+cafe.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+cafe.latitude+','+cafe.longitude+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
@@ -78,7 +78,7 @@ function show_content(tab) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
 				html += '<tr>';
-				html += '<td>'+restaurant.rating+'</td><td><a href="'+restaurant.website+'">'+restaurant.name+'</a></td><td>'+restaurant.vicinity+'</td>';
+				html += '<td>'+restaurant.rating+'</td><td><a href="'+restaurant.website+'">'+restaurant.name+'</a></td><td>'+restaurant.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+restaurant.latitude+','+restaurant.longitude+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
