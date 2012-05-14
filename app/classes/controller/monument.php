@@ -105,7 +105,7 @@ class Controller_Monument extends Controller_Abstract_Object {
             // skip irrelevant words
             if($niveau==0) continue;
 
-            $sql=" INSERT INTO dev_tags VALUES (0,'".$key."',".$niveau."); ";
+            $sql=" INSERT INTO dev_tags VALUES (0,'".$key."',".$mixedoccurrences[$key].",".$niveau."); ";
             DB::query(Database::INSERT,$sql)->execute();
             // entry in table
             echo "<tr style='border:1px solid black'><td>".$key." </td><td> ".($niveau)."</td></tr>";
@@ -128,7 +128,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         // get random tags
         $limit = $size;
-        $sql = "select * from dev_tags where length(content) > 4 order by RAND() limit ".$limit;
+        $sql = "select * from dev_tags where length(content) > 4 AND occurrences > 2 order by RAND() limit ".$limit;
         $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
 
         // convert to array
