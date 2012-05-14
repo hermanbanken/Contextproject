@@ -40,6 +40,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'foreign_key' => 'id_function',
 			),
 	);
+	protected $_translated = array(
+		"description" => "nl",
+	);
 
 	public function photo(){
 		return URL::site('photos/'.$this->id_monument).".jpg";
@@ -263,6 +266,67 @@ echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</t
 		
 		return $cid;
 	}
+
+    /**
+     * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
+     * @param int $limit number of keywords requested
+     * @return array with keywords
+     */
+    public function getKeywords($limit = 5) {
+        // stopwoorden
+        $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
+
+        // filter unused characters
+        $description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$this->description);
+
+        // explode original keywords into array
+        $originals = explode(' ',$description);
+
+        // explode search keywords into array
+        $description = array_diff(explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description)), $stopwords);
+
+        // importance of an occurrence
+        $percentage = 1/count($description);
+
+        $tf = array();
+        // add occurrence to total and mixed
+        foreach($description as $key=>$des) {
+            $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+        }
+
+        // for each unique word
+        $tfidf = array();
+        foreach($description as $des) {
+            $tfidf[$des] = true;
+        }
+        // we calculate the tf/idf
+        foreach($tfidf as $key=>&$un) {
+            $sql = "SELECT occurrences FROM dev_tags WHERE content = '".$key."';";
+            $occ = DB::query(Database::SELECT,$sql,TRUE)->execute();
+            foreach($occ as $occur) {
+                $occurrences = $occur['occurrences'];
+            }
+            if(!isset($occurrences)) $occurrences = 0;
+            $tfidf[$key] = $tf[$key] * log(25500 / (1+$occurrences));
+        }
+
+        // sort the array by importance
+        arsort($tfidf);
+
+        //die(var_dump($tfidf));
+
+        // initialize return array
+        $keywords = array();
+
+
+        foreach($tfidf as $key=>$occ) {
+            $keywords[] = $key;
+            if(count($keywords)==$limit) return $keywords;
+        }
+
+        return $keywords;
+
+    }
 
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (

@@ -42,7 +42,7 @@
 					<td colspan="2"><?php echo $monument->description; ?>
 					</td>
 				</tr>
-			</table>
+            </table>
 		</div>
 		<div class="span5">
 			<div class="well" style="text-align: center;">

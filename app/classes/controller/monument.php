@@ -27,7 +27,7 @@ class Controller_Monument extends Controller_Abstract_Object {
         $originalkeywords = array();
 
         // print header
-        echo "<h1>TEKSTUELE ANALYSE</h1>";
+//        echo "<h1>TEKSTUELE ANALYSE</h1>";
 
         // collect all monuments
         $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
@@ -52,6 +52,14 @@ class Controller_Monument extends Controller_Abstract_Object {
             // importance of an occurrence
             $percentage = 1/count($description);
 
+            $tf = array();
+            // add occurrence to total and mixed
+            foreach($description as $key=>$des) {
+                $originalkeywords[$des] = $originals[$key];
+                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
+                $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+            }
+
             // keep track of uniqueness
             $unique = array();
             foreach($description as $des) {
@@ -59,13 +67,8 @@ class Controller_Monument extends Controller_Abstract_Object {
             }
             foreach($unique as $key=>$un) {
                 $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
-            }
-
-                // add occurrence to total and mixed
-            foreach($description as $key=>$des) {
-                $originalkeywords[$des] = $originals[$key];
-                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
-                $relativeoccurrences[$des] = isset($relativeoccurrences[$des])?($relativeoccurrences[$des]+$percentage):$percentage;
+                $relativeoccurrences[$key] = isset($relativeoccurrences[$key])?
+                    ($relativeoccurrences[$key]+$tf[$key])/2:$tf[$key];
             }
         }
 
@@ -73,7 +76,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         // sort by total occurrence
         arsort($totaloccurrences);
-        echo "<table><thead><tr><td>Stopwoord</td><td>Relevantieniveau</td></tr></thead>";
+ //       echo "<table><thead><tr><td>Stopwoord</td><td>Relevantieniveau</td></tr></thead>";
         // for each word
         foreach($totaloccurrences as $key=>$occ) {
 
@@ -89,37 +92,27 @@ class Controller_Monument extends Controller_Abstract_Object {
             ) continue;
 
             // calculate level of importance
-            $niveau = 0;
+            $tfidf = 0;
 
-            // long words are usually more relevant
-            if(strlen($key)>5) $niveau+=0.1;
+            // term frequency is saved as mean
+            $tf = $relativeoccurrences[$key];
 
-            // years
-            if(preg_match('/^[0-9]{4}$/',$key)) $niveau+= 0.5;
+            // inverse document frequency = log(D/D(t))
+            $idf = log(25500 / (1+$mixedoccurrences[$key]));
 
-            // roman years
-            if(preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key)) $niveau+=0.5;
-
-            // calculate relative occurrence
-            $relocc = $totaloccurrences[$key]/$mixedoccurrences[$key];
-            // some strange descriptions contain the same word too much
-            $niveau += ($mixedoccurrences[$key]>1)?($relocc-1):0.5;
-
-            // the mean of the relative occurrence is weight 10%
-            $meanimportance = 100*$relativeoccurrences[$key]/$mixedoccurrences[$key];
-            $niveau+=$meanimportance/10;
-            $niveau+=(1-$mixedoccurrences[$key]/count($totaloccurrences));
+            // the importance of a word is tf*idf calculated
+            $tfidf = $tf*$idf;
 
             // skip irrelevant words
-            if($niveau==0) continue;
+            if($tfidf==0) continue;
 
-            $sql=" INSERT INTO dev_tags VALUES (0,'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$niveau."); ";
+            $sql=" INSERT INTO dev_tags VALUES (0,'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$tfidf."); ";
             DB::query(Database::INSERT,$sql)->execute();
             // entry in table
-            echo "<tr style='border:1px solid black'><td>".$originalkeywords[$key]." </td><td> ".($niveau)."</td></tr>";
+//            echo "<tr style='border:1px solid black'><td>".$originalkeywords[$key]." </td><td> ".($tfidf)."</td></tr>";
 
         }
-        echo "</table>";
+//       echo "</table>";
 
 
         $v = View::factory(static::$entity.'/test');
@@ -134,9 +127,9 @@ class Controller_Monument extends Controller_Abstract_Object {
      */
     public function getTagCloud($size) {
 
-        // get random tags
+        // get random tags with high tfidf importance
         $limit = $size;
-        $sql = "select * from dev_tags where length(content) > 4 AND occurrences > 2 order by RAND() limit ".$limit;
+        $sql = "select * from dev_tags where length(content) > 4 AND occurrences > 2  AND importance > 0.141430140 order by RAND() limit ".$limit;
         $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
 
         // convert to array
