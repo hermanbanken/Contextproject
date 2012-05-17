@@ -49,10 +49,16 @@ spl_autoload_register(array('Kohana', 'auto_load'));
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 
 /**
- * Read Environment
+ * Set environment
  */
-$_SERVER['KOHANA_ENV'] = ":environment";
-
+if(Kohana::$server_name == "cultuurapp.nl")
+	$_SERVER['KOHANA_ENV'] = "PRODUCTION";
+elseif(Kohana::$server_name == "dev.cultuurapp.nl")
+	$_SERVER['KOHANA_ENV'] = "DEVELOPMENT";
+elseif(!isset($_SERVER['KOHANA_ENV'])){
+	$env = ":environment";
+	$_SERVER['KOHANA_ENV'] = !empty($env) ? $env : "STAGING";
+}
 // -- Configuration and initialization -----------------------------------------
 
 /**
