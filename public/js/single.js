@@ -62,7 +62,7 @@ function show_content(tab) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, cafe) {
 				if (cafe['rating'] == null) {
-					cafe['rating'] = 1;
+					cafe['rating'] = 0;
 				}
 				html += '<tr>';
 				html += '	<td alt="'+cafe.rating+'">' + rating(cafe.rating) + '</td>';
@@ -89,7 +89,7 @@ function show_content(tab) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
 				if (restaurant['rating'] == null) {
-					restaurant['rating'] = 1;
+					restaurant['rating'] = 0;
 				}
 				html += '<tr>';
 				html += '	<td alt="'+restaurant.rating+'">' + rating(restaurant.rating) + '</td>';
