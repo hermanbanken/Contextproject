@@ -37,7 +37,7 @@ elseif (Kohana::$environment == Kohana::DEVELOPMENT)
 			),
 			'table_prefix' => 'dev_',
 			'charset'      => 'utf8',
-			'caching'      => FALSE,
+			'caching'      => TRUE,
 			'profiling'    => TRUE,
 		),
 	);
