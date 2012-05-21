@@ -217,10 +217,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_id(){
 		$v = View::factory('monument/single');
 		$id = $this->request->param('id');
-
+		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
-
+		
 		$v->bind('monument', $monument);
+		$v->bind('user', $user);
 		$this->template->body = $v;
 	}
 

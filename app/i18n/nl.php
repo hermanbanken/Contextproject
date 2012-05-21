@@ -19,6 +19,7 @@ return array (
 		'single.location' => 'Locatie',
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Cafe\'s',
+		'single.visited' => 'Bezocht',
 
 		'list.monuments' => 'Monumenten',
 		'list.selection' => 'Selectie',

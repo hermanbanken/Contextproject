@@ -40,14 +40,25 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'foreign_key' => 'id_function',
 			),
 	);
-	
+
 	protected $_has_one = array(
-		'venue' => array(
-			'model' => 'venue', 
-			'foreign_key' => 'id_monument',
-		)
+			'venue' => array(
+					'model' => 'venue',
+					'foreign_key' => 'id_monument',
+			)
 	);
-	
+
+	protected $_has_many = array(
+			'visits' => array(
+					'model' => 'visit',
+					'foreign_key' => 'id_monument',
+			),
+			'links' => array(
+					'model' => 'link',
+					'foreign_key' => 'id_monument',
+			)
+	);
+
 	protected $_translated = array(
 			"description" => "nl",
 	);
@@ -61,7 +72,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 		return $photo;
 	}
-	
+
 	/**
 	 * Accessor method for the venue field but also lookup on FourSquare if its not yet set
 	 */
@@ -72,7 +83,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			if( $sq = ORM::factory('venue')->match($this) )
 				$this->_related['venue'] = $sq;
 		}
-		
+
 		// Return cached venue
 		return $this->venue;
 	}
@@ -113,7 +124,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 				}
 			}
 			$euclidian .= ')';
-				
+
 			// Find monuments based on photos (Euclidian distance!)
 			$monuments = ORM::factory('monument')
 			->select('*', array($euclidian, 'p'))
@@ -277,10 +288,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 		foreach ($cats_avg AS $id_subcategory => $values) {
 			$euclidian = $this->euclidian_distance($photo, $values);
-				
+
 			if (!isset($min)) $min = $euclidian;
 			if (!isset($cid)) $cid = $id_subcategory;
-				
+
 			if ($min > $euclidian) {
 				$min = $euclidian;
 				$cid = $id_subcategory;

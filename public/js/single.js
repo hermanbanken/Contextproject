@@ -26,6 +26,24 @@ $(document).ready(
 			}
 			
 			show_content(tab);
+			
+			// Visited functionality
+			$(".visited").click(function(e) {
+				e.preventDefault();
+				
+				var link = $(this);
+				var icon = $(".visited i")
+				
+				$.post('ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
+					if (data.success) {
+						link.toggleClass('btn-success');
+						icon.toggleClass('icon-white');
+					}
+					else {
+						alert("Something went wrong...");
+					}
+				}, "json");
+			});
 		});
 
 function rating(r){
