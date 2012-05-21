@@ -3,11 +3,12 @@
 class Controller_4sq extends Controller {
 
 	public function action_index(){
-		
 		$authcode = Session::instance()->get("4sq.token", false);
-		if( $authcode )
+		
+		if( $authcode !== false )
 		{
 			// Do cool stuff
+			die("It worked, enjoy: ".$authcode);
 		}
 		else 
 		{
@@ -46,7 +47,7 @@ class Controller_4sq extends Controller {
 					"code" => Session::instance()->get("4sq.code", ""),
 				))
 			)->execute();
-		$obj = @json_decode($response->body);
+		$obj = @json_decode($response->body());
 		
 		if( $obj && isset($obj->access_token) )
 		{

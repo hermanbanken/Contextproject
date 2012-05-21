@@ -19,34 +19,45 @@ class Places {
 	public static function get_places($id_monument, $categories, $rankby, $radius, $sensor, $limit) {			
 		$monument = ORM::factory('monument', $id_monument);
 
-		$url = 'https://maps.googleapis.com/maps/api/place/search/json?location='.$monument->lng.','.$monument->lat.'&rankby='.$rankby.'&types='.$categories.'&sensor='.($sensor ? 'true' : 'false').'&key='.self::KEY;
-		if ($rankby != 'distance') {
-			$url .= '&radius='.$radius;
+		$response = file_get_contents(
+			"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
+				"location" => $monument->lng.','.$monument->lat,
+				"rankby" => $rankby,
+				"types" => $categories,
+				"sensor" => $sensor ? 'true' : 'false',
+				"key" => self::KEY,
+				"radius" => $rankby != 'distance' ? $radius : null,
+			))
+		);
+		
+		$places = @json_decode($response);
+		
+		$list = array();
+		$i = 0;
+		foreach ($places->results as $place){
+			$loc = $place->geometry->location;
+			$venue = array(
+				"details" => "https://maps.googleapis.com/maps/api/place/details/json".
+					URL::query( array(
+						"reference" => $place->reference,
+						"sensor" => false,
+						"key" => self::KEY,
+					)),
+				"distance" => Places::distance(
+					$loc->lat, $loc->lng, 
+					$monument->lng, $monument->lat, 'K'
+					),
+				"rating" => @$place->rating,
+				"vicinity" => $place->vicinity,
+				"name" => $place->name,
+			);
+			
+			$list[] = $venue;
+			
+			$i++;
+			if ($i == $limit) break;
 		}
-
-		$places = json_decode(file_get_contents($url));
-
-		$i = 1;
-		$return = array();
-		foreach ($places->results AS $place) {
-			$details = json_decode(file_get_contents('https://maps.googleapis.com/maps/api/place/details/json?reference='.$place->reference.'&sensor=false&key='.self::KEY));
-
-			$details = $details->result;
-
-			$longitude = $details->geometry->location->lng;
-			$latitude = $details->geometry->location->lat;
-			if (isset($place->name) && isset($place->rating) && isset($place->vicinity) && isset($details->website)) {
-				$return[] = array('longitude' => $longitude, 'latitude' => $latitude, 'distance' => Places::distance($latitude, $longitude, $monument->lng, $monument->lat, 'K'), 'name' => $place->name, 'rating' => $place->rating, 'vicinity' => $place->vicinity, 'website' => $details->website);
-
-				$i++;
-			}
-
-			if ($i > $limit) {
-				break;
-			}
-		}
-
-		return $return;
+		return $list;
 	}
 
 	/**

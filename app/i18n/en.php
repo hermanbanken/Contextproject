@@ -37,4 +37,6 @@ return array(
 		'menu.list' => 'List',
 		'menu.login' => 'login',
 		'menu.register' => 'register',
+		'menu.profile' => 'Profile',
+		'menu.logout' => 'Logout'
 );

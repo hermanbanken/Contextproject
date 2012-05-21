@@ -188,6 +188,31 @@
 	}
 }
 
+.classification { 
+	position: relative;
+	width: 91px;
+	height: 17px;
+}
+
+.classification .cover {
+	position: absolute;
+	background: transparent url(/public/images/stars.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	width: 91px;
+	height: 17px;
+	z-index: 101;
+}
+
+.classification .percentage {
+	position: absolute;
+	background: transparent url(/public/images/stars_full.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	height: 17px;
+	z-index: 102;
+}
+
 /**
  * Fixes Google Maps controls
  * @see http://stackoverflow.com/questions/7471830/google-maps-api-v3-weird-ui-display-glitches-with-screenshot

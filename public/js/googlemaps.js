@@ -92,150 +92,160 @@ function updatePins() {
 		}
 	}
 	distance = getDistance();
-	
+
 	// get the locations using AJAX with the criteria
-	$.post('monument/getmonumenten', 'longitude='+longitude+'&latitude='+latitude+'&'+$('#filter').serialize(), succes = function(data) {
-		// on ajax succes, the fetched locations have to be place on the map
-		locations = data;
-		placePins(locations);
-	}, "json");
+	$.post('monument/getmonumenten', 'longitude=' + longitude + '&latitude='
+			+ latitude + '&' + $('#filter').serialize(),
+			succes = function(data) {
+				// on ajax succes, the fetched locations have to be place on the
+				// map
+				locations = data;
+				placePins(locations);
+			}, "json");
 }
 
 /**
  * function to place fetched pins on the map
  */
 function placePins(locations) {
-	// store if the user wants to search nearby
-	var nearby = $('#nearby').is(':checked');
-	// remove all current markers
-	if (markersArray) {
-		for (i in markersArray) {
-			markersArray[i].setMap(null);
-		}
-		markersArray.length = 0;
-	}
-	if (markerClusterer) {
-		markerClusterer.clearMarkers();
-	}
-	if (circle) {
-		circle.setMap(null);
-	}
-
 	// if no monument is found, notify the user
 	if (locations.length == 0) {
 		alert("Er zijn geen monumenten gevonden die voldoen aan uw zoekcriteria.");
-	}
-	// Create a new viewpoint bound for location based search
-	bounds = new google.maps.LatLngBounds();
-	// add a pin for all locations
-	for (i = 0; i < locations.length; i++) {
-		var longlat = new google.maps.LatLng(locations[i]["longitude"],
-				locations[i]["latitude"]);
-		marker = new google.maps.Marker({
-			position : longlat
-		});
-		// And increase the bounds to take this point
-		bounds.extend(longlat);
-		// add the marker to the markerarray
-		markersArray.push(marker);
+		$("#searchdiv").fadeTo('fast', 1);
+		$("#filter_button").val("Filter");
+	} else {
 
-		// create infowindow for the pin
-		var infowindow = new google.maps.InfoWindow();
-		// make sure the infowindow pops up upon click
-		google.maps.event
-				.addListener(
-						marker,
-						'click',
-						(function(marker, i) {
-							return function() {
-								// Add right source to image
-								$
-										.post(
-												'monument/photo',
-												{
-													id : locations[i]["id"]
-												},
-												succes = function(data) {
-													// set the content of the
-													// infowindow
-													infowindow
-															.setContent("<a href='monument/id/"
-																	+ locations[i]["id"]
-																	+ "'><img id=\"photo"
-																	+ locations[i]["id"]
-																	+ "\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"
-																	+ locations[i]["name"]
-																	+ "</h2>"
-																	+ locations[i]["description"]
-																			.substring(
-																					0,
-																					200)
-																	+ " <a href='monument/id/"
-																	+ locations[i]["id"]
-																	+ "'>Meer</a>");
-													$(
-															"#photo"
-																	+ locations[i]["id"])
-															.attr('src',
-																	data.url);
-												}, "json");
-
-								infowindow.open(map, marker);
-							}
-						})(marker, i));
-		// if the client uses location based search, there's no need for
-		// clustering
-	}
-
-	// If the client uses location based search, a circle has to be added
-	if (nearby) {
-		// add current location
-		var longlat = new google.maps.LatLng(latitude, longitude);
-		marker = new google.maps.Marker({
-			position : longlat,
-			icon : new google.maps.MarkerImage(
-					'http://cdn-img.easyicon.cn/png/5526/552649.png'),
-			map : map
-		});
-		// And increase the bounds to take this point
-		bounds.extend(longlat);
-		// create infowindow for the current location
-		var infowindow = new google.maps.InfoWindow();
-
-		// add the marker to the array
-		markersArray.push(marker);
-		// make sure the infowindow pops up upon click
-		google.maps.event.addListener(marker, 'click', (function(marker, i) {
-			return function() {
-				infowindow.setContent("Huidige locatie");
-				infowindow.open(map, marker);
+		// store if the user wants to search nearby
+		var nearby = $('#nearby').is(':checked');
+		// remove all current markers
+		if (markersArray) {
+			for (i in markersArray) {
+				markersArray[i].setMap(null);
 			}
-		})(marker, i));
-		// Add a Circle overlay to the map.
-		circle = new google.maps.Circle({
-			map : map,
-			strokeColor : '#66CCFF',
-			fillColor : '#66CCFF',
-			radius : 1000 * getDistance()
-		});
-		// add the circle to the map
-		circle.bindTo('center', marker, 'position');
-		// markersArray.push(circle);
+			markersArray.length = 0;
+		}
+		if (markerClusterer) {
+			markerClusterer.clearMarkers();
+		}
+		if (circle) {
+			circle.setMap(null);
+		}
+
+		// Create a new viewpoint bound for location based search
+		bounds = new google.maps.LatLngBounds();
+		// add a pin for all locations
+		for (i = 0; i < locations.length; i++) {
+			var longlat = new google.maps.LatLng(locations[i]["longitude"],
+					locations[i]["latitude"]);
+			marker = new google.maps.Marker({
+				position : longlat
+			});
+			// And increase the bounds to take this point
+			bounds.extend(longlat);
+			// add the marker to the markerarray
+			markersArray.push(marker);
+
+			// create infowindow for the pin
+			var infowindow = new google.maps.InfoWindow();
+			// make sure the infowindow pops up upon click
+			google.maps.event
+					.addListener(
+							marker,
+							'click',
+							(function(marker, i) {
+								return function() {
+									// Add right source to image
+									$
+											.post(
+													'monument/photo',
+													{
+														id : locations[i]["id"]
+													},
+													succes = function(data) {
+														// set the content of
+														// the
+														// infowindow
+														infowindow
+																.setContent("<a href='monument/id/"
+																		+ locations[i]["id"]
+																		+ "'><img id=\"photo"
+																		+ locations[i]["id"]
+																		+ "\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"
+																		+ locations[i]["name"]
+																		+ "</h2>"
+																		+ locations[i]["description"]
+																				.substring(
+																						0,
+																						200)
+																		+ " <a href='monument/id/"
+																		+ locations[i]["id"]
+																		+ "'>Meer</a>");
+														$(
+																"#photo"
+																		+ locations[i]["id"])
+																.attr(
+																		'src',
+																		data.url);
+													}, "json");
+
+									infowindow.open(map, marker);
+								}
+							})(marker, i));
+			// if the client uses location based search, there's no need for
+			// clustering
+		}
+
+		// If the client uses location based search, a circle has to be added
+		if (nearby) {
+			// add current location
+			var longlat = new google.maps.LatLng(latitude, longitude);
+			marker = new google.maps.Marker({
+				position : longlat,
+				icon : new google.maps.MarkerImage(
+						'http://cdn-img.easyicon.cn/png/5526/552649.png'),
+				map : map
+			});
+			// And increase the bounds to take this point
+			bounds.extend(longlat);
+			// create infowindow for the current location
+			var infowindow = new google.maps.InfoWindow();
+
+			// add the marker to the array
+			markersArray.push(marker);
+			// make sure the infowindow pops up upon click
+			google.maps.event.addListener(marker, 'click',
+					(function(marker, i) {
+						return function() {
+							infowindow.setContent("Huidige locatie");
+							infowindow.open(map, marker);
+						}
+					})(marker, i));
+			// Add a Circle overlay to the map.
+			circle = new google.maps.Circle({
+				map : map,
+				strokeColor : '#66CCFF',
+				fillColor : '#66CCFF',
+				radius : 1000 * getDistance()
+			});
+			// add the circle to the map
+			circle.bindTo('center', marker, 'position');
+			// markersArray.push(circle);
+		}
+		// if the client wants location based search there's no need for late
+		// clustering
+		var maxZoom = nearby ? 14 : 16;
+		// autozoom
+		map.fitBounds(bounds);
+
+		// create the markercluster
+		if (true || !nearby)
+			markerClusterer = new MarkerClusterer(map, markersArray, {
+				// when zoomlevel reaches 16, just show the pins instead of the
+				// clusters
+				maxZoom : maxZoom
+			});
+
+		$("#searchdiv").fadeTo('fast', 1);
+		$("#filter_button").val("Filter");
 	}
-	// if the client wants location based search there's no need for late
-	// clustering
-	var maxZoom = nearby ? 14 : 16;
-	// autozoom
-	map.fitBounds(bounds);
-
-	// create the markercluster
-	if (true || !nearby)
-		markerClusterer = new MarkerClusterer(map, markersArray, {
-			// when zoomlevel reaches 16, just show the pins instead of the
-			// clusters
-			maxZoom : maxZoom
-		});
-
-	$("#searchdiv").fadeTo('fast', 1);
-	$("#filter_button").val("Filter");
 }

@@ -44,6 +44,7 @@
 				</tr>
 				<tr>
 					<td colspan="2"><?php echo $monument->description; ?>
+						<pre><?php print_r($monument->venue()->object()); ?></pre>
 					</td>
 				</tr>
             </table>
@@ -65,6 +66,9 @@
 		</li>
 		<li><a class="cafes" href="monument/id/<?php echo $monument->id_monument; ?>#cafes"><?php echo __('single.bars'); ?></a>
 		</li>
+		<li style="float: right">
+			<img src="https://developers.google.com/maps/documentation/places/images/powered-by-google-on-white.png" alt="Powered by Google" style="background:none; border: none;" />
+		</li>		
 	</ul>
 
 	<input id="id_monument" type="hidden"

@@ -13,7 +13,7 @@ $(document).ready(
 		function() {			
 			$(".single-nav li a").click(function (e) {				
 				// Get tab
-				var tab = $(this).html().toLowerCase().replace("'", "");
+				var tab = $(this).attr('class');
 
 				$(".single-nav li").removeClass('active');
 				
@@ -27,6 +27,11 @@ $(document).ready(
 			
 			show_content(tab);
 		});
+
+function rating(r){
+	var html = '<div class="classification"><div class="cover"></div><div class="percentage" style="width: '+(r * 10)+'%;"></div></div>';
+	return html;
+}
 
 function show_content(tab) {
 	$(".single-nav li ."+tab).parent().addClass('active');
@@ -56,8 +61,14 @@ function show_content(tab) {
 		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'bar|cafe'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, cafe) {
+				if (cafe['rating'] == null) {
+					cafe['rating'] = 0;
+				}
 				html += '<tr>';
-				html += '<td>'+cafe.rating+'</td><td><a href="'+cafe.website+'">'+cafe.name+'</a></td><td>'+cafe.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+cafe.latitude+','+cafe.longitude+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
+				html += '	<td alt="'+cafe.rating+'">' + rating(cafe.rating) + '</td>';
+				html += '	<td>'+cafe.name+'</td>';
+				html += '	<td>'+cafe.vicinity+'</td>';
+				html += '	<td><a href="http://maps.google.nl/maps?q='+cafe.vicinity+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
@@ -77,8 +88,14 @@ function show_content(tab) {
 		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'food|restaurant'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
+				if (restaurant['rating'] == null) {
+					restaurant['rating'] = 0;
+				}
 				html += '<tr>';
-				html += '<td>'+restaurant.rating+'</td><td><a href="'+restaurant.website+'">'+restaurant.name+'</a></td><td>'+restaurant.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+restaurant.latitude+','+restaurant.longitude+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
+				html += '	<td alt="'+restaurant.rating+'">' + rating(restaurant.rating) + '</td>';
+				html += '	<td>'+restaurant.name+'</td>';
+				html += '	<td>'+restaurant.vicinity+'</td>';
+				html += '	<td><a href="http://maps.google.nl/maps?q='+restaurant.vicinity+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
