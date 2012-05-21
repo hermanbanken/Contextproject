@@ -48,11 +48,10 @@ if(isset($_POST['install']) || !empty($_SERVER['SHELL']))
 		echo "Updating tables...\n";
 	
 	// Prevent executing route
-	$_SERVER["KOHANA_ENV"] = "TESTING";
-	
+	$_SERVER['installing'] = true;
 	include 'public/index.php';
 	Controller_Install::update_tables();
-
+	
 	if(!empty($_SERVER['SHELL']))
 		die("Customized your installation. Happy developing!\n");
 }
