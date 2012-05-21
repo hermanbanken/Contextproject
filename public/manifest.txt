@@ -1,9 +1,8 @@
 CACHE MANIFEST
 # This is a comment.
-# Cache manifest version 0.0.1
+# Cache manifest version 0.0.2
 
 images/
-http://maps.googleapis.com
 js/
 css/
  

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="manifest.txt">
+<html manifest="<?php echo URL::site("manifest.txt"); ?>">
 <head>
   <title>CultuurApp.nl</title>
   <base href="<?php echo URL::base(); ?>" />
