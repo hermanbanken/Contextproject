@@ -19,7 +19,7 @@ class Places {
 	public static function get_places($id_monument, $categories, $rankby, $radius, $sensor, $limit) {			
 		$monument = ORM::factory('monument', $id_monument);
 
-		$response = Request::factory(
+		$response = file_get_contents(
 			"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
 				"location" => $monument->lng.','.$monument->lat,
 				"rankby" => $rankby,
@@ -28,30 +28,34 @@ class Places {
 				"key" => self::KEY,
 				"radius" => $rankby != 'distance' ? $radius : null,
 			))
-		)->execute();
+		);
 		
-		$places = @json_decode($response->body());
+		$places = @json_decode($response);
 		
 		$list = array();
+		$i = 0;
 		foreach ($places->results as $place){
 			$loc = $place->geometry->location;
-			$venue = (object) array(
+			$venue = array(
 				"details" => "https://maps.googleapis.com/maps/api/place/details/json".
 					URL::query( array(
 						"reference" => $place->reference,
 						"sensor" => false,
 						"key" => self::KEY,
-					),
+					)),
 				"distance" => Places::distance(
 					$loc->lat, $loc->lng, 
 					$monument->lng, $monument->lat, 'K'
 					),
-				"rating" => $place->rating,
+				"rating" => @$place->rating,
 				"vicinity" => $place->vicinity,
 				"name" => $place->name,
 			);
 			
 			$list[] = $venue;
+			
+			$i++;
+			if ($i == $limit) break;
 		}
 		return $list;
 	}
