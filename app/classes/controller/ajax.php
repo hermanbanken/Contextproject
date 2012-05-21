@@ -18,18 +18,21 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * @return array with monuments
 	 */
 	public function action_single_aanbevelingen() {
-		$post = $this->request->post();
-		$monument = ORM::factory('monument', $post['id_monument']);
-		$similars = $monument->similars400(8);
-		$monuments = $similars['monuments']->as_array();
+		if($this->request->post('id_monument'))
+		{
+			$post = $this->request->post();
+			$monument = ORM::factory('monument', $post['id_monument']);
+			$similars = $monument->similars400(8);
+			$monuments = $similars['monuments']->as_array();
 
-		foreach ($monuments AS $key => $monument) {
-			$photo = $monument->photo();
-			$monuments[$key] = $monument->as_array();
-			$monuments[$key]['photo'] = $photo;
-		}
+			foreach ($monuments AS $key => $monument) {
+				$photo = $monument->photo();
+				$monuments[$key] = $monument->as_array();
+				$monuments[$key]['photo'] = $photo;
+			}
 
-		$this->return = $monuments;
+			$this->return = $monuments;
+		} else $this->return = array();
 	}
 
 	/**
@@ -69,9 +72,14 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * @return array with monuments => name, website, vicinity, rating, distance, longitude, latitude
 	 */
 	public function action_single_places() {
-		$post = $this->request->post();
-
-		$this->return = Places::get_places($post['id_monument'], $post['categories'], 'distance', false, false, 5);
+		if($this->request->post('id_monument'))
+		{
+			$post = $this->request->post();
+		
+			$this->return = Places::get_places(
+				$post['id_monument'], 
+				$post['categories'], 'distance', false, false, 5);
+		} else $this->return = array();
 	}
 
 	/**
