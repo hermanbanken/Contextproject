@@ -8,6 +8,10 @@ if (Kohana::$environment == Kohana::PRODUCTION)
 			'secret' => 'OGA5RRPQTYVKXMMK5YWFL5IYT5T13NVGHXHDMQEE30AMNHDD',
 		),
 		'v' => '20120521',
+		'match' => array(
+			"name" => true,
+			"distance" => 100,
+		)
 	);
 }
 elseif (Kohana::$environment == Kohana::DEVELOPMENT)
@@ -18,6 +22,10 @@ elseif (Kohana::$environment == Kohana::DEVELOPMENT)
 			'secret' => 'OGA5RRPQTYVKXMMK5YWFL5IYT5T13NVGHXHDMQEE30AMNHDD',
 		),
 		'v' => '20120521',
+		'match' => array(
+			"name" => true,
+			"distance" => 100,
+		)
 	);
 }
 elseif (Kohana::$environment == Kohana::STAGING)
@@ -28,5 +36,9 @@ elseif (Kohana::$environment == Kohana::STAGING)
 			'secret' => 'I51O0ICTYPH44S5FBGNDRJYHMPBAILTWNFBCOR0OBIMKAK5O',
 		),
 		'v' => '20120521',
+		'match' => array(
+			"name" => true,
+			"distance" => 100,
+		)
 	);
 }

@@ -67,8 +67,12 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function venue() {
 		// Not yet looked up? Do it now
-		if(!$this->venue)
-			ORM::factory('venue')->match($this);
+		if(!$this->venue || !$this->venue->loaded())
+		{
+			if( $sq = ORM::factory('venue')->match($this) )
+				$this->_related['venue'] = $sq;
+		}
+		
 		// Return cached venue
 		return $this->venue;
 	}

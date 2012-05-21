@@ -44,6 +44,7 @@
 				</tr>
 				<tr>
 					<td colspan="2"><?php echo $monument->description; ?>
+						<pre><?php print_r($monument->venue()->object()); ?></pre>
 					</td>
 				</tr>
             </table>

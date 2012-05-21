@@ -30,6 +30,7 @@ abstract class Controller extends Kohana_Controller {
 		else 
 		{
 			$lang = Kohana::$config->load("lang.default");
+			Session::instance()->set('lang', $lang);
 		}
 		
 		return $lang;

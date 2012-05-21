@@ -43,22 +43,52 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 		if(!$expired){
 			return $this;
 		} else {
+			// Clean name of all non-alpha chars
+			$name_clean = preg_replace("/[^a-zA-Z0-9\s]+/", " ", $monument->name);
+			
+			$address = $monument->street->name ." " . $monument->streetNumber;
+			$max_distance = Kohana::$config->load('4sq.match.distance');
+			$query = Kohana::$config->load('4sq.match.name') ? $name_clean : null;
+			
+			// Get venues from FourSquare
 			$response = Request::factory(
 					"https://api.foursquare.com/v2/venues/search".URL::query( array(
-						"intent" => "match",
+						"intent" => "browse",
 						"ll" => $monument->lng . ',' . $monument->lat,
-						"query" => $monument->name,
+						"radius" => $max_distance,
+						"query" => $query,
 						"v" => Kohana::$config->load('4sq.v'),
 						"client_id" => Kohana::$config->load('4sq.client.id'),
 						"client_secret" => Kohana::$config->load('4sq.client.secret'),
 					))
 				)->execute();
+				
 			$obj = @json_decode($response->body());
 			
 			if($response->status() != 200 || count($obj->response->venues) < 1){
 				return false;
 			} else {
-				$v = current($obj->response->venues);
+				// Make sure we don't pick a strange result
+				while($v = current($obj->response->venues)){
+					// Discard if too far away
+					if($v->location->distance > $max_distance)
+						next($obj->response->venues);
+					
+					// Match address, if address if the same, we're done
+					if(isset($v->location->address) && $v->location->address == $address)
+						break;
+					
+					// Match name
+					$distance = levenshtein($v->name, $name_clean);
+					if($distance < 5)
+						break;
+					
+					// Ensure we don't while(1)
+					next($obj->response->venues);
+				}
+				
+				if(!$v) return false;
+					
 				$this->id = $v->id;
 				$this->name = $v->name;
 				$this->monument = $monument;
@@ -68,6 +98,7 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 				$this->usersCount = $v->stats->usersCount;
 				$this->tipCount = $v->stats->tipCount;
 				$this->save();
+				$monument->reload();
 				return $this;
 			}
 			
