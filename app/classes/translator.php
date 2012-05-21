@@ -32,7 +32,8 @@ class Translator {
 			
 			$translated = Translator::googleTranslate($default, $lang);
 			
-			DB::query(Database::INSERT, sprintf("INSERT INTO " . $from . " VALUES ('" . $table . "', " . $pk . ", '" . $field . "', '" . $translated . "', '" . $lang . "', " . 'NOW());'))->execute();
+			
+			DB::query(Database::INSERT, ("INSERT INTO " . $from . " VALUES ('" . $table . "', " . $pk . ", '" . $field . "', " . '"' . htmlspecialchars($translated) . '"' .", '" . $lang . "', " . 'NOW());'))->execute();
 			
 			
 			
@@ -47,20 +48,120 @@ class Translator {
 		
 		$rules = explode(". ",$text);
 		
-		$text = urlencode($text);
-		$text = str_replace("+","%20",$text);
+		//$text = urlencode($text);
+		//$text = str_replace("+","%20",$text);
 		
 		
-		$file = "http://translate.google.nl/translate_a/t?client=t&text=" . $text ."&hl=nl&sl=nl&tl=" . $language . "&multires=1&otf=2&ssel=3&tsel=0&sc=1";
+		//$file = "http://translate.google.nl/translate_a/t?client=t&text=" . $text ."&hl=nl&sl=nl&tl=" . $language . "&multires=1&otf=2&ssel=3&tsel=0&sc=1";
 		
-		$response = file($file);
+		$post_data = array(
+			'client' => 't',
+			'text' => $text,
+			'hl' => 'nl',
+			'sl' => 'nl',
+			'tl' => $language,
+			'multires' => 1,
+			'otf' => 2,
+			'ssel' => 3,
+			'tsel' => 0,
+			'sc' => 1
+		);
 		
+		
+		$result = Translator::post_request('http://translate.google.nl/translate_a/t', $post_data);
+ 
+		if ($result['status'] == 'ok'){
+		 
+			// Print headers 
+			//echo $result['header']; 
+		 
+			//echo '<hr />';
+		 
+			// print the result of the whole request:
+			$response = ($result['content']);
+		 
+		}
+		else {
+			//echo 'A error occured: ' . $result['error']; 
+			return "error: " . $result['error'];
+		}
+		
+		
+		//$response = file($file);
+		//return $response;
 		$assemble = "";
+		//return $response;
 		foreach($rules as $rule){
-			$temp = stristr($response[0], '","' . $rule,true);
+			$temp = stristr($response, '","' . $rule,true);
 			$assemble = $assemble . " " . substr($temp,strrpos($temp,'["') +2,strlen($temp)-4);
 		}
 		
 		return $assemble;	
 	}
+	
+	
+	private static function post_request($url, $data, $referer='') {
+ 
+		// Convert the data array into URL Parameters like a=b&foo=bar etc.
+		$data = http_build_query($data);
+	 
+		// parse the given URL
+		$url = parse_url($url);
+	 
+		if ($url['scheme'] != 'http') { 
+			die('Error: Only HTTP request are supported !');
+		}
+	 
+		// extract host and path:
+		$host = $url['host'];
+		$path = $url['path'];
+	 
+		// open a socket connection on port 80 - timeout: 30 sec
+		$fp = fsockopen($host, 80, $errno, $errstr, 30);
+	 
+		if ($fp){
+	 
+			// send the request headers:
+			fputs($fp, "POST $path HTTP/1.1\r\n");
+			fputs($fp, "Host: $host\r\n");
+	 
+			if ($referer != '')
+				fputs($fp, "Referer: $referer\r\n");
+	 
+			fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
+			fputs($fp, "Content-length: ". strlen($data) ."\r\n");
+			fputs($fp, "Connection: close\r\n\r\n");
+			fputs($fp, $data);
+	 
+			$result = ''; 
+			while(!feof($fp)) {
+				// receive the results of the request
+				$result .= fgets($fp, 128);
+			}
+		}
+		else { 
+			return array(
+				'status' => 'err', 
+				'error' => "$errstr ($errno)"
+			);
+		}
+	 
+		// close the socket connection:
+		fclose($fp);
+	 
+		// split the result header from the content
+		$result = explode("\r\n\r\n", $result, 2);
+	 
+		$header = isset($result[0]) ? $result[0] : '';
+		$content = isset($result[1]) ? $result[1] : '';
+	 
+		// return as structured array:
+		return array(
+			'status' => 'ok',
+			'header' => $header,
+			'content' => $content
+		);
+	}
+
+
 }
