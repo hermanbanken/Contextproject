@@ -8,11 +8,16 @@ class Controller_Monument extends Controller_Abstract_Object {
      * textual analysis
      */
     public function action_indexwords() {
+
+        // execution can take a long time
+        set_time_limit(0);
+       // ini_set('memory_limit',0);
+
         // stopwoorden
         $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
 
         // all the monuments
-        $limit = 26500;
+        $limit = 26000;
 
         // total occurrences
         $totaloccurrences = array();
@@ -26,15 +31,15 @@ class Controller_Monument extends Controller_Abstract_Object {
         // keep the original (unedited) tags
         $originalkeywords = array();
 
-        // print header
-//        echo "<h1>TEKSTUELE ANALYSE</h1>";
+        // keep track of in which monuments tags are
+        $inmonuments = array();
 
         // collect all monuments
         $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
         $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
-        $sql = "";
+
         // for each monument
-        foreach($monuments as $key=>$monument) {
+        foreach($monuments as $monument) {
             // find the description, lowercase it, ignore encoding
             if(!isset($monument['description'])) {
                 continue;
@@ -46,8 +51,14 @@ class Controller_Monument extends Controller_Abstract_Object {
             // explode original keywords into array
             $originals = explode(' ',$description);
 
+            // filter stopwords
+            $originals = array_diff($originals, $stopwords);
+
             // explode search keywords into array
             $description = explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description));
+
+            // filter stopwords
+            $description = array_diff($description, $stopwords);
 
             // importance of an occurrence
             $percentage = 1/count($description);
@@ -58,6 +69,12 @@ class Controller_Monument extends Controller_Abstract_Object {
                 $originalkeywords[$des] = $originals[$key];
                 $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
                 $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+                // keep track of where tags occur
+                if(isset($inmonuments[$des])) {
+                    $inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']])?($inmonuments[$des][$monument['id_monument']]+1):1;
+                } else {
+                    $inmonuments[$des] = array($monument['id_monument'] => 1);
+                }
             }
 
             // keep track of uniqueness
@@ -72,11 +89,11 @@ class Controller_Monument extends Controller_Abstract_Object {
             }
         }
 
-        echo "<h2>Meest voorkomende woorden</h2>";
 
+        // id to insert
+        $i = 1;
         // sort by total occurrence
         arsort($totaloccurrences);
- //       echo "<table><thead><tr><td>Stopwoord</td><td>Relevantieniveau</td></tr></thead>";
         // for each word
         foreach($totaloccurrences as $key=>$occ) {
 
@@ -91,8 +108,6 @@ class Controller_Monument extends Controller_Abstract_Object {
                 OR in_array($key,$stopwords)
             ) continue;
 
-            // calculate level of importance
-            $tfidf = 0;
 
             // term frequency is saved as mean
             $tf = $relativeoccurrences[$key];
@@ -106,15 +121,17 @@ class Controller_Monument extends Controller_Abstract_Object {
             // skip irrelevant words
             if($tfidf==0) continue;
 
-            $sql=" INSERT INTO dev_tags VALUES (0,'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$tfidf."); ";
+            $sql=" INSERT INTO dev_tags VALUES (".$i.",'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$tfidf."); ";
             DB::query(Database::INSERT,$sql)->execute();
-            // entry in table
-//            echo "<tr style='border:1px solid black'><td>".$originalkeywords[$key]." </td><td> ".($tfidf)."</td></tr>";
 
+            foreach($inmonuments[$key] as $monumentid=>$monumentoccurrence) {
+                    $insertsql = "INSERT INTO dev_tag_monument VALUES (".$monumentid.",".$i.",".$monumentoccurrence.");";
+                    DB::query(Database::INSERT,$insertsql)->execute();
+            }
+            $i++;
         }
-//       echo "</table>";
 
-
+        echo "<h1>KLAAR!</h1><p>".$i." tags toegevoegd...</p>";
         $v = View::factory(static::$entity.'/test');
 
         $this->template->body = $v;
@@ -135,7 +152,7 @@ class Controller_Monument extends Controller_Abstract_Object {
         // convert to array
         $tags = array();
         foreach($tagset as $key=>$tag) {
-            $tags[$tag['importance']] = array('content' => $tag['content']);
+            $tags[$tag['importance']] = array('content' => strtolower($tag['content']));
         }
 
         // sort by importance and add fontsize
