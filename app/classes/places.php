@@ -33,7 +33,7 @@ class Places {
 		$places = @json_decode($response);
 		
 		$list = array();
-		$i = 0;
+		$ratings = array();
 		foreach ($places->results as $place){
 			$loc = $place->geometry->location;
 			$venue = array(
@@ -52,12 +52,29 @@ class Places {
 				"name" => $place->name,
 			);
 			
-			$list[] = $venue;
+			$rating = @$place->rating;
+			if ($rating == NULL) {
+				$rating = 0;
+			}
 			
+			$ratings[] = (5 - $rating);
+			$list[] = $venue;
+		}
+		
+		// Sort list-array by rating
+		array_multisort($ratings, $list);
+		
+		// Limit array
+		$limit_list = array();
+		
+		$i = 0;
+		foreach ($list AS $venue) {
+			$limit_list[] = $venue;
 			$i++;
 			if ($i == $limit) break;
 		}
-		return $list;
+		
+		return $limit_list;
 	}
 
 	/**
