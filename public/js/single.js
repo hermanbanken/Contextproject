@@ -28,6 +28,16 @@ $(document).ready(
 			show_content(tab);
 		});
 
+function rating(r){
+	var html = "";
+	for(var i = 0; i < 5; i++)
+	{
+		var full = round(max(1, r - i)*2)/2;
+		html += '<span class="star star'+ full +'"></span>';
+	}
+	return html;
+}
+
 function show_content(tab) {
 	$(".single-nav li ."+tab).parent().addClass('active');
 	
@@ -56,8 +66,8 @@ function show_content(tab) {
 		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'bar|cafe'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, cafe) {
-				html += '<tr>';
-				html += '<td>'+cafe.rating+'</td><td><a href="'+cafe.website+'">'+cafe.name+'</a></td><td>'+cafe.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+cafe.latitude+','+cafe.longitude+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
+				html += '<tr><td alt="'+cafe.rating+'">' + rating(cafe.rating) + '</td>';
+				html += '<td><a href="'+cafe.website+'">'+cafe.name+'</a></td><td>'+cafe.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+cafe.latitude+','+cafe.longitude+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
@@ -77,8 +87,8 @@ function show_content(tab) {
 		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'food|restaurant'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
-				html += '<tr>';
-				html += '<td>'+restaurant.rating+'</td><td><a href="'+restaurant.website+'">'+restaurant.name+'</a></td><td>'+restaurant.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+restaurant.latitude+','+restaurant.longitude+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
+				html += '<tr><td alt="'+restaurant.rating+'">' + rating(restaurant.rating) + '</td>';
+				html += '<td><a href="'+restaurant.website+'">'+restaurant.name+'</a></td><td>'+restaurant.vicinity+'</td><td><a href="http://maps.google.nl/maps?q='+restaurant.latitude+','+restaurant.longitude+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
 			});
 			
