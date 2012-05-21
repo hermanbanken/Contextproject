@@ -1,7 +1,7 @@
 <div class='modal form-login hide fade'>
 	<div class="modal-header">
 	    <a class="close" data-dismiss="modal">×</a>
-	    <h3>Login to CultuurApp.nl</h3>
+	    <h3><?php echo __('Login to CultuurApp.nl'); ?></h3>
 	</div>
 	<div class="modal-body">
 	<?php 	
