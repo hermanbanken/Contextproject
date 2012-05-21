@@ -23,7 +23,10 @@ class Controller_User extends Controller_Template {
     }
 
 	public function action_profile(){
-		$this->template->body = View::factory('user/profile')->bind('user', $user);
+		$v = View::factory('user/profile');
+		$v->bind('user', $user);
+		
+		$this->template->body = $v;
 		$user = Auth::instance()->get_user();
 	}
  

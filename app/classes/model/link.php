@@ -8,6 +8,13 @@ class Model_Link extends ORM {
 		$prefix = Kohana::$config->load('database.default.table_prefix');
 		return sprintf(static::$schema_sql, $prefix."links", $prefix."monument_link");
 	}
+	
+	protected $_has_many = array(
+			'monuments' => array(
+					'model' => 'monument',
+					'foreign_key' => 'id_link',
+			)
+	);
 
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_link` int(10) unsigned NOT NULL AUTO_INCREMENT,

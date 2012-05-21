@@ -2,18 +2,18 @@
 
 /**
  * Controller for Ajax calls
- * All data which is put into $this->return 
+ * All data which is put into $this->return
  * will be returned as a json object
  * @author Sjoerd
  *
-*/
+ */
 class Controller_Ajax extends Kohana_Controller_Template {
 	public function action_index() {
 		$this->return = false;
 	}
 
 	/**
-	 * Function to get recommandations for single view
+	 * Function to get recommendations for single view
 	 * @param (POST) (int) id_monument
 	 * @return array with monuments
 	 */
@@ -33,6 +33,36 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	}
 
 	/**
+	 * Function to add monument to visited
+	 * @param (POST) (int) id_monument
+	 * @return boolean success
+	 */
+	public function action_single_visited() {
+		$post = $this->request->post();
+		$monument = ORM::factory('monument', $post['id_monument']);
+		$user = Auth::instance()->get_user();
+		
+		if ($monument->loaded() && $user->loaded()) {
+			$visit = ORM::factory('visit')->where('id_monument', '=', $monument->id_monument)->and_where('id_user', '=', $user->id)->find();
+			if ($visit->loaded()) {
+				$visit->delete();
+				
+				$this->return = array('success' => true, 'action' => 'delete');
+			}
+			else {
+				$visit->id_monument = $monument->id_monument;
+				$visit->id_user = $user->id;
+				$visit->save();
+				
+				$this->return = array('success' => true, 'action' => 'add');
+			}
+		}
+		else {
+			$this->return = array('success' => false, 'action' => NULL);
+		}
+	}
+
+	/**
 	 * Google Places Ajax Controller for single view
 	 * @param (POST) (int) id_monument
 	 * @param (POST) (string) categories
@@ -40,7 +70,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 */
 	public function action_single_places() {
 		$post = $this->request->post();
-		
+
 		$this->return = Places::get_places($post['id_monument'], $post['categories'], 'distance', false, false, 5);
 	}
 
@@ -59,7 +89,8 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	/**
 	 * Clear before function
 	 */
-	public function before() { }
+	public function before() {
+	}
 
 	/**
 	 * Rewrite after function so no real template gets loaded

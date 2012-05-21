@@ -58,28 +58,19 @@
 	
 	<div class="span12">
       <h2><?php echo __('Visited monuments'); ?></h2>
-      <p><?php echo __('This are the monuments you visited last on this website or in real life.'); ?></p>
+      <p><?php echo __('This are some monuments you visited last in real life.'); ?></p>
       <ul class="thumbnails">
+      <?php 
+      $monuments = $user->visited_monuments(4);
+      foreach ($monuments AS $monument) {
+      	echo '
         <li class="span3">
-          <a href="#" class="thumbnail">
-            <img src="http://placehold.it/260x180" alt="">
+          <a href="monument/id/'.$monument->id_monument.'" class="thumbnail">
+            <img src="'.$monument->photo().'" style="max-width: 260px; max-height: 180px;" alt="">
           </a>
-        </li>
-        <li class="span3">
-          <a href="#" class="thumbnail">
-            <img src="http://placehold.it/260x180" alt="">
-          </a>
-        </li>
-        <li class="span3">
-          <a href="#" class="thumbnail">
-            <img src="http://placehold.it/260x180" alt="">
-          </a>
-        </li>
-        <li class="span3">
-          <a href="#" class="thumbnail">
-            <img src="http://placehold.it/260x180" alt="">
-          </a>
-        </li>
+        </li>';
+      }
+        ?>
       </ul>
     </div>
 	
