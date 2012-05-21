@@ -152,7 +152,7 @@ class Controller_Monument extends Controller_Abstract_Object {
         // convert to array
         $tags = array();
         foreach($tagset as $key=>$tag) {
-            $tags[$tag['importance']] = array('content' => $tag['content']);
+            $tags[$tag['importance']] = array('content' => strtolower($tag['content']));
         }
 
         // sort by importance and add fontsize
