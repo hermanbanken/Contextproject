@@ -40,6 +40,14 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 					'foreign_key' => 'id_function',
 			),
 	);
+	
+	protected $_has_one = array(
+		'venue' => array(
+			'model' => 'venue', 
+			'foreign_key' => 'id_monument',
+		)
+	);
+	
 	protected $_translated = array(
 			"description" => "nl",
 	);
@@ -52,6 +60,17 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		$photo = ORM::factory('photo')->where('id_monument', '=', $this->id_monument)->find();
 
 		return $photo;
+	}
+	
+	/**
+	 * Accessor method for the venue field but also lookup on FourSquare if its not yet set
+	 */
+	public function venue() {
+		// Not yet looked up? Do it now
+		if(!$this->venue)
+			ORM::factory('venue')->match($this);
+		// Return cached venue
+		return $this->venue;
 	}
 
 	public function extract_name() {
