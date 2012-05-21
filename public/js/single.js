@@ -33,11 +33,13 @@ $(document).ready(
 				
 				var link = $(this);
 				var icon = $(".visited i")
+				var text = $(".visited .text")
 				
 				$.post('ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
 					if (data.success) {
 						link.toggleClass('btn-success');
 						icon.toggleClass('icon-white');
+						text.html(data.buttonvalue);
 					}
 					else {
 						alert("Something went wrong...");

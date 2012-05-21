@@ -20,6 +20,7 @@ return array(
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Bars',
 		'single.visited' => 'Visited',
+		'single.not-visited' => 'Not visited',
 		
 		'list.monuments' => 'Monuments',
 		'list.selection' => 'Selection',
@@ -39,5 +40,10 @@ return array(
 		'menu.login' => 'login',
 		'menu.register' => 'register',
 		'menu.profile' => 'Profile',
-		'menu.logout' => 'Logout'
+		'menu.logout' => 'Logout',
+		
+		'profile.recommendations-title' => 'Recommended monuments',
+		'profile.recommendations-text' => 'You might like these monuments. This was determined by comparing your monument history against other users history.',
+		'profile.last-visited-title' => 'Last visited monuments',
+		'profile.last-visited-text' => 'This are some monuments you visited last in real life.'
 );

@@ -9,7 +9,7 @@
 		$visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
 		<a style="float: right; margin-top: 10px;" class="btn <?php echo ($visited ? 'btn-success ' : ''); ?>visited"
 			href="#"><i
-			class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i> <?php echo __('single.visited')?>
+			class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i> <span class="text"><?php echo ($visited ? __('single.visited') : __('single.not-visited')); ?></span>
 		</a>
 		<?php 
 		}

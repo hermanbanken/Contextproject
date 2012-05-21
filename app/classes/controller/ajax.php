@@ -50,18 +50,18 @@ class Controller_Ajax extends Kohana_Controller_Template {
 			if ($visit->loaded()) {
 				$visit->delete();
 				
-				$this->return = array('success' => true, 'action' => 'delete');
+				$this->return = array('success' => true, 'action' => 'delete', 'buttonvalue' => __('single.not-visited'));
 			}
 			else {
 				$visit->id_monument = $monument->id_monument;
 				$visit->id_user = $user->id;
 				$visit->save();
 				
-				$this->return = array('success' => true, 'action' => 'add');
+				$this->return = array('success' => true, 'action' => 'add', 'buttonvalue' => __('single.visited'));
 			}
 		}
 		else {
-			$this->return = array('success' => false, 'action' => NULL);
+			$this->return = array('success' => false, 'action' => NULL, 'buttonvalue' => NULL);
 		}
 	}
 
@@ -98,6 +98,8 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * Clear before function
 	 */
 	public function before() {
+		// Set language
+		I18n::lang($this->lang());
 	}
 
 	/**

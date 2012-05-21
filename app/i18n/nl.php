@@ -20,6 +20,7 @@ return array (
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Cafe\'s',
 		'single.visited' => 'Bezocht',
+		'single.not-visited' => 'Niet bezocht',
 
 		'list.monuments' => 'Monumenten',
 		'list.selection' => 'Selectie',
@@ -41,6 +42,11 @@ return array (
 		'menu.profile' => 'Profiel',
 		'menu.logout' => 'Uitloggen',
 		
+		'profile.recommendations-title' => 'Aanraders',
+		'profile.recommendations-text' => 'Misschien vind je deze monumenten leuk om te bezoeken. We hebben dit bepaald door je monument geschiedenis te vergelijken met die van andere gebruikers.',
+		'profile.last-visited-title' => 'Laatst bezochte monumenten',
+		'profile.last-visited-text' => 'Een aantal monumenten die u recent heeft bekeken op de website of in het echt.',
+		
 		'Your user account has been associated with this provider.' => 'Je account is gekoppeld met deze provider.',
 		'Username' => 'Gebruikersnaam',
 		'Password' => 'Wachtwoord',
@@ -58,10 +64,6 @@ return array (
 		'# of logins' => 'Aantal logins',
 		'Last login' => 'Laatste login',
 		'Profile' => 'Profiel',
-		'Advised monuments' => 'Aangeraden monumenten',
-		'Visited monuments' => 'Bekeken monumenten',
-		'You might like these monuments. This was determined by comparing your monument history against other users history.' => 'Misschien vind je deze monumenten leuk om te bezoeken. We hebben dit bepaald door je monument geschiedenis te vergelijken met die van andere gebruikers.',
-		'This are the monuments you visited last on this website or in real life.' => 'Deze monumenten heb je het laatst bekeken op de website of in het echt.',
 		'Some errors were encountered, please check the details you entered.' => 'Er is een fout opgetreden, controleer a.u.b. de gegevens die u heeft ingevoerd.',
 		'Passwords must be at least 8 characters long.' => 'Wachtwoorden moeten minstens 8 karakters lang zijn.',
 		'Confirm password' => 'Wachtwoord nogmaals',
