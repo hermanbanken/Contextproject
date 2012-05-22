@@ -30,16 +30,13 @@ $(document).ready(
 			// Visited functionality
 			$(".visited").click(function(e) {
 				e.preventDefault();
-				
 				var link = $(this);
-				var icon = $(".visited i")
-				var text = $(".visited .text")
 				
 				$.post('ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
 					if (data.success) {
 						link.toggleClass('btn-success');
-						icon.toggleClass('icon-white');
-						text.html(data.buttonvalue);
+						$(".visited i").toggleClass('icon-white');
+						$(".visited .text").html(data.buttonvalue);
 					}
 					else {
 						alert("Something went wrong...");
