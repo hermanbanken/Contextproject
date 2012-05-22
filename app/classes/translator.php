@@ -31,11 +31,7 @@ class Translator {
 		else{
 			
 			$translated = Translator::googleTranslate($default, $lang);
-			
-			
-			DB::query(Database::INSERT, ("INSERT INTO " . $from . " VALUES ('" . $table . "', " . $pk . ", '" . $field . "', " . '"' . htmlspecialchars($translated) . '"' .", '" . $lang . "', " . 'NOW());'))->execute();
-			
-			
+			$query = DB::insert('translation', array('table', 'pk', 'field', 'translation', 'lang'))->values(array($table, $pk, $field, utf8_encode($translated), $lang))->execute();
 			
 			return $translated;
 		}
