@@ -10,6 +10,28 @@ class Model_Photo extends Model_Abstract_Cultuurorm {
 		)
 	);
 	
+	/**
+	 * Get url of photo and shortcut lookup in database when 
+	 * using the id of the monument model as argument
+	 */
+	public function url($id = false)
+	{
+		$url = sprintf("photos/%d.jpg", $id ? $id : $this->id_monument);
+		return URL::site($url);
+	}
+	
+	/**
+	 * Return all fields that are features extracted by MathLab
+	 * @return array of featureName => double value
+	 */
+	public function features()
+	{
+		$fields = $this->as_array();
+		unset($fields['id']);
+		unset($fields['id_monument']);
+		return $fields;
+	}
+	
 	protected static $entity = "photo";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 		`id` int(10) unsigned AUTO_INCREMENT,

@@ -291,15 +291,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			}
 		}
 
-		// Get photo info
-		$photo = $this->getphoto();
-		unset($photo->id_monument);
-		unset($photo->id);
-
-		$photo = $photo->as_array();
+		$features = $this->getphoto()->features();
 
 		foreach ($cats_avg AS $id_subcategory => $values) {
-			$euclidian = $this->euclidian_distance($photo, $values);
+			$euclidian = $this->euclidian_distance($features, $values);
 
 			if (!isset($min)) $min = $euclidian;
 			if (!isset($cid)) $cid = $id_subcategory;
