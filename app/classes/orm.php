@@ -17,7 +17,7 @@ class ORM extends Kohana_ORM {
 	{	
 		$val = parent::__get($column);
 		
-		if (isset($this->_translated[$column]))
+		if (isset($this->_translated[$column]) && $this->loaded())
 		{
 			return Translator::translate(
 				$this->_object_name,
