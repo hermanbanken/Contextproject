@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<?php if(Kohana::$environment == Kohana::PRODUCTION): ?>
 <html manifest="<?php echo URL::site("manifest.txt"); ?>">
+<?php else: ?>
+<html>
+<?php endif; ?>
 <head>
   <title>CultuurApp.nl</title>
   <base href="<?php echo URL::base(); ?>" />
