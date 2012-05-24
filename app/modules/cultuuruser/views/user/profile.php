@@ -30,8 +30,8 @@
 	</div>
 	
 	<div class="span12">
-	      <h2><?php echo __('Advised monuments'); ?></h2>
-	      <p><?php echo __('You might like these monuments. This was determined by comparing your monument history against other users history.'); ?></p>
+	      <h2><?php echo __('profile.recommendations-title'); ?></h2>
+	      <p><?php echo __('profile.recommendations-text'); ?></p>
 	      <ul class="thumbnails">
 	        <li class="span3">
 	          <a href="#" class="thumbnail">
@@ -57,8 +57,8 @@
 	    </div>
 	
 	<div class="span12">
-      <h2><?php echo __('Visited monuments'); ?></h2>
-      <p><?php echo __('This are some monuments you visited last in real life.'); ?></p>
+      <h2><?php echo __('profile.last-visited-title'); ?></h2>
+      <p><?php echo __('profile.last-visited-text'); ?></p>
       <ul class="thumbnails">
       <?php 
       $monuments = $user->visited_monuments(4);
