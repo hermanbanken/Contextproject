@@ -19,7 +19,7 @@
 				<div class="row-fluid list-row">
 					<div class="span2">
 						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"> <img
-							src="<?php echo $monument_s->photo(); ?>" alt="">
+							src="<?php echo $monument_s->photoUrl(); ?>" alt="">
 						</a>
 					</div>
 					<div class="span3">

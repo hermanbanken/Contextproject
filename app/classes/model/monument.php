@@ -3,78 +3,76 @@
 class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
-			'province' => array(
-					'not_empty'  => NULL,
-					'min_length' => array(3),
-					'max_length' => array(50),
-			),
+        'province' => array(
+            'not_empty'  => NULL,
+            'min_length' => array(3),
+            'max_length' => array(50),
+        ),
 	);
 	protected $_primary_key = 'id_monument';
 	protected $_belongs_to = array(
-			'category'=> array(
-					'model' => 'category',
-					'foreign_key' => 'id_category',
-			),
-			'subcategory'=> array(
-					'model' => 'subcategory',
-					'foreign_key' => 'id_subcategory',
-			),
-			'town'=> array(
-					'model' => 'town',
-					'foreign_key' => 'id_town',
-			),
-			'municipality'=> array(
-					'model' => 'municipality',
-					'foreign_key' => 'id_municipality',
-			),
-			'province'=> array(
-					'model' => 'province',
-					'foreign_key' => 'id_province',
-			),
-			'street'=> array(
-					'model' => 'street',
-					'foreign_key' => 'id_street',
-			),
-			'function'=> array(
-					'model' => 'function',
-					'foreign_key' => 'id_function',
-			),
+        'category'=> array(
+            'model' => 'category',
+            'foreign_key' => 'id_category',
+        ),
+        'subcategory'=> array(
+            'model' => 'subcategory',
+            'foreign_key' => 'id_subcategory',
+        ),
+        'town'=> array(
+            'model' => 'town',
+            'foreign_key' => 'id_town',
+        ),
+        'municipality'=> array(
+            'model' => 'municipality',
+            'foreign_key' => 'id_municipality',
+        ),
+        'province'=> array(
+            'model' => 'province',
+            'foreign_key' => 'id_province',
+        ),
+        'street'=> array(
+            'model' => 'street',
+            'foreign_key' => 'id_street',
+        ),
+        'function'=> array(
+            'model' => 'function',
+            'foreign_key' => 'id_function',
+        ),
 	);
 
 	protected $_has_one = array(
-			'venue' => array(
-					'model' => 'venue',
-					'foreign_key' => 'id_monument',
-			)
+        'venue' => array(
+            'model' => 'venue',
+            'foreign_key' => 'id_monument',
+        )
 	);
 
 	protected $_has_many = array(
-			'visits' => array(
-					'model' => 'visit',
-					'foreign_key' => 'id_monument',
-			),
-			'links' => array(
-					'model' => 'link',
-					'foreign_key' => 'id_monument',
-			),
-			'photos' => array(
-					'model' => 'photo',
-					'foreign_key' => 'id_monument',
-			)
+        'visits' => array(
+            'model' => 'visit',
+            'foreign_key' => 'id_monument',
+        ),
+        'links' => array(
+            'model' => 'link',
+            'foreign_key' => 'id_monument',
+        ),
+        'photos' => array(
+            'model' => 'photo',
+            'foreign_key' => 'id_monument',
+        )
 	);
 
 	protected $_translated = array(
-			"description" => "nl",
+		"description" => "nl",
 	);
 
-	public function photo(){
-		return URL::site('photos/'.$this->id_monument).".jpg";
+	public function photoUrl(){
+		return ORM::factory('photo')->url($this->id_monument);
 	}
 
 	public function getphoto() {
-		$photo = ORM::factory('photo')->where('id_monument', '=', $this->id_monument)->find();
-
-		return $photo;
+		return $this->photos->find();
 	}
 
 	/**
@@ -100,7 +98,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 		// Woningen
 		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
-			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
+			// Check if city and street are set, since there
+            // are monuments which don't have these, dunno why
+            if(isset($this->town->name) && isset($this->street->name))
+                $name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
 		}
 
 		return $name;
