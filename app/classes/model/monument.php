@@ -56,6 +56,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			'links' => array(
 					'model' => 'link',
 					'foreign_key' => 'id_monument',
+			),
+			'photos' => array(
+					'model' => 'photo',
+					'foreign_key' => 'id_monument',
 			)
 	);
 
@@ -88,6 +92,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		return $this->venue;
 	}
 
+	/**
+	 * Make sure that if the name is the name of the street of a town that the town name is included as well.
+	 */
 	public function extract_name() {
 		$name = $this->name;
 
@@ -99,6 +106,11 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		return $name;
 	}
 
+	/**
+	 * Compare this monument against others by the features extracted 
+	 * in MathLad (in database) and return the monuments that have the 
+	 * smallest Euclidian distance to the given monument.
+	 */
 	public function similars400($limit) {
 		// Get photo info
 		$photo = $this->getphoto();
