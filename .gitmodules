@@ -31,3 +31,6 @@
 [submodule "app/modules/unittest"]
 	path = app/modules/unittest
 	url = https://github.com/kohana/unittest.git
+[submodule "app/modules/cache"]
+	path = app/modules/cache
+	url = https://github.com/kohana/cache.git

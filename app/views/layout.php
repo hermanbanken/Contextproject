@@ -1,27 +1,24 @@
 <!DOCTYPE html>
+<?php if(Kohana::$environment == Kohana::PRODUCTION): ?>
+<html manifest="<?php echo URL::site("manifest.txt"); ?>">
+<?php else: ?>
 <html>
+<?php endif; ?>
 <head>
   <title>CultuurApp.nl</title>
   <base href="<?php echo URL::base(); ?>" />
-
-  <meta name="description" content="Vind monumenten in heel het land" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-
-    <!-- Le styles -->
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 	<?php echo $header; ?>
 </head>
 
-<body data-spy="scroll" data-target=".subnav" data-offset="50" onLoad="initialize()">
+<?php
+
+	$menu = array(
+		'menu.map' => 'monument/map',
+		'menu.list' => 'monument/list',
+	);
+
+?>
+<body data-spy="scroll" data-target=".subnav" data-offset="50">
 	<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -30,17 +27,20 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<?php echo URL::site(''); ?>">CultuurApp</a>
+          <a class="brand" style="padding-top: 12px; padding-bottom: 9px;" href="<?php echo URL::site(''); ?>"><span class="brand_logo" style="background: url(<?php echo URL::site('images/logo-klein.png'); ?>) no-repeat;">CultuurApp</span></a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li <?php if(preg_match('/map/i',Request::detect_uri())) echo 'class="active"'?>>
-                <a href="<?php echo URL::site('monument/map'); ?>">Kaart</a>
-              </li>
-              <li <?php if(preg_match('/list/i',Request::detect_uri())) echo 'class="active"'?>>
-                <a href="<?php echo URL::site('monument/list'); ?>">Lijst</a>
-              </li>
+				<?php
+				foreach($menu as $label => $href){
+					$regex = "/".str_replace("/", "\/", $href)."/i";
+					$active = preg_match($regex,Request::detect_uri());
+					$class =  $active ? 'class="active"' : '';
+					echo "<li $class><a href='".URL::site($href)."'>".__($label)."</a></li>";
+				}
+				?>
             </ul>
           </div>
+	      <?php echo Request::factory("localize/menu")->execute(); ?>
           <?php echo Request::factory("user/menu")->execute(); ?>
       	</div>
 	  </div>

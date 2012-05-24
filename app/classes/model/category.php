@@ -14,11 +14,14 @@ class Model_Category extends Model_Abstract_Cultuurorm {
 			'through' => 'monuments',
 		)
 	);
+	protected $_translated = array(
+		"name" => "nl",
+	);
 	
 	protected static $entity = "category";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	  	`id_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	  	`name` varchar(90) NOT NULL,
+	  	`name` varchar(100) NOT NULL,
 	  	PRIMARY KEY (`id_category`)
 	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";	
 }

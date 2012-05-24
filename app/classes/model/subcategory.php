@@ -23,9 +23,10 @@ class Model_SubCategory extends Model_Abstract_Cultuurorm {
 	protected static $entity = "subcategory";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	  	`id_subcategory` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	  	`id_category` varchar(90) NOT NULL,
-	  	`name` varchar(90) NOT NULL,
-	  	PRIMARY KEY (`id_subcategory`)
+	  	`id_category` int(10) NOT NULL,
+	  	`name` varchar(100) NOT NULL,
+	  	PRIMARY KEY (`id_subcategory`),
+		KEY `id_category` (`id_category`)
 	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";	
 }
 ?>

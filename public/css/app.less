@@ -51,6 +51,28 @@
 	}
 }
 
+#searchdiv {
+	position: absolute; 
+	top: 40px; 
+	left: 100px; 
+	width: 220px; 
+	z-index: 2; 
+	padding: 20px; 
+	background: #1E1E1E;
+	-webkit-border-bottom-left-radius: 20px;
+	-webkit-border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px; 
+	border-bottom-right-radius: 20px;
+	
+	input[type=text], input[type=submit] {
+		width: 210px;
+	}
+	
+	label {
+		color: #fff;
+	}
+}
+
 .bs-links {
 	text-align: center;
 	
@@ -59,8 +81,141 @@
 	}
 }
 
+#kaart {
+	position: absolute; 
+	z-index: 1; 
+	top: 40px; 
+	left: 0; 
+	width: 100%; 
+	height: 100%;
+}
+
+#kaart-single {
+	margin-top: 15px;
+	height: 165px;
+}
+
+.brand_logo {
+	display: block;
+	width: 115px;
+	height: 19px;
+	text-indent: -999px;
+	overflow: hidden;
+}
+
+.tagcloud {
+    text-align: center;
+}
+
+#filter_list, #searchdiv {
+	padding-bottom: 0;
+
+	input[type=text] {
+			display: block;
+			width: 100%;
+			height: 32px;
+			-webkit-box-sizing: border-box;
+			   -moz-box-sizing: border-box;
+			    -ms-box-sizing: border-box;
+			     -o-box-sizing: border-box;
+			        box-sizing: border-box;
+	}
+	
+	select {
+		width: 100%;
+	}
+	
+	#distancecontainer .well {
+		height: 31px;
+		padding: 8px;
+		margin-bottom: 8px;
+	}
+	
+	#distance {
+		float: left;
+		width: 180px;
+		margin-top: 10px;
+	}
+	
+	#distance_ipad {
+		float: left;
+		width: 170px;
+		margin-top: 5px;
+	}
+	
+	#distance_ipad input {
+		width: 170px;
+	}
+	
+	#distance_text {
+		width: 40px;
+		float: right;
+	}
+	
+	#distance_text input {
+		width: 40px;
+	}
+}
+
+#list {
+	.list-row {
+		padding: 5px 0;
+		border-bottom: 1px #DDD solid;
+		min-height: 100px;
+		
+		img {
+			max-height: 100px;
+			max-width: 100px;
+		}
+	}
+	
+	.list-container .list-row:first-child {
+		border-top: 1px #DDD solid;
+	}
+}
+
+#searchdiv {	
+	#distance {
+		width: 140px;
+	}
+	
+	#distance_ipad {
+		width: 130px;
+	}
+	
+	#distance_ipad input {
+		width: 130px;
+	}
+}
+
+.classification { 
+	position: relative;
+	width: 91px;
+	height: 17px;
+}
+
+.classification .cover {
+	position: absolute;
+	background: transparent url(../images/stars.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	width: 91px;
+	height: 17px;
+	z-index: 101;
+}
+
+.classification .percentage {
+	position: absolute;
+	background: transparent url(../images/stars_full.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	height: 17px;
+	z-index: 102;
+}
+
 /**
  * Fixes Google Maps controls
  * @see http://stackoverflow.com/questions/7471830/google-maps-api-v3-weird-ui-display-glitches-with-screenshot
  */
 #kaart img { max-width: none; }
+#kaart-single img { max-width: none; }

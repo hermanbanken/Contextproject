@@ -23,7 +23,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		
         View::bind_global('page_title', $this->page_title);
 		
-		$googlekey = "AIzaSyBx79ayF-rofhhNDBFW6633FcLWFuEItHk";
+		$googlekey = "AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko";
 		$this
 			->less('lib/bootstrap/less/bootstrap.less')
 			->less('lib/bootstrap/less/responsive.less')
@@ -34,7 +34,9 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('jquery', 'js/jquery.min.js', true)
 			->js('jquery-ui', 'js/jquery-ui-1.8.19.custom.min.js', true)
 			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&sensor=true', true)
+			->js('selection', 'js/selection.js', true)
 			->js('ca-gmaps', 'js/googlemaps.js', true)
+			->js('single-gmaps', 'js/single.js', true)
 			->js('ca-clusterer', 'js/markerclusterer.js', true)
 			->js('ca-list', 'js/list.js', true)
 			->js('bootstrap-alert', 'lib/bootstrap/js/bootstrap-alert.js')

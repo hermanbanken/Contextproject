@@ -4,7 +4,7 @@ $rewrite = array(
 	'bootstrap' => array(
 		'default'=>'./app/bootstrap.default.php', 
 		'custom' =>'./app/bootstrap.php', 
-		'fields'=>array("baseurl"),
+		'fields'=>array("baseurl", "environment"),
 	),
 	'htaccess' => array(
 		'default' => './public/default.htaccess',
@@ -46,11 +46,12 @@ if(isset($_POST['install']) || !empty($_SERVER['SHELL']))
 	
 	if(!empty($_SERVER['SHELL']))
 		echo "Updating tables...\n";
-		
-	$_SERVER['KOHANA_ENV'] = 'TESTING';
+	
+	// Prevent executing route
+	$_SERVER['installing'] = true;
 	include 'public/index.php';
 	Controller_Install::update_tables();
-
+	
 	if(!empty($_SERVER['SHELL']))
 		die("Customized your installation. Happy developing!\n");
 }

@@ -48,6 +48,17 @@ spl_autoload_register(array('Kohana', 'auto_load'));
  */
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 
+/**
+ * Set environment
+ */
+if(Kohana::$server_name == "cultuurapp.nl")
+	$_SERVER['KOHANA_ENV'] = "PRODUCTION";
+elseif(Kohana::$server_name == "dev.cultuurapp.nl")
+	$_SERVER['KOHANA_ENV'] = "DEVELOPMENT";
+elseif(!isset($_SERVER['KOHANA_ENV'])){
+	$env = ":environment";
+	$_SERVER['KOHANA_ENV'] = !empty($env) ? $env : "STAGING";
+}
 // -- Configuration and initialization -----------------------------------------
 
 /**
@@ -100,7 +111,7 @@ Kohana::$config->attach(new Config_File);
 Kohana::modules(array(
 	 'cultuuruser'=> MODPATH.'cultuuruser',// CultuurApp user module
 	 'auth'       => MODPATH.'auth',       // Basic authentication
-	// 'cache'      => MODPATH.'cache',    // Caching with multiple backends
+	 'cache'      => MODPATH.'cache',      // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',// Benchmarking tool
 	 'database'   => MODPATH.'database',   // Database access
 	 'image'      => MODPATH.'image',      // Image manipulation
@@ -110,13 +121,16 @@ Kohana::modules(array(
 	 'bonafide'   => MODPATH.'bonafide',   // Bonafide
 	 'unittest'   => MODPATH.'unittest',   // Unit testing
 	 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
+	 // 'gettext'    => MODPATH.'gettext',    // i18n
 	));
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-Route::set('default', '(<controller>(/<action>(/<id>)))')
+Route::set('default', '(<lang>/)(<controller>(/<action>(/<id>)))', array(
+		'lang' => '.{2}'
+	))
 	->defaults(array(
 		'controller' => 'welcome',
 		'action'     => 'index',

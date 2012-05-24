@@ -7,12 +7,12 @@
   				<b class="caret"></b>
   			</a>
 			<ul class="dropdown-menu pull-right">
-				<li><a href="user/profile">Profiel</a></li>
-				<li><a href="user/logout">Logout</a></li>
+				<li><a href="user/profile"><?php echo __('menu.profile'); ?></a></li>
+				<li><a href="user/logout"><?php echo __('menu.logout'); ?></a></li>
 			</ul>
   		
   		<?php } else { ?>
-  			<a href="user/login" onclick="location.hash='#user/login';return false">Login/register</a>
+  			<a href="#user/login" onclick="location.hash='#user/login';return false"><?php echo __('menu.login').'/'.__('menu.register'); ?></a>
 		<?php } ?>
 		</li>
 	</ul>
