@@ -3,8 +3,56 @@
 class MonumentTest extends Kohana_UnitTest_TestCase
 {
    
+   
+   public function test_monumentsToJSON(){
+		
+		$fm1 = ORM::factory('monument');
+		$fm1->lng = 0;
+		$fm1->lat = 0;
+		$fm1->name = "fake monument1";
+		$fm1->description = "Dit is fake monument 1";
+		$fm1->id_monument = 1;
+		
+		$fm2 = ORM::factory('monument');
+		$fm2->lng = 0;
+		$fm2->lat = 0;
+		$fm2->name = "fake monument2";
+		$fm2->description = "Dit is fake monument 2";
+		$fm2->id_monument = 2;
+		
+		$fm3 = ORM::factory('monument');
+		$fm3->lng = 0;
+		$fm3->lat = 0;
+		$fm3->name = "fake monument3";
+		$fm3->description = "Dit is fake monument 3";
+		$fm3->id_monument = 3;
+		
+		
+		
+		
+		$fakeMonuments = array($fm1, $fm2, $fm3);
+		
+		$result = Controller_Monument::monumentsToJSON($fakeMonuments);
+		
+		$this->assertEquals($result, "");
+		
+		//$testObject = $this->getMock('Monument');
+		
+		//$testObject->expects($this->once())
+      		//->method('monumentsToJSON')
+      		//->with($testMonuments)
+      		//->will($this->returnValue($eventRow));
+		
+		   
+   }
+   
+   
+   
+   
+   
+   
 	
-	
+		
 	 public function test_getSynonyms()
      {
 		//$bla = Request::factory('monument');

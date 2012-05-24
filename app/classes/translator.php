@@ -13,10 +13,10 @@ class Translator {
 	{	
 	
 	
-		$lang = strtoupper(Session::instance()->get('lang') );
+		$lang = strtolower(Session::instance()->get('lang') );
 		
 		
-		if (($lang=='NL') || ($lang=='')){return $default;} 
+		if ( (!isset($lang)) || ($lang=='nl') || ($lang=='')){return $default;} 
 		
 	
 		//$table = str_ireplace(".",".dev_",$table);
