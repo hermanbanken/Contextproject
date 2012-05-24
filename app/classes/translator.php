@@ -16,13 +16,13 @@ class Translator {
 		$lang = strtolower(Session::instance()->get('lang') );
 		
 		
-		if ( (!isset($lang)) || ($lang=='nl') || ($lang=='')){return $default;} 
+		if ( (!isset($lang)) || ($lang=='nl') || ($lang=='') || (!isset($default)) ){return $default;} 
 		
 	
 		//$table = str_ireplace(".",".dev_",$table);
-		$from = "cultuur.dev_translation";
-		$sql = 'SELECT translation FROM ' . $from . ' WHERE `table`="' . $table . '" AND `field`="' . $field . '" AND `pk`=' . $pk . ';';
-        $query = DB::query(Database::SELECT,$sql,TRUE)->execute();
+		$query = DB::select("translation")->from("translation")->where("table", "=", $table)->and_where("field", "=", $field)->and_where("pk", "=", $pk);
+		
+		$query = $query->execute();
 	
 		if ($query->count() == 1){
 			return $query[0]['translation'];
