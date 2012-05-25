@@ -332,12 +332,15 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function getKeywords($limit = 5) {
 
-        $sql = "SELECT tags.content as tag, (link.occurrences * LOG(24500 / (1 + tags.occurrences))) as tfidf FROM dev_tag_monument link LEFT JOIN dev_tags tags ON tags.id = link.tag WHERE LENGTH(tags.content) > 4 AND link.monument = ".$this->id_monument." ORDER BY tfidf desc LIMIT ".$limit.";";
+        $sql = "SELECT tags.content as tag, (link.occurrences * LOG(24500 / (1 + tags.occurrences))) as tfidf, tags.id as id FROM dev_tag_monument link LEFT JOIN dev_tags tags ON tags.id = link.tag WHERE LENGTH(tags.content) > 4 AND link.monument = ".$this->id_monument." ORDER BY tfidf desc LIMIT ".$limit.";";
         $tags = DB::query(Database::SELECT, $sql)->execute();
         $keywords = array();
         foreach ($tags AS $keyword) {
-            $keywords[] = $keyword['tag'];
+            $keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
         }
+		
+		
+		
         return $keywords;
 	}
 
