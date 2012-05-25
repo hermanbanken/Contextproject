@@ -152,7 +152,7 @@ class Controller_Monument extends Controller_Abstract_Object {
         // convert to array
         $tags = array();
         foreach($tagset as $key=>$tag) {
-            $tags[$tag['importance']] = array('content' => strtolower($tag['content']));
+            $tags[$tag['importance']] = array('content' => strtolower(Translator::translate('tag', $tag['id'], 'tag', $tag['content'])));
         }
 
         // sort by importance and add fontsize
@@ -706,7 +706,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode(array('url' => $monument->photo())));
 	}
 
-	public function monumentsToJSON($monuments) {
+	public static function monumentsToJSON($monuments) {
 		$_return = array();
 		foreach($monuments as $key=>$monument) {
 			if($monument->lng == 0 OR $monument->lat == 0 OR $monument->lng > 57.5) continue;

@@ -1,20 +1,28 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Helper for translating fields of models
+ * @package CultuurApp
+ * @category Helpers
+ * @author Herman Banken
+ * @copyright 2012 CultuurApp Team
+ */
 class Translator {
 
 	/**
 	 * Translate fields from objects
-	 * @param string $table Name of object
-	 * @param int $pk Primary key of object
-	 * @param string $field Field name that should be translated
-	 * @param string $default Text that must be translated and fallback to this text if we can't translate
-     * @return string Translation
+	 * @param string    Name of object
+	 * @param int       Primary key of object
+	 * @param string    Field name that should be translated
+	 * @param string    Text that must be translated and fallback to this text if we can't translate
+     * @return string   Translation
+     * @author Tim Eversdijk
      */
 	public static function translate($table, $pk, $field, $default)
 	{
-		$lang = strtolower(Session::instance()->get('lang') );
+		$lang = strtolower(Session::instance()->get('lang', 'nl') );
 		
-		if ( (!isset($lang)) || ($lang=='nl') || ($lang==''))
+		if ( $lang=='nl' )
         {
             return $default;
         }
@@ -25,10 +33,12 @@ class Translator {
             ->and_where('field', '=', $field)
             ->and_where('pk', '=', $pk)
             ->execute();
-	
+
+        // Return the translation already in database
 		if ($query->count() > 0){
 			return $query[0]['translation'];
         }
+        // Make a translation since we don't have it yet
 		else{
 			$translated = Translator::googleTranslate($default, $lang);
 
@@ -46,8 +56,8 @@ class Translator {
     /**
      * Translate text in the given language by using Googles translate website
      * @static
-     * @param $text Original text
-     * @param $language Translation language
+     * @param string Original text
+     * @param string Translation language
      * @return string Translation
      * @author Herman Banken
      */
@@ -79,8 +89,8 @@ class Translator {
 
         $translation = "";
         foreach($obj[0] as $sentence){
-            list($trans, $orig) = $sentence;
-            // Remove space before dot Google added.
+            list($trans) = $sentence;
+            // Remove space Google added before dots.
             $trans = preg_replace("~\s+\.~", ".", $trans);
             $translation .= $trans;
         }

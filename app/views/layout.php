@@ -61,6 +61,12 @@
     </div>
 	</div>
 </div>	
-<?php echo $footer; ?>
+<?php
+    echo $footer;
+    if(Kohana::$environment == Kohana::STAGING)
+    {
+       echo View::factory('profiler/stats');
+    }
+?>
 </body>
 </html>

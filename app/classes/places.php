@@ -1,9 +1,17 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
 /**
- * Google Places
+ * Helper for Google Places.
+ *
+ * Get recommendations for cafe's, bars around the monuments.
+ * @package CultuurApp
+ * @category Helpers
+ * @author Sjoerd van Bekhoven
  */
 class Places {
+    /**
+     * Google Places API KEY
+     */
 	const KEY = 'AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko';
 	
 	/**
@@ -43,7 +51,7 @@ class Places {
 						"sensor" => false,
 						"key" => self::KEY,
 					)),
-				"distance" => Places::distance(
+				"distance" => self::distance(
 					$loc->lat, $loc->lng, 
 					$monument->lng, $monument->lat, 'K'
 					),
@@ -79,14 +87,14 @@ class Places {
 
 	/**
 	 * Function to calculate distance between two positions (longitude / latitude)
-	 * @param double $lat1
-	 * @param double $lon1
-	 * @param double $lat2
-	 * @param double $lon2
-	 * @param string $unit
-	 * @return double
+	 * @param double Latitude of A
+	 * @param double Longitude of A
+	 * @param double Latitude of B
+	 * @param double Longitude of B
+	 * @param string K or N, convert the distance to the correct metric system
+	 * @return double Distance in system $unit
 	 */
-	public static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+	private static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 
 		$theta = $lon1 - $lon2;
 		$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));

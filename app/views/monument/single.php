@@ -62,7 +62,7 @@
 		<div class="span5">
 			<div class="well" style="text-align: center;">
 				<img style="max-width: 100%; max-height: 400px;"
-					src="<?php echo $monument->photo(); ?>"
+					src="<?php echo $monument->photoUrl(); ?>"
 					alt="<?php echo $monument->name; ?>" />
 			</div>
 		</div>
