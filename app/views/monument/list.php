@@ -37,8 +37,8 @@
 						?> </span>
 					</div>
 					<div class="span7">
-						<?php echo substr($monument_s->description, 0, 200) ?>
-						... <a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
+						<?php echo $monument_s->summary(); ?>
+						<a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
 					</div>
 				</div>
 				<?php
