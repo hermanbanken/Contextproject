@@ -14,7 +14,7 @@ class Controller_Features extends Controller_Abstract_Object {
 		set_time_limit(0);
 
 		// Data needs to be imported in chunks, step size
-		$step = 1000;
+		$step = 100;
 
 		// Feature extraction types in array
 		$types = array('acq', 'gabor', 'hsv', 'light', 'rgb', 'segment', 'spatial', 'texture');
@@ -45,6 +45,7 @@ class Controller_Features extends Controller_Abstract_Object {
 					if ($i == $upper_bound) {
 						$this->import_data($img_data);
 
+						unset($img_data);
 						$img_data = array();
 						$upper_bound += $step;
 					}
@@ -53,6 +54,7 @@ class Controller_Features extends Controller_Abstract_Object {
 				}
 
 				$this->import_data($img_data);
+				unset($img_data);
 				$img_data = array();
 			}
 		}
@@ -64,24 +66,28 @@ class Controller_Features extends Controller_Abstract_Object {
 	}
 
 	public static function import_data($img_data) {
-		foreach ($img_data AS $mid => $types) {
-			// Search for photo
-			$photo = ORM::factory('photo')->where('id_monument', '=', $mid)->find();
-
-			// Bind right information
-			if ($photo->id_monument == NULL) {
-				$photo->id_monument = $mid;
-			}
-
-			foreach ($types AS $type => $value) {
-				$photo->$type = $value;
-			}
-			
+		foreach ($img_data AS $mid => $values) {
 			try {
-				$photo->save();
+				$query = DB::update('photos')->set($values)->where('id_monument', '=', $mid)->execute();
 			}
 			catch (Exception $e) {
 				echo $e->getMessage().'<br />';
+			}
+
+			if (!$query) {
+				$values['id_monument'] = $mid;
+
+				$columns = array();
+				foreach ($values AS $type => $value) {
+					$columns[] = $type;
+				}
+
+				try {
+					$query = DB::insert('photos', $columns)->values($values)->execute();
+				}
+				catch (Exception $e) {
+					echo $e->getMessage().'<br />';
+				}
 			}
 		}
 	}
