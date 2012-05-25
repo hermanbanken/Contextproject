@@ -833,7 +833,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	/*
 	 * Function to parse xml in an array
 	*/
-	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
+	public static function xml2array($contents, $get_attributes=1, $priority = 'tag') {
 		if(!$contents) return array();
 
 		if(!function_exists('xml_parser_create')) {
