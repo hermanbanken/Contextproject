@@ -18,8 +18,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * @return array with monuments
 	 */
 	public function action_single_aanbevelingen() {
-		if($this->request->post('id_monument'))
-		{
+		if($this->request->post('id_monument'))	{
 			$post = $this->request->post();
 			$monument = ORM::factory('monument', $post['id_monument']);
 			$similars = $monument->similars400(8);
