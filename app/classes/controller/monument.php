@@ -35,8 +35,11 @@ class Controller_Monument extends Controller_Abstract_Object {
         $inmonuments = array();
 
         // collect all monuments
-        $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
-        $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        $monuments = DB::select("description", "name", "id_monument")
+            ->from("monuments")
+            ->order_by("id_monument", "desc")
+            ->limit($limit)
+            ->execute();
 
         // for each monument
         foreach($monuments as $monument) {
@@ -121,12 +124,10 @@ class Controller_Monument extends Controller_Abstract_Object {
             // skip irrelevant words
             if($tfidf==0) continue;
 
-            $sql=" INSERT INTO dev_tags VALUES (".$i.",'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$tfidf."); ";
-            DB::query(Database::INSERT,$sql)->execute();
+            DB::insert("tags", array($i, $originalkeywords[$key], $mixedoccurrences[$key], $tfidf))->execute();
 
-            foreach($inmonuments[$key] as $monumentid=>$monumentoccurrence) {
-                    $insertsql = "INSERT INTO dev_tag_monument VALUES (".$monumentid.",".$i.",".$monumentoccurrence.");";
-                    DB::query(Database::INSERT,$insertsql)->execute();
+            foreach($inmonuments[$key] as $monumentid => $monumentoccurrence) {
+                DB::insert("tag_monument", array($monumentid, $i, $monumentoccurrence))->execute();
             }
             $i++;
         }
@@ -146,8 +147,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         // get random tags with high tfidf importance
         $limit = $size;
-        $sql = "select * from dev_tags where length(content) > 4 AND occurrences > 2  AND importance > 0.141430140 order by RAND() limit ".$limit;
-        $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        $tagset = DB::select()->from("tags")->where(DB::expr("length(content)"), ">", 4)->and_where("occurrences", ">", 2)->and_where("importance", ">", 0.141430140)->order_by(DB::expr("RAND()"))->limit($limit)->execute();
 
         // convert to array
         $tags = array();
@@ -476,8 +476,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 			}
 
 			// Connect the inserted link to the monument it belongs to if not already done
-			if (DB::select()->from('monument_link')->where('id_monument', '=', $id_monument)->and_where('id_link', '=', $link->id_link)->execute()->count() == 0) {
-				DB::query(Database::INSERT, sprintf("INSERT INTO dev_monument_link VALUES (%d, %d)", $id_monument, $link->id_link))->execute();
+            $links = DB::select()->from('monument_link')
+                ->where('id_monument', '=', $id_monument)
+                ->and_where('id_link', '=', $link->id_link)
+                ->execute();
+			if ($links->count() == 0) {
+                DB::insert("monument_link", array(intval($id_monument), intval($link->id_link)))->execute();
 			}
 		}
 	}
@@ -512,15 +516,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 
 	public static function getSynonyms($search) {
-		$sql = "select w2.word as synoniem
-		from dev_thesaurus_words w1,
-		dev_thesaurus_words w2,
-		dev_thesaurus_links l
-		where w1.id = l.word
-		and w2.id = l.synonym
-		and w1.word = '".$search."'";
-		$db = Database::instance();
-		$synonyms = $db->query(Database::SELECT,$sql,TRUE);
+        $synonyms = DB::select(array("w2.word", "synoniem"))
+            ->from(
+                array("thesaurus_words", "w1"))
+            ->join(array("thesaurus_links", "l"))->on("w1.id", "=", "l.word")
+            ->join(array("thesaurus_words", "w2"))->on("w2.id", "=", "l.synonym")
+            ->and_where("w1.word", "=", $search)->execute();
 		if($synonyms->count()==0) return false;
 		return $synonyms->as_array();
 	}
@@ -562,8 +563,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${
-					$key} = $value;
+				${$key} = $value;
 			}
 		}
 
@@ -573,13 +573,20 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 
 		// prepare sql statement
+        $query = DB::select(DB::expr("*"));
 		$sql = "SELECT * ";
 
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
+            $query->select_array(array(
+                DB::expr("*"),
+                array(DB::expr("1.6", array(":lon"=>$longitude, ":lat"=>$latitude)), "distance")
+            ));
+            $extr = "((ACOS(SIN(:lon * PI() / 180) * SIN(lat * PI() / 180) + COS(:lon * PI() / 180) * COS(lat * PI() / 180) * COS((:lat - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*";
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
 
+        $query->from("monuments");
 		// from dev_monuments
 		$sql.= "FROM dev_monuments ";
 
@@ -588,22 +595,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1)) {
+            $query->where("distance", "<", $distance);
 			$sql.= "AND distance < ".$distance." ";
 		}
 
 		// add category search
 		if(isset($category)) {
+            $query->where("id_category", "=", $category);
 			$sql.="AND id_category = ".$category." ";
 		}
 
 		// add category search
 		if(isset($province)) {
+            $query->where("id_province", "=", $province);
 			$sql.="AND id_province = ".$province." ";
 		}
 
 		// add town search
 		if(isset($town)) {
 			$orm_town = ORM::factory('town')->where('name', '=', $town)->find();
+            $query->where("id_town", "=", $orm_town->id_town);
 			$sql.="AND id_town = ".$orm_town->id_town." ";
 		}
 
@@ -616,9 +627,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 					$syns.="|".$syn->synoniem;
 				}
 				$sql.= "AND CONCAT(name,description) REGEXP '".$syns."' ";
+                $query->where(DB::expr("CONCAT(name, description)"), "REGEXP", $syns);
 			} else {
 				// if not, a LIKE operator is enough
 				$sql.="AND CONCAT(name,description) LIKE '%".$search."%' ";
+                $query->where(DB::expr("CONCAT(name, description)"), "LIKE", "%$search%");
 			}
 		}
 
@@ -630,7 +643,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				// prioritize resultset by relevance
 				if(isset($search)) {
 					if($synonyms) {
-						$sql.="CASE
+						$sql.= $case = "CASE
 						WHEN name = '".$search."' THEN 0
 						WHEN name LIKE '".$search."%' THEN 1
 						WHEN name LIKE '%".$search."%' THEN 2
@@ -639,8 +652,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 						WHEN description REGEXP '".$syns."' THEN 5
 						ELSE 6
 						END, name ";
+                        $query->order_by(DB::expr($case));
 					} else {
-						$sql.="CASE
+						$sql.= $case = "CASE
 						WHEN name = '".$search."' THEN 0
 						WHEN name LIKE '".$search."%' THEN 0
 						WHEN name LIKE '% ".$search." %' THEN 1
@@ -649,21 +663,27 @@ class Controller_Monument extends Controller_Abstract_Object {
 						WHEN description LIKE '%".$search."%' THEN 4
 						ELSE 5
 						END, name ";
+                        $query->order_by(DB::expr($case));
 					}
 				} else {
 					$sql.= "RAND() ";
+                    $query->order_by(DB::expr("RAND()"));
 				}
 				break;
 			case "name":
 				$sql.= "name ";
+                $query->order_by("name");
 				break;
 			case "distance":
 				$sql.= "distance ASC ";
+                $query->order_by("distance", "ASC");
 				break;
 			case "street":
 				$sql.= "id_street ";
+                $query->order_by("id_street");
 				break;
 			default:
+                $query->order_by(DB::expr("RAND()"));
 				$sql.= "RAND() ";
 				break;
 					
@@ -813,7 +833,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	/*
 	 * Function to parse xml in an array
 	*/
-	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
+	public static function xml2array($contents, $get_attributes=1, $priority = 'tag') {
 		if(!$contents) return array();
 
 		if(!function_exists('xml_parser_create')) {

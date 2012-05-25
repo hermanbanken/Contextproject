@@ -67,6 +67,9 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		"description" => "nl",
 	);
 
+    /**
+     * @return mixed url of photo
+     */
 	public function photoUrl(){
 		return ORM::factory('photo')->url($this->id_monument);
 	}
@@ -93,6 +96,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	/**
 	 * Accessor method for the venue field but also lookup on FourSquare if its not yet set
+     * @author Herman
 	 */
 	public function venue() {
 		// Not yet looked up? Do it now
@@ -156,12 +160,12 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 			// Find monuments based on photos (Euclidian distance!)
 			$monuments = ORM::factory('monument')
-			->select('*', array($euclidian, 'p'))
-			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-			->order_by('p', 'asc')
-			->where('monument.id_monument', '!=', $this->id_monument)
-			->limit($limit)
-			->find_all();
+			    ->select('*', array($euclidian, 'p'))
+			    ->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
+			    ->order_by('p', 'asc')
+			    ->where('monument.id_monument', '!=', $this->id_monument)
+			    ->limit($limit)
+			    ->find_all();
 
 			$euclidian = true;
 		}
@@ -187,12 +191,12 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		else {
 			// Find monuments based on photos (Euclidian distance!)
 			$monuments = ORM::factory('monument')
-			->select('*', array('sqrt(POW("color" - '.$photo->color.', 2) + POW("composition" - '.$photo->composition.', 2) + POW("orientation" - '.$photo->orientation.', 2) + POW("texture" - '.$photo->texture.', 2))', 'p'))
-			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-			->order_by('p', 'asc')
-			->where('monument.id_monument', '!=', $this->id_monument)
-			->limit($limit)
-			->find_all();
+                ->select('*', array('sqrt(POW("color" - '.$photo->color.', 2) + POW("composition" - '.$photo->composition.', 2) + POW("orientation" - '.$photo->orientation.', 2) + POW("texture" - '.$photo->texture.', 2))', 'p'))
+                ->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
+                ->order_by('p', 'asc')
+                ->where('monument.id_monument', '!=', $this->id_monument)
+                ->limit($limit)
+                ->find_all();
 
 			$euclidian = true;
 		}
@@ -332,14 +336,22 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function getKeywords($limit = 5) {
 
-        $sql = "SELECT tags.content as tag, (link.occurrences * LOG(24500 / (1 + tags.occurrences))) as tfidf, tags.id as id FROM dev_tag_monument link LEFT JOIN dev_tags tags ON tags.id = link.tag WHERE LENGTH(tags.content) > 4 AND link.monument = ".$this->id_monument." ORDER BY tfidf desc LIMIT ".$limit.";";
-        $tags = DB::query(Database::SELECT, $sql)->execute();
+        $prefix = Database::instance()->table_prefix();
+        $tags = DB::select(
+            array("tags.content", "tag"),
+            array(DB::expr("({$prefix}link.occurrences * LOG(24500 / (1 + {$prefix}tags.occurrences)))"), "tfidf"),
+            array("tags.id", "id"))
+        ->from(array("tag_monument","link"))
+        ->join("tags")->on("tags.id", "=", "link.tag")
+        ->where(DB::expr("LENGTH(tag)"), ">", 4)
+        ->and_where("link.monument", "=", $this->id_monument)
+        ->order_by("tfidf", "desc")
+        ->limit($limit)->execute();
+
         $keywords = array();
         foreach ($tags AS $keyword) {
             $keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
         }
-		
-		
 		
         return $keywords;
 	}

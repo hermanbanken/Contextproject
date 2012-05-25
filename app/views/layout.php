@@ -63,7 +63,8 @@
 </div>	
 <?php
     echo $footer;
-    if(Kohana::$environment == Kohana::STAGING)
+
+    if(Kohana::$environment == Kohana::STAGING && Request::current()->query("bench") != null)
     {
        echo View::factory('profiler/stats');
     }
