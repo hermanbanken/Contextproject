@@ -18,19 +18,19 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * @return array with monuments
 	 */
 	public function action_single_aanbevelingen() {
-		if($this->request->post('id_monument'))	{
-			$post = $this->request->post();
+		$post = $this->request->post();
+		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
 			$similars = $monument->similars400(8);
 			$monuments = $similars['monuments']->as_array();
 
 			foreach ($monuments AS $key => $monument) {
-				$photo = $monument->photo();
+				$photo = $monument->getphoto()->url();
 				$monuments[$key] = $monument->as_array();
 				$monuments[$key]['photo'] = $photo;
 			}
 
-			$this->return = $monuments;
+			$this->return = array('monuments' => $monuments, 'euclidian' => $similars['euclidian']);
 		} else $this->return = array();
 	}
 
@@ -43,19 +43,19 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		$monument = ORM::factory('monument', $post['id_monument']);
 		$user = Auth::instance()->get_user();
-		
+
 		if ($monument->loaded() && $user->loaded()) {
 			$visit = ORM::factory('visit')->where('id_monument', '=', $monument->id_monument)->and_where('id_user', '=', $user->id)->find();
 			if ($visit->loaded()) {
 				$visit->delete();
-				
+
 				$this->return = array('success' => true, 'action' => 'delete', 'buttonvalue' => __('single.not-visited'));
 			}
 			else {
 				$visit->id_monument = $monument->id_monument;
 				$visit->id_user = $user->id;
 				$visit->save();
-				
+
 				$this->return = array('success' => true, 'action' => 'add', 'buttonvalue' => __('single.visited'));
 			}
 		}
@@ -74,10 +74,10 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		if($this->request->post('id_monument'))
 		{
 			$post = $this->request->post();
-		
+
 			$this->return = Places::get_places(
-				$post['id_monument'], 
-				$post['categories'], 'distance', false, false, 5);
+					$post['id_monument'],
+					$post['categories'], 'distance', false, false, 5);
 		} else $this->return = array();
 	}
 
