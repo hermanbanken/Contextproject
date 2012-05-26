@@ -116,13 +116,6 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	public function extract_name() {
 		$name = $this->name;
 
-		// Woningen
-		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
-			// Check if city and street are set, since there
-            // are monuments which don't have these, dunno why
-            if(isset($this->town->name) && isset($this->street->name))
-                $name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
-		}
 
 		return $name;
 	}
@@ -135,7 +128,6 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	public function similars400($limit) {
 		// Get photo info
 		$photo = $this->getphoto();
-
 		if ($photo->id_monument == NULL) {
 			// For now we're searching for random monuments in the same category when no photo is found
 			$monuments = ORM::factory('monument')
@@ -226,7 +218,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		$cats_sim = array();
 
 		// Get 400 similar monuments
-		$similars = $this->similars400(5);
+		$similars = $this->similars400(20);
 		$monuments = $similars['monuments'];
 
 		// Count numbers of monuments in each category from the similars
@@ -277,9 +269,14 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	public function extractcategory2() {
 		$cats = array();
+		
+		set_time_limit(0);
 
 		// Average of each category
-		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory FROM dev_monuments NATURAL JOIN dev_photos WHERE id_monument != '.$this->id_monument)->execute();
+		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory 
+				FROM dev_monuments 
+				JOIN dev_photos ON dev_photos.id_monument = dev_monuments.id_monument 
+				WHERE dev_monuments.id_monument != '.$this->id_monument)->execute();
 		foreach ($monuments AS $monument) {
 			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
 				if (!isset($cats[$monument['id_subcategory']])) $cats[$monument['id_subcategory']] = array();
@@ -300,6 +297,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 				}
 			}
 		}
+		
+		unset($cats);
 
 		$cats_avg = array();
 		foreach ($cats_rev AS $id_subcategory => $features) {
@@ -311,6 +310,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 				$cats_avg[$id_subcategory][$feature] = array_sum($values) / count($values);
 			}
 		}
+		
+		unset($cats_rev);
 
 		$features = $this->getphoto()->features();
 

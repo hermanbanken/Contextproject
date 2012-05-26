@@ -30,7 +30,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 				$monuments[$key]['photo'] = $photo;
 			}
 
-			$this->return = $monuments;
+			$this->return = array('monuments' => $monuments, 'euclidian' => $similars['euclidian']);
 		} else $this->return = array();
 	}
 
