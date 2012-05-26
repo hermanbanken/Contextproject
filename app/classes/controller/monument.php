@@ -3,7 +3,45 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
+	
+	/**
+	 * View to compare images visual
+	 */
+	public function action_visualcomparison() {
+		$v = View::factory(static::$entity.'/visualcomparison');
 
+		// Get standard information
+		$id = $this->request->param('id');
+		$user = Auth::instance()->get_user();
+		$monument = ORM::factory('monument', $id);
+
+		// Get similar monuments
+		$post = $this->request->post();
+		$cats = array('color', 'composition', 'texture', 'orientation');
+		$cur_cats = array();
+		foreach ($cats AS $cat) {
+			if (isset($post[$cat])) {
+				$cur_cats[] = $cat;
+			}
+		}
+
+		$photo = $monument->getphoto();
+		
+		$features = array();
+		foreach ($cur_cats AS $cat) {
+			$features = array_merge($photo->features_cat($cat), $features);
+		}
+		
+		$similars = $monument->similars(20, $features);
+		
+		$v->set('selected', $cur_cats);
+		$v->set('similars', $similars);
+		$v->bind('monument', $monument);
+		$v->bind('user', $user);
+		 
+		$this->template->body = $v;
+	}
+	
     /**
      * textual analysis
      */
@@ -137,7 +175,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         $this->template->body = $v;
     }
-
 
     /**
      * @param $size size of the tagcloud measured in words

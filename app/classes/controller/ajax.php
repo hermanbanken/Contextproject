@@ -13,6 +13,22 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	}
 
 	/**
+	 * Function to get the url of a photo for google maps
+	 * @param (POST) int id_monument
+	 * @return string url of photo
+	 */
+	public function action_map_photo() {
+		$post = $this->request->post();
+		if (isset($post['id_monument'])) {
+			$photo = ORM::factory('photo');
+			$this->return = array('url' => $photo->url($post['id_monument']));
+		}
+		else {
+			$this->return = array('url' => '');
+		}
+	}
+
+	/**
 	 * Function to get recommendations for single view
 	 * @param (POST) (int) id_monument
 	 * @return array with monuments
@@ -21,16 +37,15 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$similars = $monument->similars400(8);
-			$monuments = $similars['monuments']->as_array();
+			$similars = $monument->similars(8, $monument->getphoto()->features_filter());
 
-			foreach ($monuments AS $key => $monument) {
-				$photo = $monument->getphoto()->url();
+			foreach ($similars AS $key => $monument) {
+				$url = $monument->getphoto()->url();
 				$monuments[$key] = $monument->as_array();
-				$monuments[$key]['photo'] = $photo;
+				$monuments[$key]['photo_url'] = $url;
 			}
 
-			$this->return = array('monuments' => $monuments, 'euclidian' => $similars['euclidian']);
+			$this->return = $monuments;
 		} else $this->return = array();
 	}
 

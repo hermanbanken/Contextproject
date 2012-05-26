@@ -58,6 +58,8 @@
 					<td colspan="2"><?php echo $monument->description; ?></td>
 				</tr>
 			</table>
+			<a class="btn" href="monument/visualcomparison/<?php echo $monument->id_monument; ?>">Vergelijk visueel</a>
+		</a>
 		</div>
 		<div class="span5">
 			<div class="well" style="text-align: center;">
