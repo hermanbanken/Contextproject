@@ -4,6 +4,59 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
+
+    public function action_testtagrelated() {
+        $monu = ORM::factory('monument')->order_by(DB::expr('RAND()'))->find();
+        while(count($monu->getKeywords(7))<3) $monu = ORM::factory('monument')->where('id_category','>','1')->order_by(DB::expr('RAND()'))->find();
+        echo '<h1>'.implode(', ',$monu->getKeywords(7)).'</h1>';
+        echo '<div style="border-top:1px solid black">';
+        echo '<img style="display:block" width="200px" src="'.$monu->photo().'">';
+        echo 'categorie: '.$monu->category->name.'<br />';
+        echo 'subcategorie: '.$monu->subcategory->name.'<br />';
+        echo $monu->description;
+        echo '</div>';
+        $category = $monu->category->name;
+        $subcategory = $monu->subcategory->name;
+        $i=5;
+        $results = $this->getRels($monu, $i);
+        while(count($results)<3) {
+            $i--;
+            $results = $this->getRels($monu,$i);
+        }
+        if($i==0) die("Geen resultaten");
+        $tags = $monu->getKeywords($i);
+        $tagstring = implode('|',$tags);
+        echo "<h1>Gezochte tags:</h1>";
+        echo "<h3>".implode(', ',$tags)."</h3>";
+        foreach($results as $result) {
+            $monument = ORM::factory('monument',$result['id_monument']);
+            $goed = $category == $monument->category->name;
+            $goedsub = $subcategory == $monument->subcategory->name;
+            echo '<div style="border-top:1px solid black">';
+            echo '<img style="display:block" width="200px" src="'.$monument->photo().'">';
+            echo '<span style="color:'.($goed?'green':'red').';">categorie: '.$monument->category->name.'</span><br />';
+            echo '<span style="color:'.($goedsub?'green':'red').';">subcategorie: '.$monument->subcategory->name.'</span><br />';
+            echo preg_replace('/('.$tagstring.')/','<b>$0</b>',$monument->description)."<br />**************<br />";
+            echo '</div>';
+            //echo $monu['description'].'<br />';
+        }
+        die('ok');
+    }
+
+    public function getRels($monu, $i) {
+        $tags = $monu->getKeywords($i);
+        //die(var_dump($tags));
+
+        // collect all monuments
+        $sql = "SELECT id_monument FROM dev_monuments WHERE 1 ";
+        foreach($tags as $tag) {
+            $sql.= "AND description LIKE '%".$tag."%' ";
+        }
+        $sql.="AND id_monument != ".$monu->id_monument." limit 20";
+        //$sql.="LIMIT 10;";
+        $results = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        return $results;
+    }
     /**
      * textual analysis
      */

@@ -64,6 +64,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	);
 
 	public function photo(){
+        
 		return URL::site('photos/'.$this->id_monument).".jpg";
 	}
 
@@ -112,7 +113,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			->find_all();
 
 			$euclidian = false;
-		}
+
+        }
 		else {
 			$euclidian = 'sqrt(';
 			$i = 0;
@@ -153,7 +155,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			->limit($limit)
 			->find_all();
 
-			$euclidian = false;
+      		$euclidian = false;
 		}
 		else {
 			// Find monuments based on photos (Euclidian distance!)
@@ -316,6 +318,17 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
         }
         return $keywords;
 	}
+
+    public function getRelatives($limit) {
+        $tags = $this->getKeywords(5);
+        $monuments = ORM::factory('monument')->find_all();
+        $return = array();
+        foreach($monuments as $monument) {
+            if(count(array_diff($tags, $monument->getKeywords(5)) < 3) && $monument != $this) return $monument->id_monument;//$return[] = $monument;
+            if(count($return)==$limit) break;
+        }
+        return $return;
+    }
 
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
