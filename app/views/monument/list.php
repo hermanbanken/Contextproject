@@ -14,12 +14,13 @@
 				<?php
 				}
 				foreach ($monuments AS $monument) {
+					
 					$monument_s = ORM::factory('monument', $monument['id_monument']);
 					?>
 				<div class="row-fluid list-row">
 					<div class="span2">
 						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"> <img
-							src="<?php echo $monument_s->photo(); ?>" alt="">
+							src="<?php echo $monument_s->photoUrl(); ?>" alt="">
 						</a>
 					</div>
 					<div class="span3">
@@ -37,8 +38,8 @@
 						?> </span>
 					</div>
 					<div class="span7">
-						<?php echo substr($monument_s->description, 0, 200) ?>
-						... <a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
+						<?php echo $monument_s->summary(); ?>
+						<a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
 					</div>
 				</div>
 				<?php

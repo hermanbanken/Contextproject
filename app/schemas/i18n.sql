@@ -1,4 +1,4 @@
-CREATE TABLE `%stranslation` (
+CREATE TABLE IF NOT EXISTS `%stranslation` (
  `table` varchar(15) NOT NULL,
  `pk` int(11) NOT NULL,
  `field` varchar(15) NOT NULL,

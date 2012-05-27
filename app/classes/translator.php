@@ -1,66 +1,101 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Helper for translating fields of models
+ * @package CultuurApp
+ * @category Helpers
+ * @author Herman Banken
+ * @copyright 2012 CultuurApp Team
+ */
 class Translator {
 
 	/**
 	 * Translate fields from objects
-	 * @param string $table Name of object
-	 * @param int $pk Primary key of object
-	 * @param string $field Field name that should be translated
-	 * @param string $default Text that must be translated and fallback to this text if we can't translate
-	 */
+	 * @param string    Name of object
+	 * @param int       Primary key of object
+	 * @param string    Field name that should be translated
+	 * @param string    Text that must be translated and fallback to this text if we can't translate
+     * @return string   Translation
+     * @author Tim Eversdijk
+     */
 	public static function translate($table, $pk, $field, $default)
-	{	
-	
-	
-		$lang = strtoupper(Session::instance()->get('lang') );
+	{
+		$lang = strtolower(Session::instance()->get('lang', 'nl') );
 		
-		
-		if (($lang=='NL') || ($lang=='')){return $default;} 
-		
+		if ( $lang=='nl' )
+        {
+            return $default;
+        }
 	
-		//$table = str_ireplace(".",".dev_",$table);
-		$from = "cultuur.dev_translation";
-		$sql = 'SELECT translation FROM ' . $from . ' WHERE `table`="' . $table . '" AND `field`="' . $field . '" AND `pk`=' . $pk . ';';
-        $query = DB::query(Database::SELECT,$sql,TRUE)->execute();
-	
-		if ($query->count() == 1){
+		$query = DB::select('translation')
+            ->from("translation")
+            ->where('table', '=', $table)
+            ->and_where('field', '=', $field)
+            ->and_where('pk', '=', $pk)
+            ->execute();
+
+        // Return the translation already in database
+		if ($query->count() > 0){
 			return $query[0]['translation'];
-			
-		}
+        }
+        // Make a translation since we don't have it yet
 		else{
-			
 			$translated = Translator::googleTranslate($default, $lang);
-			
-			DB::query(Database::INSERT, sprintf("INSERT INTO " . $from . " VALUES ('" . $table . "', " . $pk . ", '" . $field . "', '" . $translated . "', '" . $lang . "', " . 'NOW());'))->execute();
-			
-			
+
+            $query = DB::insert('translation', array('table', 'pk', 'field', 'translation', 'lang'))
+                ->values(array($table, $pk, $field, $translated, $lang))
+                ->execute();
 			
 			return $translated;
 		}
+
 		// Return text to be translated until we can really translate
 		return $default;
 	}
-	
+
+    /**
+     * Translate text in the given language by using Googles translate website
+     * @static
+     * @param string Original text
+     * @param string Translation language
+     * @return string Translation
+     * @author Herman Banken
+     */
 	private static function googleTranslate($text, $language){
-	
-		
-		$rules = explode(". ",$text);
-		
-		$text = urlencode($text);
-		$text = str_replace("+","%20",$text);
-		
-		
-		$file = "http://translate.google.nl/translate_a/t?client=t&text=" . $text ."&hl=nl&sl=nl&tl=" . $language . "&multires=1&otf=2&ssel=3&tsel=0&sc=1";
-		
-		$response = file($file);
-		
-		$assemble = "";
-		foreach($rules as $rule){
-			$temp = stristr($response[0], '","' . $rule,true);
-			$assemble = $assemble . " " . substr($temp,strrpos($temp,'["') +2,strlen($temp)-4);
-		}
-		
-		return $assemble;	
+
+		$post_data = array(
+			'client' => 't',
+			'hl' => 'nl',
+			'sl' => 'nl',
+			'tl' => $language,
+			'multires' => 1,
+			'otf' => 2,
+			'ssel' => 3,
+			'tsel' => 0,
+			'sc' => 1,
+            'text' => $text,
+		);
+
+		$response = Request::factory( "http://translate.google.nl/translate_a/t" )
+            ->method("POST")
+            ->body(http_build_query($post_data))->execute();
+
+        // Response isn't valid JSON since it contains comma's after comma's
+
+        $obj = utf8_encode($response->body());
+        $obj = preg_replace("~,+~", ",", $obj);
+
+        $obj = json_decode($obj);
+
+        $translation = "";
+        foreach($obj[0] as $sentence){
+            list($trans) = $sentence;
+            // Remove space Google added before dots.
+            $trans = preg_replace("~\s+\.~", ".", $trans);
+            $translation .= $trans;
+        }
+
+        return $translation;
 	}
+
 }

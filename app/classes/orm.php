@@ -8,16 +8,17 @@ class ORM extends Kohana_ORM {
 	protected $_translated;
 
 	/**
-	 * Handles translation of fields as a extension to the retrieval of all model values, relationships, and metadata from the parent class.
+	 * Handles translation of fields as a extension to the
+     * retrieval of all model values, relationships, and metadata from the parent class.
 	 *
-	 * @param   string $column Column name
+	 * @param   string Column name
 	 * @return  mixed
 	 */
 	public function __get($column)
 	{	
 		$val = parent::__get($column);
 		
-		if (isset($this->_translated[$column]))
+		if (isset($this->_translated[$column]) && $this->loaded())
 		{
 			return Translator::translate(
 				$this->_object_name,

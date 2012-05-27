@@ -157,9 +157,9 @@ function placePins(locations) {
 									// Add right source to image
 									$
 											.post(
-													'monument/photo',
+													'ajax/map_photo',
 													{
-														id : locations[i]["id"]
+														id_monument : locations[i]["id"]
 													},
 													succes = function(data) {
 														// set the content of
@@ -168,9 +168,9 @@ function placePins(locations) {
 														infowindow
 																.setContent("<a href='monument/id/"
 																		+ locations[i]["id"]
-																		+ "'><img id=\"photo"
-																		+ locations[i]["id"]
-																		+ "\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"
+																		+ "'><img src=\""
+																		+ data.url
+																		+ "\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"
 																		+ locations[i]["name"]
 																		+ "</h2>"
 																		+ locations[i]["description"]
@@ -180,12 +180,6 @@ function placePins(locations) {
 																		+ " <a href='monument/id/"
 																		+ locations[i]["id"]
 																		+ "'>Meer</a>");
-														$(
-																"#photo"
-																		+ locations[i]["id"])
-																.attr(
-																		'src',
-																		data.url);
 													}, "json");
 
 									infowindow.open(map, marker);

@@ -6,6 +6,7 @@ cache['cafes'] = '';
 cache['restaurants'] = '';
 cache['locatie'] = '';
 cache['aanbevelingen'] = '';
+cache['forecast'] = '';
 /**
  * On document ready, initialize functions and triggers
  */
@@ -30,14 +31,13 @@ $(document).ready(
 			// Visited functionality
 			$(".visited").click(function(e) {
 				e.preventDefault();
-				
 				var link = $(this);
-				var icon = $(".visited i")
 				
 				$.post('ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
 					if (data.success) {
 						link.toggleClass('btn-success');
-						icon.toggleClass('icon-white');
+						$(".visited i").toggleClass('icon-white');
+						$(".visited .text").html(data.buttonvalue);
 					}
 					else {
 						alert("Something went wrong...");
@@ -62,13 +62,41 @@ function show_content(tab) {
 		$("#ajax_content").html("Laden...");
 		$.post('ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '';
+			
+			if (data.length == 0) {
+				html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
+			}
+			
 			$.each(data, function(key, monument) {
 				html += '<div style="text-align: center; float: left; width: 12.5%; height: 165px; line-height: 150px; vertical-align: middle;">';
-				html += '<a href="monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo']+'" alt="'+monument['name']+'" /></a>';
+				html += '<a href="monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
 				html += '</div>';
 			});
 			
 			cache['aanbevelingen'] = html;
+			
+			$("#ajax_content").empty();
+			$("#ajax_content").html(html);
+		}, "json");
+	}
+	else if (tab == 'forecast') {
+		$("#ajax_content").html("Laden...");
+		$.post('ajax/weather', {id_monument: $("#id_monument").val()}, succes = function(data) {
+			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+			$.each(data, function(key, forecast) {
+				html += '<tr>';
+				html += '	<td><img src="'+forecast.image+'" alt="" /></td>';
+				html += '	<td>'+forecast.date+'</td>';
+				html += '	<td>'+forecast.forecast+'</td>';
+				html += '</tr>';
+			});
+			
+			if (data.length == 0) {
+				html += '<tr><td>Er zijn helaas geen weersvoorspellingen gevonden.</td></tr>';
+			}
+			html += '</table>';
+			
+			cache['forecast'] = html;
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);
@@ -103,7 +131,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'restaurants') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'food|restaurant'}, succes = function(data) {
+		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'restaurant'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
 				if (restaurant['rating'] == null) {

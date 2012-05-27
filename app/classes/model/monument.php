@@ -56,6 +56,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			'links' => array(
 					'model' => 'link',
 					'foreign_key' => 'id_monument',
+			),
+			'photos' => array(
+					'model' => 'photo',
+					'foreign_key' => 'id_monument',
 			)
 	);
 
@@ -63,19 +67,41 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			"description" => "nl",
 	);
 
-	public function photo(){
-        
-		return URL::site('photos/'.$this->id_monument).".jpg";
+	/**
+	 * @return mixed url of photo
+	 */
+	public function photoUrl(){
+		return ORM::factory('photo')->url($this->id_monument);
 	}
 
-	public function getphoto() {
-		$photo = ORM::factory('photo')->where('id_monument', '=', $this->id_monument)->find();
+	/**
+	 * Fetch a piece of text from the description.
+	 * @param mixed If this parameter is set we search in the description for the matching string and return the surroundings.
+	 * @return string Short version of the description
+	 */
+	public function summary($search = false){
+		if($search){
+		}else{
+			$match = preg_match("/^(.{140,200})\s/ims", $this->description, $matches);
+			if(strlen($this->description) <= 200-3){
+				return substr($this->description, 0, 200-3);
+			} else {
+				return ($match ? $matches[1] : substr($this->description, 0, 200)) . "...";
+			}
+		}
+	}
 
-		return $photo;
+	/**
+	 * Get photo of monument
+	 * @return photo of monument
+	 */
+	public function getphoto() {
+		return $this->photos->find();
 	}
 
 	/**
 	 * Accessor method for the venue field but also lookup on FourSquare if its not yet set
+	 * @author Herman
 	 */
 	public function venue() {
 		// Not yet looked up? Do it now
@@ -89,45 +115,51 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		return $this->venue;
 	}
 
+	/**
+	 * Make sure that if the name is the name of the street of a town that the town name is included as well.
+	 */
 	public function extract_name() {
 		$name = $this->name;
 
-		// Woningen
-		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
-			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
-		}
 
 		return $name;
 	}
 
-	public function similars400($limit) {
-		// Get photo info
+	/**
+	 * Compare this monument against others by the features extracted
+	 * in MATLAB (in database) and return the monuments that have the
+	 * smallest Euclidian distance to the given monument.
+	 * @param int $limit
+	 * @param array with features (created by "features_filter" or "features_cat" $features
+	 * @return array with monument objects
+	 */
+	public function similars($limit, $features = false) {
+		// Set initial array
+		$monuments = array();
+		
+		// Check if photo exists (some photos are missing)
 		$photo = $this->getphoto();
-
-		if ($photo->id_monument == NULL) {
-			// For now we're searching for random monuments in the same category when no photo is found
-			$monuments = ORM::factory('monument')
-			->where('id_subcategory', '=', $this->id_subcategory)
-			->order_by(DB::expr('RAND()'))
-			->limit($limit)
-			->find_all();
-
-			$euclidian = false;
-
-        }
-		else {
+		if ($photo->id_monument != NULL) {
+			// Set euclidian select part
 			$euclidian = 'sqrt(';
 			$i = 0;
-			foreach ($photo->_original_values AS $key => $value) {
+				
+			// If features are set, use them, otherwise get all features
+			if (!$features) {
+				$features = $photo->features();
+			}
+			
+			// Loop through features and complete euclidian select part
+			foreach ($features AS $key => $value) {
 				if ($key != 'id' && $key != 'id_monument') {
 					if ($i != 0) $euclidian .= ' + ';
-					$euclidian .= 'POW("'.$key.'" - '.$photo->$key.', 2)';
+					$euclidian .= 'POW("'.$key.'" - '.$value.', 2)';
 					$i++;
 				}
 			}
 			$euclidian .= ')';
-
-			// Find monuments based on photos (Euclidian distance!)
+				
+			// Find monuments based on euclidian distance
 			$monuments = ORM::factory('monument')
 			->select('*', array($euclidian, 'p'))
 			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
@@ -135,43 +167,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			->where('monument.id_monument', '!=', $this->id_monument)
 			->limit($limit)
 			->find_all();
-
-			$euclidian = true;
 		}
 
 		// Return monumentlist
-		return array('monuments' => $monuments, 'euclidian' => $euclidian);
-	}
-
-	public function similars4($limit) {
-		// Get photo info
-		$photo = $this->getphoto();
-
-		if ($photo->total == NULL) {
-			// For now we're searching for random monuments in the same category when no photo is found
-			$monuments = ORM::factory('monument')
-			->where('id_subcategory', '=', $this->id_subcategory)
-			->order_by(DB::expr('RAND()'))
-			->limit($limit)
-			->find_all();
-
-      		$euclidian = false;
-		}
-		else {
-			// Find monuments based on photos (Euclidian distance!)
-			$monuments = ORM::factory('monument')
-			->select('*', array('sqrt(POW("color" - '.$photo->color.', 2) + POW("composition" - '.$photo->composition.', 2) + POW("orientation" - '.$photo->orientation.', 2) + POW("texture" - '.$photo->texture.', 2))', 'p'))
-			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-			->order_by('p', 'asc')
-			->where('monument.id_monument', '!=', $this->id_monument)
-			->limit($limit)
-			->find_all();
-
-			$euclidian = true;
-		}
-
-		// Return monumentlist
-		return array('monuments' => $monuments, 'euclidian' => $euclidian);
+		return $monuments;
 	}
 
 	public function extractcategory() {
@@ -195,7 +194,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		$cats_sim = array();
 
 		// Get 400 similar monuments
-		$similars = $this->similars400(5);
+		$similars = $this->similars400(20);
 		$monuments = $similars['monuments'];
 
 		// Count numbers of monuments in each category from the similars
@@ -247,8 +246,13 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	public function extractcategory2() {
 		$cats = array();
 
+		set_time_limit(0);
+
 		// Average of each category
-		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory FROM dev_monuments NATURAL JOIN dev_photos WHERE id_monument != '.$this->id_monument)->execute();
+		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory
+				FROM dev_monuments
+				JOIN dev_photos ON dev_photos.id_monument = dev_monuments.id_monument
+				WHERE dev_monuments.id_monument != '.$this->id_monument)->execute();
 		foreach ($monuments AS $monument) {
 			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
 				if (!isset($cats[$monument['id_subcategory']])) $cats[$monument['id_subcategory']] = array();
@@ -270,6 +274,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			}
 		}
 
+		unset($cats);
+
 		$cats_avg = array();
 		foreach ($cats_rev AS $id_subcategory => $features) {
 			foreach ($features AS $feature => $values) {
@@ -281,15 +287,12 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			}
 		}
 
-		// Get photo info
-		$photo = $this->getphoto();
-		unset($photo->id_monument);
-		unset($photo->id);
+		unset($cats_rev);
 
-		$photo = $photo->as_array();
+		$features = $this->getphoto()->features();
 
 		foreach ($cats_avg AS $id_subcategory => $values) {
-			$euclidian = $this->euclidian_distance($photo, $values);
+			$euclidian = $this->euclidian_distance($features, $values);
 
 			if (!isset($min)) $min = $euclidian;
 			if (!isset($cid)) $cid = $id_subcategory;
@@ -310,25 +313,25 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function getKeywords($limit = 5) {
 
-        $sql = "SELECT tags.content as tag, (link.occurrences * LOG(24500 / (1 + tags.occurrences))) as tfidf FROM dev_tag_monument link LEFT JOIN dev_tags tags ON tags.id = link.tag WHERE LENGTH(tags.content) > 4 AND link.monument = ".$this->id_monument." ORDER BY tfidf desc LIMIT ".$limit.";";
-        $tags = DB::query(Database::SELECT, $sql)->execute();
-        $keywords = array();
-        foreach ($tags AS $keyword) {
-            $keywords[] = $keyword['tag'];
-        }
-        return $keywords;
-	}
+		$prefix = Database::instance()->table_prefix();
+		$tags = DB::select(
+				array("tags.content", "tag"),
+				array(DB::expr("({$prefix}link.occurrences * LOG(24500 / (1 + {$prefix}tags.occurrences)))"), "tfidf"),
+				array("tags.id", "id"))
+				->from(array("tag_monument","link"))
+				->join("tags")->on("tags.id", "=", "link.tag")
+				->where(DB::expr("LENGTH(tag)"), ">", 4)
+				->and_where("link.monument", "=", $this->id_monument)
+				->order_by("tfidf", "desc")
+				->limit($limit)->execute();
 
-    public function getRelatives($limit) {
-        $tags = $this->getKeywords(5);
-        $monuments = ORM::factory('monument')->find_all();
-        $return = array();
-        foreach($monuments as $monument) {
-            if(count(array_diff($tags, $monument->getKeywords(5)) < 3) && $monument != $this) return $monument->id_monument;//$return[] = $monument;
-            if(count($return)==$limit) break;
-        }
-        return $return;
-    }
+		$keywords = array();
+		foreach ($tags AS $keyword) {
+			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
+		}
+
+		return $keywords;
+	}
 
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (

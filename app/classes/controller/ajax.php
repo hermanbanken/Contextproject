@@ -11,6 +11,35 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	public function action_index() {
 		$this->return = false;
 	}
+	
+	/**
+	 * Function for wunderground weather
+	 */
+	public function action_weather() {
+		$post = $this->request->post();
+		
+		$monument = ORM::factory('monument', $post['id_monument']);
+		
+		$weather = Wunderground::weather($monument);
+
+		$this->return = $weather;
+	}
+
+	/**
+	 * Function to get the url of a photo for google maps
+	 * @param (POST) int id_monument
+	 * @return string url of photo
+	 */
+	public function action_map_photo() {
+		$post = $this->request->post();
+		if (isset($post['id_monument'])) {
+			$photo = ORM::factory('photo');
+			$this->return = array('url' => $photo->url($post['id_monument']));
+		}
+		else {
+			$this->return = array('url' => '');
+		}
+	}
 
 	/**
 	 * Function to get recommendations for single view
@@ -18,17 +47,16 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * @return array with monuments
 	 */
 	public function action_single_aanbevelingen() {
-		if($this->request->post('id_monument'))
-		{
-			$post = $this->request->post();
+		$post = $this->request->post();
+		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$similars = $monument->similars400(8);
-			$monuments = $similars['monuments']->as_array();
+			$similars = $monument->similars(8, $monument->getphoto()->features_filter());
 
-			foreach ($monuments AS $key => $monument) {
-				$photo = $monument->photo();
+			$monuments = array();
+			foreach ($similars AS $key => $monument) {
+				$url = $monument->getphoto()->url();
 				$monuments[$key] = $monument->as_array();
-				$monuments[$key]['photo'] = $photo;
+				$monuments[$key]['photo_url'] = $url;
 			}
 
 			$this->return = $monuments;
@@ -44,24 +72,24 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		$monument = ORM::factory('monument', $post['id_monument']);
 		$user = Auth::instance()->get_user();
-		
+
 		if ($monument->loaded() && $user->loaded()) {
 			$visit = ORM::factory('visit')->where('id_monument', '=', $monument->id_monument)->and_where('id_user', '=', $user->id)->find();
 			if ($visit->loaded()) {
 				$visit->delete();
-				
-				$this->return = array('success' => true, 'action' => 'delete');
+
+				$this->return = array('success' => true, 'action' => 'delete', 'buttonvalue' => __('single.not-visited'));
 			}
 			else {
 				$visit->id_monument = $monument->id_monument;
 				$visit->id_user = $user->id;
 				$visit->save();
-				
-				$this->return = array('success' => true, 'action' => 'add');
+
+				$this->return = array('success' => true, 'action' => 'add', 'buttonvalue' => __('single.visited'));
 			}
 		}
 		else {
-			$this->return = array('success' => false, 'action' => NULL);
+			$this->return = array('success' => false, 'action' => NULL, 'buttonvalue' => NULL);
 		}
 	}
 
@@ -75,10 +103,10 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		if($this->request->post('id_monument'))
 		{
 			$post = $this->request->post();
-		
+
 			$this->return = Places::get_places(
-				$post['id_monument'], 
-				$post['categories'], 'distance', false, false, 5);
+					$post['id_monument'],
+					$post['categories'], 'distance', false, false, 5);
 		} else $this->return = array();
 	}
 
@@ -98,6 +126,8 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	 * Clear before function
 	 */
 	public function before() {
+		// Set language
+		I18n::lang($this->lang());
 	}
 
 	/**

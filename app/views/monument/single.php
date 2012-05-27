@@ -9,7 +9,7 @@
 		$visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
 		<a style="float: right; margin-top: 10px;" class="btn <?php echo ($visited ? 'btn-success ' : ''); ?>visited"
 			href="#"><i
-			class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i> <?php echo __('single.visited')?>
+			class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i> <span class="text"><?php echo ($visited ? __('single.visited') : __('single.not-visited')); ?></span>
 		</a>
 		<?php 
 		}
@@ -58,21 +58,26 @@
 					<td colspan="2"><?php echo $monument->description; ?></td>
 				</tr>
 			</table>
+			<a class="btn" href="monument/visualcomparison/<?php echo $monument->id_monument; ?>">Vergelijk visueel</a>
+		</a>
 		</div>
 		<div class="span5">
 			<div class="well" style="text-align: center;">
 				<img style="max-width: 100%; max-height: 400px;"
-					src="<?php echo $monument->photo(); ?>"
+					src="<?php echo $monument->photoUrl(); ?>"
 					alt="<?php echo $monument->name; ?>" />
 			</div>
 		</div>
 	</div>
-	<ul class="nav nav-tabs single-nav">
+	<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
 		<li><a class="aanbevelingen"
 			href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
 		</a></li>
 		<li><a class="locatie"
 			href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?>
+		</a></li>
+		<li><a class="forecast"
+			href="monument/id/<?php echo $monument->id_monument; ?>#forecast"><?php echo __('single.forecast'); ?>
 		</a></li>
 		<li><a class="restaurants"
 			href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?>

@@ -1,9 +1,17 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
 /**
- * Google Places
+ * Helper for Google Places.
+ *
+ * Get recommendations for cafe's, bars around the monuments.
+ * @package CultuurApp
+ * @category Helpers
+ * @author Sjoerd van Bekhoven
  */
 class Places {
+    /**
+     * Google Places API KEY
+     */
 	const KEY = 'AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko';
 	
 	/**
@@ -33,7 +41,7 @@ class Places {
 		$places = @json_decode($response);
 		
 		$list = array();
-		$i = 0;
+		$ratings = array();
 		foreach ($places->results as $place){
 			$loc = $place->geometry->location;
 			$venue = array(
@@ -43,7 +51,7 @@ class Places {
 						"sensor" => false,
 						"key" => self::KEY,
 					)),
-				"distance" => Places::distance(
+				"distance" => self::distance(
 					$loc->lat, $loc->lng, 
 					$monument->lng, $monument->lat, 'K'
 					),
@@ -52,24 +60,41 @@ class Places {
 				"name" => $place->name,
 			);
 			
-			$list[] = $venue;
+			$rating = @$place->rating;
+			if ($rating == NULL) {
+				$rating = 0;
+			}
 			
+			$ratings[] = (5 - $rating);
+			$list[] = $venue;
+		}
+		
+		// Sort list-array by rating
+		array_multisort($ratings, $list);
+		
+		// Limit array
+		$limit_list = array();
+		
+		$i = 0;
+		foreach ($list AS $venue) {
+			$limit_list[] = $venue;
 			$i++;
 			if ($i == $limit) break;
 		}
-		return $list;
+		
+		return $limit_list;
 	}
 
 	/**
 	 * Function to calculate distance between two positions (longitude / latitude)
-	 * @param double $lat1
-	 * @param double $lon1
-	 * @param double $lat2
-	 * @param double $lon2
-	 * @param string $unit
-	 * @return double
+	 * @param double Latitude of A
+	 * @param double Longitude of A
+	 * @param double Latitude of B
+	 * @param double Longitude of B
+	 * @param string K or N, convert the distance to the correct metric system
+	 * @return double Distance in system $unit
 	 */
-	public static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+	private static function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 
 		$theta = $lon1 - $lon2;
 		$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
