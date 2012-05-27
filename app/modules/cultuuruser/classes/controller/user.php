@@ -252,7 +252,7 @@ class Controller_User extends Controller_Template {
 	{
 		// Controller(param) is deprecated in Kohana 3.2
 		$provider_name = $this->request->param('provider', $provider_name);
-		
+
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -347,7 +347,7 @@ class Controller_User extends Controller_Template {
 					$values['password'] = $values['password_confirm'] = '';
 					$view->set('defaults', $values);
 					
-					$this->template->content = $view;
+					$this->template->body = $view;
 				}
 			}
 			else
