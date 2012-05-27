@@ -39,6 +39,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 			$monument = ORM::factory('monument', $post['id_monument']);
 			$similars = $monument->similars(8, $monument->getphoto()->features_filter());
 
+			$monuments = array();
 			foreach ($similars AS $key => $monument) {
 				$url = $monument->getphoto()->url();
 				$monuments[$key] = $monument->as_array();

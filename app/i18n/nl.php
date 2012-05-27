@@ -34,6 +34,7 @@ return array (
 		'selection.name' => 'Naam',
 		'selection.relevance' => 'Relevantie',
 		'selection.distance' => 'Afstand',
+		'selection.popularity' => 'Populariteit',
 
 		'menu.map' => 'Kaart',
 		'menu.list' => 'Lijst',

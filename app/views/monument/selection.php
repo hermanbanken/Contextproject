@@ -25,6 +25,7 @@
 				<br />
 				<select id="sort" name="sort">
 					<option value="street">-- <?php echo __('selection.sort'); ?></option>
+					<option value="popularity" <?php if ($post['sort'] == 'popularity') { echo ' selected="selected"'; } ?> ><?php echo __('selection.popularity'); ?></option>
 					<option value="relevance" <?php if ($post['sort'] == 'relevance') { echo ' selected="selected"'; } ?> ><?php echo __('selection.relevance'); ?></option>
 					<option value="name" <?php if ($post['sort'] == 'name') { echo ' selected="selected"'; } ?> ><?php echo __('selection.name'); ?></option>
 					<option value="distance" <?php if ($post['sort'] == 'distance') { echo ' selected="selected"'; } ?> ><?php echo __('selection.distance'); ?></option>

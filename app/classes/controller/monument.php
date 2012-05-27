@@ -611,7 +611,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// prepare sql statement
         $query = DB::select(DB::expr("*"));
-		$sql = "SELECT * ";
+		$sql = "SELECT *, dev_monuments.id_monument AS id_monument, COUNT(dev_visits.id) AS popularity ";
 
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
@@ -626,7 +626,12 @@ class Controller_Monument extends Controller_Abstract_Object {
         $query->from("monuments");
 		// from dev_monuments
 		$sql.= "FROM dev_monuments ";
+		
+		$sql .= "LEFT JOIN dev_visits ON dev_visits.id_monument = dev_monuments.id_monument ";
 
+		
+		$sql.="GROUP BY dev_monuments.id_monument ";
+		
 		// prepare where clause
 		$sql.= "HAVING 1 ";
 
@@ -671,7 +676,8 @@ class Controller_Monument extends Controller_Abstract_Object {
                 $query->where(DB::expr("CONCAT(name, description)"), "LIKE", "%$search%");
 			}
 		}
-
+		
+		
 		// ordering
 		$sql.= "ORDER BY ";
 		$sort=isset($sort)?$sort:"default";
@@ -715,6 +721,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$sql.= "distance ASC ";
                 $query->order_by("distance", "ASC");
 				break;
+			case "popularity":
+				$sql.= "popularity DESC ";
+                $query->order_by("popularity");
+				break;
 			case "street":
 				$sql.= "id_street ";
                 $query->order_by("id_street");
@@ -725,7 +735,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				break;
 					
 		}
-
+		
 		// add the limit
 		if (isset($limit)){
 			$sql.="LIMIT " . $limit ." ";

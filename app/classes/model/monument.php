@@ -91,6 +91,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		}
 	}
 
+	/**
+	 * Get photo of monument
+	 * @return photo of monument
+	 */
 	public function getphoto() {
 		return $this->photos->find();
 	}

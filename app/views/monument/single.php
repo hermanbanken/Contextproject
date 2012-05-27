@@ -69,7 +69,7 @@
 			</div>
 		</div>
 	</div>
-	<ul class="nav nav-tabs single-nav">
+	<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
 		<li><a class="aanbevelingen"
 			href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
 		</a></li>

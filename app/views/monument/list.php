@@ -14,6 +14,7 @@
 				<?php
 				}
 				foreach ($monuments AS $monument) {
+					
 					$monument_s = ORM::factory('monument', $monument['id_monument']);
 					?>
 				<div class="row-fluid list-row">
