@@ -6,6 +6,7 @@ cache['cafes'] = '';
 cache['restaurants'] = '';
 cache['locatie'] = '';
 cache['aanbevelingen'] = '';
+cache['forecast'] = '';
 /**
  * On document ready, initialize functions and triggers
  */
@@ -73,6 +74,29 @@ function show_content(tab) {
 			});
 			
 			cache['aanbevelingen'] = html;
+			
+			$("#ajax_content").empty();
+			$("#ajax_content").html(html);
+		}, "json");
+	}
+	else if (tab == 'forecast') {
+		$("#ajax_content").html("Laden...");
+		$.post('ajax/weather', {id_monument: $("#id_monument").val()}, succes = function(data) {
+			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+			$.each(data, function(key, forecast) {
+				html += '<tr>';
+				html += '	<td><img src="'+forecast.image+'" alt="" /></td>';
+				html += '	<td>'+forecast.date+'</td>';
+				html += '	<td>'+forecast.forecast+'</td>';
+				html += '</tr>';
+			});
+			
+			if (data.length == 0) {
+				html += '<tr><td>Er zijn helaas geen weersvoorspellingen gevonden.</td></tr>';
+			}
+			html += '</table>';
+			
+			cache['forecast'] = html;
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);

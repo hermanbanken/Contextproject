@@ -11,6 +11,19 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	public function action_index() {
 		$this->return = false;
 	}
+	
+	/**
+	 * Function for wunderground weather
+	 */
+	public function action_weather() {
+		$post = $this->request->post();
+		
+		$monument = ORM::factory('monument', $post['id_monument']);
+		
+		$weather = Wunderground::weather($monument);
+
+		$this->return = $weather;
+	}
 
 	/**
 	 * Function to get the url of a photo for google maps

@@ -19,6 +19,7 @@ return array(
 		'single.location' => 'Location',
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Bars',
+		'single.forecast' => 'Forecast',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
 		

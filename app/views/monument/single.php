@@ -76,6 +76,9 @@
 		<li><a class="locatie"
 			href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?>
 		</a></li>
+		<li><a class="forecast"
+			href="monument/id/<?php echo $monument->id_monument; ?>#forecast"><?php echo __('single.forecast'); ?>
+		</a></li>
 		<li><a class="restaurants"
 			href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?>
 		</a></li>

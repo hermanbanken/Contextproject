@@ -164,7 +164,7 @@ class Controller_Features extends Controller_Abstract_Object {
 		$this->update_data($norm);
 
 		$v->set('title', 'Normalize Features');
-		$v->set('text', 'Er zijn '.$i.' foto-features genormalizeerd.');
+		$v->set('text', 'Er zijn '.$i.' foto-features genormaliseerd.');
 
 		$this->template->body = $v;
 	}
