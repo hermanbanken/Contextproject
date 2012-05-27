@@ -214,15 +214,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * action_id
 	 * Action for getting one particular object by id in single view
 	 */
-	public function action_id(){
-		$v = View::factory('monument/single');
-		$id = $this->request->param('id');
-		$user = Auth::instance()->get_user();
-		$monument = ORM::factory('monument', $id);
-		
-		$v->bind('monument', $monument);
-		$v->bind('user', $user);
-		$this->template->body = $v;
+	public function action_id()
+  {
+    $id = $this->request->param('id');
+    $user = Auth::instance()->get_user();
+    $monument = ORM::factory('monument', $id);
+
+    if($this->is_json())
+    {
+      $obj = $monument->object();
+      $obj['photoUrl'] = $monument->photoUrl();
+      $this->set_json(json_encode($obj));
+    }
+    else
+    {
+      $v = View::factory('monument/single');
+
+      $v->bind('monument', $monument);
+      $v->bind('user', $user);
+      $this->template->body = $v;
+    }
 	}
 
 	/*

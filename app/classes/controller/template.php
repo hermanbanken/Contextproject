@@ -101,7 +101,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		// Prepare css includes
 		$css = array();
 		foreach($this->css as $c){
-			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href'], $c['media']);
+			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href']."?v=".time(), $c['media']);
 		}
 		
 		$js_head = implode("\n", $js_head);
@@ -114,6 +114,17 @@ class Controller_Template extends Kohana_Controller_Template {
 		
 		parent::after();
 	}
-	
+
+  public function is_json()
+  {
+    return $this->request->accept_type("application/json") > $this->request->accept_type("text/html");
+  }
+
+  public function set_json($json = "")
+  {
+    $this->auto_render = false;
+    $this->response->headers("Content-Type", "application/json");
+    $this->response->body($json);
+  }
 }
 ?>

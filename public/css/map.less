@@ -14,6 +14,51 @@ body {
 	padding: 0;
 }
 
+.map-view {
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+
+    .panel {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.map-active {
+        .map {
+            left: 0;
+            right: 300px;
+            width: auto;
+        }
+        .list {
+            width: 300px;
+            right: 0;
+            left: auto;
+        }
+    }
+
+    &.list-active {
+        .map {
+            left: 0;
+            right: auto;
+            width: 500px;
+        }
+        .list {
+            width: auto;
+            left: 500px;
+            right: 0;
+        }
+    }
+}
+
 @media( max-width: 979px ) {
 	
 	.navbar {
@@ -28,7 +73,7 @@ body {
 		position: relative;
 	}
 	
-	#kaart {
+	#content {
 		top: 0;
 		height: 100%;
 	}
@@ -102,7 +147,7 @@ body {
 	
 	#searchdiv form br {display: none; }
 	
-	#kaart {
+	#content {
 		position: relative;
 		top: auto;
 		left: auto;
