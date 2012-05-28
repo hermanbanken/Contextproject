@@ -15,14 +15,19 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	/**
 	 * Function for wunderground weather
 	 */
-	public function action_weather() {
+	public function action_forecast() {
 		$post = $this->request->post();
 		
 		$monument = ORM::factory('monument', $post['id_monument']);
+		$forecasts = $monument->forecast();
 		
-		$weather = Wunderground::weather($monument);
-
-		$this->return = $weather;
+		// Translate forecasts to array
+		$return_forecasts = array();
+		foreach ($forecasts AS $forecast) {
+			$return_forecasts[] = $forecast->as_array();
+		}
+		
+		$this->return = $return_forecasts;
 	}
 
 	/**

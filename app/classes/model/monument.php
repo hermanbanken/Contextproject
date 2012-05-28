@@ -114,6 +114,15 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		// Return cached venue
 		return $this->venue;
 	}
+	
+	/**
+	 * 
+	 */
+	public function forecast() {
+		$forecast = Wunderground::forecast($this);
+		
+		return $forecast;
+	}
 
 	/**
 	 * Make sure that if the name is the name of the street of a town that the town name is included as well.

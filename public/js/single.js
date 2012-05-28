@@ -81,11 +81,11 @@ function show_content(tab) {
 	}
 	else if (tab == 'forecast') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/weather', {id_monument: $("#id_monument").val()}, succes = function(data) {
+		$.post('ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, forecast) {
 				html += '<tr>';
-				html += '	<td><img src="'+forecast.image+'" alt="" /></td>';
+				html += '	<td><img src="'+forecast.icon+'" alt="" /></td>';
 				html += '	<td>'+forecast.date+'</td>';
 				html += '	<td>'+forecast.forecast+'</td>';
 				html += '</tr>';
