@@ -15,14 +15,14 @@ class Model_Forecast extends Model_Abstract_Cultuurorm {
 
 	protected static $entity = "forecast";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
-	`id_forecast` int(11) NOT NULL AUTO_INCREMENT,
-	`id_town` int(11) NOT NULL,
+	`id_forecast` int(10) NOT NULL AUTO_INCREMENT,
+	`id_town` int(10) NOT NULL,
 	`icon` varchar(155) NOT NULL,
 	`forecast` text NOT NULL,
 	`date` date NOT NULL,
 	`cachedOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id_forecast`),
-	KEY `id_city` (`id_city`)
+	KEY `id_town` (`id_town`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 }
 ?>

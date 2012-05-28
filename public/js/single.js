@@ -83,15 +83,28 @@ function show_content(tab) {
 		$("#ajax_content").html("Laden...");
 		$.post('ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
-			$.each(data, function(key, forecast) {
+			$.each(data.forecasts, function(key, forecast) {
+				var date = new Date(forecast.date);
+				var now = new Date(data.now);
+				
+				if (date.getDate() == now.getDate()) {
+					forecast.date = 'Vandaag';
+				}
+				else if (date.getDate() == now.getDate() + 1) {
+					forecast.date = 'Morgen';
+				}
+				else {
+					forecast.date = date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear();
+				}
+				
 				html += '<tr>';
 				html += '	<td><img src="'+forecast.icon+'" alt="" /></td>';
-				html += '	<td>'+forecast.date+'</td>';
-				html += '	<td>'+forecast.forecast+'</td>';
+				html += '	<td style="vertical-align: middle;">'+forecast.date+'</td>';
+				html += '	<td style="vertical-align: middle;">'+forecast.forecast+'</td>';
 				html += '</tr>';
 			});
 			
-			if (data.length == 0) {
+			if (data.forecasts.length == 0) {
 				html += '<tr><td>Er zijn helaas geen weersvoorspellingen gevonden.</td></tr>';
 			}
 			html += '</table>';
