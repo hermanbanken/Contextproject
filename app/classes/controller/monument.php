@@ -180,26 +180,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
-		if (isset($session['selection'])) {
+		if (false && isset($session['selection'])) {
 			$p = $session['selection'];
 		}
 		else {
-			$p = $this->getDefaults();
+			$p = Arr::overwrite($this->getDefaults(), $this->request->post());
+      $p = Arr::overwrite($p, $this->request->query());
 		}
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
-        // add searchterm for external links
-        $search = $this->request->param('id');
-        if(isset($search) AND $search != '') $p['search'] = $search;
+    // add searchterm for external links
+    $search = $this->request->param('id');
+    if(isset($search) AND $search != '') $p['search'] = $search;
 
-        // Give variables to view
-		$f->set('post', $p);
+    // Give variables to view
+		$f->set('param', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
 		$f->set('action', '');

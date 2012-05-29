@@ -16,10 +16,16 @@ var bounds = null;
 var circle = null;
 // platform
 var isIpad = null;
+// locations
+var locations = false;
+// dom ready
+var ready = false;
 /**
  * On document ready, initialize functions and triggers
  */
 $(document).ready(function () {
+    ready = true;
+
 	// If the map is on the page
 	if ($('#kaart').size() > 0) {
 		// Adjust height
@@ -90,8 +96,8 @@ function updatePins() {
 			getCoordinates();
 			return;
 		}
+        distance = getDistance();
 	}
-	distance = getDistance();
 
 	var query = $('#filter').serialize();
 	query.longitude = longitude;

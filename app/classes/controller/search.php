@@ -7,7 +7,7 @@ class Controller_Search extends Controller_Template {
         'town' => '',
         'province' => -1,
         'category' => -1,
-        'sort' => 'rand',
+        'sort' => 'distance',
         'latitude' => false,
         'longitude' => false,
         'distance' => 0,
@@ -23,7 +23,7 @@ class Controller_Search extends Controller_Template {
     {
         if ($this->_params == null)
         {
-            $this->_params = Arr::overwrite($this->_defaults, $this->request->query());
+            $this->_params = Arr::overwrite(Arr::overwrite($this->_defaults, $this->request->query()), $this->request->post());
         }
         return $key ? $this->_params[$key] : $this->_params;
     }
@@ -40,7 +40,7 @@ class Controller_Search extends Controller_Template {
         $monuments = $query->execute();
         $r = array("monuments"=>array(), "debug"=>array());
         foreach($monuments as $m){
-            $r['monuments'][] = array_values($m);
+            $r['monuments'][] = array($m['id_monument'], $m['lng'], $m['lat']);
         }
 
         $r['debug'] = array("params"=>$this->parameter(),"count"=>count($r['monuments']),"sql" => $query->compile(Database::instance()));
@@ -103,12 +103,23 @@ class Controller_Search extends Controller_Template {
             $f->set('formname', 'filter_list');
 
             $result['pagination'] = (string) $pagination;
-            $result['monuments'] = $monuments->as_array();
+            $result['monuments'] = array();
+            foreach($monuments as $m){
+              $m['photoUrl'] = ORM::factory('photo')->url($m['id_monument']);
+              $result['monuments'][] = $m;
+            }
+            $result['more'] = $pagination->valid_page($this->parameter("page")+1);
 
             // Add view to template
             $this->auto_render = false;
             $this->response->body(json_encode($result));
         }
+    }
+
+    function action_cloud(){
+      $tags = $this->getTagCloud(20);
+      // create the view
+      $this->template = View::factory(static::$entity.'/tagcloud');
     }
 
     /**
@@ -132,7 +143,7 @@ class Controller_Search extends Controller_Template {
                 ":lat" => $latitude
             ));
 
-            $fields[] = array( $dexp, "distance" );
+            $query->select(array( $dexp, "distance" ));
 
             if ($distance > 0 && $distance_show == 1)
             {
@@ -186,6 +197,10 @@ class Controller_Search extends Controller_Template {
                 $query->order_by("name");
                 break;
 
+            case "distance":
+              $query->order_by("distance", "ASC");
+              break;
+
             case "relevance":
                 if (isset($piped))
                 {
@@ -218,10 +233,6 @@ class Controller_Search extends Controller_Template {
                 // Close is relevant, not random, do not break
                 continue;
 
-            case "distance":
-                $query->order_by("distance", "ASC");
-                break;
-
             case "rand":
             default:
                 $query->order_by(DB::expr("RAND()"));
@@ -230,20 +241,6 @@ class Controller_Search extends Controller_Template {
         }
 
         return $query;
-
-
-        // add the limit
-        if (isset($limit)){
-            $sql.="LIMIT " . $limit ." ";
-        }
-        // add the offset
-        if (isset($offset)){
-            $sql.="OFFSET " . $offset." ";
-        }
-        // return the query
-        //die($sql);
-        $sql.=";";
-        return $sql;
     }
 
     public static function getSynonyms($search)

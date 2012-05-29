@@ -23,11 +23,15 @@ class Controller_User extends Controller_Template {
     }
 
 	public function action_profile(){
-		$v = View::factory('user/profile');
-		$v->bind('user', $user);
-		
-		$this->template->body = $v;
-		$user = Auth::instance()->get_user();
+    $user = Auth::instance()->get_user();
+    if(!$user){
+      $this->request->redirect('user/login');
+    } else {
+      $v = View::factory('user/profile');
+      $v->bind('user', $user);
+
+      $this->template->body = $v;
+    }
 	}
  
     public function action_register() 
@@ -35,7 +39,7 @@ class Controller_User extends Controller_Template {
         $this->template->body = View::factory('user/register')
             ->bind('errors', $errors)
             ->bind('message', $message)
-			->set('post', $this->request->post());
+			      ->set('post', $this->request->post());
              
         if (HTTP_Request::POST == $this->request->method()) 
         {           
@@ -56,18 +60,21 @@ class Controller_User extends Controller_Template {
                  
                 // Set success message
                 $message = "You have added user '{$user->username}' to the database";
+
+              $user = Auth::instance()->login($user->username, $this->request->post('password'), false);
+              $this->request->redirect('user/profile');
                  
             } catch (ORM_Validation_Exception $e) {
                  
                 // Set failure message
-                $message = 'There were errors, please see form below.';
+                $message = __('register.invalidfields');
                  
                 // Set errors using custom messages
-				$etree = $e->errors('models');
-				if(isset($etree['_external'])){
-					$etree = array_merge($etree, $etree['_external']);
-					unset($etree['_external']);
-				}
+                $etree = $e->errors('models');
+                if(isset($etree['_external'])){
+                  $etree = array_merge($etree, $etree['_external']);
+                  unset($etree['_external']);
+                }
                 $errors = $etree;
             }
         }
@@ -91,7 +98,7 @@ class Controller_User extends Controller_Template {
             } 
             else
             {
-                $message = 'Login failed';
+                $message = __('login.failed');
             }
         }
     }
@@ -116,7 +123,7 @@ class Controller_User extends Controller_Template {
 		
 		if (Auth::instance()->logged_in())
 		{
-			Message::add('success', 'Already logged in.');
+			Message::add('success', __('login.already'));
 			// redirect to the user account
 			$this->request->redirect('user/profile');
 		}
@@ -133,7 +140,7 @@ class Controller_User extends Controller_Template {
 			$provider->redirect_url('/user/provider_return/' . $provider_name));
 			return;
 		}
-		Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
+		Message::add('error', __('login.provider.disabled'));
 		
 		$this->request->redirect('user/login');
 		return;
@@ -160,7 +167,7 @@ class Controller_User extends Controller_Template {
 				}
 				else
 				{
-					Message::add('error', 'Provider is not enabled; please select another provider or log in normally.');
+					Message::add('error',  __('login.provider.disabled'));
 					$this->request->redirect('user/login');
 					return;
 				}
@@ -168,14 +175,14 @@ class Controller_User extends Controller_Template {
 			else 
 				if (isset($_POST['confirmation']))
 				{
-					Message::add('error', 'Please click Yes to confirm associating the account.');
+					Message::add('error',  __('associate.confirm'));
 					$this->request->redirect('user/profile');
 					return;
 				}
 		}
 		else
 		{
-			Message::add('error', 'You are not logged in.');
+			Message::add('error', __("login.failed"));
 			$this->request->redirect('user/login');
 			return;
 		}

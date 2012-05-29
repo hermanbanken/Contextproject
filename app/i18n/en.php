@@ -65,11 +65,20 @@ return array(
 		'login.with-twitter' => 'Login with Twitter',
 		'login.login-to-cultuurapp' => 'Login to CultuurApp.nl',
 		'login.auto-login' => 'Auto-login next time?',
+    'login.already' => "Already logged in.",
+    'login.provider.disabled' => "Provider is not enabled; please select another provider or log in normally.",
+    'login.failed' => "Login failed",
+    'login.error' => "Login failed",
+    'associate.confirm' => 'Please click Yes to confirm associating the account.',
 		
 		'register.error' => 'Some errors have encountered, please check the details you entered.',
 		'register.error-password' => 'Passwords must be at least 8 characters long.',
 		'register.password-confirm' => 'Confirm password',
 		'register.email' => 'E-mail',
 		'register.register-to-cultuurapp' => 'Register at CultuurApp.nl',
-		'register.signup' => 'Sign up'
+		'register.signup' => 'Sign up',
+    'register.error.username.unique' => "The username is already used",
+    'register.error.email.unique' => "The emailaddress is already used",
+    'register.invalidfields' => 'There were errors, please see form below.',
+
 );

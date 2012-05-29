@@ -9,6 +9,7 @@
 			$("<div></div>").appendTo(document.body).load('user/login .form-login', function(){
 				$('.modal').on('hide', function(){
 					location.hash = "";
+                    $(this).remove();
 				}).modal();
 			});
 		}

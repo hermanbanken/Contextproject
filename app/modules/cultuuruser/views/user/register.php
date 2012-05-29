@@ -6,7 +6,7 @@
 	<div class="modal-body">
 		<?php echo Form::open() ?>
 		<?php if ($errors): ?>
-		<p class="message"><?php echo __('login.error'); ?></p>
+		<p class="message"><?php echo __('register.error'); ?></p>
 		<ul class="errors">
 		<?php foreach ($errors as $message): ?>
 		    <li><?php echo $message ?></li>

@@ -25,8 +25,8 @@ class Controller_Template extends Kohana_Controller_Template {
 		
 		$googlekey = "AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko";
 		$this
-			->less('lib/bootstrap/less/bootstrap.less')
-			->less('lib/bootstrap/less/responsive.less')
+			//->less('lib/bootstrap/less/bootstrap.less')
+			//->less('lib/bootstrap/less/responsive.less')
 			->css('css/jquery-ui-1.8.19.custom.css')
 			->less('lib/bootstrap/docs/assets/css/docs.css')
 			->less('css/app.less')
@@ -35,7 +35,7 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('jquery-ui', 'js/lib/jquery-ui-1.8.19.custom.min.js', true)
 			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&sensor=true', true)
 			->js('selection', 'js/selection.js', true)
-			->js('ca-gmaps', 'js/googlemaps.js', true)
+			->js('ca-gmaps', 'js/app.js', true)
 			->js('single-gmaps', 'js/single.js', true)
 			->js('clusterer', 'js/lib/markerclusterer.js', true)
 			->js('ca-list', 'js/list.js', true)
@@ -81,7 +81,7 @@ class Controller_Template extends Kohana_Controller_Template {
 	 * @return Controller $this - for chainability
 	 */
 	public function js($name, $file, $head = false, $depends = null){
-		$src = file_exists(DOCROOT.$file) ? URL::site($file) : $file;
+		$src = file_exists(DOCROOT.$file) ? URL::site($file."?v=".time()) : $file;
 		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
 		return $this;
 	} 

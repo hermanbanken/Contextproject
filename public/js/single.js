@@ -61,6 +61,7 @@ function show_content(tab) {
 		$("#ajax_content").html("Laden...");
 		$.post('ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '';
+            if(data.monuments)
 			$.each(data.monuments, function(key, monument) {
 				html += '<div style="text-align: center; float: left; width: 12.5%; height: 165px; line-height: 150px; vertical-align: middle;">';
 				html += '<a href="monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo']+'" alt="'+monument['name']+'" /></a>';
