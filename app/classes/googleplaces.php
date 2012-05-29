@@ -26,13 +26,15 @@ class GooglePlaces {
 	 */
 	public static function places($monument, $categories, $rankby, $radius, $sensor, $limit) {
 		// Get cached places (only places that are not too old, max is 10 days)
-		$places_orm = ORM::factory('place')
+		$places_orm_query = ORM::factory('place')
 		->where('id_monument', '=', $monument->id_monument)
 		->and_where('categories', '=', $categories)
 		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 10 * 24 * 60 * 60))
 		->order_by('rating', 'desc')
-		->limit($limit)
-		->find_all();
+		->limit($limit);
+		
+		// Execute query (reset = false, so we can use it at later time)
+		$places_orm = $places_orm_query->reset(false)->find_all();
 
 		// Check if there are cached forecasts
 		if ($places_orm->count() == 0) {
@@ -72,14 +74,8 @@ class GooglePlaces {
 				$place_orm->save();
 			}
 
-			// Get places
-			$places_orm = ORM::factory('place')
-			->where('id_monument', '=', $monument->id_monument)
-			->and_where('categories', '=', $categories)
-			->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 10 * 24 * 60 * 60))
-			->order_by('rating', 'desc')
-			->limit($limit)
-			->find_all();
+			// Get places (use old query)
+			$places_orm = $places_orm_query->reset(false)->find_all();
 		}
 
 		return $places_orm;

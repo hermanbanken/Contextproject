@@ -21,11 +21,13 @@ class Wunderground {
 	 */
 	public static function forecast($monument, $lang = 'NL') {
 		// Get cached forecasts (only forecasts that are not too old, max is one day)
-		$forecasts = ORM::factory('forecast')
+		$forecasts_query = ORM::factory('forecast')
 		->where('id_town', '=', $monument->id_town)
-		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 24 * 60 * 60))
-		->find_all();
+		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(6, 0, 0, date('n'), date('j'), date('Y'))));
 		
+		// Execute query (reset = false, so we can use it at later time)
+		$forecasts = $forecasts_query->reset(false)->find_all();
+
 		// Check if there are cached forecasts
 		if ($forecasts->count() == 0) {
 			// No cached forecasts? Request data from wunderground with our key
@@ -42,9 +44,6 @@ class Wunderground {
 
 			// Check if forecast is found
 			if (isset($response->forecast->txt_forecast->forecastday)) {
-				// Empty return array
-				$forecasts = array();
-				
 				// Clear cache
 				DB::delete('forecasts')->where('id_town', '=', $monument->id_town)->execute();
 					
@@ -62,13 +61,14 @@ class Wunderground {
 						$forecast_orm->date = date('Y-m-d', $date);
 						$forecast_orm->save();
 							
-						// Add to return array
-						$forecasts[] = $forecast_orm;
+						// Date + 1 day
 						$date += 24 * 60 * 60;
 					}
 
 					$i++;
 				}
+				
+				$forecasts = $forecasts_query->reset(false)->find_all();
 			}
 		}
 
