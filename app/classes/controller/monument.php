@@ -47,15 +47,15 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$cur_cats[] = $cat;
 			}
 		}
-
-		$photo = $monument->getphoto();
+		
+		$pca = ORM::factory('pca')->where('id_monument', '=', $monument->id_monument)->find();
 
 		$features = array();
 		foreach ($cur_cats AS $cat) {
-			$features = array_merge($photo->features_cat($cat), $features);
+			$features = array_merge($pca->features_cat($cat), $features);
 		}
 
-		$similars = $monument->similars(20, $features);
+		$similars = $monument->visuallySimilars(16, $features, true);
 
 		$v->set('selected', $cur_cats);
 		$v->set('similars', $similars);
