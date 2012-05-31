@@ -230,6 +230,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 				->limit($limit)->execute();
 
 		$keywords = array();
+		
 		foreach ($tags AS $keyword) {
 			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
 		}

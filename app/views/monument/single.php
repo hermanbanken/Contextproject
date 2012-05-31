@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<h1 style="width: 700px; float: left;">
-			<?php echo $monument->extract_name(); ?>
+			<?php echo $monument->name; ?>
 			<small><a href="javascript:history.back(1);">Terug</a> </small>
 		</h1>
 		<?php 
