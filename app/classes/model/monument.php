@@ -327,32 +327,93 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		return $cid;
 	}
 
+	
 	/**
-	 * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
-	 * @param int $limit number of keywords requested
-	 * @return array with keywords
+	 * function guessCategory guesses the category of a monument
+	 * @return id of guessed category
 	 */
-	public function getKeywords($limit = 5) {
-
+	public function guessCategory() {
+		// use the first 5 keywords of the monument
+		$keywords = $this->getKeywords(5);
+		$category = null;
+		$probabilities = array();
+		// calculate the maximum probability of an occurrence of a tag in a category
+		foreach($keywords as $keyword) {
+			$tags = DB::select('*')->from('tags')->where('content', '=', $keyword)->execute();
+			foreach($tags as $tag) {
+				for($i=1;$i<15;$i++) {
+					$probabilities[$i]=isset($probabilities[$i])?$probabilities[$i]+$tag['importance']*$tag['cat'.$i.'tfidf']:$tag['importance']*$tag['cat'.$i.'tfidf'];
+				}
+			}
+		}
+		$max = 0;
+		$sum = 0;
+		// check which category has highest probability
+		foreach($probabilities as $key=>$probability) {
+			if($probability>$max) {
+				$category = $key;
+				$max = $probability;
+			}
+			$sum+=$probability;
+		}
+		return $category;
+	}
+	
+	/**
+	 * function getTagRelated gets related monuments based on textual analysis
+	 * @param int $limit number of related monuments requested
+	 * @return array with monuments
+	 */
+	public function getTagRelated($limit) {
+		$keywords = $this->getKeywords(5);
 		$prefix = Database::instance()->table_prefix();
+		// match monuments with > 2 tags the same
+		$results = DB::query(Database::SELECT,"SELECT COUNT(DISTINCT(tag.content)), monument.id_monument
+		FROM {$prefix}monuments monument
+		INNER JOIN {$prefix}tag_monument link
+		  ON link.monument = monument.id_monument
+		INNER JOIN dev_tags tag
+		  ON tag.id = link.tag
+		WHERE tag.content IN('".implode("','",$keywords)."')
+		AND monument.id_monument != ".$this->id_monument."
+		GROUP BY monument.id_monument
+		HAVING COUNT(DISTINCT(tag.content)) >= 2 
+		limit ".$limit.";",TRUE)->execute();
+		// create monumentset from result
+		$monuments = ORM::factory('monument');
+		foreach($results as $result) {
+			$monuments = $monuments->or_where('id_monument','=',$result['id_monument']);
+		}
+		return $monuments;
+	}
+	
+	/**
+     * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
+     * @param int $limit number of keywords requested
+     * @return array with keywords
+     */
+    public function getKeywords($limit = 5) {
+        $prefix = Database::instance()->table_prefix();
+		// calculate tfidf of each keyword and return the top $limit
 		$tags = DB::select(
 				array("tags.content", "tag"),
 				array(DB::expr("({$prefix}link.occurrences * LOG(24500 / (1 + {$prefix}tags.occurrences)))"), "tfidf"),
 				array("tags.id", "id"))
 				->from(array("tag_monument","link"))
-				->join("tags")->on("tags.id", "=", "link.tag")
-				->where(DB::expr("LENGTH(tag)"), ">", 4)
+				->join("tags",'left')->on("tags.id", "=", "link.tag")
+				->where(DB::expr("LENGTH({$prefix}tags.content)"), ">", 4)
 				->and_where("link.monument", "=", $this->id_monument)
 				->order_by("tfidf", "desc")
 				->limit($limit)->execute();
-
 		$keywords = array();
-		foreach ($tags AS $keyword) {
-			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
-		}
+		// translate the keywords
+        foreach ($tags AS $keyword) {
+	        $keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
+        }
+        return $keywords;
 
-		return $keywords;
-	}
+    }
+ 
 
 	protected static $entity = "monument";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
