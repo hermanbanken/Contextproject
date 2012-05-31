@@ -5,58 +5,45 @@ class Controller_Monument extends Controller_Abstract_Object {
 	protected static $entity = 'monument';
 
 
-    public function action_testtagrelated() {
-        $monu = ORM::factory('monument')->order_by(DB::expr('RAND()'))->find();
-        while(count($monu->getKeywords(7))<3) $monu = ORM::factory('monument')->where('id_category','>','1')->order_by(DB::expr('RAND()'))->find();
-        echo '<h1>'.implode(', ',$monu->getKeywords(7)).'</h1>';
-        echo '<div style="border-top:1px solid black">';
-        echo '<img style="display:block" width="200px" src="'.$monu->photo().'">';
-        echo 'categorie: '.$monu->category->name.'<br />';
-        echo 'subcategorie: '.$monu->subcategory->name.'<br />';
-        echo $monu->description;
-        echo '</div>';
-        $category = $monu->category->name;
-        $subcategory = $monu->subcategory->name;
-        $i=5;
-        $results = $this->getRels($monu, $i);
-        while(count($results)<3) {
-            $i--;
-            $results = $this->getRels($monu,$i);
-        }
-        if($i==0) die("Geen resultaten");
-        $tags = $monu->getKeywords($i);
-        $tagstring = implode('|',$tags);
-        echo "<h1>Gezochte tags:</h1>";
-        echo "<h3>".implode(', ',$tags)."</h3>";
-        foreach($results as $result) {
-            $monument = ORM::factory('monument',$result['id_monument']);
-            $goed = $category == $monument->category->name;
-            $goedsub = $subcategory == $monument->subcategory->name;
-            echo '<div style="border-top:1px solid black">';
-            echo '<img style="display:block" width="200px" src="'.$monument->photo().'">';
-            echo '<span style="color:'.($goed?'green':'red').';">categorie: '.$monument->category->name.'</span><br />';
-            echo '<span style="color:'.($goedsub?'green':'red').';">subcategorie: '.$monument->subcategory->name.'</span><br />';
-            echo preg_replace('/('.$tagstring.')/','<b>$0</b>',$monument->description)."<br />**************<br />";
-            echo '</div>';
-            //echo $monu['description'].'<br />';
-        }
-        die('ok');
+	/** guess category for all uncategorized monuments **/
+	public function action_guesscategory() {
+		// can take a long time
+		set_time_limit(0);
+		// select all uncategorized monuments
+        $monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
+		foreach($monuments as $monument) {
+			// get keywords of monument
+			$keywords = $monument->getKeywords(5);
+			$category = null;
+			$probabilities = array();
+			// calculate the probability of the occurrence of the current tagword in categories
+			foreach($keywords as $keyword) {
+				$tags = DB::select('*')->from('tags')->where('content', '=', $keyword)->execute();
+				foreach($tags as $tag) {
+					for($i=1;$i<15;$i++) {
+						$probabilities[$i]=isset($probabilities[$i])?$probabilities[$i]+$tag['importance']*$tag['cat'.$i.'tfidf']:$tag['importance']*$tag['cat'.$i.'tfidf'];
+					}
+				}
+			}
+			$max = 0;
+			$sum = 0;
+			// check what category is most likely
+			foreach($probabilities as $key=>$probability) {
+				if($probability>$max) {
+					$category = $key;
+					$max = $probability;
+				}
+				$sum+=$probability;
+			}
+			// save the extracted category to the database
+			$monument->category_extracted = $category;
+			$monument->save();
+		}
+		$timeTaken = time() - $_SERVER['REQUEST_TIME'];
+		echo "<h1>Er zijn fucking veel monumtenten gecategoriseerd</h1>";
+		echo "Dit script heeft ".($timeTaken/3600)." uur gedraaid<br />.";
     }
 
-    public function getRels($monu, $i) {
-        $tags = $monu->getKeywords($i);
-        //die(var_dump($tags));
-
-        // collect all monuments
-        $sql = "SELECT id_monument FROM dev_monuments WHERE 1 ";
-        foreach($tags as $tag) {
-            $sql.= "AND description LIKE '%".$tag."%' ";
-        }
-        $sql.="AND id_monument != ".$monu->id_monument." limit 20";
-        //$sql.="LIMIT 10;";
-        $results = DB::query(Database::SELECT,$sql,TRUE)->execute();
-        return $results;
-    }
     /**
      * textual analysis
      */
@@ -64,7 +51,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
         // execution can take a long time
         set_time_limit(0);
-       // ini_set('memory_limit',0);
+        // ini_set('memory_limit',0);
 
         // stopwoorden
         $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
@@ -87,9 +74,151 @@ class Controller_Monument extends Controller_Abstract_Object {
         // keep track of in which monuments tags are
         $inmonuments = array();
 
+		// keep track of categories
+		$catmonuments = array();
+
         // collect all monuments
-        $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
-        $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
+        $monuments = DB::select("description", "name", "id_monument", "id_category")
+            ->from("monuments")
+            ->order_by("id_monument", "desc")
+            ->limit($limit)
+            ->execute();
+
+        // for each monument
+        foreach($monuments as $monument) {
+            // find the description, lowercase it, ignore encoding
+            if(!isset($monument['description'])) {
+                continue;
+            }
+
+            // filter unused characters
+            $description = strtolower(preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']));
+
+            // explode original keywords into array
+            $originals = explode(' ',$description);
+
+            // filter stopwords
+            $originals = array_diff($originals, $stopwords);
+
+            // explode search keywords into array
+            $description = explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description));
+
+            // filter stopwords
+            $description = array_diff($description, $stopwords);
+
+            // importance of an occurrence
+            $percentage = 1/count($description);
+
+            $tf = array();
+            // add occurrence to total and mixed
+            foreach($description as $key=>$des) {
+                $originalkeywords[$des] = $originals[$key];
+                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
+                $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+                // keep track of where tags occur
+                if(isset($inmonuments[$des])) {
+                    $inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']])?($inmonuments[$des][$monument['id_monument']]+1):1;
+                } else {
+                    $inmonuments[$des] = array($monument['id_monument'] => 1);
+                }
+            }
+
+            // keep track of uniqueness
+            $unique = array();
+            foreach($description as $des) {
+                $unique[$des] = true;
+            }
+            foreach($unique as $key=>$un) {
+                $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
+                $relativeoccurrences[$key] = isset($relativeoccurrences[$key])?
+                    ($relativeoccurrences[$key]+$tf[$key])/2:$tf[$key];
+				// categories
+				if(!isset($monument['id_category'])) continue;
+				if(isset($catmonuments[$key])) {
+					$catmonuments[$key][$monument['id_category']] = isset($catmonuments[$key][$monument['id_category']])?($catmonuments[$key][$monument['id_category']]+1):1;
+				} else {
+                    $catmonuments[$key] = array($monument['id_category'] => 1);
+                }
+            }
+        }
+		
+		// foreach tag that has been found
+		foreach($catmonuments as $key=>$catmonument) {
+			// we'll check the TFIDF of the tag relative to it's categories
+			foreach($catmonument as $cat => &$category) {
+				$catmonuments[$key][$cat] = isset($category)&&$category>0?($category/array_sum($catmonument))*log(19864 / $mixedoccurrences[$key]):0;
+			//	echo $key.' occurrence: '.$category.', category: '.$cat.', tfidf: '.$cattfidf[$key][$cat].'<br />';
+				
+			}
+		}
+
+		
+        // id to insert
+        $i = 1;
+        // sort by total occurrence
+        arsort($totaloccurrences);
+        // for each word
+        foreach($totaloccurrences as $key=>$occ) {
+
+            // check if data is set
+            if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
+
+            // check if really relevant
+            $jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
+            if($occ<2
+                OR (strlen($key)<5 AND !$jaartal)
+                OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
+                OR in_array($key,$stopwords)
+            ) continue;
+
+
+            // term frequency is saved as mean
+            $tf = $relativeoccurrences[$key];
+
+            // inverse document frequency = log(D/D(t))
+            $idf = log(25500 / (1+$mixedoccurrences[$key]));
+
+            // the importance of a word is tf*idf calculated
+            $tfidf = $tf*$idf;
+
+            // skip irrelevant words
+            if($tfidf==0) continue;
+			for($j=1; $j < 15; $j++) {
+				if(!isset($catmonuments[$key][$j])) $catmonuments[$key][$j] = 0; 
+			}
+			
+			$sql = "insert into dev_tags values(".$i.",'".$originalkeywords[$key]."',".$mixedoccurrences[$key].",".$tfidf.",".$catmonuments[$key][1].",".$catmonuments[$key][2].",".$catmonuments[$key][3].",".$catmonuments[$key][4].",".$catmonuments[$key][5].",".$catmonuments[$key][6].",".$catmonuments[$key][7].",".$catmonuments[$key][8].",".$catmonuments[$key][9].",".$catmonuments[$key][10].",".$catmonuments[$key][11].",".$catmonuments[$key][12].",".$catmonuments[$key][13].",".$catmonuments[$key][14].");";
+			DB::query(Database::INSERT, $sql)->execute();
+
+            /*DB::insert("tags", array($i, $originalkeywords[$key], $mixedoccurrences[$key], $tfidf, $catmonuments[$key][1],
+																									$catmonuments[$key][2],
+																									$catmonuments[$key][3],
+																									$catmonuments[$key][4],
+																									$catmonuments[$key][5],
+																									$catmonuments[$key][6],
+																									$catmonuments[$key][7],
+																									$catmonuments[$key][8],
+																									$catmonuments[$key][9],
+																									$catmonuments[$key][10],
+																									$catmonuments[$key][11],
+																									$catmonuments[$key][12],
+																									$catmonuments[$key][13],
+																									$catmonuments[$key][14]
+																								))->execute();*/
+
+            foreach($inmonuments[$key] as $monumentid => $monumentoccurrence) {
+				$sql = "insert into dev_tag_monument values(".$monumentid.",".$i.",".$monumentoccurrence.");";
+               	DB::query(Database::INSERT, $sql)->execute();
+			 	//DB::insert("tag_monument", array($monumentid, $i, $monumentoccurrence))->execute();
+            }
+            $i++;
+        }
+
+        echo "<h1>KLAAR!</h1><p>".$i." tags toegevoegd...</p>";
+        $v = View::factory(static::$entity.'/test');
+
+        $this->template->body = $v;
+    }
 
 	/**
 	 * View to compare images visual
@@ -129,139 +258,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
-	/**
-	 * textual analysis
-	 */
-	public function action_indexwords() {
 
-		// execution can take a long time
-		set_time_limit(0);
-		// ini_set('memory_limit',0);
-
-		// stopwoorden
-		$stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
-
-		// all the monuments
-		$limit = 26000;
-
-		// total occurrences
-		$totaloccurrences = array();
-
-		// number of monuments where the word occurs
-		$mixedoccurrences = array();
-
-		// relativity of a word
-		$relativeoccurrences = array();
-
-		// keep the original (unedited) tags
-		$originalkeywords = array();
-
-		// keep track of in which monuments tags are
-		$inmonuments = array();
-
-		// collect all monuments
-		$monuments = DB::select("description", "name", "id_monument")
-		->from("monuments")
-		->order_by("id_monument", "desc")
-		->limit($limit)
-		->execute();
-
-		// for each monument
-		foreach($monuments as $monument) {
-			// find the description, lowercase it, ignore encoding
-			if(!isset($monument['description'])) {
-				continue;
-			}
-
-			// filter unused characters
-			$description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']);
-
-			// explode original keywords into array
-			$originals = explode(' ',$description);
-
-			// filter stopwords
-			$originals = array_diff($originals, $stopwords);
-
-			// explode search keywords into array
-			$description = explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description));
-
-			// filter stopwords
-			$description = array_diff($description, $stopwords);
-
-			// importance of an occurrence
-			$percentage = 1/count($description);
-
-			$tf = array();
-			// add occurrence to total and mixed
-			foreach($description as $key=>$des) {
-				$originalkeywords[$des] = $originals[$key];
-				$totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
-				$tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
-				// keep track of where tags occur
-				if(isset($inmonuments[$des])) {
-					$inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']])?($inmonuments[$des][$monument['id_monument']]+1):1;
-				} else {
-					$inmonuments[$des] = array($monument['id_monument'] => 1);
-				}
-			}
-
-			// keep track of uniqueness
-			$unique = array();
-			foreach($description as $des) {
-				$unique[$des] = true;
-			}
-			foreach($unique as $key=>$un) {
-				$mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
-				$relativeoccurrences[$key] = isset($relativeoccurrences[$key])?
-				($relativeoccurrences[$key]+$tf[$key])/2:$tf[$key];
-			}
-		}
-
-
-		// id to insert
-		$i = 1;
-		// sort by total occurrence
-		arsort($totaloccurrences);
-		// for each word
-		foreach($totaloccurrences as $key=>$occ) {
-
-			// check if data is set
-			if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
-
-			// check if really relevant
-			$jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
-			if($occ<2
-					OR (strlen($key)<5 AND !$jaartal)
-					OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
-					OR in_array($key,$stopwords)
-			) continue;
-
-
-			// term frequency is saved as mean
-			$tf = $relativeoccurrences[$key];
-
-			// inverse document frequency = log(D/D(t))
-			$idf = log(25500 / (1+$mixedoccurrences[$key]));
-
-			// the importance of a word is tf*idf calculated
-			$tfidf = $tf*$idf;
-
-			// skip irrelevant words
-			if($tfidf==0) continue;
-
-			DB::insert("tags", array($i, $originalkeywords[$key], $mixedoccurrences[$key], $tfidf))->execute();
-
-			foreach($inmonuments[$key] as $monumentid => $monumentoccurrence) {
-				DB::insert("tag_monument", array($monumentid, $i, $monumentoccurrence))->execute();
-			}
-			$i++;
-		}
-
-		echo "<h1>KLAAR!</h1><p>".$i." tags toegevoegd...</p>";
-		$v = View::factory(static::$entity.'/test');
-
-		$this->template->body = $v;
-	}
 
 	/**
 	 * @param $size size of the tagcloud measured in words
