@@ -6,7 +6,7 @@
  * Get textually similar monuments
  * @package CultuurApp
  * @category Helpers
- * @author Sjoerd van Bekhoven
+ * @author Rutger Plak
  */
 class TextualMagic {
 	/**

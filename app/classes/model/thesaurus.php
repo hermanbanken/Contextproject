@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
+/**
+ * Model for thesaurus
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Rutger Plak
+ */
 class Model_Thesaurus extends ORM {
 
 	public static function schema(){

@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for PCA-features of photos of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_PCA extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(

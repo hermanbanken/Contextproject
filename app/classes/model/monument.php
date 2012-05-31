@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven / Rutger Plak / Herman Banken / Tim Eversdijk
+ */
 class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
