@@ -7,36 +7,43 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	/** guess category for all uncategorized monuments **/
 	public function action_guesscategory() {
+		
 		// can take a long time
 		set_time_limit(0);
+		
 		// select all uncategorized monuments
         $monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
 		foreach($monuments as $monument) {
+			
 			// get keywords of monument
 			$keywords = $monument->getKeywords(5);
 			$category = null;
 			$probabilities = array();
+			
 			// calculate the probability of the occurrence of the current tagword in categories
 			foreach($keywords as $keyword) {
 				$tags = DB::select('*')->from('tags')->where('content', '=', $keyword)->execute();
 				foreach($tags as $tag) {
-					for($i=1;$i<15;$i++) {
-						$probabilities[$i]=isset($probabilities[$i])?$probabilities[$i]+$tag['importance']*$tag['cat'.$i.'tfidf']:$tag['importance']*$tag['cat'.$i.'tfidf'];
+					for($i = 1; $i < 15; $i++) {
+						$probabilities[$i] = isset($probabilities[$i]) ? $probabilities[$i] + $tag['importance'] * $tag['cat'.$i.'tfidf'] : $tag['importance'] * $tag['cat'.$i.'tfidf'];
 					}
 				}
 			}
 			$max = 0;
 			$sum = 0;
+			
 			// check what category is most likely
-			foreach($probabilities as $key=>$probability) {
-				if($probability>$max) {
+			foreach($probabilities as $key => $probability) {
+				if($probability > $max) {
 					$category = $key;
 					$max = $probability;
 				}
-				$sum+=$probability;
+				$sum += $probability;
 			}
+			
 			// save the extracted category to the database
-			$monument->category_extracted = $category;
+			$monument->category = $category;
+			$monument->category_extracted = 1;
 			$monument->save();
 		}
 		$timeTaken = time() - $_SERVER['REQUEST_TIME'];
@@ -111,13 +118,13 @@ class Controller_Monument extends Controller_Abstract_Object {
 
             $tf = array();
             // add occurrence to total and mixed
-            foreach($description as $key=>$des) {
+            foreach($description as $key => $des) {
                 $originalkeywords[$des] = $originals[$key];
-                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
-                $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
+                $totaloccurrences[$des] = isset($totaloccurrences[$des]) ? ($totaloccurrences[$des] + 1) : 1;
+                $tf[$des] = isset($tf[$des]) ? ($tf[$des] + $percentage) : $percentage;
                 // keep track of where tags occur
                 if(isset($inmonuments[$des])) {
-                    $inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']])?($inmonuments[$des][$monument['id_monument']]+1):1;
+                    $inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']]) ? ($inmonuments[$des][$monument['id_monument']] + 1) : 1;
                 } else {
                     $inmonuments[$des] = array($monument['id_monument'] => 1);
                 }
@@ -128,14 +135,14 @@ class Controller_Monument extends Controller_Abstract_Object {
             foreach($description as $des) {
                 $unique[$des] = true;
             }
-            foreach($unique as $key=>$un) {
-                $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
+            foreach($unique as $key => $un) {
+                $mixedoccurrences[$key] = isset($mixedoccurrences[$key]) ? ($mixedoccurrences[$key] + 1) : 1;
                 $relativeoccurrences[$key] = isset($relativeoccurrences[$key])?
-                    ($relativeoccurrences[$key]+$tf[$key])/2:$tf[$key];
+                    ($relativeoccurrences[$key] + $tf[$key]) / 2 : $tf[$key];
 				// categories
 				if(!isset($monument['id_category'])) continue;
 				if(isset($catmonuments[$key])) {
-					$catmonuments[$key][$monument['id_category']] = isset($catmonuments[$key][$monument['id_category']])?($catmonuments[$key][$monument['id_category']]+1):1;
+					$catmonuments[$key][$monument['id_category']] = isset($catmonuments[$key][$monument['id_category']]) ? ($catmonuments[$key][$monument['id_category']] + 1) : 1;
 				} else {
                     $catmonuments[$key] = array($monument['id_category'] => 1);
                 }
@@ -143,10 +150,10 @@ class Controller_Monument extends Controller_Abstract_Object {
         }
 		
 		// foreach tag that has been found
-		foreach($catmonuments as $key=>$catmonument) {
+		foreach($catmonuments as $key => $catmonument) {
 			// we'll check the TFIDF of the tag relative to it's categories
 			foreach($catmonument as $cat => &$category) {
-				$catmonuments[$key][$cat] = isset($category)&&$category>0?($category/array_sum($catmonument))*log(19864 / $mixedoccurrences[$key]):0;
+				$catmonuments[$key][$cat] = isset($category) && $category > 0 ? ($category / array_sum($catmonument)) * log(19864 / $mixedoccurrences[$key]) : 0;
 			//	echo $key.' occurrence: '.$category.', category: '.$cat.', tfidf: '.$cattfidf[$key][$cat].'<br />';
 				
 			}
@@ -158,14 +165,14 @@ class Controller_Monument extends Controller_Abstract_Object {
         // sort by total occurrence
         arsort($totaloccurrences);
         // for each word
-        foreach($totaloccurrences as $key=>$occ) {
+        foreach($totaloccurrences as $key => $occ) {
 
             // check if data is set
             if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
 
             // check if really relevant
             $jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
-            if($occ<2
+            if($occ < 2
                 OR (strlen($key)<5 AND !$jaartal)
                 OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
                 OR in_array($key,$stopwords)
@@ -176,10 +183,10 @@ class Controller_Monument extends Controller_Abstract_Object {
             $tf = $relativeoccurrences[$key];
 
             // inverse document frequency = log(D/D(t))
-            $idf = log(25500 / (1+$mixedoccurrences[$key]));
+            $idf = log(25500 / (1 + $mixedoccurrences[$key]));
 
             // the importance of a word is tf*idf calculated
-            $tfidf = $tf*$idf;
+            $tfidf = $tf * $idf;
 
             // skip irrelevant words
             if($tfidf==0) continue;

@@ -66,7 +66,7 @@
       	echo '
         <li class="span3">
           <a href="monument/id/'.$monument->id_monument.'" class="thumbnail">
-            <img src="'.$monument->photo().'" style="max-width: 260px; max-height: 180px;" alt="">
+            <img src="'.$monument->photoUrl().'" style="max-width: 260px; max-height: 180px;" alt="">
           </a>
         </li>';
       }
