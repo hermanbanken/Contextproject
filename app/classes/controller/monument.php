@@ -7,16 +7,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	/** guess category for all uncategorized monuments **/
 	public function action_guesscategory() {
-		
+
 		// can take a long time
 		set_time_limit(0);
-		
+
 		// select all uncategorized monuments
-        $monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
+		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
 		foreach($monuments as $monument) {
-			
+				
 			$category = $monument->extractCategory();
-			
+				
 			// save the extracted category to the database
 			$monument->id_category = $category;
 			$monument->category_extracted = 1;
@@ -25,16 +25,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$timeTaken = time() - $_SERVER['REQUEST_TIME'];
 		echo "<h1>Klaar met monumenten categoriseren</h1>";
 		echo "Dit script heeft ".($timeTaken/3600)." uur gedraaid<br />.";
-    }
-
-    /**
-     * textual analysis
-     */
-    public function action_import_tags() {
-        $v = View::factory('default');
-
-        $this->template->body = $v;
-    }
+	}
 
 	/**
 	 * View to compare images visual
@@ -105,7 +96,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		return $tags;
 
 	}
-	
+
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
@@ -123,7 +114,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		}
 		else {
 			$p = Arr::overwrite($this->getDefaults(), $this->request->post());
-      $p = Arr::overwrite($p, $this->request->query());
+			$p = Arr::overwrite($p, $this->request->query());
 		}
 		// Get provinces and categories for selection
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
@@ -131,11 +122,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
-    // add searchterm for external links
-    $search = $this->request->param('id');
-    if(isset($search) AND $search != '') $p['search'] = $search;
+		// add searchterm for external links
+		$search = $this->request->param('id');
+		if(isset($search) AND $search != '') $p['search'] = $search;
 
-    // Give variables to view
+		// Give variables to view
 		$f->set('param', $p);
 		$f->set('categories', $categories);
 		$f->set('action', '');
@@ -151,43 +142,25 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * Action for getting one particular object by id in single view
 	 */
 	public function action_id()
-  {
-    $id = $this->request->param('id');
-    $user = Auth::instance()->get_user();
-    $monument = ORM::factory('monument', $id);
+	{
+		$id = $this->request->param('id');
+		$user = Auth::instance()->get_user();
+		$monument = ORM::factory('monument', $id);
 
-    if($this->is_json())
-    {
-      $obj = $monument->object();
-      $obj['photoUrl'] = $monument->photoUrl();
-      $this->set_json(json_encode($obj));
-    }
-    else
-    {
-      $v = View::factory('monument/single');
+		if($this->is_json())
+		{
+			$obj = $monument->object();
+			$obj['photoUrl'] = $monument->photoUrl();
+			$this->set_json(json_encode($obj));
+		}
+		else
+		{
+			$v = View::factory('monument/single');
 
-      $v->bind('monument', $monument);
-      $v->bind('user', $user);
-      $this->template->body = $v;
-    }
-	}
-
-	/**
-	 * Import Monuments
-	*/
-	public function action_import() {
-		// Set default view
-		$v = View::factory('import');
-
-		// Import monuments and save count
-		$count = Importer::monuments();
-
-		// Set variables for output
-		$v->set('title', 'Monumenten Import');
-		$v->set('text', 'Er zijn een '.$count.' monumenten geimporteerd.');
-
-		// Set view to template
-		$this->template->body = $v;
+			$v->bind('monument', $monument);
+			$v->bind('user', $user);
+			$this->template->body = $v;
+		}
 	}
 
 	public function action_getsteden() {
@@ -267,7 +240,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${$key} = $value;
+				${
+					$key} = $value;
 			}
 		}
 
