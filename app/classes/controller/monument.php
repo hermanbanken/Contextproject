@@ -15,7 +15,7 @@ class Controller_Monument extends Controller_Abstract_Object {
         $monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
 		foreach($monuments as $monument) {
 			
-			$category = $monument->guessCategory();
+			$category = $monument->extractCategory();
 			
 			// save the extracted category to the database
 			$monument->id_category = $category;
