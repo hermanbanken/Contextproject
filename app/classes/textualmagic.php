@@ -50,16 +50,16 @@ class TextualMagic {
 		$prefix = Database::instance()->table_prefix();
 		// match monuments with > 2 tags the same
 		$results = DB::query(Database::SELECT,"SELECT COUNT(DISTINCT(tag.content)), monument.id_monument
-		FROM {$prefix}monuments monument
-		INNER JOIN {$prefix}tag_monument link
+				FROM {$prefix}monuments monument
+				INNER JOIN {$prefix}tag_monument link
 		  ON link.monument = monument.id_monument
-		INNER JOIN dev_tags tag
+		  INNER JOIN dev_tags tag
 		  ON tag.id = link.tag
-		WHERE tag.content IN('".implode("','",$keywords)."')
-		AND monument.id_monument != ".$monument->id_monument."
-		GROUP BY monument.id_monument
-		HAVING COUNT(DISTINCT(tag.content)) >= 2 
-		limit ".$limit.";",TRUE)->execute();
+		  WHERE tag.content IN('".implode("','",$keywords)."')
+		  AND monument.id_monument != ".$monument->id_monument."
+		  GROUP BY monument.id_monument
+		  HAVING COUNT(DISTINCT(tag.content)) >= 2
+		  limit ".$limit.";",TRUE)->execute();
 		// create monumentset from result
 		$monuments = ORM::factory('monument');
 		foreach($results as $result) {
@@ -85,10 +85,10 @@ class TextualMagic {
 				->and_where("link.monument", "=", $monument->id_monument)
 				->order_by("tfidf", "desc")
 				->limit($limit)->execute();
-		
-		
+
+
 		$keywords = array();
-		
+
 		foreach ($tags AS $keyword) {
 			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
 		}

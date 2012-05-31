@@ -18,7 +18,6 @@ class Model_Link extends ORM {
 
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_link` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	`id_monument` int(10) unsigned NOT NULL,
 	`name` varchar(20) NOT NULL,
 	`url` varchar(150) NOT NULL,
 	PRIMARY KEY (`id_link`),
