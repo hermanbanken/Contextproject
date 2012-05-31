@@ -4,25 +4,25 @@
 		<table class="table table-bordered table-striped">
 			<thead>
 			  <tr>
-			    <th><?php echo __('Field'); ?></th>
-			    <th><?php echo __('Value'); ?></th>
+			    <th><?php echo __('profile.field'); ?></th>
+			    <th><?php echo __('profile.value'); ?></th>
 			  </tr>
 			</thead>
 		  	<tbody>
 				<tr>
-				  <th><?php echo __('Username'); ?></th>
+				  <th><?php echo __('login.username'); ?></th>
 				  <td><?php echo $user->username; ?></td>
 				</tr>
 				<tr>
-				  <th><?php echo __('Email'); ?></th>
+				  <th><?php echo __('profile.email'); ?></th>
 				  <td><?php echo $user->email; ?></td>
 				</tr>
 				<tr>
-				  <th><?php echo __('# of logins'); ?></th>
+				  <th><?php echo __('profile.no-logins'); ?></th>
 				  <td><?php echo $user->logins; ?></td>
 				</tr>
 				<tr>
-				  <th><?php echo __('Last login'); ?></th>
+				  <th><?php echo __('profile.last-login'); ?></th>
 				  <td><?php echo date('Y-m-d H:i:s', $user->last_login); ?></td>
 				</tr>
 			</tbody>

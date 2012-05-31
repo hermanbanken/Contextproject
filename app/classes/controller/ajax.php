@@ -13,6 +13,40 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	}
 
 	/**
+	 * Function for wunderground weather
+	 */
+	public function action_forecast() {
+		$post = $this->request->post();
+
+		$monument = ORM::factory('monument', $post['id_monument']);
+		$forecasts = $monument->forecast();
+
+		// Translate forecasts to array
+		$return_forecasts = array();
+		foreach ($forecasts AS $forecast) {
+			$return_forecasts[] = $forecast->as_array();
+		}
+
+		$this->return = array('forecasts' => $return_forecasts, 'now' => date('Y-m-d'));
+	}
+
+	/**
+	 * Function to get the url of a photo for google maps
+	 * @param (POST) int id_monument
+	 * @return string url of photo
+	 */
+	public function action_map_photo() {
+		$post = $this->request->post();
+		if (isset($post['id_monument'])) {
+			$photo = ORM::factory('photo');
+			$this->return = array('url' => $photo->url($post['id_monument']));
+		}
+		else {
+			$this->return = array('url' => '');
+		}
+	}
+
+	/**
 	 * Function to get recommendations for single view
 	 * @param (POST) (int) id_monument
 	 * @return array with monuments
@@ -21,16 +55,16 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$similars = $monument->similars400(8);
-			$monuments = $similars['monuments']->as_array();
+			$similars = $monument->similars(8, $monument->getphoto()->features_filter());
 
-			foreach ($monuments AS $key => $monument) {
-				$photo = $monument->getphoto()->url();
+			$monuments = array();
+			foreach ($similars AS $key => $monument) {
+				$url = $monument->getphoto()->url();
 				$monuments[$key] = $monument->as_array();
-				$monuments[$key]['photo'] = $photo;
+				$monuments[$key]['photo_url'] = $url;
 			}
 
-			$this->return = array('monuments' => $monuments, 'euclidian' => $similars['euclidian']);
+			$this->return = $monuments;
 		} else $this->return = array();
 	}
 
@@ -74,10 +108,23 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		if($this->request->post('id_monument'))
 		{
 			$post = $this->request->post();
-
-			$this->return = Places::get_places(
-					$post['id_monument'],
-					$post['categories'], 'distance', false, false, 5);
+			
+			// Find monument
+			$monument = ORM::factory('monument', $post['id_monument']);
+			
+			// Get places via google places
+			$places = $monument->places($post['categories'], 5);
+			
+			// Translate places to array
+			$return_places = array();
+			foreach ($places AS $key => $place) {
+				$distance = GooglePlaces::distance($place->lat, $place->lng, $monument->lng, $monument->lat, 'K');
+				
+				$return_places[$key] = $place->as_array();
+				$return_places[$key]['distance'] = $distance;
+			}
+			
+			$this->return = $return_places;
 		} else $this->return = array();
 	}
 

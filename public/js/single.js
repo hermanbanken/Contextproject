@@ -6,6 +6,7 @@ cache['cafes'] = '';
 cache['restaurants'] = '';
 cache['locatie'] = '';
 cache['aanbevelingen'] = '';
+cache['forecast'] = '';
 /**
  * On document ready, initialize functions and triggers
  */
@@ -25,7 +26,8 @@ $(document).ready(
 				tab = 'aanbevelingen';
 			}
 			
-			show_content(tab);
+			if($("#id_monument").size() > 0)
+				show_content(tab);
 			
 			// Visited functionality
 			$(".visited").click(function(e) {
@@ -61,14 +63,54 @@ function show_content(tab) {
 		$("#ajax_content").html("Laden...");
 		$.post('ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '';
-            if(data.monuments)
-			$.each(data.monuments, function(key, monument) {
+			
+			if (data.length == 0) {
+				html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
+			}
+			
+			$.each(data, function(key, monument) {
 				html += '<div style="text-align: center; float: left; width: 12.5%; height: 165px; line-height: 150px; vertical-align: middle;">';
-				html += '<a href="monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo']+'" alt="'+monument['name']+'" /></a>';
+				html += '<a href="monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
 				html += '</div>';
 			});
 			
 			cache['aanbevelingen'] = html;
+			
+			$("#ajax_content").empty();
+			$("#ajax_content").html(html);
+		}, "json");
+	}
+	else if (tab == 'forecast') {
+		$("#ajax_content").html("Laden...");
+		$.post('ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
+			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+			$.each(data.forecasts, function(key, forecast) {
+				var date = new Date(forecast.date);
+				var now = new Date(data.now);
+				
+				if (date.getDate() == now.getDate()) {
+					forecast.date = 'Vandaag';
+				}
+				else if (date.getDate() == now.getDate() + 1) {
+					forecast.date = 'Morgen';
+				}
+				else {
+					forecast.date = date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear();
+				}
+				
+				html += '<tr>';
+				html += '	<td><img src="'+forecast.icon+'" alt="" /></td>';
+				html += '	<td style="vertical-align: middle;">'+forecast.date+'</td>';
+				html += '	<td style="vertical-align: middle;">'+forecast.forecast+'</td>';
+				html += '</tr>';
+			});
+			
+			if (data.forecasts.length == 0) {
+				html += '<tr><td>Er zijn helaas geen weersvoorspellingen gevonden.</td></tr>';
+			}
+			html += '</table>';
+			
+			cache['forecast'] = html;
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);

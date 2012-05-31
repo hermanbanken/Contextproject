@@ -58,6 +58,8 @@
 					<td colspan="2"><?php echo $monument->description; ?></td>
 				</tr>
 			</table>
+			<a class="btn" href="monument/visualcomparison/<?php echo $monument->id_monument; ?>">Vergelijk visueel</a>
+		</a>
 		</div>
 		<div class="span5">
 			<div class="well" style="text-align: center;">
@@ -67,12 +69,15 @@
 			</div>
 		</div>
 	</div>
-	<ul class="nav nav-tabs single-nav">
+	<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
 		<li><a class="aanbevelingen"
 			href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
 		</a></li>
 		<li><a class="locatie"
 			href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?>
+		</a></li>
+		<li><a class="forecast"
+			href="monument/id/<?php echo $monument->id_monument; ?>#forecast"><?php echo __('single.forecast'); ?>
 		</a></li>
 		<li><a class="restaurants"
 			href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?>

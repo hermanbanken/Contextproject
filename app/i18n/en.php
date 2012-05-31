@@ -19,6 +19,7 @@ return array(
 		'single.location' => 'Location',
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Bars',
+		'single.forecast' => 'Forecast',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
 		
@@ -31,9 +32,10 @@ return array(
 		'selection.search' => 'Search',
 		'selection.search-in-neighbourhood' => 'Search in neighbourhood',
 		'selection.filter' => 'Filter',
-		'selection.name' => 'Naam',
-		'selection.relevance' => 'Relevantie',
-		'selection.distance' => 'Afstand',
+		'selection.name' => 'Name',
+		'selection.relevance' => 'Relevance',
+		'selection.distance' => 'Distance',
+		'selection.popularity' => 'Popularity',
 
 		'menu.map' => 'Map',
 		'menu.list' => 'List',
