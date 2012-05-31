@@ -114,13 +114,34 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		// Return cached venue
 		return $this->venue;
 	}
+	
+	/**
+	 * Function to get 4-day forecast
+	 * @return array with forecast-objects
+	 */
+	public function forecast() {
+		$forecast = Wunderground::forecast($this);
+		
+		return $forecast;
+	}
+	
+	/**
+	 * Function to get surrounding places
+	 * @param string $categories (https://developers.google.com/maps/documentation/places/supported_types)
+	 * @param int $limit
+	 * @return array with place-objects
+	 */
+	public function places($categories, $limit) {
+		$places = GooglePlaces::places($this, $categories, 'distance', false, false, $limit);
+		
+		return $places;
+	}
 
 	/**
 	 * Make sure that if the name is the name of the street of a town that the town name is included as well.
 	 */
 	public function extract_name() {
 		$name = $this->name;
-
 
 		return $name;
 	}

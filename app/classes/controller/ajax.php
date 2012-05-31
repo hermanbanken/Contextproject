@@ -11,18 +11,23 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	public function action_index() {
 		$this->return = false;
 	}
-	
+
 	/**
 	 * Function for wunderground weather
 	 */
-	public function action_weather() {
+	public function action_forecast() {
 		$post = $this->request->post();
-		
-		$monument = ORM::factory('monument', $post['id_monument']);
-		
-		$weather = Wunderground::weather($monument);
 
-		$this->return = $weather;
+		$monument = ORM::factory('monument', $post['id_monument']);
+		$forecasts = $monument->forecast();
+
+		// Translate forecasts to array
+		$return_forecasts = array();
+		foreach ($forecasts AS $forecast) {
+			$return_forecasts[] = $forecast->as_array();
+		}
+
+		$this->return = array('forecasts' => $return_forecasts, 'now' => date('Y-m-d'));
 	}
 
 	/**
@@ -103,10 +108,23 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		if($this->request->post('id_monument'))
 		{
 			$post = $this->request->post();
-
-			$this->return = Places::get_places(
-					$post['id_monument'],
-					$post['categories'], 'distance', false, false, 5);
+			
+			// Find monument
+			$monument = ORM::factory('monument', $post['id_monument']);
+			
+			// Get places via google places
+			$places = $monument->places($post['categories'], 5);
+			
+			// Translate places to array
+			$return_places = array();
+			foreach ($places AS $key => $place) {
+				$distance = GooglePlaces::distance($place->lat, $place->lng, $monument->lng, $monument->lat, 'K');
+				
+				$return_places[$key] = $place->as_array();
+				$return_places[$key]['distance'] = $distance;
+			}
+			
+			$this->return = $return_places;
 		} else $this->return = array();
 	}
 
