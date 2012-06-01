@@ -548,15 +548,15 @@ class Importer {
 			unset($photo['id_monument']);
 
 			// Put normalized data in array with formula (normalized) = (value_of_photo - feature_minimum) / (feature_maximum - feature_minimum)
-			foreach ($photo AS $type => $value) {
-				$min = $max_min['min_'.$type];
-				$max = $max_min['max_'.$type];
+			foreach ($photo AS $type1 => $value) {
+				$min = $max_min['min_'.$type1];
+				$max = $max_min['max_'.$type1];
 					
 				if ($max - $min != 0) {
-					$norm[$id_photo][$type] = ($value - $min) / ($max - $min);
+					$norm[$id_photo][$type1] = ($value - $min) / ($max - $min);
 				}
 				else {
-					$norm[$id_photo][$type] = ($value - $min) / 0.000000000001;
+					$norm[$id_photo][$type1] = ($value - $min) / 0.000000000001;
 				}
 			}
 

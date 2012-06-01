@@ -33,15 +33,20 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
 
-		// Get standard information
+		// Get post, query, user and monument information
 		$id = $this->request->param('id');
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
-
-		// Get similar monuments
 		$post = $this->request->post();
 		$query = $this->request->query();
+		$session = Session::instance()->as_array();
+		
+		// If nothing is posted, use recent post in session if it exists
+		if (!isset($post['posted']) && isset($session['vc'])) {
+			$post = $session['vc'];
+		}
 
+		// Set categories
 		$cats = array('color', 'composition', 'texture', 'orientation');
 		$cur_cats = array();
 		foreach ($cats AS $cat) {
@@ -50,26 +55,39 @@ class Controller_Monument extends Controller_Abstract_Object {
 			}
 		}
 
-		$pca = ORM::factory('pca')->where('id_monument', '=', $monument->id_monument)->find();
+		// Determine if we have to use 400 or 4 features
+		$type = 'pca';
+		if (isset($post['advanced'])) {
+			$type = 'photo';
+		}
+		$photo = ORM::factory($type)->where('id_monument', '=', $monument->id_monument)->find();
 
+		// Find features to compare on
 		$features = array();
 		foreach ($cur_cats AS $cat) {
-			$features = array_merge($pca->features_cat($cat), $features);
+			$features = array_merge($photo->features_cat($cat), $features);
 		}
 
+		// Set needed variables for view
 		$similars = array();
 		$posted = false;
+		
+		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
-			$similars = $monument->visuallySimilars(16, $features, true);
+			$_SESSION['vc'] = $post;
+			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
-
+		
+		// Bind variables to view
 		$v->set('selected', $cur_cats);
+		$v->set('advanced', ($type != 'pca'));
 		$v->set('similars', $similars);
 		$v->set('posted', $posted);
 		$v->bind('monument', $monument);
 		$v->bind('user', $user);
 			
+		// Bind view to template
 		$this->template->body = $v;
 	}
 

@@ -51,6 +51,9 @@ return array(
 		'visualcomparison.orientation' => 'Orientation',
 		'visualcomparison.composition' => 'Composition',
 		'visualcomparison.texture' => 'Texture',
+		'visualcomparison.advanced' => 'Extensive comparison',
+		'visualcomparison.advanced-explain' => 'The extensive comparison uses 100 times more features, but takes a lot longer.',
+		'visualcomparison.title' => 'Visual Comparison for',
 		
 		'profile.recommendations-title' => 'Recommended monuments',
 		'profile.recommendations-text' => 'You might like these monuments. This was determined by comparing your monument history against other users history.',

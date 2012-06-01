@@ -1,7 +1,7 @@
 <div class="row" style="padding-bottom: 20px;">
 	<div class="span12">
 		<h1>
-			<?php echo $monument->name; ?>
+			<?php echo __('visualcomparison.title').' '.$monument->name; ?>
 		</h1>
 		<?php 
 		if ($user) {
@@ -44,6 +44,10 @@
 				type="checkbox" name="orientation"
 				<?php if (in_array('orientation', $selected)) { echo ' checked="checked"'; } ?>>
 				<?php echo __('visualcomparison.orientation'); ?>
+			</label> <label class="checkbox" style="margin-right: 10px;"> <input
+				type="checkbox" name="advanced"
+				<?php if ($advanced) { echo ' checked="checked"'; } ?>>
+				<span id="tooltip" rel="tooltip" title="<?php echo __('visualcomparison.advanced-explain'); ?>"><?php echo __('visualcomparison.advanced'); ?></span>
 			</label> <input class="btn btn-primary" type="submit"
 				value="<?php echo __('visualcomparison.compare'); ?>" />
 		</form>
@@ -88,3 +92,8 @@
 </div>
 </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#tooltip').tooltip();
+});
+</script>

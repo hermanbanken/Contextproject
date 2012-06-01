@@ -51,6 +51,9 @@ return array (
 		'visualcomparison.orientation' => 'Orientatie',
 		'visualcomparison.composition' => 'Compositie',
 		'visualcomparison.texture' => 'Textuur',
+		'visualcomparison.advanced' => 'Uitgebreide vergelijking',
+		'visualcomparison.advanced-explain' => 'De uitgebreide vergelijking maakt gebruik van 100 keer meer features, maar duurt daarom wel een stuk langer.',
+		'visualcomparison.title' => 'Visuele Vergelijking voor',
 		
 		'profile.recommendations-title' => 'Aanraders',
 		'profile.recommendations-text' => 'Misschien vind je deze monumenten leuk om te bezoeken. We hebben dit bepaald door je monument geschiedenis te vergelijken met die van andere gebruikers.',
