@@ -27,24 +27,25 @@
 	</div>
 	<div class="span8">
 		<form class="well form-inline" method="post">
-			<label class="checkbox" style="margin-right: 10px;"> <input
-				type="checkbox" name="color"
+			<input type="hidden" name="posted" value="" /> <label
+				class="checkbox" style="margin-right: 10px;"> <input type="checkbox"
+				name="color"
 				<?php if (in_array('color', $selected)) { echo ' checked="checked"'; } ?>>
-				Kleur
+				<?php echo __('visualcomparison.color'); ?>
 			</label> <label class="checkbox" style="margin-right: 10px;"> <input
 				type="checkbox" name="composition"
 				<?php if (in_array('composition', $selected)) { echo ' checked="checked"'; } ?>>
-				Compositie
+				<?php echo __('visualcomparison.composition'); ?>
 			</label> <label class="checkbox" style="margin-right: 10px;"> <input
 				type="checkbox" name="texture"
 				<?php if (in_array('texture', $selected)) { echo ' checked="checked"'; } ?>>
-				Textuur
+				<?php echo __('visualcomparison.texture'); ?>
 			</label> <label class="checkbox" style="margin-right: 10px;"> <input
 				type="checkbox" name="orientation"
 				<?php if (in_array('orientation', $selected)) { echo ' checked="checked"'; } ?>>
-				Orientatie
+				<?php echo __('visualcomparison.orientation'); ?>
 			</label> <input class="btn btn-primary" type="submit"
-				value="Vergelijk" />
+				value="<?php echo __('visualcomparison.compare'); ?>" />
 		</form>
 
 		<div class="well">
@@ -63,11 +64,20 @@
 					}
 					echo '
 					<td style="text-align: center; vertical-align: middle;">
-					<a style="display: block;" href="monument/visualcomparison/'.$similar->id_monument.'">
+					<a style="display: block;" href="monument/visualcomparison/'.$similar->id_monument.'?posted">
 					<img style="max-height: 100px;" src="'.$similar->getphoto()->url().'" alt="'.$similar->name.'">
 					</a>
 					</td>';
 					$i++;
+				}
+
+				if (count($similars) == 0) {
+					if ($posted) {
+						echo '<td>'.__('visualcomparison.nothingfound').'</td>';
+					}
+					else {
+						echo '<td>'.__('visualcomparison.searchinstructions').'</td>';
+					}
 				}
 
 				?>
