@@ -8,7 +8,7 @@ class Controller_Import extends Controller_Abstract_Object {
 		$v = View::factory('import');
 
 		$count = Importer::features();
-		Importer::normalize_features();
+		Importer::normalize_features('photo');
 		
 		$v->set('type', 'feature');
 		$v->set('count', $count);
@@ -51,7 +51,7 @@ class Controller_Import extends Controller_Abstract_Object {
 		$v = View::factory('import');
 
 		$count = Importer::pca_features();
-		Importer::normalize_features();
+		Importer::normalize_features('pca');
 		
 		$v->set('type', 'pca');
 		$v->set('count', $count);
