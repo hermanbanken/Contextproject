@@ -205,7 +205,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// extract synonyms
 		if(isset($search)) {
-			$synonyms = $this->getSynonyms($search);
+			$synonyms = TextualMagic::synonyms($search);
 		}
 
 		// prepare sql statement

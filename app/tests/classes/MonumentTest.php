@@ -5,36 +5,11 @@ class MonumentTest extends Kohana_UnitTest_TestCase
    
    
    
-   
-   
-   public function test_getTagCloud(){
-	   PrepareTestDB::prepDB();
-		$this->assertEquals(count(Controller_Monument::getTagCloud(5)),3);
-		$this->assertEquals(count(Controller_Monument::getTagCloud(2)),2);    
-   }
-   
-   public function test_iets(){
-	   //$this->prepDB();
+  public function test_iets(){
 	  
-	  //print_r(Kohana::$config);
-	   
-	   
-	   //$tables = array("categories", "functions", "links", "monuments", "monument_link", "municipalities", "photos", "provinces", "roles", "roles_users", "session", "streets", "subcategories", "tags", "tag_monument", "thesaurus_links", "thesaurus_words", "towns", "translation", "users", "user_identities", "user_tokens", "venues", "visits");
-	   
-	 
 	 	
 		
-	 	//DB::query('TRUNCATE', 'TRUNCATE ' .  $db->table_prefix() . 'monument_link')->execute();
-	   
-	   DB::insert("monument_link", array("id_monument", "id_link"))->values( array(intval(0), intval(0)))->execute();
-	   
-	   //print_r($bla);
-	   
-	   //DB::insert("monuments", array(intval(1), 1, 1, "test", 1, 1, 1, 1, '31', '1234AB', 1, 'test', 'test', 1, 1, 0))->execute();
-	   
-	   
-	   
-	   
+	 
 	   
 	   $monuments = DB::select("description", "name", "id_monument")
 		->from("monuments")
@@ -168,24 +143,7 @@ class MonumentTest extends Kohana_UnitTest_TestCase
    
 	
 		
-	 public function test_getSynonyms()
-     {
-		//$bla = Request::factory('monument');
-		
-		//$test = new Controller_Monument();
-		
-		
-		//$this->assertInstanceOf(Controller_Monument::getSynonyms("bla"), Array);
-
-		$this->assertEquals(array(array('synoniem'=>'blabla'),array('synoniem'=>'blablabla'),array('synoniem'=>'blablablabla')), Controller_Monument::getSynonyms("bla"));
-		$this->assertEquals(array(array('synoniem'=>'bla'),array('synoniem'=>'blablabla'),array('synoniem'=>'blablablabla')), Controller_Monument::getSynonyms("blabla"));
-		$this->assertEquals(array(array('synoniem'=>'bla'),array('synoniem'=>'blabla'),array('synoniem'=>'blablablabla')), Controller_Monument::getSynonyms("blablabla"));
-		$this->assertEquals(array(array('synoniem'=>'bla'),array('synoniem'=>'blabla'),array('synoniem'=>'blablabla')), Controller_Monument::getSynonyms("blablablabla"));
-		$this->assertEquals(array(array('synoniem'=>'bar')), Controller_Monument::getSynonyms("foo"));
-		$this->assertEquals(array(array('synoniem'=>'foo')), Controller_Monument::getSynonyms("bar"));
-		$this->assertEquals(false, Controller_Monument::getSynonyms("geen"));		
-
-	 }
+	 
 
 	public function test_buildQuery()
 	{
