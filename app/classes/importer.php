@@ -699,5 +699,31 @@ class Importer {
 
 		return $i;
 	}
+	
+	/**
+	 * Import categories based on textual analysis
+	 */
+	public static function categories() {
+		// can take a long time
+		set_time_limit(0);
+		
+		// select all uncategorized monuments
+		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
+		$i = 0;
+		foreach($monuments as $monument) {
+		
+			$category = $monument->extractCategory();
+		
+			// save the extracted category to the database
+			$monument->id_category = $category;
+			$monument->category_extracted = 1;
+			if($category > 0) {
+				$i++;
+				$monument->save();
+			}
+		}
+		
+		return $i;
+	}
 }
 ?>

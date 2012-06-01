@@ -58,5 +58,19 @@ class Controller_Import extends Controller_Abstract_Object {
 		
 		$this->template->body = $v;
 	}
+	
+	/**
+	 * Import extracted categories
+	 */
+	public function action_categories() {
+		$v = View::factory('import');
+
+		$count = Importer::categories();
+		
+		$v->set('type', 'category');
+		$v->set('count', $count);
+		
+		$this->template->body = $v;
+	}
 }
 ?>

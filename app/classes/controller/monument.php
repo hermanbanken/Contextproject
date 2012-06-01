@@ -4,29 +4,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 
-
-	/** guess category for all uncategorized monuments **/
-	public function action_guesscategory() {
-
-		// can take a long time
-		set_time_limit(0);
-
-		// select all uncategorized monuments
-		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
-		foreach($monuments as $monument) {
-
-			$category = $monument->extractCategory();
-
-			// save the extracted category to the database
-			$monument->id_category = $category;
-			$monument->category_extracted = 1;
-			if($category > 0) $monument->save();
-		}
-		$timeTaken = time() - $_SERVER['REQUEST_TIME'];
-		echo "<h1>Klaar met monumenten categoriseren</h1>";
-		echo "Dit script heeft ".($timeTaken/3600)." uur gedraaid<br />.";
-	}
-
 	/**
 	 * View to compare images visual
 	 */
