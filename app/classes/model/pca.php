@@ -63,7 +63,7 @@ class Model_PCA extends Model_Abstract_Cultuurorm {
 	`composition_pca3` double NOT NULL DEFAULT '0',
 	`orientation_pca3` double NOT NULL DEFAULT '0',
 	`texture_pca3` double NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id_pca`)
+	PRIMARY KEY (`id`)
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
 	protected $_table_columns = array(

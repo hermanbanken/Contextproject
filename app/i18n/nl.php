@@ -44,6 +44,14 @@ return array (
 		'menu.profile' => 'Profiel',
 		'menu.logout' => 'Uitloggen',
 		
+		'visualcomparison.nothingfound' => 'Deze foto is (nog) niet geindexeerd en kan daarom niet vergeleken worden met andere monumenten.',
+		'visualcomparison.searchinstructions' => 'Selecteer eventueel enkele features om op te zoeken en klik op \'Vergelijken\' om te beginnen.',
+		'visualcomparison.compare' => 'Vergelijken',
+		'visualcomparison.color' => 'Kleur',
+		'visualcomparison.orientation' => 'Orientatie',
+		'visualcomparison.composition' => 'Compositie',
+		'visualcomparison.texture' => 'Textuur',
+		
 		'profile.recommendations-title' => 'Aanraders',
 		'profile.recommendations-text' => 'Misschien vind je deze monumenten leuk om te bezoeken. We hebben dit bepaald door je monument geschiedenis te vergelijken met die van andere gebruikers.',
 		'profile.last-visited-title' => 'Laatst bezochte monumenten',

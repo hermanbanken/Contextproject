@@ -14,9 +14,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// select all uncategorized monuments
 		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
 		foreach($monuments as $monument) {
-				
+
 			$category = $monument->extractCategory();
-				
+
 			// save the extracted category to the database
 			$monument->id_category = $category;
 			$monument->category_extracted = 1;
@@ -40,6 +40,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// Get similar monuments
 		$post = $this->request->post();
+		$query = $this->request->query();
+
 		$cats = array('color', 'composition', 'texture', 'orientation');
 		$cur_cats = array();
 		foreach ($cats AS $cat) {
@@ -47,7 +49,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				$cur_cats[] = $cat;
 			}
 		}
-		
+
 		$pca = ORM::factory('pca')->where('id_monument', '=', $monument->id_monument)->find();
 
 		$features = array();
@@ -55,10 +57,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$features = array_merge($pca->features_cat($cat), $features);
 		}
 
-		$similars = $monument->visuallySimilars(16, $features, true);
+		$similars = array();
+		$posted = false;
+		if (isset($post['posted']) || isset($query['posted'])) {
+			$similars = $monument->visuallySimilars(16, $features, true);
+			$posted = true;
+		}
 
 		$v->set('selected', $cur_cats);
 		$v->set('similars', $similars);
+		$v->set('posted', $posted);
 		$v->bind('monument', $monument);
 		$v->bind('user', $user);
 			
