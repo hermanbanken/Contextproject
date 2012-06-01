@@ -79,7 +79,7 @@
           </tr>
           <tr>
             <th>Tags</th>
-            <td><?php echo strtolower(implode(', ', $monument->getKeywords())); ?>
+            <td><?php echo strtolower(implode(', ', $monument->tags())); ?>
             </td>
           </tr>
           <tr>
