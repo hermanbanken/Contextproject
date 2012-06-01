@@ -23,6 +23,9 @@ return array (
 		'single.visited' => 'Bezocht',
 		'single.not-visited' => 'Niet bezocht',
 
+    'foursquare.outboundlink' => 'Toon op FourSquare',
+    'foursquare.checkins' => ':d checkins',
+
 		'list.monuments' => 'Monumenten',
 		'list.selection' => 'Selectie',
 		'list.zero-results' => 'Er zijn helaas geen monumenten gevonden met de huidige zoekcriteria.',
@@ -36,6 +39,23 @@ return array (
 		'selection.relevance' => 'Relevantie',
 		'selection.distance' => 'Afstand',
 		'selection.popularity' => 'Populariteit',
+
+		'foursquare.form.header' => 'Voeg FourSquare-plaats toe',
+		'foursquare.form.legend' => 'Maak een plaats op FourSquare en koppel deze met deze monumentpagina.',
+		'foursquare.form.legend.name' => 'Naam',
+		'foursquare.form.help.name' => 'Schoon de naam a.u.b. op als het onnodige delen zoals de naam van de stad of rare tekens bevat.',
+		'foursquare.form.legend.city' => 'Stad',
+		'foursquare.form.help.city' => 'Stad',
+		'foursquare.form.legend.address' => 'Adres',
+		'foursquare.form.help.address' => 'Straat + nummer',
+		'foursquare.form.legend.description' => 'Beschrijving',
+		'foursquare.form.help.description' => 'Meer informatie over deze plaats, de locatie of wat u er van vindt.',
+		'foursquare.form.save' => 'Maak',
+		'foursquare.form.cancel' => 'Annuleren',
+		'foursquare.header.duplicates' => 'Gelijkende plaats gevonden',
+		'foursquare.legend.duplicates' => "We hebben een of meer plaatsen gevonden op FourSquare die heel erg lijken op de plaats die je probeert toe te voegen. Weet je zeker dat je niet een van onderstaande plaatsen wilt koppelen aan het monument? Als je de plaats tóch wilt toevoegen, gebruik dan het onderste formulier.",
+		'foursquare.form.linkbutton' => "Koppel",
+		'foursquare.venue.added' => 'De plaats is toegevoegd op FourSquare en is gekoppeld met dit monument.',
 
 		'menu.map' => 'Kaart',
 		'menu.list' => 'Lijst',

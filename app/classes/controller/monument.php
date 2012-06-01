@@ -355,7 +355,7 @@ class Controller_Monument extends Controller_Abstract_Object {
     }
     else
     {
-      $v = View::factory('monument/single');
+      $v = View::factory('monument/single-sleek');
 
       $v->bind('monument', $monument);
       $v->bind('user', $user);

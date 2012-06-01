@@ -10,6 +10,48 @@
     padding-top: 50px;
 }
 
+.monument-single {
+    .map-outer {
+        position: relative;
+    }
+    .map {
+        overflow: hidden;
+        height: 120px;
+        margin-bottom:0;
+        .border-radius(4px 4px 0 0);
+        border-bottom: 0;
+    }
+    .map > div, .map > div > div {
+        .border-radius(3px 3px 0 0);
+    }
+
+    .map-outer + table {
+        .border-radius(0);
+        background: #fff;
+        margin-bottom: 0;
+    }
+
+    .forecast {
+        position: relative;
+    }
+    .forecast .inner {
+        overflow: hidden;
+        .border-radius(0 0 4px 4px);
+        border-top: 0;
+        padding: 0;
+
+        .day {
+            position: relative;
+            width: 80px;
+            padding: 5px;
+            text-align: center;
+
+            img { width: 60px; height: 50px; background: blue; }
+            span { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.4); color: white; }
+        }
+    }
+}
+
 .modal {
 	display:none;
 	

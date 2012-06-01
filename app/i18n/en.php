@@ -22,6 +22,9 @@ return array(
 		'single.forecast' => 'Forecast',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
+
+    'foursquare.outboundlink' => 'View on FourSquare',
+    'foursquare.checkins' => ':d checkins',
 		
 		'list.monuments' => 'Monuments',
 		'list.selection' => 'Selection',
@@ -36,6 +39,23 @@ return array(
 		'selection.relevance' => 'Relevance',
 		'selection.distance' => 'Distance',
 		'selection.popularity' => 'Popularity',
+
+		'foursquare.form.header' => 'Add FourSquare venue',
+		'foursquare.form.legend' => 'Make a FourSquare venue for this monument',
+		'foursquare.form.legend.name' => 'Venue name',
+		'foursquare.form.help.name' => 'Please cleanup the name if it contains unnecessary bits like a city name for example.',
+		'foursquare.form.legend.city' => 'City',
+		'foursquare.form.help.city' => 'City',
+		'foursquare.form.legend.address' => 'Address',
+		'foursquare.form.help.address' => 'Street + number',
+		'foursquare.form.legend.description' => 'Description',
+		'foursquare.form.help.description' => 'More information about this venue, location or what you think of it.',
+		'foursquare.form.save' => 'Create',
+		'foursquare.form.cancel' => 'Cancel',
+		'foursquare.header.duplicates' => 'Duplicate venue found',
+		'foursquare.legend.duplicates' => "We've found one or more venues that look a lot like the venue you are trying to add. Are you sure you don't want to link any of these venues? If you still want to add the venue, please use the form at the bottom.",
+		'foursquare.form.linkbutton' => "Link venue",
+		'foursquare.venue.added' => 'The venue was added on FourSquare and was linked with this monument.',
 
 		'menu.map' => 'Map',
 		'menu.list' => 'List',
