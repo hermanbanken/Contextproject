@@ -160,16 +160,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 	}
 
 
-	public static function getSynonyms($search) {
-		$synonyms = DB::select(array("w2.word", "synoniem"))
-		->from(
-				array("thesaurus_words", "w1"))
-				->join(array("thesaurus_links", "l"))->on("w1.id", "=", "l.word")
-				->join(array("thesaurus_words", "w2"))->on("w2.id", "=", "l.synonym")
-				->and_where("w1.word", "=", $search)->execute();
-		if($synonyms->count()==0) return false;
-		return $synonyms->as_array();
-	}
 
 	public function getDefaults() {
 		$defaults = array('search' => '',
