@@ -65,38 +65,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$this->template->body = $v;
 	}
 
-
-
-	/**
-	 * @param $size size of the tagcloud measured in words
-	 * @return array with tags and their size
-	 */
-	public function getTagCloud($size) {
-
-		// get random tags with high tfidf importance
-		$limit = $size;
-		$tagset = DB::select()->from("tags")->where(DB::expr("length(content)"), ">", 4)->and_where("occurrences", ">", 2)->and_where("importance", ">", 0.141430140)->order_by(DB::expr("RAND()"))->limit($limit)->execute();
-
-		// convert to array
-		$tags = array();
-		foreach($tagset as $key=>$tag) {
-			$tags[$tag['importance']] = array('content' => strtolower(Translator::translate('tag', $tag['id'], 'tag', $tag['content'])));
-		}
-
-		// sort by importance and add fontsize
-		ksort($tags);
-		$i = 0;
-		foreach($tags as $key=>&$tag) {
-			$tag['fontsize'] = 12+$i;
-			$i+=1;
-		}
-		// sort alphabetically
-		asort($tags);
-
-		return $tags;
-
-	}
-
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
@@ -497,7 +465,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-		$tags = $this->getTagCloud(20);
+		$tags = TextualMagic::tagcloud(20);
 		// create the view
 		$t = View::factory(static::$entity.'/tagcloud');
 		// bind the tags
