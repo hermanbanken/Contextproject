@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for places int he neighbourhood of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Place extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(

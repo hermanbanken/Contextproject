@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for foursquare venues of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Herman Banken
+ */
 class Model_Venue extends Model_Abstract_Cultuurorm {
 		
 	protected $_rules = array(

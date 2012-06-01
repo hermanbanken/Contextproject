@@ -1,7 +1,7 @@
 <div class="row" style="padding-bottom: 20px;">
 	<div class="span12">
 		<h1>
-			<?php echo $monument->extract_name(); ?>
+			<?php echo $monument->name; ?>
 		</h1>
 		<?php 
 		if ($user) {

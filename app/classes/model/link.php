@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for links of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Link extends ORM {
 	
 	protected $_primary_key = "id_link";

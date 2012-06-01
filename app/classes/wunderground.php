@@ -31,16 +31,10 @@ class Wunderground {
 		// Check if there are cached forecasts
 		if ($forecasts->count() == 0) {
 			// No cached forecasts? Request data from wunderground with our key
-			$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->town->name).".json";
+			$url = "http://api.wunderground.com/api/".self::KEY."/forecast/lang:".$lang."/q/".$monument->lng.",".$monument->lat.".json";
+// 			$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->town->name).".json";
 			$response_json = file_get_contents($url);
 			$response = @json_decode($response_json);
-
-			// Check if forecast is found, if not: try municipality
-			if (!isset($response->forecast->txt_forecast->forecastday)) {
-				$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->municipality->name).".json";
-				$response_json = file_get_contents($url);
-				$response = @json_decode($response_json);
-			}
 
 			// Check if forecast is found
 			if (isset($response->forecast->txt_forecast->forecastday)) {

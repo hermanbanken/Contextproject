@@ -487,7 +487,7 @@ class Importer {
 			}
 
 			if ($i == $upper_bound) {
-				Importer::insert_data($img_data);
+				Importer::insert_data($img_data, 'photo');
 				$img_data = array();
 				$upper_bound += $step;
 			}
@@ -495,16 +495,18 @@ class Importer {
 			$i++;
 		}
 
-		Importer::insert_data($img_data);
-		
+		Importer::insert_data($img_data, 'photo');
+
 		return $i;
 	}
 
 	/**
 	 * Function to normalize the imported MATLAB features
 	 * already put in database with function action_import
+	 * 
+	 * @param string $type, 'photo' or 'pca'
 	 */
-	public static function normalize_features() {
+	public static function normalize_features($type) {
 		// No time limit
 		set_time_limit(0);
 
@@ -515,7 +517,7 @@ class Importer {
 		$upper_bound = $step;
 
 		// Get all features in table photos
-		$features = ORM::factory('photo')->list_columns();
+		$features = ORM::factory($type)->list_columns();
 		unset($features['id']);
 		unset($features['id_monument']);
 
@@ -531,7 +533,7 @@ class Importer {
 		}
 
 		// Select maxima and mima per feature
-		$query = DB::select(DB::expr($sql))->from('photos')->execute();
+		$query = DB::select(DB::expr($sql))->from($type.'s')->execute();
 		$max_min = $query[0];
 
 		// Set counter and init array
@@ -539,7 +541,7 @@ class Importer {
 		$norm = array();
 
 		// For each photo in the table, normalize data
-		$photos = DB::select('*')->from('photos')->execute();
+		$photos = DB::select('*')->from($type.'s')->execute();
 		foreach ($photos AS $photo) {
 			$id_photo = $photo['id'];
 			unset($photo['id']);
@@ -560,7 +562,7 @@ class Importer {
 
 			// If upperbound is reached, increasee upper_bound, imort data and clear array
 			if ($i == $upper_bound) {
-				Importer::update_data($norm);
+				Importer::update_data($norm, $type);
 				$norm = array();
 				$upper_bound += $step;
 			}
@@ -569,14 +571,15 @@ class Importer {
 		}
 
 		// Import last data
-		Importer::update_data($norm);
+		Importer::update_data($norm, $type);
 	}
 
 	/**
 	 * Function to import data chunks into photo_table
 	 * @param array $img_data
+	 * @param string $type 'photo' or 'pca'
 	 */
-	public static function update_data($img_data) {
+	public static function update_data($img_data, $type) {
 		// Open database isntance for beginning and committing
 		$db = Database::instance();
 
@@ -585,7 +588,7 @@ class Importer {
 
 		foreach ($img_data AS $id => $values) {
 			try {
-				$query = DB::update('photos')->set($values)->where('id', '=', $id)->execute();
+				$query = DB::update($type.'s')->set($values)->where('id', '=', $id)->execute();
 			}
 			catch (Exception $e) {
 				echo $e->getMessage().'<br />';
@@ -599,8 +602,9 @@ class Importer {
 	/**
 	 * Function to import data chunks into photo_table
 	 * @param array $img_data
+	 * param string $type 'photo' or 'pca'
 	 */
-	public static function insert_data($img_data) {
+	public static function insert_data($img_data, $type) {
 		// Open database isntance for beginning and committing
 		$db = Database::instance();
 
@@ -620,7 +624,7 @@ class Importer {
 
 		// Create sql for a query with multiple inserts
 		// Will look like INSERT INTO photos (column1, column2) VALUES (value1_1, value2_1), (value1_2, value2_2), (value1_3, value2_3)......
-		$sql = "INSERT INTO ".Kohana::$config->load('database.default.table_prefix')."photos (`".implode('`, `', $columns)."`) VALUES ";
+		$sql = "INSERT INTO ".Kohana::$config->load('database.default.table_prefix').$type."s (`".implode('`, `', $columns)."`) VALUES ";
 
 		$i = false;
 		foreach ($img_data AS $mid => $values) {
@@ -640,6 +644,60 @@ class Importer {
 
 		// Commit transaction
 		$db->commit();
+	}
+
+	/**
+	 * Function to import pca feature data
+	 */
+	public static function pca_features() {
+		set_time_limit(0);
+
+		// Data needs to be imported in chunks, step size
+		$step = 100;
+
+		// Feature extraction types in array
+		$types = array('color', 'composition', 'orientation', 'texture');;
+
+		// Loop through csv-files containing image features
+		// Save maximum and minimum, save values per image
+		$img_data = array();
+		$upper_bound = $step;
+
+		foreach ($types AS $ftype) {
+			$handle[$ftype] = fopen("files/feature_extractions/pca/dev_pca_".$ftype.".score.txt", "r");
+			$columns[$ftype] = fgetcsv($handle[$ftype], 0, ",");
+			$data[$ftype] = fgetcsv($handle[$ftype], 0, ",");
+		}
+
+		$i = 0;
+		while ($data[$types[0]] !== FALSE) {
+			$id = str_replace(array('O:\photos\\', '.jpg'), '', $data[$types[0]][0]);
+
+			foreach ($types AS $ftype) {
+				foreach ($data[$ftype] AS $key => $value) {
+					if ($key != 0) {
+						$img_data[$id][$ftype.'_'.$columns[$ftype][$key]] = $value;
+					}
+				}
+			}
+
+			foreach ($types AS $ftype) {
+				$data[$ftype] = fgetcsv($handle[$ftype], 0, ",");
+			}
+
+			// If upperbound is reached, increasee upper_bound, imort data and clear array
+			if ($i == $upper_bound) {
+				Importer::insert_data($img_data, 'pca');
+				$img_data = array();
+				$upper_bound += $step;
+			}
+
+			$i++;
+		}
+
+		Importer::insert_data($img_data, 'pca');
+
+		return $i;
 	}
 }
 ?>

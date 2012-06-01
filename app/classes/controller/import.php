@@ -43,5 +43,20 @@ class Controller_Import extends Controller_Abstract_Object {
 		
 		$this->template->body = $v;
 	}
+	
+	/**
+	 * Import pca's
+	 */
+	public function action_pca() {
+		$v = View::factory('import');
+
+		$count = Importer::pca_features();
+		Importer::normalize_features();
+		
+		$v->set('type', 'pca');
+		$v->set('count', $count);
+		
+		$this->template->body = $v;
+	}
 }
 ?>

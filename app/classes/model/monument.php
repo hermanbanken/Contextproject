@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven / Rutger Plak / Herman Banken / Tim Eversdijk
+ */
 class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
@@ -114,17 +121,17 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 		// Return cached venue
 		return $this->venue;
 	}
-	
+
 	/**
 	 * Function to get 4-day forecast
 	 * @return array with forecast-objects
 	 */
 	public function forecast() {
 		$forecast = Wunderground::forecast($this);
-		
+
 		return $forecast;
 	}
-	
+
 	/**
 	 * Function to get surrounding places
 	 * @param string $categories (https://developers.google.com/maps/documentation/places/supported_types)
@@ -133,7 +140,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function places($categories, $limit) {
 		$places = GooglePlaces::places($this, $categories, 'distance', false, false, $limit);
-		
+
 		return $places;
 	}
 
@@ -145,9 +152,14 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 * @param array with features (created by "features_filter" or "features_cat" $features
 	 * @return array with monument objects
 	 */
-	public function visuallySimilars($limit, $features = false) {
-		$monuments = VisualMagic::similars($this, $limit, $features);
-		
+	public function visuallySimilars($limit, $features = false, $pca = false) {
+		if ($pca) {
+			$monuments = VisualMagic::similars_pca($this, $limit, $features);
+		}
+		else {
+			$monuments = VisualMagic::similars($this, $limit, $features);
+		}
+
 		return $monuments;
 	}
 
@@ -157,10 +169,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function extractCategory() {
 		$id = TextualMagic::extractCategory($this);
-		
+
 		return $id;
 	}
-	
+
 	/**
 	 * function getTagRelated gets related monuments based on textual analysis
 	 * @param int $limit number of related monuments requested
@@ -168,10 +180,10 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function textuallySimilars($limit) {
 		$monuments = TextualMagic::related($this, $limit);
-		
+
 		return $monuments;
 	}
-	
+
 	/**
 	 * function tags uses TFIDF for text analysis and returns the top x most relevant tags
 	 * @param int $limit number of tags requested
@@ -179,7 +191,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function tags($limit = 5) {
 		$tags = TextualMagic::tags($this, $limit);
-		
+
 		return $tags;
 	}
 

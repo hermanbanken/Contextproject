@@ -6,11 +6,12 @@
  * Get textually similar monuments
  * @package CultuurApp
  * @category Helpers
- * @author Sjoerd van Bekhoven
+ * @author Rutger Plak
  */
 class TextualMagic {
 	/**
-	 * function extractCategory guesses the category of a monument
+	 * Function to extract the category of a monument
+	 *
 	 * @return id of guessed category
 	 */
 	public static function extractCategory($monument) {
@@ -41,7 +42,8 @@ class TextualMagic {
 	}
 
 	/**
-	 * function related gets related monuments based on textual analysis
+	 * Function to get related monuments based on textual analysis
+	 *
 	 * @param int $limit number of related monuments requested
 	 * @return array with monuments
 	 */
@@ -69,7 +71,8 @@ class TextualMagic {
 	}
 
 	/**
-	 * function tags uses TFIDF for text analysis and returns the top x most relevant tags
+	 * Function which uses TFIDF for text analysis and returns the top x most relevant tags
+	 *
 	 * @param int $limit number of keywords requested
 	 * @return array with tags
 	 */
@@ -94,5 +97,70 @@ class TextualMagic {
 		}
 
 		return $keywords;
+	}
+
+	/**
+	 * Function which creates tagcloud with tags
+	 * differing in size
+	 *
+	 * @param $size size of the tagcloud measured in words
+	 * @return array with tags and their size
+	 */
+	public static function tagcloud($size) {
+		// get random tags with high tfidf importance
+		$limit = $size;
+		$tagset = DB::select()
+		->from("tags")
+		->where(DB::expr("length(content)"), ">", 4)
+		->where("occurrences", ">", 2)
+		->where("importance", ">", 0.141430140)
+		->order_by(DB::expr("RAND()"))
+		->limit($limit)
+		->execute();
+
+		// convert to array
+		$tags = array();
+		foreach($tagset as $key=>$tag) {
+			$tags[$tag['importance']] = array(
+					'content' => strtolower(Translator::translate(
+							'tag',
+							$tag['id'],
+							'tag',
+							$tag['content']
+					))
+			);
+		}
+
+		// sort by importance and add fontsize
+		ksort($tags);
+		$i = 0;
+		foreach($tags as $key=>&$tag) {
+			$tag['fontsize'] = 12+$i;
+			$i+=1;
+		}
+		// sort alphabetically
+		asort($tags);
+
+		return $tags;
+	}
+
+	/**
+	 * Get synonyms from Thesaurus
+	 * 
+	 * @param string $search
+	 * @return array with synonyms
+	 */
+	public static function synonyms($search) {
+		$synonyms = DB::select(array("w2.word", "synoniem"))
+		->from(
+				array("thesaurus_words", "w1"))
+				->join(array("thesaurus_links", "l"))->on("w1.id", "=", "l.word")
+				->join(array("thesaurus_words", "w2"))->on("w2.id", "=", "l.synonym")
+				->and_where("w1.word", "=", $search)->execute();
+
+		if ($synonyms->count() == 0)
+			return false;
+
+		return $synonyms->as_array();
 	}
 }

@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for town of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Town extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(

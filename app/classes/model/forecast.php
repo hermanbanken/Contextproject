@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for forecasts at towns
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Forecast extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
