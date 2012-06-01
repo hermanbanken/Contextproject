@@ -614,8 +614,8 @@ class Importer {
 		// Create array with column names
 		$columns = array();
 		foreach ($img_data AS $mid => $values) {
-			foreach ($values AS $type => $value) {
-				$columns[] = $type;
+			foreach ($values AS $type1 => $value) {
+				$columns[] = $type1;
 			}
 			$columns[] = 'id_monument';
 
