@@ -1,2 +1,2 @@
-<h1 style="margin-bottom: 10px;"><?php echo $title; ?></h1>
-<p><?php echo $text; ?></p>
+<h1 style="margin-bottom: 10px;"><?php echo ucfirst($type); ?> import</h1>
+<p>Er <?php echo ($count == 1 ? 'is' : 'zijn').' '.$count.' '.($count == 1 ? 'entry' : 'entries'); ?> van het type '<?php echo $type; ?>' geimporteerd.</p>

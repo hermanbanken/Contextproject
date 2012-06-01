@@ -42,6 +42,27 @@ elseif (Kohana::$environment == Kohana::DEVELOPMENT)
 		),
 	);
 }
+elseif (Kohana::$environment == Kohana::TESTING)
+{
+  	return array
+	(
+		'default' => array
+		(
+			'type'       => 'mysql',
+			'connection' => array(
+				'hostname'   => 'localhost',
+				'database'   => 'cultuurTESTING',
+				'username'   => 'cultuurTESTING',
+				'password'   => 'TESTING',
+				'persistent' => TRUE,
+			),
+			'table_prefix' => 'dev_',
+			'charset'      => 'utf8',
+			'caching'      => TRUE,
+			'profiling'    => TRUE,
+		),
+	);
+}
 else
 {
 	return array

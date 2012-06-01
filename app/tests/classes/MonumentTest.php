@@ -3,7 +3,28 @@
 class MonumentTest extends Kohana_UnitTest_TestCase
 {
    
-   public function test_xml2array(){
+   
+   
+  public function test_iets(){
+	  
+	 	
+		
+	 
+	   
+	   $monuments = DB::select("description", "name", "id_monument")
+		->from("monuments")
+		->order_by("id_monument", "desc")
+		->limit(20)
+		->execute()
+		->as_array();
+	   
+	   print_r($monuments);
+   }
+   
+	
+  /* public function test_xml2array(){
+	  
+	  $test = ORM::factory('monument');
 	   
 	  //test1 no attributes priority=tag 
 	  $test1 = Controller_Monument::xml2array(@file_get_contents('testFiles/testFile'.'1'.'.xml'));
@@ -71,7 +92,7 @@ class MonumentTest extends Kohana_UnitTest_TestCase
 	  $this->assertEquals($monumentRegisterData['yCoordinates']['value'], "5");
    }
    
-   
+   */
    public function test_monumentsToJSON(){
 		
 		$fm1 = ORM::factory('monument');
@@ -122,32 +143,23 @@ class MonumentTest extends Kohana_UnitTest_TestCase
    
 	
 		
-	 public function test_getSynonyms()
-     {
-		//$bla = Request::factory('monument');
-		
-		//$test = new Controller_Monument();
-		
-		
-		//$this->assertInstanceOf(Controller_Monument::getSynonyms("bla"), Array);
-		
-		$this->assertTrue( (Bool)( (Controller_Monument::getSynonyms("bla") == false)  ^ (is_array(Controller_Monument::getSynonyms("bla")))) );
-
-	 }
+	 
 
 	public function test_buildQuery()
 	{
 		$testCases = array(
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array()),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('' => 'zoeken', '' => 'town', '' => '-1')),
-		array("SELECT * FROM dev_monuments HAVING 1 AND CONCAT(name,description) LIKE '%nothesaurus%' ORDER BY RAND() ;", array('search' => 'nothesaurus')),
+		array("SELECT *, dev_monuments.id_monument AS id_monument, COUNT(dev_visits.id) AS popularity FROM dev_monuments LEFT JOIN dev_visits ON dev_visits.id_monument = dev_monuments.id_monument GROUP BY dev_monuments.id_monument HAVING 1 ORDER BY RAND() ;", array()),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('search'=>"bla")) );
+		
+		/*array("SELECT * FROM dev_monuments HAVING 1 AND CONCAT(name,description) LIKE '%nothesaurus%' ORDER BY RAND() ;", array('search' => 'nothesaurus')),
 		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '0')),
-		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1')),
+		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => 1, 'distance_show'=>1)),
 		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1', 'longitude' => '1')),
 		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('distance' => '1', 'latitude' => '1')),
 		array("SELECT * ,((ACOS(SIN(31 * PI() / 180) * SIN(lat * PI() / 180) + COS(31 * PI() / 180) * COS(lat * PI() / 180) * COS((32 - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance FROM dev_monuments HAVING 1 AND distance < 1 ORDER BY RAND() ;", array('distance' => '1', 'longitude' => '31', 'latitude' => '32', 'distance_show' => '1')),
 		array("SELECT * FROM dev_monuments HAVING 1 ORDER BY RAND() ;", array('category' => '1'))
 		);
+		*/
 		
 		/*foreach($testCases as $testCase){
 			$response = $testCase[0];
@@ -173,10 +185,10 @@ class MonumentTest extends Kohana_UnitTest_TestCase
 		$request = Request::factory('monument')->method(Request::POST)->post($testCases[$num][1]);
 		$controller = (new Controller_Monument($request, new Response()));
 		try{$query = $controller->buildQuery();}
-		catch(ErrorException $expected){$query = "Error!";}	
+		catch(ErrorException $expected){$query = "Error!";}
 		$this->assertEquals($testCases[$num][0], $query);
 		
-		$num++;
+		/*$num++;
 		$request = Request::factory('monument')->method(Request::POST)->post($testCases[$num][1]);
 		$controller = (new Controller_Monument($request, new Response()));
 		try{$query = $controller->buildQuery();}
@@ -218,7 +230,7 @@ class MonumentTest extends Kohana_UnitTest_TestCase
 		catch(ErrorException $expected){$query = "Error!";}	
 		$this->assertEquals($testCases[$num][0], $query);
 		
-		
+		*/
 		//echo $controller->buildQuery();
 		
 		//echo "COUNT:".count($testCases);

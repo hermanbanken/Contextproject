@@ -64,6 +64,17 @@ return array(
 		'menu.profile' => 'Profile',
 		'menu.logout' => 'Logout',
 		
+		'visualcomparison.nothingfound' => 'This photo is not (yet) indexed and can therefore not be compared to other monuments.',
+		'visualcomparison.searchinstructions' => 'Optionally select some features to search on and click \'Compare\' to begin.',
+		'visualcomparison.compare' => 'Compare',
+		'visualcomparison.color' => 'Color',
+		'visualcomparison.orientation' => 'Orientation',
+		'visualcomparison.composition' => 'Composition',
+		'visualcomparison.texture' => 'Texture',
+		'visualcomparison.advanced' => 'Extensive comparison',
+		'visualcomparison.advanced-explain' => 'The extensive comparison uses 100 times more features, but takes a lot longer.',
+		'visualcomparison.title' => 'Visual Comparison for',
+		
 		'profile.recommendations-title' => 'Recommended monuments',
 		'profile.recommendations-text' => 'You might like these monuments. This was determined by comparing your monument history against other users history.',
 		'profile.last-visited-title' => 'Last visited monuments',
