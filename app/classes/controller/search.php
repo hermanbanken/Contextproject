@@ -85,7 +85,7 @@ class Controller_Search extends Controller_Template {
 			$provinces = ORM::factory('province')->order_by('name')->find_all();
 			$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-			$tags = $this->getTagCloud(20);
+			$tags = TextualMagic::tagcloud(20);
 			// create the view
 			$t = View::factory(static::$entity.'/tagcloud');
 			// bind the tags
@@ -116,8 +116,8 @@ class Controller_Search extends Controller_Template {
 		}
 	}
 
-	function action_cloud(){
-		$tags = $this->getTagCloud(20);
+	function action_cloud() {
+		$tags = TextualMagic::tagcloud(20);
 		// create the view
 		$this->template = View::factory(static::$entity.'/tagcloud');
 	}
@@ -127,8 +127,7 @@ class Controller_Search extends Controller_Template {
 	 * @param array $fields
 	 * @return Database_Query_Builder_Select Query
 	 */
-	function query($fields = array())
-	{
+	function query($fields = array()) {
 		$params = $this->parameter();
 		extract($params);
 
@@ -173,7 +172,7 @@ class Controller_Search extends Controller_Template {
 
 		// add string search
 		if (!empty($search)) {
-			$synonyms = $this->getSynonyms($search);
+			$synonyms = TextualMagic::synonyms($search);
 
 			if ($synonyms)
 			{
@@ -241,65 +240,6 @@ class Controller_Search extends Controller_Template {
 		}
 
 		return $query;
-	}
-
-	public static function getSynonyms($search)
-	{
-		$synonyms = DB::select(array("w2.word", "synoniem"))
-		->from(
-				array("thesaurus_words", "w1"))
-				->join(array("thesaurus_links", "l"))->on("w1.id", "=", "l.word")
-				->join(array("thesaurus_words", "w2"))->on("w2.id", "=", "l.synonym")
-				->and_where("w1.word", "=", $search)->execute();
-
-		if ($synonyms->count() == 0)
-			return false;
-
-		return $synonyms->as_array();
-	}
-
-	/**
-	 * @param $size size of the tagcloud measured in words
-	 * @return array with tags and their size
-	 */
-	public function getTagCloud($size) {
-
-		// get random tags with high tfidf importance
-		$limit = $size;
-		$tagset = DB::select()
-		->from("tags")
-		->where(DB::expr("length(content)"), ">", 4)
-		->where("occurrences", ">", 2)
-		->where("importance", ">", 0.141430140)
-		->order_by(DB::expr("RAND()"))
-		->limit($limit)
-		->execute();
-
-		// convert to array
-		$tags = array();
-		foreach($tagset as $key=>$tag) {
-			$tags[$tag['importance']] = array(
-					'content' => strtolower(Translator::translate(
-							'tag',
-							$tag['id'],
-							'tag',
-							$tag['content']
-					))
-			);
-		}
-
-		// sort by importance and add fontsize
-		ksort($tags);
-		$i = 0;
-		foreach($tags as $key=>&$tag) {
-			$tag['fontsize'] = 12+$i;
-			$i+=1;
-		}
-		// sort alphabetically
-		asort($tags);
-
-		return $tags;
-
 	}
 }
 
