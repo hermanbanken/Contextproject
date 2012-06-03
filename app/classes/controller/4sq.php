@@ -203,7 +203,8 @@ class Controller_4sq extends Controller_Template {
 		
 		if( $obj && isset($obj->access_token) )
 		{
-			Session::instance()->set("4sq.token", $obj->access_token);			
+			Session::instance()->set("4sq.token", $obj->access_token);
+			return true;
 		} else {
 			return false;
 		}
