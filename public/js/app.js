@@ -186,10 +186,10 @@ var exports = exports | {};
                         var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
                         var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
                         infowindow.setContent(
-                            "<a href='monument/id/"+id+"' >" +
-                                "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
+                            "<a href='"+base+"monument/id/"+id+"' >" +
+                                "<img class='map-info-photo' id='photo'"+id+"' src='"+base+data.photoUrl+"' style='"+style+"' />" +
                                 "<h2>" + data.name + "</h2></a>" +
-                                "<p>"+desc+"<a href='monument/id/"+id+"'>Meer</a></p>"
+                                "<p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>"
                         );
                         infowindow.open(map, marker);
                     });
