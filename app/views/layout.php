@@ -6,8 +6,8 @@
 <?php endif; ?>
 <head>
   <title>CultuurApp.nl</title>
-  <base href="<?php echo URL::base(); ?>" />
-	<?php echo $header; ?>
+  <script>var base = "<?php echo URL::base(); ?>";</script>
+  <?php echo $header; ?>
 </head>
 
 <?php

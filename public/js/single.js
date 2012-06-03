@@ -34,7 +34,7 @@ $(document).ready(
 				e.preventDefault();
 				var link = $(this);
 				
-				$.post('ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
+				$.post(base+'ajax/single_visited', {id_monument: $("#id_monument").val()}, succes = function(data) {
 					if (data.success) {
 						link.toggleClass('btn-success');
 						$(".visited i").toggleClass('icon-white');
@@ -61,7 +61,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'aanbevelingen') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
+		$.post(base+'ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '';
 			
 			if (data.length == 0) {
@@ -82,7 +82,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'forecast') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
+		$.post(base+'ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data.forecasts, function(key, forecast) {
 				var date = new Date(forecast.date);
@@ -118,7 +118,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'cafes') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'bar|cafe'}, succes = function(data) {
+		$.post(base+'ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'bar|cafe'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, cafe) {
 				if (cafe['rating'] == null) {
@@ -145,7 +145,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'restaurants') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'restaurant'}, succes = function(data) {
+		$.post(base+'ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'restaurant'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
 			$.each(data, function(key, restaurant) {
 				if (restaurant['rating'] == null) {
@@ -172,7 +172,7 @@ function show_content(tab) {
 	}
 	else if (tab == 'locatie') {
 		$("#ajax_content").html("Laden...");
-		$.post('ajax/monument', {id_monument: $("#id_monument").val()}, succes = function(monument) {
+		$.post(base+'ajax/monument', {id_monument: $("#id_monument").val()}, succes = function(monument) {
 			$("#ajax_content").html('<div id="kaart-single"></div>');
 			
 			// If the map is on the page
