@@ -7,6 +7,7 @@ class Controller_Welcome extends Controller_Template {
 	public function action_index(){
 		$v = View::factory("splash");
 		$this->less('css/splash.less');
+		$this->js('plax', 'js/lib/plax.js', true);
 		
 		$this->template->body = $v;
 	}

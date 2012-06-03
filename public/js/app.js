@@ -79,7 +79,7 @@ var exports = exports | {};
             var query = this.parameter(false, function(){ self.list(); });
 
             if(this.page > 0) query.page = this.page;
-            $.getJSON("search/list", query, function(data)
+            $.getJSON(base+"search/list", query, function(data)
             {
                 if(options && options.replace)
                     data.replace = options.replace;
@@ -142,7 +142,7 @@ var exports = exports | {};
         if(!locations){
             var query = this.parameter(false, function(){ self.map(); });
 
-            $.getJSON("search/map", query, function(data){
+            $.getJSON(base+"search/map", query, function(data){
                 self.map(data.monuments);
                 console.log("Debug", data.debug);
             });
@@ -181,7 +181,7 @@ var exports = exports | {};
                     var infowindow = self.infowindow = new google.maps.InfoWindow();
 
                     // Add right source to image
-                    $.getJSON('monument/id/'+location[0], function (data) {
+                    $.getJSON(base+'monument/id/'+location[0], function (data) {
                         var id = location[0];
                         var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
                         var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
