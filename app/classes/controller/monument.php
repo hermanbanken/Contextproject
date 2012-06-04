@@ -118,16 +118,18 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
 
-    if($this->is_json())
-    {
-      $obj = $monument->object();
-      $obj['photoUrl'] = $monument->photoUrl();
-      $this->set_json(json_encode($obj));
-    }
-    else
-    {
-      $v = View::factory('monument/single-sleek');
+		if(!$monument->loaded())
+			throw new HTTP_Exception_404(__('monument.notfound'));
 
+		if($this->is_json())
+		{
+		  $obj = $monument->object();
+		  $obj['photoUrl'] = $monument->photoUrl();
+		  $this->set_json(json_encode($obj));
+		}
+		else
+		{
+		  	$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
 			$this->template->body = $v;
