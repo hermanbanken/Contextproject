@@ -28,8 +28,8 @@
 		<div class="bs-links">
 			<p><a href="user/register"><?php echo __('login.register'); ?></a> <?php echo __("login.no-account"); ?></p>
 			<div class="btn-group">
-				<a class="btn btn-small btn-primary" href="user/provider/facebook">F</a>
-				<a class="btn btn-small btn-primary" href="user/provider/facebook"><?php echo __('login.with-fb'); ?></a>
+				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>">F</a>
+				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>"><?php echo __('login.with-fb'); ?></a>
 			</div>
 			<div class="btn-group">
 				<a class="btn btn-small btn-info">T</a>
