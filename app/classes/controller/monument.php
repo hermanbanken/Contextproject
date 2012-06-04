@@ -17,7 +17,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$post = $this->request->post();
 		$query = $this->request->query();
 		$session = Session::instance()->as_array();
-		
+
 		// If nothing is posted, use recent post in session if it exists
 		if (!isset($post['posted']) && isset($session['vc'])) {
 			$post = $session['vc'];
@@ -48,14 +48,14 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Set needed variables for view
 		$similars = array();
 		$posted = false;
-		
+
 		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
 			$_SESSION['vc'] = $post;
 			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
-		
+
 		// Bind variables to view
 		$v->set('selected', $cur_cats);
 		$v->set('advanced', ($type != 'pca'));
@@ -117,6 +117,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$id = $this->request->param('id');
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
+		$forecasts = $monument->forecast();
+
 
 		if(!$monument->loaded())
 			throw new HTTP_Exception_404(__('monument.notfound'));
@@ -132,6 +134,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		  	$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
+			$v->bind('forecasts', $forecasts);
 			$this->template->body = $v;
 		}
 	}

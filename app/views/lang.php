@@ -9,7 +9,7 @@
 			<?php
 				foreach($languages as $l){
 					$uri = Request::detect_uri() . URL::query(array('lang' => $l));
-					$href = "$l/localize?redirect=".urlencode($uri);
+					$href = URL::site("$l/localize?redirect=".urlencode($uri));
 					$img = HTML::image("images/lang/$l.png");
 					echo "<li><a href='$href'>$img ".__($l)."</a></li>";
 				}
