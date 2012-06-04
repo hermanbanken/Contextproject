@@ -99,10 +99,10 @@ var exports = exports | {};
                 $("#list").append(
                     $(
                         "<div class='monument'>"+
-                        "<a href='monument/id/"+id+"' >" +
+                        "<a href='"+base+"monument/id/"+id+"' >" +
                         "<h2>" + monument.name + "</h2>" +
                         "<img class='map-info-photo' id='photo'"+id+"' src='"+monument.photoUrl+"' style='"+style+"' />" +
-                        "</a><p>"+desc+"<a href='monument/id/"+id+"'>Meer</a></p>" +
+                        "</a><p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>" +
                         "</div>"
                     ).click(function(){
                         $(this).addClass("selected").siblings().removeClass("selected");
@@ -187,7 +187,11 @@ var exports = exports | {};
                         var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
                         infowindow.setContent(
                             "<a href='"+base+"monument/id/"+id+"' >" +
+<<<<<<< HEAD
                                 "<img class='map-info-photo' id='photo'"+id+"' src='"+base+data.photoUrl+"' style='"+style+"' />" +
+=======
+                                "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
+>>>>>>> 21edad1417481f96a6ba4a2684ee85e3812fdd21
                                 "<h2>" + data.name + "</h2></a>" +
                                 "<p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>"
                         );

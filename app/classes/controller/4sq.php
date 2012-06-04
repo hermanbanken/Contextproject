@@ -9,6 +9,11 @@ class Controller_4sq extends Controller_Template {
 		$this->token();
 	}
 
+	public function action_logout(){
+		Session::instance()->set("4sq.token", false);
+		$this->template->body = "<h1>Loggout of FourSquare</h1>";
+	}
+
 	/**
 	 * Get the user token for FourSquare access
 	 * if not set, login at FourSquare
@@ -36,7 +41,14 @@ class Controller_4sq extends Controller_Template {
 			);
 		}
 	}
-	
+
+	/**
+	 * Callback point for FourSquare to return after the
+	 * user has logged in on FourSquare.
+	 *
+	 * The GET parameter 'code' is set, With this we can
+	 * get an oauth access token.
+	 */
 	public function action_cb(){
 		if( $code = $this->request->query('code') )
 		{
@@ -60,6 +72,18 @@ class Controller_4sq extends Controller_Template {
 		}
 	}
 
+	/**
+	 * Action called when a user clicks to create a venue. If we
+	 * already have a venue for this monument we ask if the user
+	 * doesn't know this.
+	 *
+	 * Show a form with the fields for a new venue. If FourSquare
+	 * suggests venues, show them and offer the user to link them.
+	 * If the user whishes to link the new venue anyway, we force
+	 * to create it by using the force-key FourSquare provides.
+	 *
+	 * @return mixed
+	 */
 	public function action_create(){
 		$id = $this->request->param('id');
 
@@ -121,18 +145,26 @@ class Controller_4sq extends Controller_Template {
 			// Valid, go try to add it to FourSquare
 			if($venue->validation()->check())
 			{
-				$response = Request::factory("https://api.foursquare.com/v2/venues/add".URL::query(array(
+				$request = Request::factory("https://api.foursquare.com/v2/venues/add".URL::query(array(
 					"oauth_token" => $token,
 					"v" => "20120601"
 				)))
 					->method("post")
-					->post( $venue->as_array() )
-					->execute();
+					->post( $venue->as_array() );
+
+				// Ignore duplicates and force insert if requested to do so
+				if( $this->request->post('force') ){
+					$request->post('ignoreDuplicatesKey', $this->request->post('force'))
+							->post('ignoreDuplicates', 'true');
+				}
+
+				$response = $request->execute();
 
 				$j = @json_decode($response->body());
 
 				if($response->status() == 200)
 				{
+					// Success, store venue
 					$v = $j->response->venue;
 					$venue->set("id", $v->id)->save();
 					Message::add("info", __("foursquare.venue.added"));
@@ -150,6 +182,7 @@ class Controller_4sq extends Controller_Template {
 					$view->bind('force', $j->response->ignoreDuplicatesKey);
 					$view->bind('suggest', $suggest);
 				} else {
+					// Unknown error, add meta error
 					$view->bind("meta", $j->meta);
 	        	}
 			}
@@ -158,6 +191,7 @@ class Controller_4sq extends Controller_Template {
 				$view->set('errors', $venue->validation()->errors('models'));
 			}
     	} else {
+			// Fill form
 			$venue->values(array(
 				"name" => $monument->name,
 				"address" => $monument->street->name.' '.$monument->streetNumber,
@@ -173,6 +207,11 @@ class Controller_4sq extends Controller_Template {
 		//https://api.foursquare.com/v2/events/categories
 	}
 
+	/**
+	 * Fetch single venue, by it's id, from FourSquare
+	 * @param $id
+	 * @return mixed
+	 */
 	public function fetchVenue($id){
 		if(!preg_match("~^[a-z0-9A-Z]+$~", $id))
 			return;
@@ -188,7 +227,15 @@ class Controller_4sq extends Controller_Template {
 		}
 	}
 
+	/**
+	 * Get OAuth authorization code from FourSquare.
+	 * The sleep is needed since FourSquare doesn't work fast
+	 * enough and straight away the response is always an error.
+	 *
+	 * @return bool verified or not
+	 */
 	public function verify(){
+		usleep(200);
 		$response = 
 			Request::factory(
 				"https://foursquare.com/oauth2/access_token".URL::query( array(
@@ -200,7 +247,7 @@ class Controller_4sq extends Controller_Template {
 				))
 			)->execute();
 		$obj = @json_decode($response->body());
-		
+
 		if( $obj && isset($obj->access_token) )
 		{
 			Session::instance()->set("4sq.token", $obj->access_token);
