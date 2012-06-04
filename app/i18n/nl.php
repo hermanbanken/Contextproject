@@ -10,7 +10,7 @@ return array (
 		'english' => 'Engels',
 		'dutch' => 'Nederlands',
 		
-		'forecast.days' => array('Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'),
+		'forecast.days' => array('ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'),
 
 		'splash.text' => 'Ontdek monumenten in Nederland!',
 		'splash.show-map' => 'Toon kaart',
