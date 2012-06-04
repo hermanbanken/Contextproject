@@ -413,6 +413,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get post-data
 		$pform = $this->request->query();
 		
+		//die(var_dump($pform));
+		
 		// override values
 		foreach($pform as $key => $value) {
 			$p[$key] = $value;
@@ -421,13 +423,10 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
-		if (count($p) == 0) {
-			if (isset($session['selection'])) {
-				$p = $session['selection'];
-			}
-			else {
-				$p = $this->getDefaults();
-			}
+		
+		// fetch variables saved in session 
+		foreach($session as $key => $value) {
+			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
 		}
 		
 		// add searchterm for external links
@@ -436,9 +435,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 			// If searching for tag, remove irrelevant filterings, but keep post values used for sorting
 			unset($p['category']);
 			unset($p['town']);
+			unset($p['distance']);
 			$p['search'] = $search;
 		}
-
+		
+		// re-initialize unset variables
 		foreach ($this->getDefaults() AS $key => $value) {
 			if (!isset($p[$key])) $p[$key] = $value;
 		}
