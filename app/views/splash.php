@@ -24,7 +24,7 @@
 				type: "rect", x: 0, y: 0, width: "100%", height: "100%",
 				fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
 			// Draw grass
-			grs.ellipse("50%", "90%", "100%", "50%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
+			sky.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
 
 			$(".monuments .house").each(function(i){
 				var paper = Raphael(this, "100%", "100%");
@@ -45,10 +45,10 @@
 			<h1><img alt="CultuurApp" src="images/logo.png" /></h1>
 			<p style="color:black"><?php echo __('splash.text'); ?></p>
 			<p class="download-info">
-				<a href="monument/map" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
-				<a href="user/register" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
+				<a href="<?php echo URL::site("monument/map"); ?>" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
+				<a href="<?php echo URL::site("user/register"); ?>" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
 			</p>
 			</div>
 	</header>
 	<div class='background'></div>
-	<a class='torn' href='monument/map'></a>
+	<a class='torn' href='<?php echo URL::site("monument/map"); ?>'></a>

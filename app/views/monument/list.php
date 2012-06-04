@@ -19,12 +19,12 @@
 					?>
 				<div class="row-fluid list-row">
 					<div class="span2">
-						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"> <img
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>"> <img
 							src="<?php echo $monument_s->photoUrl(); ?>" alt="">
 						</a>
 					</div>
 					<div class="span3">
-						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"><?php echo $monument_s->name; ?>
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>"><?php echo $monument_s->name; ?>
 						</a> <span style="display: block;"><?php 
 						if (isset($monument['distance'])) {
 							$union = 'meter';
@@ -39,7 +39,7 @@
 					</div>
 					<div class="span7">
 						<?php echo $monument_s->summary(); ?>
-						<a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>">Meer</a>
 					</div>
 				</div>
 				<?php

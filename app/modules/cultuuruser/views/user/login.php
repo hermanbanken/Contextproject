@@ -5,7 +5,7 @@
 	</div>
 	<div class="modal-body">
 	<?php 	
-		echo Form::open('user/login');
+		echo Form::open(URL::site('user/login'));
 		if ($message){
 			echo $message;
 		}
@@ -24,10 +24,10 @@
   	<div class="modal-footer">
 		<p class="modal-footer-legend">-- <?php echo __('login.or'); ?> --</p>
 		<div class="bs-links">
-			<p><a href="user/register"><?php echo __('login.register'); ?></a> <?php echo __("login.no-account"); ?></p>
+			<p><a href="<?php echo URL::site("user/register"); ?>"><?php echo __('login.register'); ?></a> <?php echo __("login.no-account"); ?></p>
 			<div class="btn-group">
-				<a class="btn btn-small btn-primary" href="user/provider/facebook">F</a>
-				<a class="btn btn-small btn-primary" href="user/provider/facebook"><?php echo __('login.with-fb'); ?></a>
+				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>">F</a>
+				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>"><?php echo __('login.with-fb'); ?></a>
 			</div>
 			<div class="btn-group">
 				<a class="btn btn-small btn-info">T</a>
