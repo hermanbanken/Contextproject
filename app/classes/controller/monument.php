@@ -185,7 +185,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	function buildQuery($post = false) {
 		if (!$post) {
-			$post = $this->request->post();
+			$post = $this->request->query();
 		}
 
 		if (!isset($post['not_in_session'])) {
@@ -407,8 +407,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Set view
 		$v = View::factory(static::$entity.'/list');
 
+		// get defaults
+		$p = $this->getDefaults();
+		
 		// Get post-data
-		$p = $this->request->query();
+		$pform = $this->request->query();
+		
+		// override values
+		foreach($pform as $key => $value) {
+			$p[$key] = $value;
+		}
 		
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
@@ -428,7 +436,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 			// If searching for tag, remove irrelevant filterings, but keep post values used for sorting
 			unset($p['category']);
 			unset($p['town']);
-			unset($p['distance']);
 			$p['search'] = $search;
 		}
 
