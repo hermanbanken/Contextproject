@@ -24,7 +24,7 @@ class Wunderground {
 		$forecasts_query = ORM::factory('forecast')
 		->where('id_town', '=', $monument->id_town)
 		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(6, 0, 0, date('n'), date('j'), date('Y'))));
-		
+
 		// Execute query (reset = false, so we can use it at later time)
 		$forecasts = $forecasts_query->reset(false)->find_all();
 
@@ -32,36 +32,29 @@ class Wunderground {
 		if ($forecasts->count() == 0) {
 			// No cached forecasts? Request data from wunderground with our key
 			$url = "http://api.wunderground.com/api/".self::KEY."/forecast/lang:".$lang."/q/".$monument->lng.",".$monument->lat.".json";
-// 			$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->town->name).".json";
+			// 			$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->town->name).".json";
 			$response_json = file_get_contents($url);
 			$response = @json_decode($response_json);
 
 			// Check if forecast is found
-			if (isset($response->forecast->txt_forecast->forecastday)) {
+			if (isset($response->forecast->simpleforecast->forecastday)) {
 				// Clear cache
 				DB::delete('forecasts')->where('id_town', '=', $monument->id_town)->execute();
-					
-				$forecast = $response->forecast->txt_forecast->forecastday;
-				$i = 0;
-				$date = time();
+
+				$forecast = $response->forecast->simpleforecast->forecastday;
 
 				// Loop through forecasts, cache in database
 				foreach ($forecast AS $f) {
-					if ($i % 2 == 0) {
-						$forecast_orm = ORM::factory('forecast');
-						$forecast_orm->id_town = $monument->id_town;
-						$forecast_orm->icon = $f->icon_url;
-						$forecast_orm->forecast = $f->fcttext_metric;
-						$forecast_orm->date = date('Y-m-d', $date);
-						$forecast_orm->save();
-							
-						// Date + 1 day
-						$date += 24 * 60 * 60;
-					}
-
-					$i++;
+					$forecast_orm = ORM::factory('forecast');
+					$forecast_orm->id_town = $monument->id_town;
+					$forecast_orm->icon = $f->icon_url;
+					$forecast_orm->low = $f->low->celsius;
+					$forecast_orm->high = $f->high->celsius;
+					$forecast_orm->date = date('Y-m-d', mktime(0, 0, 0, $f->date->month, $f->date->day, $f->date->year));
+					var_dump($forecast_orm);
+					$forecast_orm->save();
 				}
-				
+
 				$forecasts = $forecasts_query->reset(false)->find_all();
 			}
 		}

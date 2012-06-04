@@ -9,6 +9,8 @@ return array (
 		'subcategory' => 'Subcategorie',
 		'english' => 'Engels',
 		'dutch' => 'Nederlands',
+		
+		'forecast.days' => array('Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'),
 
 		'splash.text' => 'Ontdek monumenten in Nederland!',
 		'splash.show-map' => 'Toon kaart',

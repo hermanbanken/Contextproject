@@ -10,6 +10,8 @@ return array(
 		'english' => 'English',
 		'dutch' => 'Netherlands',
 		
+		'forecast.days' => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'),
+		
 		'splash.text' => 'Discover monuments in the Netherlands!',
 		'splash.show-map' => 'Show map',
 		'splash.create-account' => 'Create an account',
