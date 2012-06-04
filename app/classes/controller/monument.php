@@ -185,7 +185,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	function buildQuery($post = false) {
 		if (!$post) {
-			$post = $this->request->post();
+			$post = $this->request->query();
 		}
 
 		if (!isset($post['not_in_session'])) {
@@ -407,19 +407,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Set view
 		$v = View::factory(static::$entity.'/list');
 
+		// get defaults
+		$p = $this->getDefaults();
+		
 		// Get post-data
-		$p = $this->request->query();
+		$pform = $this->request->query();
+		
+		//die(var_dump($pform));
+		
+		// override values
+		foreach($pform as $key => $value) {
+			$p[$key] = $value;
+		}
 		
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
-		if (count($p) == 0) {
-			if (isset($session['selection'])) {
-				$p = $session['selection'];
-			}
-			else {
-				$p = $this->getDefaults();
-			}
+		
+		// fetch variables saved in session 
+		foreach($session as $key => $value) {
+			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
 		}
 		
 		// add searchterm for external links
@@ -431,7 +438,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 			unset($p['distance']);
 			$p['search'] = $search;
 		}
-
+		
+		// re-initialize unset variables
 		foreach ($this->getDefaults() AS $key => $value) {
 			if (!isset($p[$key])) $p[$key] = $value;
 		}

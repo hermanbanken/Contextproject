@@ -132,12 +132,6 @@ foreach ($forecasts AS $forecast) {
     <li><a class="aanbevelingen"
            href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
     </a></li>
-    <li><a class="locatie"
-           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#locatie"><?php echo __('single.location'); ?>
-    </a></li>
-    <li><a class="forecast"
-           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#forecast"><?php echo __('single.forecast'); ?>
-    </a></li>
     <li><a class="restaurants"
            href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#restaurants"><?php echo __('single.restaurants'); ?>
     </a></li>
