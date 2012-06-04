@@ -51,7 +51,11 @@
 				</tr>
 				<tr>
 					<td>Tags</td>
-					<td><?php echo strtolower(implode(', ', $monument->tags())); ?>
+					<td><?php 
+							$tags = $monument->tags();
+							foreach($tags as $tag)
+								echo '<a href="'.URL::site('monument/list/'.$tag).'">'.$tag.'</a>';
+						?>
 					</td>
 				</tr>
 				<tr>
