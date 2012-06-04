@@ -132,19 +132,19 @@ foreach ($forecasts AS $forecast) {
   </div>
   <ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
     <li><a class="aanbevelingen"
-           href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
+           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
     </a></li>
     <li><a class="locatie"
-           href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?>
+           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#locatie"><?php echo __('single.location'); ?>
     </a></li>
     <li><a class="forecast"
-           href="monument/id/<?php echo $monument->id_monument; ?>#forecast"><?php echo __('single.forecast'); ?>
+           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#forecast"><?php echo __('single.forecast'); ?>
     </a></li>
     <li><a class="restaurants"
-           href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?>
+           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#restaurants"><?php echo __('single.restaurants'); ?>
     </a></li>
     <li><a class="cafes"
-           href="monument/id/<?php echo $monument->id_monument; ?>#cafes"><?php echo __('single.bars'); ?>
+           href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#cafes"><?php echo __('single.bars'); ?>
     </a></li>
     <li style="float: right"><img
         src="https://developers.google.com/maps/documentation/places/images/powered-by-google-on-white.png"
