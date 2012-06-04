@@ -3,7 +3,7 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 
 	public static function handler(Exception $e)
 	{
-		if (false && (Kohana::DEVELOPMENT === Kohana::$environment || Kohana::STAGING === Kohana::$environment))
+		if (Kohana::DEVELOPMENT === Kohana::$environment || Kohana::STAGING === Kohana::$environment)
 		{
 			parent::handler($e);
 		}
