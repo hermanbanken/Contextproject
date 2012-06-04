@@ -24,7 +24,7 @@
 				type: "rect", x: 0, y: 0, width: "100%", height: "100%",
 				fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
 			// Draw grass
-			grs.ellipse("50%", "90%", "100%", "50%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
+			sky.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
 
 			$(".monuments .house").each(function(i){
 				var paper = Raphael(this, "100%", "100%");
