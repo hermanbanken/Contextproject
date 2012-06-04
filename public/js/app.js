@@ -34,6 +34,27 @@ var exports = exports | {};
         mapTypeId:google.maps.MapTypeId.ROADMAP
     };
 
+    var isMobile = {
+        Android: function() {
+            return navigator.userAgent.match(/Android/i) ? true : false;
+        },
+        BlackBerry: function() {
+            return navigator.userAgent.match(/BlackBerry/i) ? true : false;
+        },
+        iOS: function() {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false;
+        },
+        Windows: function() {
+            return navigator.userAgent.match(/IEMobile/i) ? true : false;
+        },
+        any: function() {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+        },
+        capable: function() {
+            return (isMobile.Android() || isMobile.iOS() || isMobile.BlackBerry());
+        }
+    };
+
 	function CultuurApp()
     {
         this.initialize();
@@ -68,42 +89,43 @@ var exports = exports | {};
         });
 	};
 
-    CultuurApp.prototype.list = function(monuments, options)
+    CultuurApp.prototype.mapList = function(monuments, options)
     {
         var self = this;
         var extractedMarker = false;
+        var scrolled = false;
         this.page = this.page || 1;
 
         if(!monuments)
         {
-            var query = this.parameter(false, function(){ self.list(); });
+            var query = this.parameter(false, function(){ self.mapList(); });
 
             if(this.page > 1) query.page = this.page;
             $.getJSON(base+"search/list", query, function(data)
             {
                 if(options && options.replace)
                     data.replace = options.replace;
-                self.list(data.monuments, data);
+                self.mapList(data.monuments, data);
             });
         }else{
             if( options && options.replace )
-                $(this).remove();
+                $(options.replace).remove();
             else
-                $("#list").html("");
+                $("#list .list").html("");
 
             $.map(monuments, function(monument)
             {
                 var id = monument.id_monument;
                 var desc = monument.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
                 var style = "float: left; margin-right: 10px; margin-top: 3px; ";//max-height: 100px; min-height: 100px;";
-                $("#list").append(
+                $("#list .list").append(
                     $(
-                        "<div class='monument'>"+
+                        "<li class='monument'>"+
                         "<a href='"+base+"monument/id/"+id+"' >" +
                         "<h2>" + monument.name + "</h2>" +
                         "<img class='map-info-photo' id='photo'"+id+"' src='"+monument.photoUrl+"' style='"+style+"' />" +
                         "</a><p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>" +
-                        "</div>"
+                        "</li>"
                     ).click(function(){
                         if($(this).hasClass("selected")){
                             $(this).removeClass("selected");
@@ -131,15 +153,46 @@ var exports = exports | {};
                 );
             });
 
-            if(options.more) $("#list").append(
-                $("<div class='monument more'>Load more monuments</div>").click(
+            $("#list .info").text($("#list ul .monument").size() + " / " + options.total);
+
+            if(options.more) $("#list .list").append(
+                $("<li class='more'>Load more monuments</li>").click(
                     function()
                     {
                         self.page++;
-                        self.list(false, { replace: this });
+                        self.mapList(false, { replace: this });
                     }
                 )
             );
+
+            if(isMobile.capable())
+            {
+                if(!scrolled)
+                {
+                    $("#list .info").css({ position: "absolute", top: 0 });
+                    $("#list ul").wrap(
+                        $("<div class='wrapper'></div>").css({
+                            position: "absolute",
+                            top: '40px', bottom: 0,
+                            left: 0, right: 0
+                        })
+                    ).css({
+                        position: "static",
+                        top: 'auto',
+                        bottom: 'auto',
+                        marginTop: 0
+                    });
+
+                    // Prevent bubbling on a touch move
+                    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+                    // Add scroller
+                    scrolled = new iScroll($("#list .wrapper").get(0), {
+                        hScrollbar: false
+                    });
+                }
+                scrolled.refresh();
+            }
         }
 
     };
@@ -158,7 +211,7 @@ var exports = exports | {};
         } else {
             this.locations = locations;
             this.placePins();
-            this.list();
+            this.mapList();
         }
 
     };

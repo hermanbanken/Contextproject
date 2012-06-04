@@ -66,7 +66,7 @@ class Controller_Search extends Controller_Template {
 
 		// Create pagination (count query without limit and offset)
 		$pagination = Pagination::factory(array(
-				'total_items' => $monuments->count(),
+				'total_items' => $total = $monuments->count(),
 				'items_per_page' => $limit,
 				'view' => '../../../views/pagination'
 		));
@@ -109,6 +109,7 @@ class Controller_Search extends Controller_Template {
 				$result['monuments'][] = $m;
 			}
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
+			$result['total'] = $total;
 
 			// Add view to template
 			$this->auto_render = false;

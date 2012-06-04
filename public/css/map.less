@@ -32,12 +32,36 @@ body {
         height: 100%;
     }
 
-    .list {
-        overflow-y: scroll;
-        overflow-x: hidden;
+    .panel-list {
         border-left: 1px solid gray;
 
-        .monument {
+        .info {
+            display: block;
+            #gradient > .vertical(#08C, #05C);
+            position: absolute;
+            top: 0;
+            height: 19px;
+            border-bottom: 1px solid #555;
+            border-bottom: 1px solid rgba(0,0,0,.5);
+            line-height: 20px;
+            padding: 10px;
+            left: 0;
+            right: 0;
+        }
+
+        @media( max-width: 980px ){ .info { top: 50px; } }
+
+        ul.list {
+            margin: 0;
+            padding: 0;
+            top: 40px;
+            position: absolute;
+            bottom: 0;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .monument, .more {
             display: block;
             padding: 10px;
             clear: both;
@@ -63,12 +87,12 @@ body {
     }
 
     &.map-active {
-        .map {
+        .panel-map {
             left: 0;
             right: 300px;
             width: auto;
         }
-        .list {
+        .panel-list {
             width: 300px;
             right: 0;
             left: auto;
@@ -76,12 +100,12 @@ body {
     }
 
     &.list-active {
-        .map {
+        .panel-map {
             left: 0;
             right: auto;
             width: 500px;
         }
-        .list {
+        .panel-list {
             width: auto;
             left: 500px;
             right: 0;
