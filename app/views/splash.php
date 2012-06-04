@@ -45,10 +45,10 @@
 			<h1><img alt="CultuurApp" src="images/logo.png" /></h1>
 			<p style="color:black"><?php echo __('splash.text'); ?></p>
 			<p class="download-info">
-				<a href="monument/map" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
-				<a href="user/register" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
+				<a href="<?php echo URL::site("monument/map"); ?>" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
+				<a href="<?php echo URL::site("user/register"); ?>" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
 			</p>
 			</div>
 	</header>
 	<div class='background'></div>
-	<a class='torn' href='monument/map'></a>
+	<a class='torn' href='<?php echo URL::site("monument/map"); ?>'></a>
