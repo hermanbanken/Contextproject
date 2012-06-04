@@ -7,8 +7,8 @@
   				<b class="caret"></b>
   			</a>
 			<ul class="dropdown-menu pull-right">
-				<li><a href="user/profile"><?php echo __('menu.profile'); ?></a></li>
-				<li><a href="user/logout"><?php echo __('menu.logout'); ?></a></li>
+				<li><a href="<?php echo URL::site("user/profile"); ?>"><?php echo __('menu.profile'); ?></a></li>
+				<li><a href="<?php echo URL::site("user/logout"); ?>""><?php echo __('menu.logout'); ?></a></li>
 			</ul>
   		
   		<?php } else { ?>

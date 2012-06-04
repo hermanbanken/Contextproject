@@ -1,4 +1,4 @@
-			<form method="post" action="" id="<?php echo $formname; ?>">
+			<form method="get" action="<?php echo URL::site('monument/list') ?>" id="<?php echo $formname; ?>">
 				<input id="search" type="text" name="search" value="<?php echo $param['search']; ?>" placeholder="<?php echo __('selection.search'); ?>" /> 
 				<input id="town" type="text" name="town" value="<?php echo $param['town']; ?>" placeholder="<?php echo __('city'); ?>" />
 				<input type="hidden" name="longitude" id="longitude" value="" /> 

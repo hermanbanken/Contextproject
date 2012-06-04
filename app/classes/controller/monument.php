@@ -119,16 +119,19 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$monument = ORM::factory('monument', $id);
 		$forecasts = $monument->forecast();
 
+
+		if(!$monument->loaded())
+			throw new HTTP_Exception_404(__('monument.notfound'));
+
 		if($this->is_json())
 		{
-			$obj = $monument->object();
-			$obj['photoUrl'] = $monument->photoUrl();
-			$this->set_json(json_encode($obj));
+		  $obj = $monument->object();
+		  $obj['photoUrl'] = $monument->photoUrl();
+		  $this->set_json(json_encode($obj));
 		}
 		else
 		{
-			$v = View::factory('monument/single-sleek');
-				
+		  	$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
 			$v->bind('forecasts', $forecasts);
@@ -203,8 +206,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${
-					$key} = $value;
+				${$key} = $value;
 			}
 		}
 
@@ -406,18 +408,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$v = View::factory(static::$entity.'/list');
 
 		// Get post-data
-		$p = $this->request->post();
-
-		// add searchterm for external links
-		$search = $this->request->param('id');
-		if(isset($search) AND $search != '') {
-			// If searching for tag, remove other filterings
-			foreach ($p AS $key => $value) {
-				unset($p[$key]);
-			}
-			$p['search'] = $search;
-		}
-
+		$p = $this->request->query();
+		
 		// If no post-data is set, get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
@@ -428,6 +420,16 @@ class Controller_Monument extends Controller_Abstract_Object {
 			else {
 				$p = $this->getDefaults();
 			}
+		}
+		
+		// add searchterm for external links
+		$search = $this->request->param('id');
+		if(isset($search) AND $search != '') {
+			// If searching for tag, remove irrelevant filterings, but keep post values used for sorting
+			unset($p['category']);
+			unset($p['town']);
+			unset($p['distance']);
+			$p['search'] = $search;
 		}
 
 		foreach ($this->getDefaults() AS $key => $value) {
