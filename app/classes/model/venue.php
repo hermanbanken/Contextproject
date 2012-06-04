@@ -116,7 +116,7 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 				if(!$v) return false;
 
 				$this->fromFourSquare($v, $monument);
-				$this->save();
+				$this->find()->save();
 				$monument->reload();
 				return $this;
 			}
