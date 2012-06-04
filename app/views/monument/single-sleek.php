@@ -11,7 +11,7 @@
             <h5><?php echo $monument->name; ?></h5>
             <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
             <p>
-              <a class="btn" href="monument/visualcomparison/<?php echo $monument->id_monument; ?>">Vergelijk visueel</a>
+              <a class="btn" href="<?php echo URL::site('monument/visualcomparison/'.$monument->id_monument); ?>">Vergelijk visueel</a>
               <?php
               if ($user) {
                 $visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
