@@ -72,13 +72,13 @@ var exports = exports | {};
     {
         var self = this;
         var extractedMarker = false;
-        this.page = this.page || 0;
+        this.page = this.page || 1;
 
         if(!monuments)
         {
             var query = this.parameter(false, function(){ self.list(); });
 
-            if(this.page > 0) query.page = this.page;
+            if(this.page > 1) query.page = this.page;
             $.getJSON(base+"search/list", query, function(data)
             {
                 if(options && options.replace)
@@ -105,19 +105,28 @@ var exports = exports | {};
                         "</a><p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>" +
                         "</div>"
                     ).click(function(){
-                        $(this).addClass("selected").siblings().removeClass("selected");
-                        var point = new google.maps.LatLng( monument.lng, monument.lat );
-                        map.panTo(point);
-                        if(map.getZoom() < 16) map.setZoom(16);
+                        if($(this).hasClass("selected")){
+                            $(this).removeClass("selected");
+                            if(extractedMarker){
+                                markerClusterer.addMarkers([extractedMarker]);
+                            }
+                            extractedMarker = false;
+                            map.fitBounds(bounds);
+                        }else{
+                            $(this).addClass("selected").siblings().removeClass("selected");
+                            var point = new google.maps.LatLng( monument.lng, monument.lat );
+                            map.panTo(point);
+                            if(map.getZoom() < 16) map.setZoom(16);
 
-                        if(extractedMarker){
-                            markerClusterer.addMarkers([extractedMarker]);
+                            if(extractedMarker){
+                                markerClusterer.addMarkers([extractedMarker]);
+                            }
+                            extractedMarker = markersLookup[monument.id_monument];
+                            marker.setMap(map);
+                            //marker.setVisible(true);
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                            //setTimeout(function(){ marker.setAnimation(null); }, 750);
                         }
-                        extractedMarker = markersLookup[monument.id_monument];
-                        marker.setMap(map);
-                        //marker.setVisible(true);
-                        marker.setAnimation(google.maps.Animation.BOUNCE);
-                        //setTimeout(function(){ marker.setAnimation(null); }, 750);
                     })
                 );
             });

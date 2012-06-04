@@ -3,13 +3,11 @@
 
     <div class="span8 monument-single-overview">
 
-      <h1><?php echo $monument->name; ?><small style="float:right"><a href="javascript:history.back(1);">Terug</a></small></h1>
+      <h1><?php echo $monument->name; ?></h1>
       <p>
         <div class="thumbnail span4" style="float:right">
           <img src="<?php echo $monument->photoUrl(); ?>" alt="<?php echo $monument->name; ?>">
           <div class="caption">
-            <h5><?php echo $monument->name; ?></h5>
-            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
             <p>
               <a class="btn" href="<?php echo URL::site('monument/visualcomparison/'.$monument->id_monument); ?>">Vergelijk visueel</a>
               <?php
@@ -32,7 +30,7 @@
 
     <div class="span4 monument-single-details">
 
-      <h2>Details</h2>
+      <h2>Details <small style="float:right"><a href="javascript:history.back(1);">Terug</a></small></h2>
       <div class="column">
         <div class="map-outer">
           <div class="map well" id="single-map" data-map="<?php echo $monument->lat . ";" . $monument->lng; ?>">

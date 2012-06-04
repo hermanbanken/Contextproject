@@ -50,7 +50,13 @@ body {
             p { font-size: .9em; }
 
             &:hover {
-                border-left: 5px solid #ccc;
+                border-left: 5px solid #aaa;
+                padding-left: 5px;
+            }
+
+            &.selected {
+                #gradient > .vertical(#aaa, #ccc);
+                border-left: 5px solid #999;
                 padding-left: 5px;
             }
         }
