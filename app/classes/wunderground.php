@@ -51,7 +51,6 @@ class Wunderground {
 					$forecast_orm->low = $f->low->celsius;
 					$forecast_orm->high = $f->high->celsius;
 					$forecast_orm->date = date('Y-m-d', mktime(0, 0, 0, $f->date->month, $f->date->day, $f->date->year));
-					var_dump($forecast_orm);
 					$forecast_orm->save();
 				}
 
