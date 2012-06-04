@@ -3,18 +3,6 @@
 		<h1>
 			<?php echo __('visualcomparison.title').' '.$monument->name; ?>
 		</h1>
-		<?php 
-		if ($user) {
-		$visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
-		<a style="float: right; margin-top: 10px;"
-			class="btn <?php echo ($visited ? 'btn-success ' : ''); ?>visited"
-			href="#"><i
-			class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i> <span
-			class="text"><?php echo ($visited ? __('single.visited') : __('single.not-visited')); ?>
-		</span> </a>
-		<?php 
-		}
-		?>
 	</div>
 </div>
 <div class="row">
@@ -44,7 +32,7 @@
 				type="checkbox" name="orientation"
 				<?php if (in_array('orientation', $selected)) { echo ' checked="checked"'; } ?>>
 				<?php echo __('visualcomparison.orientation'); ?>
-			</label> <label class="checkbox" style="margin-right: 10px;"> <input
+			</label> <label style="float: right; margin-top: 5px;" class="checkbox" style="margin-right: 10px;"> <input
 				type="checkbox" name="advanced"
 				<?php if ($advanced) { echo ' checked="checked"'; } ?>>
 				<span id="tooltip" rel="tooltip" title="<?php echo __('visualcomparison.advanced-explain'); ?>"><?php echo __('visualcomparison.advanced'); ?></span>
