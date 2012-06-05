@@ -28,6 +28,14 @@ class Model_Forecast extends Model_Abstract_Cultuurorm {
 	}
 	
 	/**
+	 * Get url of icon from wunderground
+	 * @return string url
+	 */
+	public function icon() {
+		return sprintf('http://icons-ak.wxug.com/i/c/k/%s.gif', $this->icon);
+	}
+	
+	/**
 	 * Get abbreviation of day string
 	 * @return string abbreviation of day string
 	 */
@@ -42,7 +50,7 @@ class Model_Forecast extends Model_Abstract_Cultuurorm {
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_forecast` int(10) NOT NULL AUTO_INCREMENT,
 	`id_town` int(10) NOT NULL,
-	`icon` varchar(155) NOT NULL,
+	`icon` varchar(50) NOT NULL,
 	`low` double NOT NULL,
 	`high` double NOT NULL,
 	`date` date NOT NULL,

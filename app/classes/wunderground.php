@@ -47,7 +47,7 @@ class Wunderground {
 				foreach ($forecast AS $f) {
 					$forecast_orm = ORM::factory('forecast');
 					$forecast_orm->id_town = $monument->id_town;
-					$forecast_orm->icon = $f->icon_url;
+					$forecast_orm->icon = $f->icon;
 					$forecast_orm->low = $f->low->celsius;
 					$forecast_orm->high = $f->high->celsius;
 					$forecast_orm->date = date('Y-m-d', mktime(0, 0, 0, $f->date->month, $f->date->day, $f->date->year));
