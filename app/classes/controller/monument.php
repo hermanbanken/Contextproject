@@ -120,8 +120,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$forecasts = $monument->forecast();
 		
 		// Log monument
-		$logger = new Logger();
-		$logger->monument($monument);
+		Logger::instance()->monument($monument);
 
 		if(!$monument->loaded())
 			throw new HTTP_Exception_404(__('monument.notfound'));
@@ -483,7 +482,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$v->set('tagcloud',$t);
 		
 		// Logging
-		$logger = new Logger();
+		$logger = Logger::instance();
 		$logger->category(ORM::factory('category', $p['category']));
 		$logger->town(ORM::factory('town', $p['town']));
 		$logger->keywords($p['search']);

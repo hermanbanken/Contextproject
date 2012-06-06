@@ -14,8 +14,7 @@ class Auth_ORM extends Kohana_Auth_ORM
 		parent::complete_login($user);
 
 		// Couple user to tracker
-		$logger = new Logger();
-		$logger->bind_user($user);
+		Logger::instance()->bind_user($user);
 	}
 
 }
