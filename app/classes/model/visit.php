@@ -14,13 +14,14 @@ class Model_Visit extends Model_Abstract_Cultuurorm {
 	
 	protected static $entity = "visit";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
-		`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-	  	`id_user` int(10) unsigned NOT NULL,
-	  	`id_monument` int(10) unsigned NOT NULL,
-	  	`date` timestamp DEFAULT CURRENT_TIMESTAMP,
-		PRIMARY KEY (`id`),
-		KEY `id_user` (`id_user`),
-		KEY `id_monument` (`id_monument`)
-	  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";	
+		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `id_user` int(10) unsigned NOT NULL,
+		  `id_monument` int(10) unsigned NOT NULL,
+		  `irl` tinyint(1) NOT NULL DEFAULT '0',
+		  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		  PRIMARY KEY (`id`),
+		  KEY `id_user` (`id_user`),
+		  KEY `id_monument` (`id_monument`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";	
 }
 ?>
