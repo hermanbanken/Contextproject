@@ -118,20 +118,23 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
 		$forecasts = $monument->forecast();
-
+		
+		// Log monument
+		$logger = new Logger();
+		$logger->monument($monument);
 
 		if(!$monument->loaded())
 			throw new HTTP_Exception_404(__('monument.notfound'));
 
 		if($this->is_json())
 		{
-		  $obj = $monument->object();
-		  $obj['photoUrl'] = $monument->photoUrl();
-		  $this->set_json(json_encode($obj));
+			$obj = $monument->object();
+			$obj['photoUrl'] = $monument->photoUrl();
+			$this->set_json(json_encode($obj));
 		}
 		else
 		{
-		  	$v = View::factory('monument/single-sleek');
+			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
 			$v->bind('forecasts', $forecasts);
@@ -206,7 +209,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${$key} = $value;
+				${
+					$key} = $value;
 			}
 		}
 
@@ -409,26 +413,26 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// get defaults
 		$p = $this->getDefaults();
-		
+
 		// Get post-data
 		$pform = $this->request->query();
-		
+
 		//die(var_dump($pform));
-		
+
 		// override values
 		foreach($pform as $key => $value) {
 			$p[$key] = $value;
 		}
-		
+
 		// If no post-data is set, get data from session or set default data
-		$session = Session::instance();
+		$session = Session_Native::instance();
 		$session = $session->as_array();
-		
-		// fetch variables saved in session 
+
+		// fetch variables saved in session
 		foreach($session as $key => $value) {
 			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
 		}
-		
+
 		// add searchterm for external links
 		$search = $this->request->param('id');
 		if(isset($search) AND $search != '') {
@@ -438,7 +442,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 			unset($p['distance']);
 			$p['search'] = $search;
 		}
-		
+
 		// re-initialize unset variables
 		foreach ($this->getDefaults() AS $key => $value) {
 			if (!isset($p[$key])) $p[$key] = $value;
@@ -477,6 +481,12 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$t->bind('tags',$tags);
 		// add tagcloud to page
 		$v->set('tagcloud',$t);
+		
+		// Logging
+		$logger = new Logger();
+		$logger->category(ORM::factory('category', $p['category']));
+		$logger->town(ORM::factory('town', $p['town']));
+		$logger->keywords($p['search']);
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
