@@ -13,10 +13,16 @@ class Logger {
 	private $log;
 	private $saved = false;
 
+	/**
+	 * Create instance of logger
+	 */
 	public static function instance() {
 		return new Logger();
 	}
 	
+	/**
+	 * Constructor of logger
+	 */
 	public function __construct() {
 		$this->tracker = ORM::factory('tracker');
 		$session = Session::instance();
@@ -52,6 +58,10 @@ class Logger {
 		$this->log->id_tracker = $this->tracker->id_tracker;
 	}
 
+	/**
+	 * Log category
+	 * @param category $category
+	 */
 	public function category($category) {
 		// Check if category is set
 		if ($category->loaded()) {
@@ -61,6 +71,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log town
+	 * @param town $town
+	 */
 	public function town($town) {
 		if ($town->loaded()) {
 			$this->savelog();
@@ -69,6 +83,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log monument
+	 * @param monument $monument
+	 */
 	public function monument($monument) {
 		if ($monument->loaded()) {
 			$this->savelog();
@@ -77,6 +95,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log keywords
+	 * @param string $keywords
+	 */
 	public function keywords($keywords) {
 		if ($keywords != '') {
 			$this->savelog();
@@ -88,7 +110,11 @@ class Logger {
 			}
 		}
 	}
-
+	
+	/**
+	 * Function which is called by every logging action
+	 * saves the created log if it isn't saved yet
+	 */
 	public function savelog() {
 		if (!$this->saved) {
 			$this->log->save();
@@ -97,6 +123,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Function to bind user to tracker if he logs in
+	 * @param user $user
+	 */
 	public function bind_user($user) {
 		// Check if there already is a tracker for this user
 		$tracker = ORM::factory('tracker')->where('id_user', '=', $user->id)->find();
@@ -119,6 +149,9 @@ class Logger {
 		}
 	}
 	
+	/**
+	 * Set session and cookie from tracker
+	 */
 	public function set_session_and_cookie() {
 		// Init session
 		$session = Session::instance();
@@ -130,6 +163,10 @@ class Logger {
 		Cookie::set('tracker', $this->tracker->hash);
 	}
 
+	/**
+	 * Create random string
+	 * @param int $length
+	 */
 	public static function randomstring($length) {
 		$randomstring = '';
 		$chars = array_merge(range('A','Z'), range('a','z'), range(0, 9), array('!','#','@','$','%','^','&','*'));

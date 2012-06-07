@@ -3,7 +3,7 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
-
+	
 	/**
 	 * View to compare images visual
 	 */
