@@ -56,7 +56,7 @@
 					}
 					echo '
 					<td style="text-align: center; vertical-align: middle;">
-					<a style="display: block;" href="monument/visualcomparison/'.$similar->id_monument.'?posted">
+					<a style="display: block;" href="'.URL::site('monument/visualcomparison/'.$similar->id_monument).'?posted">
 					<img style="max-height: 100px;" src="'.$similar->getphoto()->url().'" alt="'.$similar->name.'">
 					</a>
 					</td>';

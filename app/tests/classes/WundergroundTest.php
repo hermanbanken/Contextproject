@@ -11,7 +11,9 @@ class WundergroundTest extends Kohana_UnitTest_TestCase
 		$fakemonument->description = "Dit is fake monument 1";
 		$fakemonument->id_monument = 1;
 		
-		print_r(Wunderground::forecast($fakemonument[0])->as_array());
+		$forecasts = Wunderground::forecast($fakemonument);
+	
+		print_r($forecasts);
 		
 	}
 	
