@@ -202,7 +202,7 @@ class Controller_Search extends Controller_Template {
 		switch ($sort)
 		{
 			case "street":
-				$query->order_by("street");
+				$query->order_by("id_street");
 				break;
 
 			case "name":
@@ -252,7 +252,7 @@ class Controller_Search extends Controller_Template {
 				{
 					$query->order_by("distance", "ASC");
 				} else {
-					$query->order_by("street");
+					$query->order_by("id_street");
 				}
 				break;
 
