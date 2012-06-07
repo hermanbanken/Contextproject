@@ -35,6 +35,19 @@ $(function(){
     var empty = $(".monument-list .empty").hide();
     var $template = $(".monument-list .list-row.monument").remove();
 
+    $(document).keyup(function(event){
+        if(event.target == document.body)
+        {
+            var prev = parseInt(getParameter('page'));
+            if(event.keyCode == 39)
+                setParameter('page', prev+1);
+            else if(event.keyCode == 37)
+                setParameter('page', prev-1);
+
+            setState();
+        }
+    });
+
     function getParameterByName(name, source)
     {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

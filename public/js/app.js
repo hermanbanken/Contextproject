@@ -93,7 +93,10 @@ var exports = exports | {};
     CultuurApp.prototype.mapList = function(monuments, options)
     {
         var self = this;
-        var extractedMarker = false;
+        var open = {
+            marker: false,
+            zindex: false
+        };
         var scrolled = false;
         this.page = this.page || 1;
 
@@ -129,26 +132,48 @@ var exports = exports | {};
                         "</li>"
                     ).click(function(){
                         if($(this).hasClass("selected")){
+
                             $(this).removeClass("selected");
-                            if(extractedMarker){
-                                markerClusterer.addMarkers([extractedMarker]);
+
+                            // Add the highlighted marker back to the cluster
+                            if(open.marker){
+                                open.marker.setZIndex(open.zindex);
+                                markerClusterer.addMarkers([open.marker]);
                             }
-                            extractedMarker = false;
+                            open.marker = false;
+
+                            // Zoom back out
                             map.fitBounds(bounds);
                         }else{
+                            // Close info window
+                            if(self.infowindow)
+                                self.infowindow.close();
+
                             $(this).addClass("selected").siblings().removeClass("selected");
+
+                            // Center at monument
                             var point = new google.maps.LatLng( monument.lng, monument.lat );
                             map.panTo(point);
                             if(map.getZoom() < 16) map.setZoom(16);
 
-                            if(extractedMarker){
-                                markerClusterer.addMarkers([extractedMarker]);
+                            // Add the highlighted marker back to the cluster
+                            if(open.marker){
+                                open.marker.setZIndex(open.zindex);
+                                markerClusterer.addMarkers([open.marker]);
                             }
-                            extractedMarker = markersLookup[monument.id_monument];
-                            marker.setMap(map);
-                            //marker.setVisible(true);
-                            marker.setAnimation(google.maps.Animation.BOUNCE);
-                            //setTimeout(function(){ marker.setAnimation(null); }, 750);
+
+                            // Unlink monument marker from cluster
+                            open.marker = markersLookup[monument.id_monument];
+                            open.zindex = open.marker.getZIndex();
+                            markerClusterer.removeMarker(open.marker);
+                            open.marker.setMap(map);
+                            open.marker.setZIndex(999999);
+
+                            // Bounce
+                            google.maps.event.addListenerOnce(map, "idle", function(){
+                                open.marker.setAnimation(google.maps.Animation.BOUNCE);
+                                setTimeout(function(){ open.marker.setAnimation(null); }, 1500);
+                            });
                         }
                     })
                 );
