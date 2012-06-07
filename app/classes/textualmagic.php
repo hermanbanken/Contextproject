@@ -23,8 +23,8 @@ class TextualMagic {
 		foreach($keywords as $keyword) {
 			$tags = DB::select('*')->from('tags')->where('content', '=', $keyword)->execute();
 			foreach($tags as $tag) {
-				for($i=1;$i<15;$i++) {
-					$probabilities[$i]=isset($probabilities[$i])?$probabilities[$i]+$tag['importance']*$tag['cat'.$i.'tfidf']:$tag['importance']*$tag['cat'.$i.'tfidf'];
+				for($i = 1; $i < 15 ; $i++) {
+					$probabilities[$i] =  isset($probabilities[$i]) ? $probabilities[$i] + $tag['importance'] * $tag['cat'.$i.'tfidf'] : $tag['importance'] * $tag['cat'.$i.'tfidf'];
 				}
 			}
 		}
