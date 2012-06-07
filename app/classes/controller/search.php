@@ -106,6 +106,8 @@ class Controller_Search extends Controller_Template {
 			$result['monuments'] = array();
 			foreach($monuments as $m){
 				$m['photoUrl'] = ORM::factory('photo')->url($m['id_monument']);
+				$trans = Translator::translate("monuments", $m['id_monument'], "description", $m['description']);
+				$m['summary'] = Model_Monument::descToSummary($trans);
 				$result['monuments'][] = $m;
 			}
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
@@ -234,8 +236,14 @@ class Controller_Search extends Controller_Template {
 				continue;
 
 			case "rand":
-			default:
 				$query->order_by(DB::expr("RAND()"));
+			default:
+				if($longitude && $latitude)
+				{
+					$query->order_by("distance", "ASC");
+				} else {
+					$query->order_by("street");
+				}
 				break;
 
 		}
