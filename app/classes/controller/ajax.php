@@ -56,7 +56,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
 			$pca = ORM::factory('pca')->where('id_monument', '=', $monument->id_monument)->find();
-			$similars = $monument->visuallySimilars(8, $pca->features(), true);
+			$similars = $monument->visuallySimilars(5, $pca->features(), true);
 
 			$monuments = array();
 			foreach ($similars AS $key => $monument) {

@@ -23,8 +23,8 @@ class TextualMagic {
 		foreach($keywords as $keyword) {
 			$tags = DB::select('*')->from('tags')->where('content', '=', $keyword)->execute();
 			foreach($tags as $tag) {
-				for($i=1;$i<15;$i++) {
-					$probabilities[$i]=isset($probabilities[$i])?$probabilities[$i]+$tag['importance']*$tag['cat'.$i.'tfidf']:$tag['importance']*$tag['cat'.$i.'tfidf'];
+				for($i = 1; $i < 15 ; $i++) {
+					$probabilities[$i] =  isset($probabilities[$i]) ? $probabilities[$i] + $tag['importance'] * $tag['cat'.$i.'tfidf'] : $tag['importance'] * $tag['cat'.$i.'tfidf'];
 				}
 			}
 		}
@@ -93,7 +93,7 @@ class TextualMagic {
 		$keywords = array();
 
 		foreach ($tags AS $keyword) {
-			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
+			$keywords[] = array('original' => $keyword['tag'], 'content' => Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']));
 		}
 
 		return $keywords;
@@ -122,6 +122,7 @@ class TextualMagic {
 		$tags = array();
 		foreach($tagset as $key=>$tag) {
 			$tags[$tag['importance']] = array(
+					'original' => $tag['content'],
 					'content' => strtolower(Translator::translate(
 							'tag',
 							$tag['id'],

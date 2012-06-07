@@ -23,7 +23,7 @@ $(document).ready(
 			
 			var tab = document.location.hash.replace('#', '');
 			if (tab == '') {
-				tab = 'aanbevelingen';
+				tab = 'restaurants';
 			}
 			
 			if($("#id_monument").size() > 0)
@@ -45,6 +45,25 @@ $(document).ready(
 					}
 				}, "json");
 			});
+			
+
+			$("#aanbevelingen").html("Laden...");
+			$.post(base+'ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
+				var html = '';
+				
+				if (data.length == 0) {
+					html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
+				}
+				
+				$.each(data, function(key, monument) {
+					html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
+					html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
+					html += '</div>';
+				});
+				
+				$("#aanbevelingen").empty();
+				$("#aanbevelingen").html(html);
+			}, "json");
 		});
 
 function rating(r){
@@ -58,63 +77,6 @@ function show_content(tab) {
 	if (cache[tab] != '') {
 		$("#ajax_content").empty();
 		$("#ajax_content").html(cache[tab]);
-	}
-	else if (tab == 'aanbevelingen') {
-		$("#ajax_content").html("Laden...");
-		$.post(base+'ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
-			var html = '';
-			
-			if (data.length == 0) {
-				html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
-			}
-			
-			$.each(data, function(key, monument) {
-				html += '<div style="text-align: center; float: left; width: 12.5%; height: 165px; line-height: 150px; vertical-align: middle;">';
-				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
-				html += '</div>';
-			});
-			
-			cache['aanbevelingen'] = html;
-			
-			$("#ajax_content").empty();
-			$("#ajax_content").html(html);
-		}, "json");
-	}
-	else if (tab == 'forecast') {
-		$("#ajax_content").html("Laden...");
-		$.post(base+'ajax/forecast', {id_monument: $("#id_monument").val()}, succes = function(data) {
-			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
-			$.each(data.forecasts, function(key, forecast) {
-				var date = new Date(forecast.date);
-				var now = new Date(data.now);
-				
-				if (date.getDate() == now.getDate()) {
-					forecast.date = 'Vandaag';
-				}
-				else if (date.getDate() == now.getDate() + 1) {
-					forecast.date = 'Morgen';
-				}
-				else {
-					forecast.date = date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear();
-				}
-				
-				html += '<tr>';
-				html += '	<td><img src="'+forecast.icon+'" alt="" /></td>';
-				html += '	<td style="vertical-align: middle;">'+forecast.date+'</td>';
-				html += '	<td style="vertical-align: middle;">'+forecast.forecast+'</td>';
-				html += '</tr>';
-			});
-			
-			if (data.forecasts.length == 0) {
-				html += '<tr><td>Er zijn helaas geen weersvoorspellingen gevonden.</td></tr>';
-			}
-			html += '</table>';
-			
-			cache['forecast'] = html;
-			
-			$("#ajax_content").empty();
-			$("#ajax_content").html(html);
-		}, "json");
 	}
 	else if (tab == 'cafes') {
 		$("#ajax_content").html("Laden...");
@@ -168,37 +130,6 @@ function show_content(tab) {
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);
-		}, "json");
-	}
-	else if (tab == 'locatie') {
-		$("#ajax_content").html("Laden...");
-		$.post(base+'ajax/monument', {id_monument: $("#id_monument").val()}, succes = function(monument) {
-			$("#ajax_content").html('<div id="kaart-single"></div>');
-			
-			// If the map is on the page
-			if ($('#kaart-single').size() > 0) {
-				// initialize options for google maps
-				var myOptions = {
-					// center of holland
-					center : new google.maps.LatLng(monument.lng, monument.lat),
-					// default zoomlevel 8
-					zoom : 12,
-					mapTypeControl : false,
-					streetViewControl : false,
-					// maptype road
-					mapTypeId : google.maps.MapTypeId.ROADMAP
-				};
-				// create the map
-				map = new google.maps.Map(document
-						.getElementById("kaart-single"), myOptions);
-	
-				var longlat = new google.maps.LatLng(monument.lng, monument.lat);
-	
-				marker = new google.maps.Marker({
-					position : longlat,
-					map : map,
-				});
-			}
 		}, "json");
 	}
 }
