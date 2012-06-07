@@ -16,6 +16,14 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 	protected $_belongs_to = array(
 	);
 
+	protected $_table_columns = array(
+		"id_tracker" => array( "type" => "int", "key" => "PRI", "extra" => "auto_increment" ),
+		"id_user" 	 =>	array( "type" => "int", "key" => "MUL" ),
+		"hash"		 => array( "type" => "string", "character_maximum_length" => 30 ),
+		"dateCreated" => array( "type" => "string", "data_type" => "timestamp" ),
+		"dateLastUpdated" => array( "type" => "string", "column_default" => "CURRENT_TIMESTAMP", "data_type" => "timestamp" ),
+	);
+
 	protected static $entity = "tracker";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	`id_tracker` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -26,6 +26,7 @@
 					</div>
 				</div>
 			</div>
+			<div class="bench"></div>
 		</div>
 
 		<div class="span3">
@@ -38,9 +39,8 @@
 	</div>
 	<script>
 		$(function(){
-			var paper = spinner($(".loading").get(0), 70, 120, 12, 25, "#fff");
+			var paper = spinner($(".loading").get(0), 70, 120, 12, 25, "#000");
 
-			spinner()
 			function spinner(holder, R1, R2, count, stroke_width, colour) {
 				var sectorsCount = count || 12,
 						color = colour || "#fff",

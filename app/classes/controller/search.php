@@ -35,11 +35,6 @@ class Controller_Search extends Controller_Template {
 		return $key ? $this->_params[$key] : $this->_params;
 	}
 
-	public function action_search()
-	{
-		$this->response->body( "<pre>".$this->query()->compile(Database::instance())."</pre>" );
-	}
-
 	public function action_map()
 	{
 		$query = $this->query()->select("id_monument", "lng", "lat");
@@ -128,6 +123,10 @@ class Controller_Search extends Controller_Template {
 
 			// Add view to template
 			$this->auto_render = false;
+
+			// Include bench marks
+			// $result['bench'] = (string)View::factory('profiler/stats');
+
 			$this->response->body(json_encode($result));
 		}
 	}
@@ -248,8 +247,6 @@ class Controller_Search extends Controller_Template {
 				// Close is relevant, not random, do not break
 				continue;
 
-			case "rand":
-				$query->order_by(DB::expr("RAND()"));
 			default:
 				if($longitude && $latitude)
 				{
