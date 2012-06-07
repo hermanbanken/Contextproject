@@ -55,7 +55,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$recommendations = Recommender::recommend($monument, 5);
+			$recommendations = Recommender::recommend(5);
 
 			$monuments = array();
 			foreach ($recommendations AS $key => $monument) {
