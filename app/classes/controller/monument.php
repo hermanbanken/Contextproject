@@ -52,6 +52,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
 			$_SESSION['vc'] = $post;
+			unset($_SESSION['vc']['posted']);
 			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
