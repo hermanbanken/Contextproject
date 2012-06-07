@@ -484,7 +484,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Logging
 		$logger = Logger::instance();
 		$logger->category(ORM::factory('category', $p['category']));
-		$logger->town(ORM::factory('town', $p['town']));
+		$logger->town(ORM::factory('town')->where('name', '=', $p['town'])->find());
 		$logger->keywords($p['search']);
 
 		// Get view for form
