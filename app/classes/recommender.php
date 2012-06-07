@@ -14,7 +14,7 @@ class Recommender {
 		$tracker = ORM::factory('tracker')->tracker();
 		$monuments = $tracker->monuments();
 
-		$trackers = ORM::factory('tracker')->find_all();
+		$trackers = ORM::factory('tracker')->where('id_tracker', '!=', $tracker->id_tracker)->find_all();
 		$similars = array();
 		$max_score = -1;
 		foreach ($trackers AS $atracker) {
