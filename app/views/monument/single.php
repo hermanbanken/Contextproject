@@ -54,7 +54,7 @@
 					<td><?php 
 							$tags = $monument->tags();
 							foreach($tags as $tag)
-								echo '<a href="'.URL::site('monument/list/'.$tag).'">'.$tag.'</a>';
+								echo '<a href="'.URL::site('monument/list/'.$tag['original']).'">'.$tag['content'].'</a>';
 						?>
 					</td>
 				</tr>
