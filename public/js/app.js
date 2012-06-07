@@ -75,8 +75,6 @@ var exports = exports | {};
 	CultuurApp.prototype.search = function(){
         var self = this;
 
-        console.log("Search");
-
         $(function(){
             // catch submitting of filter
             $("#filter").on("submit", function (e) {
@@ -84,8 +82,11 @@ var exports = exports | {};
                 self.map();
             });
 
-            map = new google.maps.Map(document.getElementById("kaart"), mapOptions);
-            self.map();
+            var el = document.getElementById("kaart");
+            if(el){
+                map = new google.maps.Map(el, mapOptions);
+                self.map();
+            }
         });
 	};
 
@@ -191,7 +192,12 @@ var exports = exports | {};
                         hScrollbar: false
                     });
                 }
-                scrolled.refresh();
+
+                // This refresh needs a timeout
+                setTimeout(function(){
+                    scrolled.refresh();
+                }, 100);
+
             }
         }
 
@@ -397,7 +403,7 @@ var exports = exports | {};
      * @param callback
      * @return {*}
      */
-    CultuurApp.prototype.parameter = function(key, callback){
+    CultuurApp.prototype.parameter = exports.serializeFilter = function(key, callback){
         var serialize = $('#filter').serializeArray();
         var query = {};
         $.each(serialize, function(i, o){ query[o.name] = o.value; });

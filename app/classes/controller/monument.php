@@ -404,6 +404,38 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * Action for listing all objects of type
 	 */
 	public function action_list() {
+
+		$v = View::factory(static::$entity.'/list-dynanmic');
+		$this->js("ca-list", "js/list.js", true);
+
+		// Get provinces and categories for selection
+		$provinces = ORM::factory('province')->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+
+		$tags = TextualMagic::tagcloud(20);
+		// create the view
+		$t = View::factory(static::$entity.'/tagcloud');
+		// bind the tags
+		$t->bind('tags',$tags);
+		// add tagcloud to page
+		$v->set('tagcloud',$t);
+
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
+
+		// Give variables to view
+		$f->set('param', $this->getDefaults());
+		$f->set('provinces', $provinces);
+		$f->set('categories', $categories);
+		$f->set('action', 'monument/list');
+		$f->set('formname', 'filter_list');
+
+		$v->bind('selection_form', $f);
+
+		$this->template->body = $v;
+
+		return;
+
 		// Set view
 		$v = View::factory(static::$entity.'/list');
 

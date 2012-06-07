@@ -71,7 +71,7 @@ class Controller_Search extends Controller_Template {
 				'view' => '../../../views/pagination'
 		));
 		// Tell pagination where we are
-		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
+		$pagination->route_params(array('controller' => 'monument', 'action' => $this->request->action()));
 
 		if($pagination->valid_page($this->parameter("page")))
 		{
