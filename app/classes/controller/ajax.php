@@ -59,7 +59,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 
 			$monuments = array();
 			foreach ($recommendations AS $key => $monument) {
-				$url = $monument->getphoto()->url();
+				$url = $monument->photoUrl();
 				$monuments[$key] = $monument->as_array();
 				$monuments[$key]['photo_url'] = $url;
 			}
