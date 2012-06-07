@@ -24,35 +24,7 @@ class Logger {
 	 * Constructor of logger
 	 */
 	public function __construct() {
-		$this->tracker = ORM::factory('tracker');
-		$session = Session::instance();
-
-		// If tracker is in session, use session
-		$s_tracker = $session->get('tracker');
-		if (isset($s_tracker)) {
-			// Find tracker
-			$this->tracker = ORM::factory('tracker')->where('hash', '=', $s_tracker)->find();
-		}
-		else {
-			// If tracker is in cookie, use cookie
-			$c_tracker = Cookie::get('tracker');
-			if (isset($c_tracker)) {
-				// Put tracker in session
-				$session->set('tracker', $c_tracker);
-
-				// Find tracker
-				$this->tracker = ORM::factory('tracker')->where('hash', '=', $c_tracker)->find();
-			}
-		}
-
-		// If not tracker is found, create new one and create session and cookie
-		if ($this->tracker->id_tracker == NULL) {
-			$this->tracker->hash = Logger::randomstring(30);
-			$this->tracker->dateCreated = date('Y-m-d H:i:s');
-			$this->tracker->save();
-			
-			$this->set_session_and_cookie();
-		}
+		$this->tracker = ORM::factory('tracker')->tracker();
 
 		$this->log = ORM::factory('log');
 		$this->log->id_tracker = $this->tracker->id_tracker;
@@ -140,27 +112,13 @@ class Logger {
 			$this->tracker = $tracker;
 			
 			// Update session and cookies to right tracker
-			$this->set_session_and_cookie();
+			$this->tracker->set_session_and_cookie();
 		}
 		else {
 			// Just add a user id to the tracker
 			$this->tracker->id_user = $user->id;
 			$this->tracker->save();
 		}
-	}
-	
-	/**
-	 * Set session and cookie from tracker
-	 */
-	public function set_session_and_cookie() {
-		// Init session
-		$session = Session::instance();
-		
-		// Create session
-		$session->set('tracker', $this->tracker->hash);
-		
-		// Create cookie
-		Cookie::set('tracker', $this->tracker->hash);
 	}
 
 	/**
