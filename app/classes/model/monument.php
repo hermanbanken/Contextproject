@@ -86,14 +86,27 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 * @param mixed If this parameter is set we search in the description for the matching string and return the surroundings.
 	 * @return string Short version of the description
 	 */
-	public function summary($search = false){
+	public function summary($search = false)
+	{
+		return self::descToSummary($this->description, $search);
+	}
+
+	/**
+	 * Fetch a piece of text from a text.
+	 * @param $text string Text to summarize
+	 * @param $search mixed If this parameter is set we search in the description for the matching string and return the surroundings.
+	 * @return string Short version of the description
+	 */
+	public static function descToSummary($text, $search = false)
+	{
 		if($search){
+			return $text;
 		}else{
-			$match = preg_match("/^(.{140,200})\s/ims", $this->description, $matches);
-			if(strlen($this->description) <= 200-3){
-				return substr($this->description, 0, 200-3);
+			$match = preg_match("/^(.{140,200})\s/ims", $text, $matches);
+			if(strlen($text) <= 200-3){
+				return substr($text, 0, 200-3);
 			} else {
-				return ($match ? $matches[1] : substr($this->description, 0, 200)) . "...";
+				return ($match ? $matches[1] : substr($text, 0, 200)) . "...";
 			}
 		}
 	}

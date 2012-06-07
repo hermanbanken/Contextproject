@@ -30,7 +30,7 @@ function update_position() {
 
 var exports = exports || {};
 $(function(){
-    var keys = {"page": 1, "search": "", "town": "", "province": -1, "category": -1, "sort": "street", "latitude": null, "longitude": null, "distance": null, "distance_show": null};
+    var keys = {"page": 1, "search": "", "town": "", "province": -1, "category": -1, "sort": "street", "latitude": null, "longitude": null, "distance": null, "distance_show": null, "lang": null};
     var page = getParameter('page');
     var empty = $(".monument-list .empty").hide();
     var $template = $(".monument-list .list-row.monument").remove();
@@ -147,7 +147,7 @@ $(function(){
 
                     $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
                     $html.find("img").attr("src", monument.photoUrl);
-                    $html.find(".summary").text(monument.description);
+                    $html.find(".summary").text(monument.summary);
                     $html.find(".name a").text(monument.name);
                     if(monument.distance)
                     {
@@ -165,6 +165,12 @@ $(function(){
             error: function(){
                 empty.show();
                 $(".monument-list .list-row.monument").remove();
+            },
+            ajaxStart: function() {
+                $(".loading").show();
+            },
+            ajaxStop : function() {
+                $(".loading").hide();
             }
         });
     };
