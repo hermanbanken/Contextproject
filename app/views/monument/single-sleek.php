@@ -152,30 +152,29 @@
 			</div>
 
 		</div>
+		<?php
+			$conf = Kohana::$config->load("features");
+		?>
 		<div class="row-fluid">
 			<div class="span6">
 				<ul class="nav nav-tabs" style="margin-top: 20px;">
-					<li class="active"><a class="aanbevelingen"
-						href="#"><?php echo __('single.recommendations'); ?>
-					</a>
-					</li>
+					<li class="active"><a class="aanbevelingen" href="#">
+						<?php echo __('single.recommendations'); ?>
+					</a></li>
 				</ul>
 
-				<input id="id_monument" type="hidden"
-					value="<?php echo $monument->id_monument; ?>" />
+				<input id="id_monument" type="hidden" value="<?php echo $monument->id_monument; ?>" />
 
-				<div id="aanbevelingen"></div>
+				<div id="aanbevelingen" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
 			</div>
 			<div class="span6">
 				<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
-					<li><a class="restaurants"
-						href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#restaurants"><?php echo __('single.restaurants'); ?>
-					</a>
-					</li>
-					<li><a class="cafes"
-						href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#cafes"><?php echo __('single.bars'); ?>
-					</a>
-					</li>
+					<li class="<?php if(!$conf->get("restaurants")) echo "disabled"; ?>">
+						<a class="restaurants" href="#restaurants"><?php echo __('single.restaurants'); ?>
+					</a></li>
+					<li class="<?php if(!$conf->get("cafes")) echo "disabled"; ?>">
+						<a class="cafes" href="#cafes"><?php echo __('single.bars'); ?>
+					</a></li>
 					<li style="float: right"><img
 						src="https://developers.google.com/maps/documentation/places/images/powered-by-google-on-white.png"
 						alt="Powered by Google" style="background: none; border: none;" />

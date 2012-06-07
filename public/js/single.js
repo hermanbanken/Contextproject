@@ -79,7 +79,13 @@ function rating(r){
 }
 
 function show_content(tab) {
-	$(".single-nav li ."+tab).parent().addClass('active');
+	$li = $(".single-nav li ."+tab).parent();
+    $li.addClass('active');
+
+    if($li.hasClass("disabled")) {
+        $("#ajax_content").html("<p>Deze functie is helaas tijdelijk niet beschikbaar.</p>");
+        return;
+    }
 	
 	if (cache[tab] != '') {
 		$("#ajax_content").empty();
