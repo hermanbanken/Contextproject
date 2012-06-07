@@ -44,6 +44,9 @@ class Controller_Search extends Controller_Template {
 	{
 		$query = $this->query()->select("id_monument", "lng", "lat");
 		
+		// Log user info
+		$this->log();
+		
 		$monuments = $query->execute();
 		$r = array("monuments"=>array(), "debug"=>array());
 		foreach($monuments as $m){
@@ -60,19 +63,19 @@ class Controller_Search extends Controller_Template {
 			$this->response->status(404);
 	}
 
-	public function action_list(){
+	public function action_list(){		
 		// Set view
 		$result = array();
 
 		$query = $this->query()->select('id_monument');
 
+		// Log user info
+		$this->log();
+		
 		$monuments = $query->execute();
 
 		$limit = 8;
 		$offset = $limit * (intval($this->parameter("page")) - 1);
-		
-		// Log user info
-		$this->log();
 		
 		// Create pagination (count query without limit and offset)
 		$pagination = Pagination::factory(array(
