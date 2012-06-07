@@ -42,8 +42,10 @@ class Recommender {
 		// For each tracker, each monument, count score (number of trackers * number of monuments)
 		$scores = array();
 		foreach ($recommends AS $id_tracker => $tracker) {
-			foreach ($tracker['monuments'] AS $id_monument => $monument) {
-				$scores[$id_tracker][$id_monument] = $tracker['count'] + $monument['count'];
+			if (isset($tracker['monument'])) {
+				foreach ($tracker['monuments'] AS $id_monument => $monument) {
+					$scores[$id_tracker][$id_monument] = $tracker['count'] + $monument['count'];
+				}
 			}
 		}
 
