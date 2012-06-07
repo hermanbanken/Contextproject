@@ -67,6 +67,7 @@ class TextualMagic {
 		foreach($results as $result) {
 			$monuments = $monuments->or_where('id_monument','=',$result['id_monument']);
 		}
+		$monuments = $monuments->find_all();
 		return $monuments;
 	}
 

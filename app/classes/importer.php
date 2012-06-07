@@ -319,8 +319,8 @@ class Importer {
 			}
 
 			// filter unused characters
-			$description = strtolower(preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']));
-
+			$description = strtolower(preg_replace('/[^a-zA-Z0-9\-\_\s]/','',utf8_decode($monument['description'])));
+			
 			// explode original keywords into array
 			$originals = explode(' ',$description);
 

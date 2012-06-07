@@ -208,8 +208,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${
-					$key} = $value;
+				${$key} = $value;
 			}
 		}
 
@@ -416,13 +415,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get post-data
 		$pform = $this->request->query();
 
-		//die(var_dump($pform));
-
 		// override values
 		foreach($pform as $key => $value) {
-			$p[$key] = $value;
+			if($value != '') $p[$key] = $value;
 		}
-
+	
 		// If no post-data is set, get data from session or set default data
 		$session = Session_Native::instance();
 		$session = $session->as_array();
@@ -431,7 +428,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		foreach($session as $key => $value) {
 			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
 		}
-
+	
 		// add searchterm for external links
 		$search = $this->request->param('id');
 		if(isset($search) AND $search != '') {
