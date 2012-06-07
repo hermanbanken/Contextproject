@@ -138,8 +138,10 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 			$this->monument = $monument;
 
 		// Location
-		$this->city = $venue->location->city;
-		$this->address = $venue->location->address;
+		if(isset($venue->location->city))
+			$this->city = $venue->location->city;
+		if(isset($venue->location->address))
+			$this->address = $venue->location->address;
 		$this->location = json_encode($venue->location);
 		$this->ll = $venue->location->lat . ';' . $venue->location->lng;
 		// Categories
