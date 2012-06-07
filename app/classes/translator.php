@@ -88,6 +88,9 @@ class Translator {
         $obj = json_decode($obj);
 
         $translation = "";
+
+		if(!is_array($obj[0])) return $text;
+
         foreach($obj[0] as $sentence){
             list($trans) = $sentence;
             // Remove space Google added before dots.

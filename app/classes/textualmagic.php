@@ -94,7 +94,7 @@ class TextualMagic {
 		$keywords = array();
 
 		foreach ($tags AS $keyword) {
-			$keywords[] = Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']);
+			$keywords[] = array('original' => $keyword['tag'], 'content' => Translator::translate('tag',$keyword['id'],'tag',$keyword['tag']));
 		}
 
 		return $keywords;
@@ -123,6 +123,7 @@ class TextualMagic {
 		$tags = array();
 		foreach($tagset as $key=>$tag) {
 			$tags[$tag['importance']] = array(
+					'original' => $tag['content'],
 					'content' => strtolower(Translator::translate(
 							'tag',
 							$tag['id'],
