@@ -19,6 +19,31 @@ class Model_User extends Model_Auth_User {
 			),
 	);
 
+	protected $_table_columns = array(
+		"id" => array(
+			'type' => 'int',
+			'key' => 'PRI',
+		),
+		"email" => array(
+			'type' => 'string',
+			'key' => 'UNI'
+		),
+		"username" => array(
+			'type' => 'string',
+			'key' => 'UNI'
+		),
+		"password" => array(
+			'type' => 'string',
+			'character_maximum_length' => '64'
+		),
+		"logins" => array(
+			'type' => 'int',
+		),
+		"last_login" => array(
+			'type' => 'int',
+		)
+	);
+
 	/**
 	 * Returns id's of visited monuments
 	 */

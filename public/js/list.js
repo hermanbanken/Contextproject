@@ -140,6 +140,7 @@ $(function(){
 
                 $(".pagination").html(response.pagination);
                 $(".tagcloud").html(response.tagcloud);
+                $(".bench").html(response.bench);
 
                 $(".monument-list .list-row.monument").remove();
                 $.map(response.monuments, function(monument, i){
@@ -166,11 +167,13 @@ $(function(){
                 empty.show();
                 $(".monument-list .list-row.monument").remove();
             },
-            ajaxStart: function() {
-                $(".loading").show();
+            beforeSend: function() {
+                $(".loading").css({opacity: 0, display: "block"}).animate({ opacity: 1}, 200);
+                $(".monument-list .monument").animate({ opacity:.7});
             },
-            ajaxStop : function() {
-                $(".loading").hide();
+            complete: function() {
+                $(".loading").animate({ opacity: 0}, 200).animate({opacity: 0, display: "none"}, 1);
+                $(".monument-list .monument").animate({ opacity: 1});
             }
         });
     };

@@ -17,6 +17,12 @@ class Model_Log extends ORM {
 	);
 	
 	protected static $entity = "log";
+
+	protected $_table_columns = array(
+		"id_log" => 	array( "type" => "int", "key" => "PRI" ),
+		"id_tracker" => array( "type" => "int", "key" => "MUL" ),
+		"dateCreated" =>array( "type" => "string", "column_default" => "CURRENT_TIMESTAMP", "data_type" => "timestamp" ),
+	);
 	
 	public static function schema(){
 		$prefix = Kohana::$config->load('database.default.table_prefix');
