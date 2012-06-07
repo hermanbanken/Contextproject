@@ -14,7 +14,7 @@ class Recommender {
 		$tracker = ORM::factory('tracker')->tracker();
 		$monuments = $tracker->monuments();
 
-		$trackers = ORM::factory('tracker')->where('id_tracker', '!=', $tracker->id_tracker)->find_all();
+		$trackers = ORM::factory('tracker')->where('id_tracker', '!=', $tracker->id_tracker)->order_by(DB::expr('RAND()'))->find_all();
 		$similars = array();
 		$max_score = -1;
 		foreach ($trackers AS $atracker) {
@@ -23,6 +23,7 @@ class Recommender {
 			if ($score > $max_score) {
 				$max_score = $score;
 				$similars = $amonuments;
+				$similarstracker = $atracker;
 			}
 		}
 
@@ -50,7 +51,11 @@ class Recommender {
 		$monuments = $monuments->limit($limit);
 		$monuments = $monuments->find_all();
 		
-		return $monuments;
+		if (!isset($similarstracker)) {
+			$similarstracker = ORM::factory('tracker');
+		}
+		
+		return array('monuments' => $monuments, 'tracker' => $similarstracker);
 	}
 
 	public static function removematches($original, $new) {

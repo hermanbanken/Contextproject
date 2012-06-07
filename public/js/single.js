@@ -56,13 +56,20 @@ $(document).ready(
 				}
 				
 				$.each(data, function(key, monument) {
+					if (monument.recommendedwhy == null) {
+						monument.recommendedwhy = 'een onbekende gebruiker';
+					}
+					
 					html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
-					html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
+					html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img class="tooltip_recommender" title="Aangeraden door:<br /> '+monument.recommendedwhy+'" style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
 					html += '</div>';
 				});
 				
 				$("#aanbevelingen").empty();
 				$("#aanbevelingen").html(html);
+				
+
+				$('.tooltip_recommender').tooltip();
 			}, "json");
 		});
 
