@@ -19,6 +19,13 @@ class Controller_Search extends Controller_Template {
 
 	private $_params = null;
 
+	public function log() {
+		$logger = Logger::instance();
+		$logger->category(ORM::factory('category', $this->_params['category']));
+		$logger->town(ORM::factory('town')->where('name', '=', $this->_params['town'])->find());
+		$logger->keywords($this->_params['search']);
+	}
+	
 	public function parameter($key = null)
 	{
 		if ($this->_params == null)
@@ -36,7 +43,7 @@ class Controller_Search extends Controller_Template {
 	public function action_map()
 	{
 		$query = $this->query()->select("id_monument", "lng", "lat");
-
+		
 		$monuments = $query->execute();
 		$r = array("monuments"=>array(), "debug"=>array());
 		foreach($monuments as $m){
@@ -63,7 +70,10 @@ class Controller_Search extends Controller_Template {
 
 		$limit = 8;
 		$offset = $limit * (intval($this->parameter("page")) - 1);
-
+		
+		// Log user info
+		$this->log();
+		
 		// Create pagination (count query without limit and offset)
 		$pagination = Pagination::factory(array(
 				'total_items' => $total = $monuments->count(),
