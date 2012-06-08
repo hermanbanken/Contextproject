@@ -31,4 +31,17 @@ class ORM extends Kohana_ORM {
 		return $val;
 	}
 
+	public function object()
+	{
+		$o = parent::object();
+
+		if($this->loaded())
+		foreach($this->_translated as $column => $val)
+		{
+			$o[$column] = $this->{$column};
+		}
+
+		return $o;
+	}
+
 }

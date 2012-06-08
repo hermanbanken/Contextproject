@@ -35,6 +35,19 @@ $(function(){
     var empty = $(".monument-list .empty").hide();
     var $template = $(".monument-list .list-row.monument").remove();
 
+    $(document).keyup(function(event){
+        if(event.target == document.body)
+        {
+            var prev = parseInt(getParameter('page'));
+            if(event.keyCode == 39)
+                setParameter('page', prev+1);
+            else if(event.keyCode == 37)
+                setParameter('page', prev-1 || 1);
+
+            setState();
+        }
+    });
+
     function getParameterByName(name, source)
     {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -139,7 +152,7 @@ $(function(){
                 empty.hide();
 
                 $(".pagination").html(response.pagination);
-                $(".tagcloud").html(response.tagcloud);
+                $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
 
                 $(".monument-list .list-row.monument").remove();
@@ -148,7 +161,7 @@ $(function(){
 
                     $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
                     $html.find("img").attr("src", monument.photoUrl);
-                    $html.find(".summary").text(monument.summary);
+                    $html.find(".summary").html(monument.summary);
                     $html.find(".name a").text(monument.name);
                     if(monument.distance)
                     {

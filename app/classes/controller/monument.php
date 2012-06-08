@@ -140,6 +140,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		{
 			$obj = $monument->object();
 			$obj['photoUrl'] = $monument->photoUrl();
+			$obj['summary'] = $monument->summary();
 			$this->set_json(json_encode($obj));
 		}
 		else
