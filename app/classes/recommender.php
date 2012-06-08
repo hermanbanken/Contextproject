@@ -32,7 +32,7 @@ class Recommender {
 		if (count($ids) != 0) {
 			// Make sure order is always different
 			shuffle($ids);
-			
+
 			// Set up order-field
 			$order = 'FIELD(id_monument';
 			foreach ($ids AS $value) {
@@ -47,14 +47,82 @@ class Recommender {
 		if ($order != '') {
 			$monuments = $monuments->order_by(DB::expr($order), 'desc');
 		}
+		else {
+			$monuments = $monuments->order_by(DB::expr('RAND()'));
+		}
 
 		$monuments = $monuments->limit($limit);
 		$monuments = $monuments->find_all();
-		
+
 		if (!isset($similarstracker)) {
 			$similarstracker = ORM::factory('tracker');
 		}
+
+		return array('monuments' => $monuments, 'tracker' => $similarstracker);
+	}
+
+	public static function recommend_monument($monument, $limit) {
+		$atracker = ORM::factory('tracker')->tracker();
 		
+		$tracker = DB::select('id_tracker')
+		->distinct(true)
+		->from('logs_monuments')
+		->join('logs')->on('logs.id_log', '=', 'logs_monuments.id_log')
+		->where('id_monument', '=', $monument->id_monument)
+		->where('id_tracker', '!=', $atracker->id_tracker)
+		->order_by(DB::expr('RAND()'))
+		->limit(1)
+		->execute();
+
+		$monuments = array();
+
+		if (isset($tracker[0])) {
+			$monuments = DB::select('id_monument')
+			->distinct(true)
+			->from('logs_monuments')
+			->join('logs')->on('logs.id_log', '=', 'logs_monuments.id_log')
+			->where('id_tracker', '=', $tracker[0]['id_tracker'])
+			->order_by(DB::expr('RAND()'))
+			->execute();
+			
+			$similarstracker = ORM::factory('tracker', $tracker[0]['id_tracker']);
+		}
+
+		$ids = array();
+		foreach ($monuments AS $monument) {
+			$ids[] = $monument['id_monument'];
+		}
+
+		$order = '';
+		if (count($ids) != 0) {
+			// Make sure order is always different
+			shuffle($ids);
+
+			// Set up order-field
+			$order = 'FIELD(id_monument';
+			foreach ($ids AS $value) {
+				$order .= ','.$value;
+			}
+			$order .= ')';
+		}
+
+		// Build query
+		$monuments = ORM::factory('monument');
+
+		if ($order != '') {
+			$monuments = $monuments->order_by(DB::expr($order), 'desc');
+		}
+		else {
+			$monuments = $monuments->order_by(DB::expr('RAND()'));
+		}
+
+		if (!isset($similarstracker)) {
+			$similarstracker = ORM::factory('tracker');
+		}
+
+		$monuments = $monuments->limit($limit);
+		$monuments = $monuments->find_all();
+
 		return array('monuments' => $monuments, 'tracker' => $similarstracker);
 	}
 

@@ -7,9 +7,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_recommender() {
 		$v = View::factory('test');
 		
-		foreach (Recommender::recommend(5) AS $monument) {
-			echo var_dump($monument, true);
-		}
+		echo '<pre>'.print_r(Recommender::recommend_monument(ORM::factory('monument', 1), 5), true).'</pre>';
 		
 		$this->template->body = $v;
 	}
