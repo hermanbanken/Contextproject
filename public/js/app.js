@@ -120,7 +120,7 @@ var exports = exports | {};
             $.map(monuments, function(monument)
             {
                 var id = monument.id_monument;
-                var desc = monument.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+                var desc = monument.summary;
                 var style = "float: left; margin-right: 10px; margin-top: 3px; ";//max-height: 100px; min-height: 100px;";
                 $("#list .list").append(
                     $(
@@ -128,7 +128,7 @@ var exports = exports | {};
                         "<a href='"+base+"monument/id/"+id+"' >" +
                         "<h2>" + monument.name + "</h2>" +
                         "<img class='map-info-photo' id='photo'"+id+"' src='"+monument.photoUrl+"' style='"+style+"' />" +
-                        "</a><p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>" +
+                        "</a><p>"+desc+"</p>" +
                         "</li>"
                     ).click(function(){
                         if($(this).hasClass("selected")){
@@ -276,13 +276,13 @@ var exports = exports | {};
                     // Add right source to image
                     $.getJSON(base+'monument/id/'+location[0], function (data) {
                         var id = location[0];
-                        var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+                        var desc = data.summary;
                         var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
                         infowindow.setContent(
                             "<a href='"+base+"monument/id/"+id+"' >" +
                                 "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
                                 "<h2>" + data.name + "</h2></a>" +
-                                "<p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>"
+                                "<p>"+desc+"</p>"
                         );
                         infowindow.open(map, marker);
                     });

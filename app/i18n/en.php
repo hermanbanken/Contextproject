@@ -58,6 +58,7 @@ return array(
 		'foursquare.legend.duplicates' => "We've found one or more venues that look a lot like the venue you are trying to add. Are you sure you don't want to link any of these venues? If you still want to add the venue, please use the form at the bottom.",
 		'foursquare.form.linkbutton' => "Link venue",
 		'foursquare.venue.added' => 'The venue was added on FourSquare and was linked with this monument.',
+		'foursquare.venue.create' => "Create a venue",
 
 		'menu.map' => 'Map',
 		'menu.list' => 'List',
@@ -116,4 +117,5 @@ return array(
     'register.error.email.unique' => "The emailaddress is already used",
     'register.invalidfields' => 'There were errors, please see form below.',
 
+	'more' => "more",
 );

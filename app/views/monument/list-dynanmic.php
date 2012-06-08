@@ -22,7 +22,6 @@
 					</div>
 					<div class="span7">
 						<span class="summary"></span>
-						<a href="">Meer</a>
 					</div>
 				</div>
 			</div>

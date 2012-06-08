@@ -161,7 +161,7 @@ $(function(){
 
                     $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
                     $html.find("img").attr("src", monument.photoUrl);
-                    $html.find(".summary").text(monument.summary);
+                    $html.find(".summary").html(monument.summary);
                     $html.find(".name a").text(monument.name);
                     if(monument.distance)
                     {

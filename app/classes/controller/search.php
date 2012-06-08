@@ -113,9 +113,10 @@ class Controller_Search extends Controller_Template {
 			$result['pagination'] = (string) $pagination;
 			$result['monuments'] = array();
 			foreach($monuments as $m){
-				$m['photoUrl'] = ORM::factory('photo')->url($m['id_monument']);
-				$trans = Translator::translate("monuments", $m['id_monument'], "description", $m['description']);
-				$m['summary'] = Model_Monument::descToSummary($trans);
+				$monument = ORM::factory("monument", $m['id_monument']);
+				$m = $monument->object();
+				$m['photoUrl'] = $monument->photoUrl();
+				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
@@ -125,7 +126,7 @@ class Controller_Search extends Controller_Template {
 			$this->auto_render = false;
 
 			// Include bench marks
-			// $result['bench'] = (string)View::factory('profiler/stats');
+			 $result['bench'] = (string)View::factory('profiler/stats');
 
 			$this->response->body(json_encode($result));
 		}

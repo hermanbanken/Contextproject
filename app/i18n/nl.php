@@ -58,6 +58,7 @@ return array (
 		'foursquare.legend.duplicates' => "We hebben een of meer plaatsen gevonden op FourSquare die heel erg lijken op de plaats die je probeert toe te voegen. Weet je zeker dat je niet een van onderstaande plaatsen wilt koppelen aan het monument? Als je de plaats tóch wilt toevoegen, gebruik dan het onderste formulier.",
 		'foursquare.form.linkbutton' => "Koppel",
 		'foursquare.venue.added' => 'De plaats is toegevoegd op FourSquare en is gekoppeld met dit monument.',
+		'foursquare.venue.create' => "Maak een FourSquare-locatie",
 
 		'menu.map' => 'Kaart',
 		'menu.list' => 'Lijst',
@@ -110,4 +111,6 @@ return array (
 		'register.signup' => 'Registreren',
     'register.error.username.unique' => "De gebruikersnaam is al in gebruik",
     'register.error.email.unique' => "Het e-mailadres is al in gebruik",
+
+	'more' => "meer",
 );
