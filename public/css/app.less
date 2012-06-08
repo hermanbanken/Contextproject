@@ -1,5 +1,83 @@
+@import "../lib/bootstrap/less/bootstrap.less";
+@import "../lib/bootstrap/less/responsive.less";
+@import "map.less";
+
 .row-fluid.map {
 	height:100%;
+}
+
+body {
+    width: 100%;
+}
+
+.page {
+    padding-top: 60px;
+}
+
+.background {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left: 0;
+    right: 0;
+}
+.monument-list {
+    position: relative;
+
+    &.busy .monument {
+        opacity: .7;
+    }
+    .loading {
+        position: absolute;
+        display:none;
+        left: 50%;
+        width: 295px;
+        margin-left: -150px;
+        z-index: 900;
+    }
+}
+
+.monument-single {
+    .map-outer {
+        position: relative;
+    }
+    .map {
+        overflow: hidden;
+        height: 120px;
+        margin-bottom:0;
+        .border-radius(4px 4px 0 0);
+        border-bottom: 0;
+    }
+    .map > div, .map > div > div {
+        .border-radius(3px 3px 0 0);
+    }
+
+    .map-outer + table {
+        .border-radius(0);
+        background: #fff;
+        margin-bottom: 0;
+    }
+
+    .forecast {
+        position: relative;
+    }
+    .forecast .inner {
+        overflow: hidden;
+        .border-radius(0 0 4px 4px);
+        border-top: 0;
+        padding: 0;
+
+        .day {
+            position: relative;
+            width: 80px;
+            padding: 5px;
+            text-align: center;
+
+            img { width: 60px; height: 50px; }
+            .dayabbr { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.4); color: white; }
+            .temperature { position: absolute; top: 0; right: 0; color: black; text-align: right; font-size: 80%; }
+        }
+    }
 }
 
 .modal {
@@ -51,10 +129,18 @@
 	}
 }
 
+.similars {
+	width: 100%;
+
+	tr td {
+		padding: 8px 0;
+	}
+}
+
 #searchdiv {
 	position: absolute; 
-	top: 40px; 
-	left: 100px; 
+	top: 40px;
+	left: 75px;
 	width: 220px; 
 	z-index: 2; 
 	padding: 20px; 
@@ -73,21 +159,18 @@
 	}
 }
 
+@media(max-width: 980px){
+    #searchdiv {
+        top: 0;
+    }
+}
+
 .bs-links {
 	text-align: center;
 	
 	.btn-group {
 		display:inline-block;
 	}
-}
-
-#kaart {
-	position: absolute; 
-	z-index: 1; 
-	top: 40px; 
-	left: 0; 
-	width: 100%; 
-	height: 100%;
 }
 
 #kaart-single {

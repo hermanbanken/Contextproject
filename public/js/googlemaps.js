@@ -16,10 +16,16 @@ var bounds = null;
 var circle = null;
 // platform
 var isIpad = null;
+// locations
+var locations = false;
+// dom ready
+var ready = false;
 /**
  * On document ready, initialize functions and triggers
  */
-$(document).ready(function() {
+$(document).ready(function () {
+    ready = true;
+
 	// If the map is on the page
 	if ($('#kaart').size() > 0) {
 		// Adjust height
@@ -27,18 +33,18 @@ $(document).ready(function() {
 		// initialize options for google maps
 		var myOptions = {
 			// center of holland
-			center : new google.maps.LatLng(52.003695, 4.361444),
+			center:new google.maps.LatLng(52.003695, 4.361444),
 			// default zoomlevel 8
-			zoom : 15,
+			zoom:15,
 			// maptype road
-			mapTypeId : google.maps.MapTypeId.ROADMAP
+			mapTypeId:google.maps.MapTypeId.ROADMAP
 		};
 		// create the map
 		map = new google.maps.Map(document.getElementById("kaart"), myOptions);
 		// get the clients coordinates
 		getCoordinates();
 		// set pin update on filter submit
-		$('#filter').submit(function(e) {
+		$('#filter').submit(function (e) {
 			e.preventDefault();
 			updatePins();
 		});
@@ -52,7 +58,7 @@ function getCoordinates() {
 	// try the navigator
 	if (navigator.geolocation) {
 		browserSupportFlag = true;
-		navigator.geolocation.getCurrentPosition(function(position) {
+		navigator.geolocation.getCurrentPosition(function (position) {
 			latitude = position.coords.latitude;
 			longitude = position.coords.longitude;
 			// update pins upon completion
@@ -62,7 +68,7 @@ function getCoordinates() {
 	} else if (google.gears) {
 		browserSupportFlag = true;
 		var geo = google.gears.factory.create('beta.geolocation');
-		geo.getCurrentPosition(function(position) {
+		geo.getCurrentPosition(function (position) {
 			latitude = position.latitude;
 			longitude = position.longitude;
 			// update pins upon completion
@@ -90,18 +96,26 @@ function updatePins() {
 			getCoordinates();
 			return;
 		}
+        distance = getDistance();
 	}
-	distance = getDistance();
+
+	var query = $('#filter').serialize();
+	query.longitude = longitude;
+	query.latitude = latitude;
 
 	// get the locations using AJAX with the criteria
-	$.post('monument/getmonumenten', 'longitude=' + longitude + '&latitude='
-			+ latitude + '&' + $('#filter').serialize(),
-			succes = function(data) {
-				// on ajax succes, the fetched locations have to be place on the
-				// map
-				locations = data;
-				placePins(locations);
-			}, "json");
+	$.get(
+		'search/map',
+		query,
+		succes = function (data) {
+			// on ajax succes, the fetched locations have to be place on the
+			// map
+			locations = data.monuments;
+			console.log("Debug", data.debug);
+			placePins(locations);
+		},
+		"json"
+	);
 }
 
 /**
@@ -135,64 +149,51 @@ function placePins(locations) {
 		bounds = new google.maps.LatLngBounds();
 		// add a pin for all locations
 		for (i = 0; i < locations.length; i++) {
-			var longlat = new google.maps.LatLng(locations[i]["longitude"],
-					locations[i]["latitude"]);
+			var longlat = new google.maps.LatLng(
+				locations[i][1],
+				locations[i][2]
+			);
 			marker = new google.maps.Marker({
-				position : longlat
+				position:longlat
 			});
 			// And increase the bounds to take this point
 			bounds.extend(longlat);
 			// add the marker to the markerarray
 			markersArray.push(marker);
 
-			// create infowindow for the pin
-			var infowindow = new google.maps.InfoWindow();
-			// make sure the infowindow pops up upon click
-			google.maps.event
-					.addListener(
-							marker,
-							'click',
-							(function(marker, i) {
-								return function() {
-									// Add right source to image
-									$
-											.post(
-													'monument/photo',
-													{
-														id : locations[i]["id"]
-													},
-													succes = function(data) {
-														// set the content of
-														// the
-														// infowindow
-														infowindow
-																.setContent("<a href='monument/id/"
-																		+ locations[i]["id"]
-																		+ "'><img id=\"photo"
-																		+ locations[i]["id"]
-																		+ "\" src=\"\" alt=\"\" style=\"float: left; max-height: 100px; margin-right: 15px; min-height: 100px;\" /></a><h2>"
-																		+ locations[i]["name"]
-																		+ "</h2>"
-																		+ locations[i]["description"]
-																				.substring(
-																						0,
-																						200)
-																		+ " <a href='monument/id/"
-																		+ locations[i]["id"]
-																		+ "'>Meer</a>");
-														$(
-																"#photo"
-																		+ locations[i]["id"])
-																.attr(
-																		'src',
-																		data.url);
-													}, "json");
+			// store open window
+			var openInfowindow;
 
-									infowindow.open(map, marker);
-								}
-							})(marker, i));
-			// if the client uses location based search, there's no need for
-			// clustering
+			// make sure the infowindow pops up upon click
+			google.maps.event.addListener(
+				marker,
+				'click',
+				(function (marker, i) {
+					return function () {
+						// Close other open window
+						if(openInfowindow)
+							openInfowindow.close();
+
+						// create infowindow for the pin
+						var infowindow = openInfowindow = new google.maps.InfoWindow();
+
+						// Add right source to image
+						$.getJSON('monument/id/'+locations[i][0], function (data) {
+							var id = locations[i][0];
+							var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+							var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
+							infowindow.setContent(
+							  "<a href='monument/id/"+id+"' >" +
+							  "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
+							  "<h2>" + data.name + "</h2></a>" +
+							  "<p>"+desc+"<a href='monument/id/"+id+"'>Meer</a></p>"
+							);
+							infowindow.open(map, marker);
+						});
+
+					}
+				})(marker, i)
+            );
 		}
 
 		// If the client uses location based search, a circle has to be added
@@ -200,10 +201,10 @@ function placePins(locations) {
 			// add current location
 			var longlat = new google.maps.LatLng(latitude, longitude);
 			marker = new google.maps.Marker({
-				position : longlat,
-				icon : new google.maps.MarkerImage(
-						'http://cdn-img.easyicon.cn/png/5526/552649.png'),
-				map : map
+				position:longlat,
+				icon:new google.maps.MarkerImage(
+					'http://cdn-img.easyicon.cn/png/5526/552649.png'),
+				map:map
 			});
 			// And increase the bounds to take this point
 			bounds.extend(longlat);
@@ -214,18 +215,18 @@ function placePins(locations) {
 			markersArray.push(marker);
 			// make sure the infowindow pops up upon click
 			google.maps.event.addListener(marker, 'click',
-					(function(marker, i) {
-						return function() {
-							infowindow.setContent("Huidige locatie");
-							infowindow.open(map, marker);
-						}
-					})(marker, i));
+				(function (marker, i) {
+					return function () {
+						infowindow.setContent("Huidige locatie");
+						infowindow.open(map, marker);
+					}
+				})(marker, i));
 			// Add a Circle overlay to the map.
 			circle = new google.maps.Circle({
-				map : map,
-				strokeColor : '#66CCFF',
-				fillColor : '#66CCFF',
-				radius : 1000 * getDistance()
+				map:map,
+				strokeColor:'#66CCFF',
+				fillColor:'#66CCFF',
+				radius:1000 * getDistance()
 			});
 			// add the circle to the map
 			circle.bindTo('center', marker, 'position');
@@ -242,7 +243,7 @@ function placePins(locations) {
 			markerClusterer = new MarkerClusterer(map, markersArray, {
 				// when zoomlevel reaches 16, just show the pins instead of the
 				// clusters
-				maxZoom : maxZoom
+				maxZoom:maxZoom
 			});
 
 		$("#searchdiv").fadeTo('fast', 1);

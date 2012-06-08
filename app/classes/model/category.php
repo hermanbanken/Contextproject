@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for categories of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Category extends Model_Abstract_Cultuurorm {
 		
 	protected $_rules = array(
@@ -17,7 +24,12 @@ class Model_Category extends Model_Abstract_Cultuurorm {
 	protected $_translated = array(
 		"name" => "nl",
 	);
-	
+
+	protected $_table_columns = array(
+		"id_category" => array( "type" => "int", "key" => "PRI", "extra" => "auto_increment" ),
+		"name"		 => array( "type" => "string", "character_maximum_length" => 100 ),
+	);
+
 	protected static $entity = "category";
 	protected static $schema_sql = "CREATE TABLE IF NOT EXISTS `%s` (
 	  	`id_category` int(10) unsigned NOT NULL AUTO_INCREMENT,

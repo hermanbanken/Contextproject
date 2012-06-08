@@ -1,10 +1,25 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for foursquare venues of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Herman Banken
+ */
 class Model_Venue extends Model_Abstract_Cultuurorm {
-		
-	protected $_rules = array(
-	);
-	
+
+	public function rules()
+	{
+		return array(
+			'name' => array(
+				array('not_empty'),
+				array('min_length', array(':value', 4)),
+				array('max_length', array(':value', 32)),
+			),
+		);
+	}
+
 	protected $_primary_key = "id";
 	protected $_belongs_to = array(
 			'monument'=> array(
@@ -24,6 +39,10 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 		`usersCount` int(8),
 		`tipCount` int(4),
 		`photos` text,
+		`ll` varchar(50),
+		`city` varchar(100),
+		`address` varchar(150),
+		`description` text,
 		`cachedOn` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	  	PRIMARY KEY (`id`),
 		KEY `id_monument` (`id_monument`)
@@ -32,7 +51,11 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 	/**
 	 * Lookup a venue for a monument
 	 */
-	public function match($monument){
+	public function match($monument)
+	{
+		if(!isset($monument) || !$monument->loaded())
+			return false;
+
 		$this
 			->where('id_monument', '=', $monument->pk())
 			->find();
@@ -88,22 +111,60 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 				}
 				
 				if(!$v) return false;
-					
-				$this->id = $v->id;
-				$this->name = $v->name;
-				$this->monument = $monument;
-				$this->location = json_encode($v->location);
-				$this->categories = json_encode($v->categories);
-				$this->checkinsCount = $v->stats->checkinsCount;
-				$this->usersCount = $v->stats->usersCount;
-				$this->tipCount = $v->stats->tipCount;
-				$this->save();
-				$monument->reload();
+
+				$this->find($v->id);
+				$this->fromFourSquare($v, $monument);
+
+				if($this->check())
+				{
+					$this->save();
+					$monument->reload();
+				}
+				else
+				{
+					return false;
+				}
+
 				return $this;
 			}
 			
 			return false;	
 // 		}
-	}	
+	}
+
+	/**
+	 * Construct new venue from a FourSquare response
+	 * @param $venue
+	 * @param null $monument
+	 */
+	public function fromFourSquare($venue, $monument = null)
+	{
+		$this->id = $venue->id;
+		$this->name = substr($venue->name, 0, 32);
+		if($monument)
+			$this->monument = $monument;
+
+		// Location
+		if(isset($venue->location->city))
+			$this->city = $venue->location->city;
+		elseif($monument)
+			$this->city = $monument->town->name;
+
+		if(isset($venue->location->address))
+			$this->address = $venue->location->address;
+		elseif($monument)
+			$this->address = $monument->street->name . " " . $monument->streetNumber;
+
+		$this->location = json_encode($venue->location);
+		$this->ll = $venue->location->lat . ';' . $venue->location->lng;
+		// Categories
+		$this->categories = json_encode($venue->categories);
+		// Stats
+		$this->checkinsCount = $venue->stats->checkinsCount;
+		$this->usersCount = $venue->stats->usersCount;
+		$this->tipCount = $venue->stats->tipCount;
+
+		return $this;
+	}
 }
 ?>

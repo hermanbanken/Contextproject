@@ -3,171 +3,82 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
+	
+	public function action_recommender() {
+		$v = View::factory('test');
+		
+		foreach (Recommender::recommend(5) AS $monument) {
+			echo var_dump($monument, true);
+		}
+		
+		$this->template->body = $v;
+	}
+	
+	/**
+	 * View to compare images visual
+	 */
+	public function action_visualcomparison() {
+		$v = View::factory(static::$entity.'/visualcomparison');
 
-    /**
-     * textual analysis
-     */
-    public function action_indexwords() {
+		// Get post, query, user and monument information
+		$id = $this->request->param('id');
+		$user = Auth::instance()->get_user();
+		$monument = ORM::factory('monument', $id);
+		$post = $this->request->post();
+		$query = $this->request->query();
+		$session = Session::instance()->as_array();
 
-        // execution can take a long time
-        set_time_limit(0);
-       // ini_set('memory_limit',0);
+		// If nothing is posted, use recent post in session if it exists
+		if (!isset($post['posted']) && isset($session['vc'])) {
+			$post = $session['vc'];
+		}
 
-        // stopwoorden
-        $stopwords = array("aan","af","al","alles","als","altijd","andere","ben","bij","daar","dan","dat","de","der","deze","die","dit","doch","doen","door","dus","een","eens","en","enz","er","etc","ge","geen","geweest","haar","had","heb","hebben","heeft","hem","hen","het","hier","hij ","hoe","hun","iemand","iets","ik","in","is","ja","je ","jouw","jullie","kan","kon","kunnen","maar","me","meer","men","met","mij","mijn","moet","na","naar","niet","niets","nog","nu","of","om","omdat","ons","onze","ook","op","over","reeds","te","ten","ter","tot","tegen","toch","toen","tot","u","uit","uw","van","veel","voor","want","waren","was","wat","we","wel","werd","wezen","wie","wij","wil","worden","zal","ze","zei","zelf","zich","zij","zijn","zo","zonder","zou");
+		// Set categories
+		$cats = array('color', 'composition', 'texture', 'orientation');
+		$cur_cats = array();
+		foreach ($cats AS $cat) {
+			if (isset($post[$cat])) {
+				$cur_cats[] = $cat;
+			}
+		}
 
-        // all the monuments
-        $limit = 26000;
+		// Determine if we have to use 400 or 4 features
+		$type = 'pca';
+		if (isset($post['advanced'])) {
+			$type = 'photo';
+		}
+		$photo = ORM::factory($type)->where('id_monument', '=', $monument->id_monument)->find();
 
-        // total occurrences
-        $totaloccurrences = array();
+		// Find features to compare on
+		$features = array();
+		foreach ($cur_cats AS $cat) {
+			$features = array_merge($photo->features_cat($cat), $features);
+		}
 
-        // number of monuments where the word occurs
-        $mixedoccurrences = array();
+		// Set needed variables for view
+		$similars = array();
+		$posted = false;
 
-        // relativity of a word
-        $relativeoccurrences = array();
+		// If there is a post-request, find similar monuments and acknowledge post
+		if (isset($post['posted']) || isset($query['posted'])) {
+			$_SESSION['vc'] = $post;
+			unset($_SESSION['vc']['posted']);
+			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
+			$posted = true;
+		}
 
-        // keep the original (unedited) tags
-        $originalkeywords = array();
+		// Bind variables to view
+		$v->set('selected', $cur_cats);
+		$v->set('advanced', ($type != 'pca'));
+		$v->set('similars', $similars);
+		$v->set('posted', $posted);
+		$v->bind('monument', $monument);
+		$v->bind('user', $user);
+			
+		// Bind view to template
+		$this->template->body = $v;
+	}
 
-        // keep track of in which monuments tags are
-        $inmonuments = array();
-
-        // collect all monuments
-        $sql = "SELECT m.description, m.name, m.id_monument FROM dev_monuments m ORDER BY id_monument desc LIMIT ".$limit;
-        $monuments = DB::query(Database::SELECT,$sql,TRUE)->execute();
-
-        // for each monument
-        foreach($monuments as $monument) {
-            // find the description, lowercase it, ignore encoding
-            if(!isset($monument['description'])) {
-                continue;
-            }
-
-            // filter unused characters
-            $description = preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']);
-
-            // explode original keywords into array
-            $originals = explode(' ',$description);
-
-            // filter stopwords
-            $originals = array_diff($originals, $stopwords);
-
-            // explode search keywords into array
-            $description = explode(' ',preg_replace('/[^a-zA-Z0-9\s]/','',$description));
-
-            // filter stopwords
-            $description = array_diff($description, $stopwords);
-
-            // importance of an occurrence
-            $percentage = 1/count($description);
-
-            $tf = array();
-            // add occurrence to total and mixed
-            foreach($description as $key=>$des) {
-                $originalkeywords[$des] = $originals[$key];
-                $totaloccurrences[$des] = isset($totaloccurrences[$des])?($totaloccurrences[$des]+1):1;
-                $tf[$des] = isset($tf[$des])?($tf[$des]+$percentage):$percentage;
-                // keep track of where tags occur
-                if(isset($inmonuments[$des])) {
-                    $inmonuments[$des][$monument['id_monument']] = isset($inmonuments[$des][$monument['id_monument']])?($inmonuments[$des][$monument['id_monument']]+1):1;
-                } else {
-                    $inmonuments[$des] = array($monument['id_monument'] => 1);
-                }
-            }
-
-            // keep track of uniqueness
-            $unique = array();
-            foreach($description as $des) {
-                $unique[$des] = true;
-            }
-            foreach($unique as $key=>$un) {
-                $mixedoccurrences[$key] = isset($mixedoccurrences[$key])?($mixedoccurrences[$key]+1):1;
-                $relativeoccurrences[$key] = isset($relativeoccurrences[$key])?
-                    ($relativeoccurrences[$key]+$tf[$key])/2:$tf[$key];
-            }
-        }
-
-
-        // id to insert
-        $i = 1;
-        // sort by total occurrence
-        arsort($totaloccurrences);
-        // for each word
-        foreach($totaloccurrences as $key=>$occ) {
-
-            // check if data is set
-            if($key == '' || !isset($mixedoccurrences[$key]) OR !isset($totaloccurrences[$key])) continue;
-
-            // check if really relevant
-            $jaartal = preg_match('/^[^a-z]+$/', $key) OR preg_match('/^(?=.)(?i)m*(d?c{0,3}|c[dm])(l?x{0,3}|x[lc])(v?i{0,3}|i[vx])$/',$key);
-            if($occ<2
-                OR (strlen($key)<5 AND !$jaartal)
-                OR (!preg_match('/^[a-z]+$/',$key) AND !$jaartal)
-                OR in_array($key,$stopwords)
-            ) continue;
-
-
-            // term frequency is saved as mean
-            $tf = $relativeoccurrences[$key];
-
-            // inverse document frequency = log(D/D(t))
-            $idf = log(25500 / (1+$mixedoccurrences[$key]));
-
-            // the importance of a word is tf*idf calculated
-            $tfidf = $tf*$idf;
-
-            // skip irrelevant words
-            if($tfidf==0) continue;
-
-            $sql=" INSERT INTO dev_tags VALUES (".$i.",'".addslashes($originalkeywords[$key])."',".$mixedoccurrences[$key].",".$tfidf."); ";
-            DB::query(Database::INSERT,$sql)->execute();
-
-            foreach($inmonuments[$key] as $monumentid=>$monumentoccurrence) {
-                    $insertsql = "INSERT INTO dev_tag_monument VALUES (".$monumentid.",".$i.",".$monumentoccurrence.");";
-                    DB::query(Database::INSERT,$insertsql)->execute();
-            }
-            $i++;
-        }
-
-        echo "<h1>KLAAR!</h1><p>".$i." tags toegevoegd...</p>";
-        $v = View::factory(static::$entity.'/test');
-
-        $this->template->body = $v;
-    }
-
-
-    /**
-     * @param $size size of the tagcloud measured in words
-     * @return array with tags and their size
-     */
-    public function getTagCloud($size) {
-
-        // get random tags with high tfidf importance
-        $limit = $size;
-        $sql = "select * from dev_tags where length(content) > 4 AND occurrences > 2  AND importance > 0.141430140 order by RAND() limit ".$limit;
-        $tagset = DB::query(Database::SELECT,$sql,TRUE)->execute();
-
-        // convert to array
-        $tags = array();
-        foreach($tagset as $key=>$tag) {
-            $tags[$tag['importance']] = array('content' => strtolower($tag['content']));
-        }
-
-        // sort by importance and add fontsize
-        ksort($tags);
-        $i = 0;
-        foreach($tags as $key=>&$tag) {
-            $tag['fontsize'] = 12+$i;
-            $i+=1;
-        }
-        // sort alphabetically
-        asort($tags);
-
-       return $tags;
-
-    }
 	/**
 	 * action_map
 	 * Action for getting all monuments on a map view
@@ -180,27 +91,25 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get data from session or set default data
 		$session = Session::instance();
 		$session = $session->as_array();
-		if (isset($session['selection'])) {
+		if (false && isset($session['selection'])) {
 			$p = $session['selection'];
 		}
 		else {
-			$p = $this->getDefaults();
+			$p = Arr::overwrite($this->getDefaults(), $this->request->post());
+			$p = Arr::overwrite($p, $this->request->query());
 		}
 		// Get provinces and categories for selection
-		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
-
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
-        // add searchterm for external links
-        $search = $this->request->param('id');
-        if(isset($search) AND $search != '') $p['search'] = $search;
+		// add searchterm for external links
+		$search = $this->request->param('id');
+		if(isset($search) AND $search != '') $p['search'] = $search;
 
-        // Give variables to view
-		$f->set('post', $p);
-		$f->set('provinces', $provinces);
+		// Give variables to view
+		$f->set('param', $p);
 		$f->set('categories', $categories);
 		$f->set('action', '');
 		$f->set('formname', 'filter');
@@ -214,271 +123,33 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * action_id
 	 * Action for getting one particular object by id in single view
 	 */
-	public function action_id(){
-		$v = View::factory('monument/single');
+	public function action_id()
+	{
 		$id = $this->request->param('id');
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);
+		$forecasts = $monument->forecast();
 		
-		$v->bind('monument', $monument);
-		$v->bind('user', $user);
-		$this->template->body = $v;
-	}
+		// Log monument
+		Logger::instance()->monument($monument);
 
-	/*
-	 * Import monuments from files stored in /public/files/monuments/
-	* Should be xml files with names like 1001.xml when id_monument = 1001
-	*/
-	public function action_import() {
-		// Set default view
-		$v = View::factory('default');
+		if(!$monument->loaded())
+			throw new HTTP_Exception_404(__('monument.notfound'));
 
-		// Set time limit at unlimited (long import)
-		set_time_limit(0);
-
-		// Set counter
-		$i = 0;
-
-		// Make a list of id's from monument that are already stored
-		$ids = array();
-		$monuments_orm = ORM::factory('monument')->find_all();
-		foreach ($monuments_orm AS $monument) {
-			$ids[] = $monument->id_monument;
+		if($this->is_json())
+		{
+			$obj = $monument->object();
+			$obj['photoUrl'] = $monument->photoUrl();
+			$obj['summary'] = $monument->summary();
+			$this->set_json(json_encode($obj));
 		}
-
-		// Loop through all files in the map /public/files/monuments
-		if ($monuments = opendir('files/monuments')) {
-			while (($monument_file = readdir($monuments)) !== false) {
-				// Check if file is xml-file
-				if (substr($monument_file, -3) == 'xml') {
-					// Set some basis arrays
-					$data = array();
-					$link = array();
-
-					// Find id in filename
-					$monument_id = intval($monument_file);
-
-					// If it is an unparsed monument
-					if (!in_array($monument_id, $ids)) {
-
-						// Read file and parse into array
-						$info = $this->xml2array(@file_get_contents('files/monuments/'.$monument_id.'.xml'));
-
-						// Array for the records of wikimedia in the form (name_in_file => name_in_database)
-						$wikimedia_array = array('monumentNumber' => 'id_monument',
-								'title' => 'name',
-								'description' => 'description_commons',
-								'longitude' => 'lng',
-								'latitude' => 'lat',
-								'usageOnOtherWikis' => 'wiki',
-								'usageOnWikiMediaCommons' => 'commons');
-
-						// Loop through data and save in link- or data-array
-						foreach ($wikimedia_array AS $wikimedia => $field) {
-							if (isset($info['Monument']['wikimediaCommons'][$wikimedia])) {
-								if ($wikimedia == 'usageOnOtherWikis' || $wikimedia == 'usageOnWikiMediaCommons') {
-									$link[$field] = $info['Monument']['wikimediaCommons'][$wikimedia];
-
-								}
-								else {
-									$data[$field] = urldecode($info['Monument']['wikimediaCommons'][$wikimedia]);
-								}
-							}
-						}
-
-						// Array for the records of monumentregistry in the form (name_in_file => name_in_database)
-						$mr_array = array('province' => 'id_province',
-								'municipality' => 'id_municipality',
-								'town' => 'id_town',
-								'street' => 'id_street',
-								'streetNumber' => 'streetNumber',
-								'zipCode' => 'zipCode',
-								'mainCategory' => 'id_category',
-								'subCategory' => 'id_subcategory',
-								'function' => 'id_function',
-								'description' => 'description');
-
-						// Loop through data and save in link- or data-array
-						foreach ($mr_array AS $mr => $field) {
-							if (isset($info['Monument']['monumentRegistry'][$mr])) {
-								if (is_array($info['Monument']['monumentRegistry'][$mr])) {
-									$link[$field] = $info['Monument']['monumentRegistry'][$mr];
-								}
-								else {
-									$data[$field] = urldecode($info['Monument']['monumentRegistry'][$mr]);
-								}
-							}
-						}
-
-						// If category is present, find id or insert new category in database
-						if (isset($data['id_category'])) {
-							$category = ORM::factory('category')->where('name', '=', $data['id_category'])->find();
-							if ($category->name == NULL) {
-								$category->name = $data['id_category'];
-								try {
-									$category->save();
-								}
-								catch (Exception $e) {
-									echo $e->getMessage().'<br />';
-								}
-							}
-							$data['id_category'] = $category->id_category;
-
-							// If subcategory is present, find id or insert new category in database
-							if (isset($data['id_subcategory'])) {
-								$subcategory = ORM::factory('subcategory')->where('name', '=', $data['id_subcategory'])->find();
-								if ($subcategory->name == NULL) {
-									$subcategory->name = $data['id_subcategory'];
-									$subcategory->id_category = $category->id_category;
-									try {
-										$subcategory->save();
-									}
-									catch (Exception $e) {
-										echo $e->getMessage().'<br />';
-									}
-								}
-								$data['id_subcategory'] = $subcategory->id_subcategory;
-							}
-						}
-
-						// If province is present, find id or insert new category in database
-						if (isset($data['province'])) {
-							$province = ORM::factory('province')->where('name', '=', $data['province'])->find();
-							if ($province->name == NULL) {
-								$province->name = $data['province'];
-								try {
-									$province->save();
-								}
-								catch (Exception $e) {
-									echo $e->getMessage().'<br />';
-								}
-							}
-							$data['province'] = $province->id_province;
-
-							// If municipality is present, find id or insert new category in database
-							if (isset($data['municipality'])) {
-								$municipality = ORM::factory('municipality')->where('name', '=', $data['municipality'])->find();
-								if ($municipality->name == NULL) {
-									$municipality->name = $data['municipality'];
-									$municipality->id_province = $province->id_province;
-									try {
-										$municipality->save();
-									}
-									catch (Exception $e) {
-										echo $e->getMessage().'<br />';
-									}
-								}
-								$data['municipality'] = $municipality->id_municipality;
-
-								// If town is present, find id or insert new category in database
-								if (isset($data['town'])) {
-									$town = ORM::factory('town')->where('name', '=', $data['town'])->find();
-									if ($town->name == NULL) {
-										$town->name = $data['town'];
-										$town->id_municipality = $municipality->id_municipality;
-										try {
-											$town->save();
-										}
-										catch (Exception $e) {
-											echo $e->getMessage().'<br />';
-										}
-									}
-									$data['town'] = $town->id_town;
-
-									// If street is present, find id or insert new category in database
-									if (isset($data['street'])) {
-										$street = ORM::factory('street')->where('name', '=', $data['street'])->and_where('id_town', '=', $town->id_town)->find();
-										if ($street->name == NULL) {
-											$street->name = $data['street'];
-											$street->id_town = $town->id_town;
-											try {
-												$street->save();
-											}
-											catch (Exception $e) {
-												echo $e->getMessage().'<br />';
-											}
-										}
-										$data['street'] = $street->id_street;
-									}
-								}
-							}
-						}
-
-						// If function is present, find id or insert new category in database
-						if (isset($data['function'])) {
-							$function = ORM::factory('function')->where('name', '=', $data['function'])->find();
-							if ($function->name == NULL) {
-								$function->name = $data['function'];
-								try {
-									$function->save();
-								}
-								catch (Exception $e) {
-									echo $e->getMessage().'<br />';
-								}
-							}
-							$data['function'] = $function->id_function;
-						}
-
-						// Insert new monument in database
-						$monument = ORM::factory('monument')->where('id_monument', '=', $data['id_monument'])->find();
-						if ($monument->id_monument == NULL) {
-							foreach ($data AS $key => $value) {
-								$monument->$key = $value;
-							}
-							try {
-								$monument->save();
-							}
-							catch (Exception $e) {
-								echo $e->getMessage().'<br />';
-							}
-						}
-
-						// Insert links in database
-						foreach ($link AS $key => $url) {
-							// Use recursive function (url depth is unknonw, sometimes 5 nodes)
-							$this->savelink($monument->id_monument, $url, $key);
-						}
-
-						$i++;
-					}
-				}
-			}
-		}
-
-		closedir($monuments);
-
-		$v->set('title', 'Monumenten Import');
-		$v->set('text', 'Er zijn een '.$i.' monumenten ge�mporteerd.');
-
-		$this->template->body = $v;
-
-	}
-
-	// Url sometimes has depth of 5 nodes, so recursive function is handy
-	function savelink($id_monument, $url, $name) {
-		if (is_array($url)) {
-			foreach ($url AS $value) {
-				$this->savelink($id_monument, $value, $name);
-			}
-		}
-		else {
-			// Look if link is already in database, otherwise insert new one
-			$link = ORM::factory('link')->where('url', '=', $url)->find();
-			if ($link->url == NULL) {
-				$link->url = $url;
-				$link->name = $name;
-				try {
-					$link->save();
-				}
-				catch (Exception $e) {
-					echo $e->getMessage().'<br />';
-				}
-			}
-
-			// Connect the inserted link to the monument it belongs to if not already done
-			if (DB::select()->from('monument_link')->where('id_monument', '=', $id_monument)->and_where('id_link', '=', $link->id_link)->execute()->count() == 0) {
-				DB::query(Database::INSERT, sprintf("INSERT INTO dev_monument_link VALUES (%d, %d)", $id_monument, $link->id_link))->execute();
-			}
+		else
+		{
+			$v = View::factory('monument/single-sleek');
+			$v->bind('monument', $monument);
+			$v->bind('user', $user);
+			$v->bind('forecasts', $forecasts);
+			$this->template->body = $v;
 		}
 	}
 
@@ -511,19 +182,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 	}
 
 
-	public static function getSynonyms($search) {
-		$sql = "select w2.word as synoniem
-		from dev_thesaurus_words w1,
-		dev_thesaurus_words w2,
-		dev_thesaurus_links l
-		where w1.id = l.word
-		and w2.id = l.synonym
-		and w1.word = '".$search."'";
-		$db = Database::instance();
-		$synonyms = $db->query(Database::SELECT,$sql,TRUE);
-		if($synonyms->count()==0) return false;
-		return $synonyms->as_array();
-	}
 
 	public function getDefaults() {
 		$defaults = array('search' => '',
@@ -541,7 +199,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	function buildQuery($post = false) {
 		if (!$post) {
-			$post = $this->request->post();
+			$post = $this->request->query();
 		}
 
 		if (!isset($post['not_in_session'])) {
@@ -569,42 +227,64 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// extract synonyms
 		if(isset($search)) {
-			$synonyms = $this->getSynonyms($search);
+			$synonyms = TextualMagic::synonyms($search);
 		}
 
 		// prepare sql statement
-		$sql = "SELECT * ";
+		$query = DB::select(DB::expr("*"));
+		$sql = "SELECT *, dev_monuments.id_monument AS id_monument, COUNT(dev_visits.id) AS popularity ";
 
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1) || (isset($sort) && $sort == 'distance')) {
+			$query->select_array(array(
+					DB::expr("*"),
+					array(DB::expr("1.6", array(":lon"=>$longitude, ":lat"=>$latitude)), "distance")
+			));
+			$extr = "((ACOS(SIN(:lon * PI() / 180) * SIN(lat * PI() / 180) + COS(:lon * PI() / 180) * COS(lat * PI() / 180) * COS((:lat - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*";
 			$sql.= ",((ACOS(SIN(".$longitude." * PI() / 180) * SIN(lat * PI() / 180) + COS(".$longitude." * PI() / 180) * COS(lat * PI() / 180) * COS((".$latitude." - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 AS distance ";
 		}
 
+		$query->from("monuments");
 		// from dev_monuments
 		$sql.= "FROM dev_monuments ";
+
+		$sql .= "LEFT JOIN dev_visits ON dev_visits.id_monument = dev_monuments.id_monument ";
+
+
+		$sql.="GROUP BY dev_monuments.id_monument ";
 
 		// prepare where clause
 		$sql.= "HAVING 1 ";
 
 		// search for distance if needed
 		if((isset($distance) && $distance != 0 && isset($distance_show) && $distance_show == 1)) {
+			$query->where("distance", "<", $distance);
 			$sql.= "AND distance < ".$distance." ";
 		}
 
 		// add category search
 		if(isset($category)) {
+			$query->where("id_category", "=", $category);
 			$sql.="AND id_category = ".$category." ";
 		}
 
 		// add category search
 		if(isset($province)) {
+			$query->where("id_province", "=", $province);
 			$sql.="AND id_province = ".$province." ";
 		}
 
 		// add town search
 		if(isset($town)) {
 			$orm_town = ORM::factory('town')->where('name', '=', $town)->find();
-			$sql.="AND id_town = ".$orm_town->id_town." ";
+			if ($orm_town->loaded()) {
+				$query->where("id_town", "=", $orm_town->id_town);
+				$sql.="AND id_town = ".$orm_town->id_town." ";
+			}
+			else {
+				$query->where("id_town", "=", 0);
+				$sql.="AND id_town = 0 ";
+			}
 		}
 
 		// add string search
@@ -616,9 +296,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 					$syns.="|".$syn->synoniem;
 				}
 				$sql.= "AND CONCAT(name,description) REGEXP '".$syns."' ";
+				$query->where(DB::expr("CONCAT(name, description)"), "REGEXP", $syns);
 			} else {
 				// if not, a LIKE operator is enough
 				$sql.="AND CONCAT(name,description) LIKE '%".$search."%' ";
+				$query->where(DB::expr("CONCAT(name, description)"), "LIKE", "%$search%");
 			}
 		}
 
@@ -630,7 +312,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				// prioritize resultset by relevance
 				if(isset($search)) {
 					if($synonyms) {
-						$sql.="CASE
+						$sql.= $case = "CASE
 						WHEN name = '".$search."' THEN 0
 						WHEN name LIKE '".$search."%' THEN 1
 						WHEN name LIKE '%".$search."%' THEN 2
@@ -639,8 +321,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 						WHEN description REGEXP '".$syns."' THEN 5
 						ELSE 6
 						END, name ";
+						$query->order_by(DB::expr($case));
 					} else {
-						$sql.="CASE
+						$sql.= $case = "CASE
 						WHEN name = '".$search."' THEN 0
 						WHEN name LIKE '".$search."%' THEN 0
 						WHEN name LIKE '% ".$search." %' THEN 1
@@ -649,21 +332,31 @@ class Controller_Monument extends Controller_Abstract_Object {
 						WHEN description LIKE '%".$search."%' THEN 4
 						ELSE 5
 						END, name ";
+						$query->order_by(DB::expr($case));
 					}
 				} else {
 					$sql.= "RAND() ";
+					$query->order_by(DB::expr("RAND()"));
 				}
 				break;
 			case "name":
 				$sql.= "name ";
+				$query->order_by("name");
 				break;
 			case "distance":
 				$sql.= "distance ASC ";
+				$query->order_by("distance", "ASC");
+				break;
+			case "popularity":
+				$sql.= "popularity DESC ";
+				$query->order_by("popularity");
 				break;
 			case "street":
 				$sql.= "id_street ";
+				$query->order_by("id_street");
 				break;
 			default:
+				$query->order_by(DB::expr("RAND()"));
 				$sql.= "RAND() ";
 				break;
 					
@@ -706,7 +399,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		die(json_encode(array('url' => $monument->photo())));
 	}
 
-	public function monumentsToJSON($monuments) {
+	public static function monumentsToJSON($monuments) {
 		$_return = array();
 		foreach($monuments as $key=>$monument) {
 			if($monument->lng == 0 OR $monument->lat == 0 OR $monument->lng > 57.5) continue;
@@ -726,34 +419,74 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 * Action for listing all objects of type
 	 */
 	public function action_list() {
+
+		$v = View::factory(static::$entity.'/list-dynanmic');
+		$this->js("ca-list", "js/list.js", true);
+
+		// Get provinces and categories for selection
+		$provinces = ORM::factory('province')->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+
+		$tags = TextualMagic::tagcloud(20);
+		// create the view
+		$t = View::factory(static::$entity.'/tagcloud');
+		// bind the tags
+		$t->bind('tags',$tags);
+		// add tagcloud to page
+		$v->set('tagcloud',$t);
+
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
+
+		// Give variables to view
+		$f->set('param', $this->getDefaults());
+		$f->set('provinces', $provinces);
+		$f->set('categories', $categories);
+		$f->set('action', 'monument/list');
+		$f->set('formname', 'filter_list');
+
+		$v->bind('selection_form', $f);
+
+		$this->template->body = $v;
+
+		return;
+
 		// Set view
 		$v = View::factory(static::$entity.'/list');
 
+		// get defaults
+		$p = $this->getDefaults();
+
 		// Get post-data
-		$p = $this->request->post();
+		$pform = $this->request->query();
 
-        // add searchterm for external links
-        $search = $this->request->param('id');
-        if(isset($search) AND $search != '') {
-        	// If searching for tag, remove other filterings
-        	foreach ($p AS $key => $value) {
-        		unset($p[$key]);
-        	}
-        	$p['search'] = $search;
-        }
+		//die(var_dump($pform));
 
-		// If no post-data is set, get data from session or set default data
-		$session = Session::instance();
-		$session = $session->as_array();
-		if (count($p) == 0) {
-			if (isset($session['selection'])) {
-				$p = $session['selection'];
-			}
-			else {
-				$p = $this->getDefaults();
-			}
+		// override values
+		foreach($pform as $key => $value) {
+			$p[$key] = $value;
 		}
 
+		// If no post-data is set, get data from session or set default data
+		$session = Session_Native::instance();
+		$session = $session->as_array();
+
+		// fetch variables saved in session
+		foreach($session as $key => $value) {
+			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
+		}
+
+		// add searchterm for external links
+		$search = $this->request->param('id');
+		if(isset($search) AND $search != '') {
+			// If searching for tag, remove irrelevant filterings, but keep post values used for sorting
+			unset($p['category']);
+			unset($p['town']);
+			unset($p['distance']);
+			$p['search'] = $search;
+		}
+
+		// re-initialize unset variables
 		foreach ($this->getDefaults() AS $key => $value) {
 			if (!isset($p[$key])) $p[$key] = $value;
 		}
@@ -776,7 +509,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$p['limit'] = $pagination->items_per_page;
 		$p['offset'] = $pagination->offset;
 
-        // Build new query with limit and offset
+		// Build new query with limit and offset
 		$sql = $this->buildQuery($p);
 		$monuments = DB::query(Database::SELECT, $sql)->execute();
 
@@ -784,19 +517,25 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-        $tags = $this->getTagCloud(20);
-        // create the view
-        $t = View::factory(static::$entity.'/tagcloud');
-        // bind the tags
-        $t->bind('tags',$tags);
-        // add tagcloud to page
-        $v->set('tagcloud',$t);
+		$tags = TextualMagic::tagcloud(20);
+		// create the view
+		$t = View::factory(static::$entity.'/tagcloud');
+		// bind the tags
+		$t->bind('tags',$tags);
+		// add tagcloud to page
+		$v->set('tagcloud',$t);
+		
+		// Logging
+		$logger = Logger::instance();
+		$logger->category(ORM::factory('category', $p['category']));
+		$logger->town(ORM::factory('town')->where('name', '=', $p['town'])->find());
+		$logger->keywords($p['search']);
 
-        // Get view for form
+		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
 
 		// Give variables to view
-		$f->set('post', $p);
+		$f->set('param', $p);
 		$f->set('provinces', $provinces);
 		$f->set('categories', $categories);
 		$f->set('action', 'monument/list');
@@ -808,133 +547,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// Add view to template
 		$this->template->body = $v;
-	}
-
-	/*
-	 * Function to parse xml in an array
-	*/
-	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
-		if(!$contents) return array();
-
-		if(!function_exists('xml_parser_create')) {
-			//print "'xml_parser_create()' function not found!";
-			return array();
-		}
-
-		//Get the XML parser of PHP - PHP must have this module for the parser to work
-		$parser = xml_parser_create('');
-		xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
-		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-		xml_parse_into_struct($parser, trim($contents), $xml_values);
-		xml_parser_free($parser);
-
-		if(!$xml_values) return;//Hmm...
-
-		//Initializations
-		$xml_array = array();
-		$parents = array();
-		$opened_tags = array();
-		$arr = array();
-
-		$current = &$xml_array; //Refference
-
-		//Go through the tags.
-		$repeated_tag_index = array();//Multiple tags with same name will be turned into an array
-		foreach($xml_values as $data) {
-			unset($attributes,$value);//Remove existing values, or there will be trouble
-
-			//This command will extract these variables into the foreach scope
-			// tag(string), type(string), level(int), attributes(array).
-			extract($data);//We could use the array by itself, but this cooler.
-
-			$result = array();
-			$attributes_data = array();
-
-			if(isset($value)) {
-				if($priority == 'tag') $result = $value;
-				else $result['value'] = $value; //Put the value in a assoc array if we are in the 'Attribute' mode
-			}
-
-			//Set the attributes too.
-			if(isset($attributes) and $get_attributes) {
-				foreach($attributes as $attr => $val) {
-					if($priority == 'tag') $attributes_data[$attr] = $val;
-					else $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
-				}
-			}
-
-			//See tag status and do the needed.
-			if($type == "open") {//The starting of the tag '<tag>'
-				$parent[$level-1] = &$current;
-				if(!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
-					$current[$tag] = $result;
-					if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
-					$repeated_tag_index[$tag.'_'.$level] = 1;
-
-					$current = &$current[$tag];
-
-				} else { //There was another element with the same tag name
-
-					if(isset($current[$tag][0])) {//If there is a 0th element it is already an array
-						$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-						$repeated_tag_index[$tag.'_'.$level]++;
-					} else {//This section will make the value an array if multiple tags with the same name appear together
-						$current[$tag] = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
-						$repeated_tag_index[$tag.'_'.$level] = 2;
-
-						if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-							$current[$tag]['0_attr'] = $current[$tag.'_attr'];
-							unset($current[$tag.'_attr']);
-						}
-
-					}
-					$last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
-					$current = &$current[$tag][$last_item_index];
-				}
-
-			} elseif($type == "complete") { //Tags that ends in 1 line '<tag />'
-				//See if the key is already taken.
-				if(!isset($current[$tag])) { //New Key
-					$current[$tag] = $result;
-					$repeated_tag_index[$tag.'_'.$level] = 1;
-					if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
-
-				} else { //If taken, put all things inside a list(array)
-					if(isset($current[$tag][0]) and is_array($current[$tag])) {//If it is already an array...
-
-						// ...push the new element into that array.
-						$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-
-						if($priority == 'tag' and $get_attributes and $attributes_data) {
-							$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-						}
-						$repeated_tag_index[$tag.'_'.$level]++;
-
-					} else { //If it is not an array...
-						$current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
-						$repeated_tag_index[$tag.'_'.$level] = 1;
-						if($priority == 'tag' and $get_attributes) {
-							if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-
-								$current[$tag]['0_attr'] = $current[$tag.'_attr'];
-								unset($current[$tag.'_attr']);
-							}
-
-							if($attributes_data) {
-								$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-							}
-						}
-						$repeated_tag_index[$tag.'_'.$level]++; //0 and 1 index is already taken
-					}
-				}
-
-			} elseif($type == 'close') { //End of tag '</tag>'
-				$current = &$parent[$level-1];
-			}
-		}
-
-		return($xml_array);
 	}
 }
 ?>

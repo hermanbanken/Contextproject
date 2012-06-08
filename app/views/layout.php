@@ -6,8 +6,8 @@
 <?php endif; ?>
 <head>
   <title>CultuurApp.nl</title>
-  <base href="<?php echo URL::base(); ?>" />
-	<?php echo $header; ?>
+  <script>var base = "<?php echo URL::base(); ?>";</script>
+  <?php echo $header; ?>
 </head>
 
 <?php
@@ -61,6 +61,13 @@
     </div>
 	</div>
 </div>	
-<?php echo $footer; ?>
+<?php
+    echo $footer;
+
+    if(Kohana::$environment == Kohana::STAGING && Request::current()->query("bench") != null)
+    {
+       echo View::factory('profiler/stats');
+    }
+?>
 </body>
 </html>

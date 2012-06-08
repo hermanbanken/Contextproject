@@ -14,16 +14,17 @@
 				<?php
 				}
 				foreach ($monuments AS $monument) {
+					
 					$monument_s = ORM::factory('monument', $monument['id_monument']);
 					?>
 				<div class="row-fluid list-row">
 					<div class="span2">
-						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"> <img
-							src="<?php echo $monument_s->photo(); ?>" alt="">
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>"> <img
+							src="<?php echo $monument_s->photoUrl(); ?>" alt="">
 						</a>
 					</div>
 					<div class="span3">
-						<a href="monument/id/<?php echo $monument_s->id_monument; ?>"><?php echo $monument_s->name; ?>
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>"><?php echo $monument_s->name; ?>
 						</a> <span style="display: block;"><?php 
 						if (isset($monument['distance'])) {
 							$union = 'meter';
@@ -37,8 +38,8 @@
 						?> </span>
 					</div>
 					<div class="span7">
-						<?php echo substr($monument_s->description, 0, 200) ?>
-						... <a href="monument/id/<?php echo $monument_s->id_monument; ?>">Meer</a>
+						<?php echo $monument_s->summary(); ?>
+						<a href="<?php echo URL::site("monument/id/$monument_s->id_monument"); ?>">Meer</a>
 					</div>
 				</div>
 				<?php

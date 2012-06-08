@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven / Rutger Plak / Herman Banken / Tim Eversdijk
+ */
 class Model_Monument extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
@@ -67,18 +74,49 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 			"description" => "nl",
 	);
 
-	public function photo(){
-		return URL::site('photos/'.$this->id_monument).".jpg";
+	/**
+	 * @return mixed url of photo
+	 */
+	public function photoUrl(){
+		return ORM::factory('photo')->url($this->id_monument);
 	}
 
-	public function getphoto() {
-		$photo = ORM::factory('photo')->where('id_monument', '=', $this->id_monument)->find();
+	/**
+	 * Fetch a piece of text from the description.
+	 * @param mixed If this parameter is set we search in the description for the matching string and return the surroundings.
+	 * @return string Short version of the description
+	 */
+	public function summary($search = false)
+	{
+		return self::descToSummary($this->description, $this->id_monument);
+	}
 
-		return $photo;
+	/**
+	 * Fetch a piece of text from a text.
+	 * @param $text string Text to summarize
+	 * @param $search mixed If this parameter is set we search in the description for the matching string and return the surroundings.
+	 * @return string Short version of the description
+	 */
+	public static function descToSummary($text, $id, $search = false)
+	{
+		if($search){
+			return $text;
+		}else{
+			return Text::limit_chars($text, 200, "...", true) . " " . HTML::anchor('monument/id/'.$id, __('more'));
+		}
+	}
+
+	/**
+	 * Get photo of monument
+	 * @return photo of monument
+	 */
+	public function getphoto() {
+		return $this->photos->find();
 	}
 
 	/**
 	 * Accessor method for the venue field but also lookup on FourSquare if its not yet set
+	 * @author Herman
 	 */
 	public function venue() {
 		// Not yet looked up? Do it now
@@ -93,240 +131,76 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	}
 
 	/**
-	 * Make sure that if the name is the name of the street of a town that the town name is included as well.
+	 * Function to get 4-day forecast
+	 * @return array with forecast-objects
 	 */
-	public function extract_name() {
-		$name = $this->name;
+	public function forecast() {
+		$forecast = Wunderground::forecast($this);
 
-		// Woningen
-		if ($this->category->id_category == 1 || preg_match('/('.strtolower($this->street->name).'|flickr)/', strtolower($name))) {
-			$name = $this->town->name.' - '.$this->street->name.' '.$this->streetNumber;
-		}
-
-		return $name;
+		return $forecast;
 	}
 
 	/**
-	 * Compare this monument against others by the features extracted 
-	 * in MathLad (in database) and return the monuments that have the 
+	 * Function to get surrounding places
+	 * @param string $categories (https://developers.google.com/maps/documentation/places/supported_types)
+	 * @param int $limit
+	 * @return array with place-objects
+	 */
+	public function places($categories, $limit) {
+		$places = GooglePlaces::places($this, $categories, 'distance', false, false, $limit);
+
+		return $places;
+	}
+
+	/**
+	 * Compare this monument against others by the features extracted
+	 * in MATLAB (in database) and return the monuments that have the
 	 * smallest Euclidian distance to the given monument.
+	 * @param int $limit
+	 * @param array with features (created by "features_filter" or "features_cat" $features
+	 * @return array with monument objects
 	 */
-	public function similars400($limit) {
-		// Get photo info
-		$photo = $this->getphoto();
-
-		if ($photo->id_monument == NULL) {
-			// For now we're searching for random monuments in the same category when no photo is found
-			$monuments = ORM::factory('monument')
-			->where('id_subcategory', '=', $this->id_subcategory)
-			->order_by(DB::expr('RAND()'))
-			->limit($limit)
-			->find_all();
-
-			$euclidian = false;
+	public function visuallySimilars($limit, $features = false, $pca = false) {
+		if ($pca) {
+			$monuments = VisualMagic::similars_pca($this, $limit, $features);
 		}
 		else {
-			$euclidian = 'sqrt(';
-			$i = 0;
-			foreach ($photo->_original_values AS $key => $value) {
-				if ($key != 'id' && $key != 'id_monument') {
-					if ($i != 0) $euclidian .= ' + ';
-					$euclidian .= 'POW("'.$key.'" - '.$photo->$key.', 2)';
-					$i++;
-				}
-			}
-			$euclidian .= ')';
-
-			// Find monuments based on photos (Euclidian distance!)
-			$monuments = ORM::factory('monument')
-			->select('*', array($euclidian, 'p'))
-			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-			->order_by('p', 'asc')
-			->where('monument.id_monument', '!=', $this->id_monument)
-			->limit($limit)
-			->find_all();
-
-			$euclidian = true;
+			$monuments = VisualMagic::similars($this, $limit, $features);
 		}
 
-		// Return monumentlist
-		return array('monuments' => $monuments, 'euclidian' => $euclidian);
-	}
-
-	public function similars4($limit) {
-		// Get photo info
-		$photo = $this->getphoto();
-
-		if ($photo->total == NULL) {
-			// For now we're searching for random monuments in the same category when no photo is found
-			$monuments = ORM::factory('monument')
-			->where('id_subcategory', '=', $this->id_subcategory)
-			->order_by(DB::expr('RAND()'))
-			->limit($limit)
-			->find_all();
-
-			$euclidian = false;
-		}
-		else {
-			// Find monuments based on photos (Euclidian distance!)
-			$monuments = ORM::factory('monument')
-			->select('*', array('sqrt(POW("color" - '.$photo->color.', 2) + POW("composition" - '.$photo->composition.', 2) + POW("orientation" - '.$photo->orientation.', 2) + POW("texture" - '.$photo->texture.', 2))', 'p'))
-			->join('photos')->on('photos.id_monument', '=', 'monument.id_monument')
-			->order_by('p', 'asc')
-			->where('monument.id_monument', '!=', $this->id_monument)
-			->limit($limit)
-			->find_all();
-
-			$euclidian = true;
-		}
-
-		// Return monumentlist
-		return array('monuments' => $monuments, 'euclidian' => $euclidian);
-	}
-
-	public function extractcategory() {
-		$cats = array();
-
-		// Count numbers of monuments in each category
-		$monuments = DB::query(Database::SELECT, 'SELECT * FROM dev_monuments NATURAL JOIN dev_photos WHERE id_monument != '.$this->id_monument)->execute();
-		foreach ($monuments AS $monument) {
-			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
-				if (!isset($cats[$monument['id_subcategory']])) $cats[$monument['id_subcategory']] = 0;
-				$cats[$monument['id_subcategory']]++;
-			}
-		}
-
-		// Calculate percentages per category
-		$cats_perc = array();
-		foreach ($cats AS $cat => $value) {
-			$cats_perc[$cat] = $value / array_sum($cats);
-		}
-
-		$cats_sim = array();
-
-		// Get 400 similar monuments
-		$similars = $this->similars400(5);
-		$monuments = $similars['monuments'];
-
-		// Count numbers of monuments in each category from the similars
-		foreach ($monuments AS $monument) {
-			if ($monument->subcategory->id_subcategory != NULL && $monument->subcategory->id_subcategory != 0) {
-				if (!isset($cats_sim[$monument->subcategory->id_subcategory])) $cats_sim[$monument->subcategory->id_subcategory] = 0;
-				$cats_sim[$monument->subcategory->id_subcategory]++;
-			}
-		}
-
-		// Calculate percentages per category
-		$cats_sim_perc = array();
-		foreach ($cats_sim AS $cat_sim => $value) {
-			$cats_sim_perc[$cat_sim] = $value / array_sum($cats_sim);
-		}
-			
-		echo '<style>table.hallo tr td { padding-right: 10px; }</style><table class="hallo">';
-		// Compare percentages
-		foreach ($cats_sim_perc AS $cat_sim => $value) {
-			if (!isset($max)) $max = $value - $cats_perc[$cat_sim];
-			if (!isset($old_max)) $old_max = $value - $cats_perc[$cat_sim];
-			if (!isset($final_cat)) $final_cat = $cat_sim;
-
-			// Compare difference between percentages of normal and compared monuments
-			$max = max($value - $cats_perc[$cat_sim], $max);
-			echo '<tr><td>'.$cat_sim.'</td><td>'.$cats_sim[$cat_sim].'</td><td>'.$value.'</td><td>'.$cats_perc[$cat_sim].'</td><td>'.($value - $cats_perc[$cat_sim]).'</td></tr>';
-			// If the difference is bigger then previous, update final categorization
-			if ($max > $old_max) $final_cat = $cat_sim;
-
-			$old_max = $max;
-		}
-		echo '</table>';
-
-		// If no final cat is set final categorization to false
-		if (!isset($final_cat)) $final_cat = false;
-
-		return $final_cat;
-	}
-
-	public function euclidian_distance($v1, $v2) {
-		$total = 0;
-		foreach ($v1 AS $key => $val1) {
-			$total += pow($val1 - $v2[$key], 2);
-		}
-
-		return sqrt($total);
-	}
-
-	public function extractcategory2() {
-		$cats = array();
-
-		// Average of each category
-		$monuments = DB::query(Database::SELECT, 'SELECT dev_photos.*, id_subcategory FROM dev_monuments NATURAL JOIN dev_photos WHERE id_monument != '.$this->id_monument)->execute();
-		foreach ($monuments AS $monument) {
-			if ($monument['id_subcategory'] != NULL && $monument['id_subcategory'] != 0) {
-				if (!isset($cats[$monument['id_subcategory']])) $cats[$monument['id_subcategory']] = array();
-
-				$id_subcategory = $monument['id_subcategory'];
-				unset($monument['id_monument']);
-				unset($monument['id_subcategory']);
-				unset($monument['id']);
-				$cats[$id_subcategory][] = $monument;
-			}
-		}
-
-		$cats_rev = array();
-		foreach ($cats AS $id_subcategory => $photos) {
-			foreach ($photos AS $photo => $features) {
-				foreach ($features AS $feature => $value) {
-					$cats_rev[$id_subcategory][$feature][$photo] = $value;
-				}
-			}
-		}
-
-		$cats_avg = array();
-		foreach ($cats_rev AS $id_subcategory => $features) {
-			foreach ($features AS $feature => $values) {
-				rsort($values);
-				$middle = round(count($values) / 2);
-				$total = $values[$middle-1];
-
-				$cats_avg[$id_subcategory][$feature] = array_sum($values) / count($values);
-			}
-		}
-
-		// Get photo info
-		$photo = $this->getphoto();
-		unset($photo->id_monument);
-		unset($photo->id);
-
-		$photo = $photo->as_array();
-
-		foreach ($cats_avg AS $id_subcategory => $values) {
-			$euclidian = $this->euclidian_distance($photo, $values);
-
-			if (!isset($min)) $min = $euclidian;
-			if (!isset($cid)) $cid = $id_subcategory;
-
-			if ($min > $euclidian) {
-				$min = $euclidian;
-				$cid = $id_subcategory;
-			}
-		}
-
-		return $cid;
+		return $monuments;
 	}
 
 	/**
-	 * function getKeywords uses TFIDF for text analysis and returns the top x most relevant tags
-	 * @param int $limit number of keywords requested
-	 * @return array with keywords
+	 * function guessCategory guesses the category of a monument
+	 * @return id of guessed category
 	 */
-	public function getKeywords($limit = 5) {
+	public function extractCategory() {
+		$id = TextualMagic::extractCategory($this);
 
-        $sql = "SELECT tags.content as tag, (link.occurrences * LOG(24500 / (1 + tags.occurrences))) as tfidf FROM dev_tag_monument link LEFT JOIN dev_tags tags ON tags.id = link.tag WHERE LENGTH(tags.content) > 4 AND link.monument = ".$this->id_monument." ORDER BY tfidf desc LIMIT ".$limit.";";
-        $tags = DB::query(Database::SELECT, $sql)->execute();
-        $keywords = array();
-        foreach ($tags AS $keyword) {
-            $keywords[] = $keyword['tag'];
-        }
-        return $keywords;
+		return $id;
+	}
+
+	/**
+	 * function getTagRelated gets related monuments based on textual analysis
+	 * @param int $limit number of related monuments requested
+	 * @return array with monuments
+	 */
+	public function textuallySimilars($limit) {
+		$monuments = TextualMagic::related($this, $limit);
+
+		return $monuments;
+	}
+
+	/**
+	 * function tags uses TFIDF for text analysis and returns the top x most relevant tags
+	 * @param int $limit number of tags requested
+	 * @return array with tags
+	 */
+	public function tags($limit = 5) {
+		$tags = TextualMagic::tags($this, $limit);
+
+		return $tags;
 	}
 
 	protected static $entity = "monument";

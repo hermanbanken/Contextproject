@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<h1 style="width: 700px; float: left;">
-			<?php echo $monument->extract_name(); ?>
+			<?php echo $monument->name; ?>
 			<small><a href="javascript:history.back(1);">Terug</a> </small>
 		</h1>
 		<?php 
@@ -51,28 +51,37 @@
 				</tr>
 				<tr>
 					<td>Tags</td>
-					<td><?php echo strtolower(implode(', ', $monument->getKeywords())); ?>
+					<td><?php 
+							$tags = $monument->tags();
+							foreach($tags as $tag)
+								echo '<a href="'.URL::site('monument/list/'.$tag['original']).'">'.$tag['content'].'</a>';
+						?>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2"><?php echo $monument->description; ?></td>
 				</tr>
 			</table>
+			<a class="btn" href="monument/visualcomparison/<?php echo $monument->id_monument; ?>">Vergelijk visueel</a>
+		</a>
 		</div>
 		<div class="span5">
 			<div class="well" style="text-align: center;">
 				<img style="max-width: 100%; max-height: 400px;"
-					src="<?php echo $monument->photo(); ?>"
+					src="<?php echo $monument->photoUrl(); ?>"
 					alt="<?php echo $monument->name; ?>" />
 			</div>
 		</div>
 	</div>
-	<ul class="nav nav-tabs single-nav">
+	<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
 		<li><a class="aanbevelingen"
 			href="monument/id/<?php echo $monument->id_monument; ?>#aanbevelingen"><?php echo __('single.recommendations'); ?>
 		</a></li>
 		<li><a class="locatie"
 			href="monument/id/<?php echo $monument->id_monument; ?>#locatie"><?php echo __('single.location'); ?>
+		</a></li>
+		<li><a class="forecast"
+			href="monument/id/<?php echo $monument->id_monument; ?>#forecast"><?php echo __('single.forecast'); ?>
 		</a></li>
 		<li><a class="restaurants"
 			href="monument/id/<?php echo $monument->id_monument; ?>#restaurants"><?php echo __('single.restaurants'); ?>

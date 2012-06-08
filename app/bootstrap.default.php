@@ -135,3 +135,11 @@ Route::set('default', '(<lang>/)(<controller>(/<action>(/<id>)))', array(
 		'controller' => 'welcome',
 		'action'     => 'index',
 	));
+
+Route::set('error', 'error/<action>(/<message>)', array(
+		'action' => '[0-9]++',
+		'message' => '.+'
+	))
+	->defaults(array(
+		'controller' => 'error_handler'
+	));

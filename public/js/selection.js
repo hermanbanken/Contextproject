@@ -66,7 +66,7 @@ $(document).ready(
 			});
 
 			// autocomplete needs a list of cities
-			$.post('monument/getsteden', {}, succes = function(towns) {
+			$.post(base+'monument/getsteden', {}, succes = function(towns) {
 				$("#town").autocomplete({
 					source : towns
 				});

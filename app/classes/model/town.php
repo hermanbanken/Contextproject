@@ -1,5 +1,12 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+/**
+ * Model for town of monuments
+ *
+ * @package CultuurApp
+ * @category Models
+ * @author Sjoerd van Bekhoven
+ */
 class Model_Town extends Model_Abstract_Cultuurorm {
 
 	protected $_rules = array(
@@ -11,6 +18,12 @@ class Model_Town extends Model_Abstract_Cultuurorm {
 					'model' => 'municipality',
 					'foreign_key' => 'id_municipality',
 			),
+	);
+
+	protected $_table_columns = array(
+		"id_town" => array( "type" => "int", "key" => "PRI", "extra" => "auto_increment" ),
+		"id_town" => array( "type" => "int" ),
+		"name"		 => array( "type" => "string", "character_maximum_length" => 90 ),
 	);
 
 	protected static $entity = "town";
