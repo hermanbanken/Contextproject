@@ -42,7 +42,7 @@ $(function(){
             if(event.keyCode == 39)
                 setParameter('page', prev+1);
             else if(event.keyCode == 37)
-                setParameter('page', prev-1);
+                setParameter('page', prev-1 || 1);
 
             setState();
         }
@@ -152,7 +152,7 @@ $(function(){
                 empty.hide();
 
                 $(".pagination").html(response.pagination);
-                $(".tagcloud").html(response.tagcloud);
+                $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
 
                 $(".monument-list .list-row.monument").remove();

@@ -93,14 +93,6 @@ class Controller_Search extends Controller_Template {
 			$provinces = ORM::factory('province')->order_by('name')->find_all();
 			$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-			$tags = TextualMagic::tagcloud(20);
-			// create the view
-			$t = View::factory(static::$entity.'/tagcloud');
-			// bind the tags
-			$t->bind('tags',$tags);
-			// add tagcloud to page
-			$result['tagcloud'] = (string) $t;
-
 			// Get view for form
 			$f = View::factory(static::$entity.'/selection');
 
@@ -126,7 +118,7 @@ class Controller_Search extends Controller_Template {
 			$this->auto_render = false;
 
 			// Include bench marks
-			 $result['bench'] = (string)View::factory('profiler/stats');
+			$result['bench'] = (string)View::factory('profiler/stats');
 
 			$this->response->body(json_encode($result));
 		}
@@ -135,7 +127,7 @@ class Controller_Search extends Controller_Template {
 	function action_cloud() {
 		$tags = TextualMagic::tagcloud(20);
 		// create the view
-		$this->template = View::factory(static::$entity.'/tagcloud');
+		$this->template = View::factory(static::$entity.'/tagcloud')->bind('tags',$tags);
 	}
 
 	/**
