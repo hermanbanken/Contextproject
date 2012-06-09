@@ -4,7 +4,7 @@
 
 \begin{document}
 
-\title{TI2800 Contextproject - My Cultural Heritage\\ Requirements Analysis and Design}
+\title{TI2800 Contextproject - My Cultural Heritage\\ Final Report}
 \author{Sjoerd van Bekhoven\\ Tim Eversdijk \\ Herman Blanken \\ Rutger Plak \and 4014774 \\ 4005562 \\ 4078624 \\ 1358375}
 
 \maketitle
@@ -20,16 +20,13 @@
 \tableofcontents
 
 \clearpage
-
 %
 %
 % INLEIDING
 %
 %
 \section{Inleiding}
-In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problemen die zijn opgetreden worden besproken, evenals de oplossingen die voor deze problemen zijn bedacht. Om tot deze oplossingen te komen is in teamverband gewerkt. De samenwerking in dit team wordt dan ook uitgewerkt. Ook bevat dit document een uitleg over de toegepaste tekstuele en visuele analyse.
-
-\clearpage
+In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problemen en tekortkomingen die we vooraf hebben geconstateerd als de oplossingen die we hiervoor hebben gevonden. Daarnaast worden enkele highlights van CultuurApp besproken en uitgewerkt. Omdat CultuurApp door samenwerking van een team tot stand is gekomen, zal er ook gereflecteerd worden op de samenwerking, zowel in het algemeen als persoonlijk.
 
 %
 %
@@ -38,7 +35,7 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 %
 \section{Problemen / Tekortkomingen}
 	\subsection{Niet toeristgericht}
-	Toeristen hebben andere behoeften dan wordt geboden op het internet. Een toerist wil in \'e\'en oogopslag zien waar in de buurt een monument is. Een toerist wil wanneer hij iets leest over dat monument direct kunnen zien waar hij of zij in de buurt iets kan eten of drinken. Voor een toerist is het belangrijk dat hij of zij aangeraden wordt een bepaald monument te bekijken, omdat de kennis van een toerist over het aanbod vaak gering is. De uitdaging is dan ook geweest om een systeem te maken dat zich zoveel mogelijk toespitst op de toerist. Door de toerist van zoveel mogelijk toeristgerelateerde nuttige informatie te voorzien hebben wij getracht het systeem aantrekkelijk te maken voor toeristen. Aanbevelingen laten monumenten zien die een toerist anders nooit had gezien. En voor de toerist die geen Nederlands spreekt, werkt het volledige systeem gewoon in het Engels.
+	Toeristen hebben andere behoeften dan wordt geboden op het internet. Een toerist wil in \'e\'en oogopslag zien waar in de buurt een monument is. Een toerist wil wanneer hij iets leest over dat monument direct kunnen zien waar hij of zij in de buurt iets kan eten of drinken. Voor een toerist is het belangrijk dat hij of zij aangeraden wordt een bepaald monument te bekijken, omdat de kennis van een toerist over het aanbod vaak gering is. De uitdaging is dan ook geweest om een systeem te maken dat zich zoveel mogelijk toespitst op de toerist. Door de toerist van zoveel mogelijk toeristgerelateerde nuttige informatie te voorzien, hebben wij getracht het systeem aantrekkelijk te maken voor toeristen. Aanbevelingen laten monumenten zien die een toerist anders nooit had gezien. En voor de toerist die geen Nederlands spreekt, werkt het volledige systeem gewoon in het Engels.
 	
 	\subsection{Incomplete dataset}
 	De aangeleverde dataset is een inconsistente en incomplete dataset. ±5000 van de monumenten zijn niet gecategoriseerd. Het ontbreken van een categorie maakt het voor CultuurApp lastiger om relaties tussen monumenten te vinden. Ook filtering door de gebruiker kan hierdoor niet plaatsvinden. CultuurApp heeft deze categorien toegevoegd aan monumenten waar deze ontbreekt. Dit staat uitgewerkt bij tekstuele analyse. \\
@@ -70,10 +67,9 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 		\subsubsection{Gerelateerde monumenten}
 		Ieder monument heeft steekwoorden. Hoe groter de interceptie van de steekwoorden van twee verschillende monumenten is, hoe groter de kans is dat deze monumenten bij elkaar horen. CultuurApp zoekt bij een monument welke andere monumenten zoveel mogelijk steekwoorden overeen hebben, om op deze manier gerelateerde monumenten te bepalen.
 
-	\subsection{Textuele analyse}
-		
+	\subsection{Visuele analyse}		
 		\subsubsection{Feature Extraction}
-		Uit de foto's zijn 399 features verkregen met behulp van het MATLAB-script FeatureExtractor\footnote{http://code.google.com/p/softwarestudies/wiki/FeatureExtractor}. De FeatureExtractor verkrijgt de volgende features:
+		Om de foto's van de monumenten visueel te analyseren, zullen er eerst features uit de foto's moeten worden ge\"extraheerd. In de ori\"entatiefase dachten we genoeg te hebben aan een plugin voor het programma ImageJ, maar uiteindelijk hebben we toch gekozen voor een geavanceerdere tool. Uit de foto's zijn nu 399 features verkregen met behulp van het MATLAB-script FeatureExtractor\footnote{http://code.google.com/p/softwarestudies/wiki/FeatureExtractor}. De FeatureExtractor verkrijgt de volgende features:
 		\begin{enumerate}
 			\item Het gemiddelde, de mediaan, de standaard deviatie, de scheefheid, de kurtosis, het minimum en het maximum van de helderheid.
 			\item Bin 1-8 van een 8-bin grijswaarde histogram.
@@ -87,11 +83,12 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 			\item Enkele waardes m.b.t. contrast, homogeneiteit, energie en ratio van rand-pixels tot de grootte van de afbeelding.
 			\item Enkele waardes m.b.t. entropie.
 		\end{enumerate}
+		\\
 		Al deze features worden door de FeatureExtractor opgeslagen in de volgende bestanden: dev\_acq.txt, dev\_gabor.txt, dev\_hsv.txt, dev\_light.txt, dev\_log.txt, dev\_rgb.txt, dev\_segment.txt, dev\_spatial.txt en dev\_texture.txt. We hebben er bewust voor gekozen ons niet te verdiepen in de verkregen waardes en wat deze precies betekenen.
 		
 		\subsubsection{Importeren}
 		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren\footnote{http://www.cs.bilkent.edu.tr/\~saksoy/papers/prletters01\_likelihood.pdf} met de volgende formule:
-		\[n_{fm} = \frac{v_{fm} - max(v_{f})}{max(v_{f}) - min(v_{f})}\]
+		\[n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}\]
 		Met:
 		\begin{itemize}
 			\item $v_{fm} =$ de waarde van feature $f$ van monument $m$.
@@ -108,7 +105,7 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 			\item $q_{i}$ en $p_{i} =$ feature $i$ van monument $q$ of $p$.
 			\item $n =$ het totaal aantal features per monument.
 		\end{itemize}
-		
+		\\
 		Door een bepaald monument $q$ te noemen en alle monumenten langs te gaan en deze $p$ te noemen, kunnen we de afstanden tussen $q$ en de andere monumenten vinden. Het monument met de kleinste afstand is het meest 'visueel gelijkend'.
 		
 	\subsection{Completeren dataset}
@@ -127,7 +124,7 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 	Toeristen zoeken naar monumenten die ze interessant vinden, maar willen daarbij ook geprikkeld worden. Monumenten ontdekken, zichzelf verrijken met monumenten die ze zelf niet zouden kunnen vinden. Hiervoor zijn aanbevelingen de uitkomst. Binnen CultuurApp zijn twee plaatsen waar aanbevelingen worden gegeven, namelijk op de profielpagina en bij een monument dat wordt bekeken:
 	
 		\subsubsection{Algemeen}
-		Om aanbevelingen ten kunnen doen, moet er bepaalde informatie worden onthouden door CultuurApp. Van iedere toerist wordt informatie als zoekwoorden, geseleteerde categorieën, gezochte steden e.d. opgeslagen. Daarnaast wordt ook opgeslagen welke monumenten een toerist uiteindelijk bezoekt. Deze informatie wordt opgeslagen in de database en gelinkt aan de 'computer' van de gebruiker. Deze informatie wordt nooit verwijderd en op het moment dat de gebruiker inlogt op de computer, wordt de informatie gekoppeld aan zijn profiel. Door deze informatie is het mogelijk om bijvoorbeeld een set monumenten te verkrijgen welke door de toerist of CultuurApp-gebruiker zijn bezocht. Deze informatie is erg bruikbaar bij het geven van aanbevelingen.
+		Om aanbevelingen ten kunnen doen, moet er bepaalde informatie worden onthouden door CultuurApp. Van iedere toerist wordt informatie als zoekwoorden, geselecteerde categorieën, gezochte steden e.d. opgeslagen. Daarnaast wordt ook opgeslagen welke monumenten een toerist uiteindelijk bezoekt. Deze informatie wordt opgeslagen in de database en gelinkt aan de 'computer' van de gebruiker. Deze informatie wordt nooit verwijderd en op het moment dat de gebruiker inlogt op de computer, wordt de informatie gekoppeld aan zijn profiel. Door deze informatie is het mogelijk om bijvoorbeeld een set monumenten te verkrijgen welke door de toerist of CultuurApp-gebruiker zijn bezocht. Deze informatie is erg bruikbaar bij het geven van aanbevelingen.
 	
 		\subsubsection{Profielpagina}
 		Bij de profielpagina wordt gebruik gemaakt van de set monumenten die door de toerist of CultuurApp-gebruiker is bezocht op de website. Deze set wordt vergeleken met alle sets van monumenten in de dtabase. De set met het meeste overeenkomsten met de set van de aan te bevelen toerist of CultuurApp-gebruiker, wordt gebruikt om aanbevelingen te geven. Dit wordt gedaan met het volgende algoritme:
@@ -145,14 +142,21 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 			\item Zoek een set monumenten die het monument dat nu bekeken wordt bevat, noem deze $A$.
 			\item Beveel nu op willekeurige volgorde monumenten uit $A$ aan aan de toerist of CultuurApp-gebruiker.
 		\end{enumerate}
+	
+	\subsection{Weersvoorspelling}
+	Met de API van Wunderground\footnote{http://www.wunderground.com/weather/api/} is het mogelijk om aan de hand van een longitude en latitude een weersvoorspelling te verkrijgen. Omdat het weer binnen een stad redelijk hetzelfde is, hebben we besloten om het weer per stad te cachen. Daarom hoeft per stad maar \'e\'en keer per dag het weer live opgehaald te worden.
+	
+	\subsection{Faciliteiten}
+	Met de API van Google Places\footnote{https://developers.google.com/maps/documentation/places/} is het mogelijk om aan de hand van een longitude, latitude en enkele steekwoorden de juiste faciliteiten rond een monument op te halen. Omdat het aantal faciliteiten rondom een monument zelden veradnerd, hebben we er voor gekozen om voor ieder monument de faciliteiten voor 15 dagen op te slaan in de database. Zo kost het slechts \'e\'en keer in de 15 dagen veel tijd om de faciliteiten rondom een monument op te halen. De faciliteiten rond een monument worden tot 5 km rondom het monument opgehaald en daarna gesorteerd op rating, waardoor een toerist altijd de beste bar of het beste restaurant als eerste te zien krijgt.
+		
 		
 \section{Reflectie op het teamwork}
 
 	\subsection{Voorbereidingsfase}
-	Tijdens het maken van de Requirements Analysis, de Architectural Design en het Test and Implementation Plan is vooraf veel overleg gepleegd. Alle mogelijkheden zijn besproken en er is gezamelijk een selectie requirements uitgekomen. De requirements zijn verdeeld over de personen en zijn uitgewerkt. Bij de architectural design is veel overleg geweest over de structuur van de software. Samen met het test and implementation plan zijn al deze plannen uitgewerkt. 
+	Tijdens het maken van de Requirements Analysis, de Architectural Design en het Test and Implementation Plan is vooraf veel overleg gepleegd. Alle mogelijkheden zijn besproken en er is gezamelijk een selectie requirements uitgekomen. Bij het maken van deze rapporten waren de verwachtingen in het begin onduidelijk. De drafts die we van deze rapporten hebben ingeleverd waren daarom geen goede stukken om feedback op te krijgen, waardoor ook de finals van deze rapporten matig waren. Uiteindelijk hebben we de kans gekregen om deze finals samen met alle andere groepen binnen ons Contextproject te verbeteren, maar hierdoor is wel tijd die eigenlijk bij de ontwikkelfase hoorde verloren gegaan.
 	
 	\subsection{Ontwikkelfase}
-	De ontwikkelfase ging bij de eerste iteratie erg hard. De taken werden onderverdeeld en individuele software werd automatisch gekoppeld door vooraf vastgestelde eigenschappen. In de hierop volgende iteraties bleek het regelmatig nodig te zijn software uit de eerste iteratie te verbeteren. Te implementeren features werden complexer en voortgang leek trager. Iedere week hebben we echter een deadline voor onszelf gesteld. Wanneer taken niet afgemaakt werden tijdens de bijeenkomsten, werd thuis verder gewerkt. Er is vele malen meer tijd in het project komen te zitten dan voorgeschreven was. Dit doordat de groepsgenoten allen gedreven zijn, trots zijn op wat ze doen en dit een interessant project was. Het creeeren van data maakt veel mogelijk en deze nieuwe mogelijkheden zijn interessant om te ontdekken. Tijdens bijeenkomsten is alles overlegd en ideeen uitgewisseld. Bij het onmogelijk blijken van features zijn oplossingen besproken en geimplementeerd. Door regelmatige afwezigheid en/of te laat komen van een van de groepsgenoten zijn irritaties ontstaan. Deze irritaties zijn uitgepraat en de taakverdeling is hierop afgesteld. 
+	De ontwikkelfase ging bij de eerste iteratie erg hard, maar dit was noodzakelijk, omdat we veel tijd verloren waren aan de voorbereidingsfase. De taken werden onderverdeeld en individuele software werd automatisch gekoppeld door vooraf vastgestelde eigenschappen. In de hierop volgende iteraties bleek het regelmatig nodig te zijn code uit de eerste iteratie te verbeteren. Te implementeren features werden complexer en voortgang werd trager. Iedere week hebben we echter een deadline voor onszelf gesteld. Wanneer taken niet afgemaakt werden tijdens de bijeenkomsten, werd thuis verder gewerkt. Er is vele malen meer tijd in het project komen te zitten dan voorgeschreven was. Dit doordat de groepsgenoten allen gedreven zijn, trots zijn op wat ze doen en dit een interessant project was. Het cre\"eeren van data maakt veel mogelijk en deze nieuwe mogelijkheden zijn interessant om te ontdekken. Tijdens bijeenkomsten is alles overlegd en ideeen uitgewisseld. Bij het onmogelijk blijken van features zijn oplossingen besproken en geimplementeerd. Door regelmatige afwezigheid en/of te laat komen van een van de groepsgenoten zijn irritaties ontstaan. Deze irritaties zijn uitgepraat en de taakverdeling is hierop afgesteld. 
 
 	\subsection{Individuele reflectie op het teamwork}
 		
