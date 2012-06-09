@@ -90,7 +90,7 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 		Al deze features worden door de FeatureExtractor opgeslagen in de volgende bestanden: dev\_acq.txt, dev\_gabor.txt, dev\_hsv.txt, dev\_light.txt, dev\_log.txt, dev\_rgb.txt, dev\_segment.txt, dev\_spatial.txt en dev\_texture.txt. We hebben er bewust voor gekozen ons niet te verdiepen in de verkregen waardes en wat deze precies betekenen.
 		
 		\subsubsection{Importeren}
-		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren tussen 0 en 1 met de volgende formule:
+		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren\footnote{http://www.cs.bilkent.edu.tr/\~saksoy/papers/prletters01\_likelihood.pdf} met de volgende formule:
 		\[n_{fm} = \frac{v_{fm} - max(v_{f})}{max(v_{f}) - min(v_{f})}\]
 		Met:
 		\begin{itemize}
@@ -123,6 +123,29 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 		\\
 		Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aaan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 4300 categorie\"en juist te voorspellen.
 		
+	\subsection{Aanbevelingen}
+	Toeristen zoeken naar monumenten die ze interessant vinden, maar willen daarbij ook geprikkeld worden. Monumenten ontdekken, zichzelf verrijken met monumenten die ze zelf niet zouden kunnen vinden. Hiervoor zijn aanbevelingen de uitkomst. Binnen CultuurApp zijn twee plaatsen waar aanbevelingen worden gegeven, namelijk op de profielpagina en bij een monument dat wordt bekeken:
+	
+		\subsubsection{Algemeen}
+		Om aanbevelingen ten kunnen doen, moet er bepaalde informatie worden onthouden door CultuurApp. Van iedere toerist wordt informatie als zoekwoorden, geseleteerde categorieën, gezochte steden e.d. opgeslagen. Daarnaast wordt ook opgeslagen welke monumenten een toerist uiteindelijk bezoekt. Deze informatie wordt opgeslagen in de database en gelinkt aan de 'computer' van de gebruiker. Deze informatie wordt nooit verwijderd en op het moment dat de gebruiker inlogt op de computer, wordt de informatie gekoppeld aan zijn profiel. Door deze informatie is het mogelijk om bijvoorbeeld een set monumenten te verkrijgen welke door de toerist of CultuurApp-gebruiker zijn bezocht. Deze informatie is erg bruikbaar bij het geven van aanbevelingen.
+	
+		\subsubsection{Profielpagina}
+		Bij de profielpagina wordt gebruik gemaakt van de set monumenten die door de toerist of CultuurApp-gebruiker is bezocht op de website. Deze set wordt vergeleken met alle sets van monumenten in de dtabase. De set met het meeste overeenkomsten met de set van de aan te bevelen toerist of CultuurApp-gebruiker, wordt gebruikt om aanbevelingen te geven. Dit wordt gedaan met het volgende algoritme:
+		\begin{enumerate}
+			\item Zoek de set van monumenten van de aan te bevelen toerist of CultuurApp-gebruiker, noem deze $A$.
+			\item Loop door alle sets monumenten heen, noem \'e\'en set $B$ en sla de score $S = n(A \cap B)$ op in $C$. ($n(x) =$ het aantal elementen in set x) 
+			\item Kies (\'e\'en van) de set(s) met de hoogste score uit $C$ en noem deze $D$.
+			\item Haal nu de overeenkomstige monumenten van $A$ en $D$ weg uit $D$ en sla deze op in $E$. ($E = D - A$).
+			\item Beveel op willekeurige volgorde monumenten uit $E$ aan aan de toerist of CultuurApp-gebruiker.
+		\end{enumerate}
+		
+		\subsubsection{Monumentpagina}
+		Bij de monumentpagina wordt gebruikt gemaakt van alle sets monumenten per gebruiker die in de database staan. Hierbij wordt gekeken welke set(s) monumenten het monument bevat dat de gebruiker op dit moment bekijkt. Vervolgens worden de rest van de monumenten in deze set gebruikt om de gebruiker een aanbeveling te geven.
+		\begin{enumerate}
+			\item Zoek een set monumenten die het monument dat nu bekeken wordt bevat, noem deze $A$.
+			\item Beveel nu op willekeurige volgorde monumenten uit $A$ aan aan de toerist of CultuurApp-gebruiker.
+		\end{enumerate}
+		
 \section{Reflectie op het teamwork}
 
 	\subsection{Voorbereidingsfase}
@@ -138,35 +161,11 @@ In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problem
 		Ik had enkele ideeën voor het goede verloop van het project en de implementatie van de applicatie. Gelukkig pakten die ideeën goed uit en hebben mijn groepsgenoten goed gebruik gemaakt van de mogelijkheden die GIT en Kohana bieden, ook al waren ze vooraf een behoorlijk sceptisch.
 		
 		\subsubsection{Sjoerd van Bekhoven}
-		Bij het indelen van de groepen binnen ons Contextproject werd volgens de presentatie 'nergens rekening mee gehouden'. Toen ik echter kennis maakte met mijn groepsleden, kwam ik er vrij snel achter dat onze groep bestond uit zogenaamde 'langstudeerders'. Uiteindelijk viel \'e\'en persoon af en kwam Herman in ozne groep terecht en hij is een zeer waardevolle toevoeging geweest. Daarnaast heb ik ook nauwelijks last gehad van het feit dat onze groep bestond uit oudere studenten. De groep fungeerde vrij soepel en vergaderen was zelden nodig. Tim heeft op een gegeven moment tot irritatie geleid vanwege regelmatige afwezigheid of nalatigheid, maar heeft dit enigszins rechtgetrokken door extra gas te geven tegen het einde. Rutger heeft zich ontplooid als harde werker en vindt het geen probleem om ook thuis even door te werken. Herman fungeerde als techneut en heeft ons aardig wat 'moeilijke, maar wel heel handige' snufjes aangepraat, wat op sommige momenten tot problemen leed, maar ons ook ontzettend veel heeft opgeleverd. Kortom: de groep was prettig en ik ben erg tevreden met het resultaat dat we bereikt hebben.
+		Bij het indelen van de groepen binnen ons Contextproject werd volgens de presentatie 'nergens rekening mee gehouden'. Toen ik echter kennis maakte met mijn groepsleden, kwam ik er vrij snel achter dat onze groep bestond uit zogenaamde 'langstudeerders'. Uiteindelijk viel \'e\'en persoon af en kwam Herman in ozne groep terecht en hij is een zeer waardevolle toevoeging geweest. Daarnaast heb ik ook nauwelijks last gehad van het feit dat onze groep bestond uit oudere studenten. De groep fungeerde vrij soepel en vergaderen was zelden nodig. Tim's te laat komen en/of afwezig zijn heeft op een gegeven moment tot irritatie geleid. Hij heeft dit enigszins rechtgetrokken door extra gas te geven tegen het einde. Rutger heeft zich ontplooid als harde werker en vindt het geen probleem om ook thuis even door te werken. Herman fungeerde als techneut en heeft ons aardig wat 'moeilijke, maar wel heel handige' snufjes aangereikt, wat op sommige momenten tot problemen leed, maar ons ook ontzettend veel heeft opgeleverd. Kortom: de groep was veelal prettig en ik ben erg tevreden met het resultaat dat we bereikt hebben.
 		
 		\subsubsection{Tim Eversdijk}
 		
 		\subsubsection{Rutger Plak}
 		Het was fijn om in deze projectgroep te zitten. De groepsgenoten waren, zoals helaas vaak niet zo is in willekeurige projectgroepen, even gedreven, gemotiveerd en enthousiast als ik. Tijdens de onderzoeksfase is dan ook vaak in groepsverband tot in de late uren doorgewerkt. Door deze gedrevenheid hebben wij tijdens de implementatiefase alles gedaan wat we wilden doen. Herman Banken bewaarde het overzicht over het systeem. Dit is erg handig omdat bij een systeem dat zo snel groeit vaak het vinden van een kleine component lastig kan zijn. Sjoerd van Bekhoven nam de lastige taak van visuele analyse op zich. Hij was hier vaak thuis mee bezig en heeft dan ook een indrukwekkend visueel vergelijkingssysteem neergezet.
-
-%
-%
-% LIGHTWEIGHT SCRUM PLANS
-%
-%
-\section{Lightweight Scrum Plans}
-	\subsection{Iteration 1}
-	
-	\begin{tabular}{l|l|r|l}
-	\hline
-	Feature&Taken&Tijd&Ontwikkelaar\\
-	\hline
-	Weergaves&Google Maps&10 uur&Tim / Rutger\\
-	&Lijst&2 uur&Sjoerd\\
-	&Selectie&2 uur&Sjoerd / Rutger\\
-	\hline
-	\end{tabular}
-	
-	\subsection{Iteration 2}
-	
-	\subsection{Iteration 3}
-	
-	\subsection{Iteration 4}
-
+		
 \end{document}
