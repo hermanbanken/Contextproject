@@ -1,0 +1,172 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{graphicx,wrapfig,hyperref}
+\usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry}
+
+\begin{document}
+
+\title{TI2800 Contextproject - My Cultural Heritage\\ Requirements Analysis and Design}
+\author{Sjoerd van Bekhoven\\ Tim Eversdijk \\ Herman Blanken \\ Rutger Plak \and 4014774 \\ 4005562 \\ 4078624 \\ 1358375}
+
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+\vspace{10cm}
+		\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=\textwidth]{cultuurapp-logo.png}
+			\end{figure}
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+%
+%
+% INLEIDING
+%
+%
+\section{Inleiding}
+In dit verslag wordt gereflecteerd op het ontwikkelen van CultuurApp. De problemen die zijn opgetreden worden besproken, evenals de oplossingen die voor deze problemen zijn bedacht. Om tot deze oplossingen te komen is in teamverband gewerkt. De samenwerking in dit team wordt dan ook uitgewerkt. Ook bevat dit document een uitleg over de toegepaste tekstuele en visuele analyse.
+
+\clearpage
+
+%
+%
+% PROBLEMEN
+%
+%
+\section{Problemen / Tekortkomingen}
+	\subsection{Niet toeristgericht}
+	Toeristen hebben andere behoeften dan wordt geboden op het internet. Een toerist wil in \'e\'en oogopslag zien waar in de buurt een monument is. Een toerist wil wanneer hij iets leest over dat monument direct kunnen zien waar hij of zij in de buurt iets kan eten of drinken. Voor een toerist is het belangrijk dat hij of zij aangeraden wordt een bepaald monument te bekijken, omdat de kennis van een toerist over het aanbod vaak gering is. De uitdaging is dan ook geweest om een systeem te maken dat zich zoveel mogelijk toespitst op de toerist. Door de toerist van zoveel mogelijk toeristgerelateerde nuttige informatie te voorzien hebben wij getracht het systeem aantrekkelijk te maken voor toeristen. Aanbevelingen laten monumenten zien die een toerist anders nooit had gezien. En voor de toerist die geen Nederlands spreekt, werkt het volledige systeem gewoon in het Engels.
+	
+	\subsection{Incomplete dataset}
+	De aangeleverde dataset is een inconsistente en incomplete dataset. ±5000 van de monumenten zijn niet gecategoriseerd. Het ontbreken van een categorie maakt het voor CultuurApp lastiger om relaties tussen monumenten te vinden. Ook filtering door de gebruiker kan hierdoor niet plaatsvinden. CultuurApp heeft deze categorien toegevoegd aan monumenten waar deze ontbreekt. Dit staat uitgewerkt bij tekstuele analyse. \\
+	Ieder monument heeft in de dataset een naam. Deze naam is veelal een straatnaam en huisnummer. Soms is het echter een beschrijving. Het kan een steekwoord zijn, of een combinatie van al deze informatie. Na veel en vaak brainstormen en algoritmen schrijven om deze namen consistent te maken, is besloten dit niet te doen. De willekeurigheid van de namen is te groot, een algoritme die dit tracht te verbeteren kan belangrijke data weggooien. 
+	
+	\subsection{Real-time visuele/textuele berekingen zijn duur}
+	Het extracten van features uit afbeeldingen om deze met elkaar te vergelijken is een zeer duur proces. Per afbeelding duurt dit ±6 seconde. Elke foto met elke foto vergelijken is daardoor niet haalbaar. Hiervoor zijn de berekeningen vooraf gedaan. Live hoeven nu slechts nog getallen te worden vergeleken. Dit wordt verder uitgewerkt in visuele analyse. \\
+	Het berekenen van alle TFIDF waarden zoals beschreven in tekstuele analyse kost veel tijd. Er moeten meer dan 500.000 woorden worden geanalyseerd. Deze analyse is vooraf bepaald, live hoeven er slechts nog berekeningen te worden gedaan met getallen. Dit wordt verder uitgewerkt in tekstuele analyse.
+
+%
+%
+% OPLOSSINGEN
+%
+%
+\section{Oplossingen / Highlights}
+	\subsection{Textuele analyse}
+	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Met een dergelijk grote dataset van 24500+ monumenten kan interessante data worden herleid.
+
+		\subsubsection{Trefwoorden}
+		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
+		
+		\subsubsection{Term Frequency Inverse Document Frequency}
+		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Hoe hoger de waarde is, hoe specifieker het trefwoord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Het tweede deel is Inverse Document Frequency. Dit is inver evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. Inverse Document Frequency wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
+		Aan de hand van dit algoritme heeft CultuurApp alle woorden van alle beschrijvingen van alle monumenten geanalyseerd en waarden gegeven. CultuurApp maakt live berekeningen en extraheert geautomatiseerd sleutelwoorden uit de beschrijving door voor ieder woord in de beschrijving van het monument een TFIDF waarde te berekenen en de woorden met de hoogste score worden als sleutelwoord aangewezen.
+		
+		\subsubsection{Tag-cloud}
+		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TFIDF waarde vastgesteld relatief naar de monumenten. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TFIDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. Door willekeurig bovengemiddelde waarden te pakken uit de set, kan een tagcloud worden gemaakt. Woorden met een hogere score krijgen een groter lettertype.
+		
+		\subsubsection{Gerelateerde monumenten}
+		Ieder monument heeft steekwoorden. Hoe groter de interceptie van de steekwoorden van twee verschillende monumenten is, hoe groter de kans is dat deze monumenten bij elkaar horen. CultuurApp zoekt bij een monument welke andere monumenten zoveel mogelijk steekwoorden overeen hebben, om op deze manier gerelateerde monumenten te bepalen.
+
+	\subsection{Textuele analyse}
+		
+		\subsubsection{Feature Extraction}
+		Uit de foto's zijn 399 features verkregen met behulp van het MATLAB-script FeatureExtractor\footnote{http://code.google.com/p/softwarestudies/wiki/FeatureExtractor}. De FeatureExtractor verkrijgt de volgende features:
+		\begin{enumerate}
+			\item Het gemiddelde, de mediaan, de standaard deviatie, de scheefheid, de kurtosis, het minimum en het maximum van de helderheid.
+			\item Bin 1-8 van een 8-bin grijswaarde histogram.
+			\item Bin 1-32 van een 32-bin grijswaarde histogram.
+			\item Het gemiddelde, de mediaan, de standaard deviatie, de kurtosis, het minimum en het maximum van de kleuren rood, groen en blauw.
+			\item Meest dominante kleur na 16-color adaptive quantization.
+			\item Op \'e\'en na meest dominante kleur na 16-color adaptive quantization.
+			\item Bin 1-4 en 1-8 van een 4-bin en 8-bin histogram in de kleuren rood, groen en blauw.
+			\item Het gemiddelde, de mediaan, de standaard deviatie, de scheefheid, de kurtosis, het minimum en het maximum van de tint en verzadiging.
+			\item Bin 1-4 en 1-8 van een 4-bin en 8-bin histogram van de tint en verzadiging.
+			\item Enkele waardes m.b.t. contrast, homogeneiteit, energie en ratio van rand-pixels tot de grootte van de afbeelding.
+			\item Enkele waardes m.b.t. entropie.
+		\end{enumerate}
+		Al deze features worden door de FeatureExtractor opgeslagen in de volgende bestanden: dev\_acq.txt, dev\_gabor.txt, dev\_hsv.txt, dev\_light.txt, dev\_log.txt, dev\_rgb.txt, dev\_segment.txt, dev\_spatial.txt en dev\_texture.txt. We hebben er bewust voor gekozen ons niet te verdiepen in de verkregen waardes en wat deze precies betekenen.
+		
+		\subsubsection{Importeren}
+		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren tussen 0 en 1 met de volgende formule:
+		\[n_{fm} = \frac{v_{fm} - max(v_{f})}{max(v_{f}) - min(v_{f})}\]
+		Met:
+		\begin{itemize}
+			\item $v_{fm} =$ de waarde van feature $f$ van monument $m$.
+			\item $v_{f} =$ de waardes van de monumenten bij feature $f$.
+			\item $n_{fm} =$ de genormaliseerde waarde van feature $f$ van monument $m$.
+		\end{itemize}
+		
+		\subsubsection{Vergelijking van monumenten}
+		Als we de features verkregen door de FeatureExtractor met elkaar willen vergelijken, beschouwen we de 399 features als een vector en kunnen we deze vergelijken met behulp van de zogenaamde Euclidian Distance:
+		\[ ed(q, p) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2} \]
+		Met:
+		\begin{itemize}
+			\item $q$ en $p =$ vectoren van de 399 features van monument $q$ of $p$.
+			\item $q_{i}$ en $p_{i} =$ feature $i$ van monument $q$ of $p$.
+			\item $n =$ het totaal aantal features per monument.
+		\end{itemize}
+		
+		Door een bepaald monument $q$ te noemen en alle monumenten langs te gaan en deze $p$ te noemen, kunnen we de afstanden tussen $q$ en de andere monumenten vinden. Het monument met de kleinste afstand is het meest 'visueel gelijkend'.
+		
+	\subsection{Completeren dataset}
+	Bij $\pm$ 5000 monumenten is geen hoofd- en subcategorie bekend. Voor het gebruiksgemak is het gewenst dat deze categorie\"en worden ingevuld. Aan de hand van visuele en textuele analyse zou dit mogelijk moeten zijn, gezien het feit dat we beschikken over $\pm$ 20000 monumenten die wel een hoofd- en subcategorie bevatten.
+	
+		\subsubsection{Visueel}
+	Helaas werd vrij snel duidelijk dat de visuele analyse van monumenten vaak niet het gewenste resultaat had. Gebouwen worden niet alleen en vaak zelfs juist niet op uiterlijk geselecteerd, maar juist op functie in de maatschappij. Zo wordt een watertoren ingedeeld bij 'Overheidsgebouwen' waar een visueel herkenningssysteem deze eerder zal indelen in de categorie 'Kastelen'. Een percentage hoger dan 20\% is hier helaas nooit gehaald.
+	
+		\subsubsection{Textueel}
+	Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TFIDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TFIDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hierd komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.\\
+	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TFIDF waarde van het sleutelwoord te vermenigvuldigen met de TFIDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. CultuurApp kijkt nu welke categorie het meest waarschijnlijk is en wijst deze categorie toe aan het monument.\\
+		\\
+		Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aaan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 4300 categorie\"en juist te voorspellen.
+		
+\section{Reflectie op het teamwork}
+
+	\subsection{Voorbereidingsfase}
+	Tijdens het maken van de Requirements Analysis, de Architectural Design en het Test and Implementation Plan is vooraf veel overleg gepleegd. Alle mogelijkheden zijn besproken en er is gezamelijk een selectie requirements uitgekomen. De requirements zijn verdeeld over de personen en zijn uitgewerkt. Bij de architectural design is veel overleg geweest over de structuur van de software. Samen met het test and implementation plan zijn al deze plannen uitgewerkt. 
+	
+	\subsection{Ontwikkelfase}
+	De ontwikkelfase ging bij de eerste iteratie erg hard. De taken werden onderverdeeld en individuele software werd automatisch gekoppeld door vooraf vastgestelde eigenschappen. In de hierop volgende iteraties bleek het regelmatig nodig te zijn software uit de eerste iteratie te verbeteren. Te implementeren features werden complexer en voortgang leek trager. Iedere week hebben we echter een deadline voor onszelf gesteld. Wanneer taken niet afgemaakt werden tijdens de bijeenkomsten, werd thuis verder gewerkt. Er is vele malen meer tijd in het project komen te zitten dan voorgeschreven was. Dit doordat de groepsgenoten allen gedreven zijn, trots zijn op wat ze doen en dit een interessant project was. Het creeeren van data maakt veel mogelijk en deze nieuwe mogelijkheden zijn interessant om te ontdekken. Tijdens bijeenkomsten is alles overlegd en ideeen uitgewisseld. Bij het onmogelijk blijken van features zijn oplossingen besproken en geimplementeerd. Door regelmatige afwezigheid en/of te laat komen van een van de groepsgenoten zijn irritaties ontstaan. Deze irritaties zijn uitgepraat en de taakverdeling is hierop afgesteld. 
+
+	\subsection{Individuele reflectie op het teamwork}
+		
+		\subsubsection{Herman Banken}
+		Bij het maken van de indeling kon ik helaas niet aanwezig zijn en ik werd dus ingedeeld bij mensen die ik nog niet kende. Dat is best wel een gok voor een dergelijk groot project, maar het is me goed bevallen om met Sjoerd, Rutger en Tim samen te werken. Elk van ons is zeer gedreven om een gaaf product af te leveren en er is dus vaak 's avonds en zelfs 's nachts aan gewerkt. In de vele uren die we samen hebben zitten programmeren hebben zijn we veel problemen tegen gekomen en altijd konden we elkaar helpen.\\
+		Ik had enkele ideeën voor het goede verloop van het project en de implementatie van de applicatie. Gelukkig pakten die ideeën goed uit en hebben mijn groepsgenoten goed gebruik gemaakt van de mogelijkheden die GIT en Kohana bieden, ook al waren ze vooraf een behoorlijk sceptisch.
+		
+		\subsubsection{Sjoerd van Bekhoven}
+		Bij het indelen van de groepen binnen ons Contextproject werd volgens de presentatie 'nergens rekening mee gehouden'. Toen ik echter kennis maakte met mijn groepsleden, kwam ik er vrij snel achter dat onze groep bestond uit zogenaamde 'langstudeerders'. Uiteindelijk viel \'e\'en persoon af en kwam Herman in ozne groep terecht en hij is een zeer waardevolle toevoeging geweest. Daarnaast heb ik ook nauwelijks last gehad van het feit dat onze groep bestond uit oudere studenten. De groep fungeerde vrij soepel en vergaderen was zelden nodig. Tim heeft op een gegeven moment tot irritatie geleid vanwege regelmatige afwezigheid of nalatigheid, maar heeft dit enigszins rechtgetrokken door extra gas te geven tegen het einde. Rutger heeft zich ontplooid als harde werker en vindt het geen probleem om ook thuis even door te werken. Herman fungeerde als techneut en heeft ons aardig wat 'moeilijke, maar wel heel handige' snufjes aangepraat, wat op sommige momenten tot problemen leed, maar ons ook ontzettend veel heeft opgeleverd. Kortom: de groep was prettig en ik ben erg tevreden met het resultaat dat we bereikt hebben.
+		
+		\subsubsection{Tim Eversdijk}
+		
+		\subsubsection{Rutger Plak}
+		Het was fijn om in deze projectgroep te zitten. De groepsgenoten waren, zoals helaas vaak niet zo is in willekeurige projectgroepen, even gedreven, gemotiveerd en enthousiast als ik. Tijdens de onderzoeksfase is dan ook vaak in groepsverband tot in de late uren doorgewerkt. Door deze gedrevenheid hebben wij tijdens de implementatiefase alles gedaan wat we wilden doen. Herman Banken bewaarde het overzicht over het systeem. Dit is erg handig omdat bij een systeem dat zo snel groeit vaak het vinden van een kleine component lastig kan zijn. Sjoerd van Bekhoven nam de lastige taak van visuele analyse op zich. Hij was hier vaak thuis mee bezig en heeft dan ook een indrukwekkend visueel vergelijkingssysteem neergezet.
+
+%
+%
+% LIGHTWEIGHT SCRUM PLANS
+%
+%
+\section{Lightweight Scrum Plans}
+	\subsection{Iteration 1}
+	
+	\begin{tabular}{l|l|r|l}
+	\hline
+	Feature&Taken&Tijd&Ontwikkelaar\\
+	\hline
+	Weergaves&Google Maps&10 uur&Tim / Rutger\\
+	&Lijst&2 uur&Sjoerd\\
+	&Selectie&2 uur&Sjoerd / Rutger\\
+	\hline
+	\end{tabular}
+	
+	\subsection{Iteration 2}
+	
+	\subsection{Iteration 3}
+	
+	\subsection{Iteration 4}
+
+\end{document}
