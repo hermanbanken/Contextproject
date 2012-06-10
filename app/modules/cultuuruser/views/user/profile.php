@@ -32,28 +32,19 @@
 	<div class="span12">
 	      <h2><?php echo __('profile.recommendations-title'); ?></h2>
 	      <p><?php echo __('profile.recommendations-text'); ?></p>
-	      <ul class="thumbnails">
-	        <li class="span3">
-	          <a href="#" class="thumbnail">
-	            <img src="http://placehold.it/260x180" alt="">
-	          </a>
-	        </li>
-	        <li class="span3">
-	          <a href="#" class="thumbnail">
-	            <img src="http://placehold.it/260x180" alt="">
-	          </a>
-	        </li>
-	        <li class="span3">
-	          <a href="#" class="thumbnail">
-	            <img src="http://placehold.it/260x180" alt="">
-	          </a>
-	        </li>
-	        <li class="span3">
-	          <a href="#" class="thumbnail">
-	            <img src="http://placehold.it/260x180" alt="">
-	          </a>
-	        </li>
-	      </ul>
+      <ul class="thumbnails">
+      <?php
+      $monuments = Recommender::recommend(4);
+      foreach ($monuments['monuments'] AS $monument) {
+      	echo '
+        <li class="span3">
+          <a href="'.URL::site('monument/id/'.$monument->id_monument).'" class="thumbnail">
+            <img src="'.$monument->photoUrl().'" style="max-width: 260px; max-height: 180px;" alt="">
+          </a>
+        </li>';
+      }
+        ?>
+      </ul>
 	    </div>
 	
 	<div class="span12">

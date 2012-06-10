@@ -55,7 +55,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$recommendations = Recommender::recommend(5);
+			$recommendations = Recommender::recommend_monument($monument, 5);
 
 			$monuments = array();
 			foreach ($recommendations['monuments'] AS $key => $monument) {
@@ -66,6 +66,27 @@ class Controller_Ajax extends Kohana_Controller_Template {
 			}
 
 			$this->return = $monuments;
+		} else $this->return = array();
+	}
+
+	/**
+	 * Function to get recommendations for single view
+	 * @param (POST) (int) id_monument
+	 * @return array with monuments
+	 */
+	public function action_single_flickr() {
+		$post = $this->request->post();
+		if(isset($post['id_monument']))	{
+			$monument = ORM::factory('monument', $post['id_monument']);
+			$photos = Flickr::photos($monument, 5);
+
+			$urls = array();
+			foreach ($photos AS $photo) {
+				$url = array('large' => $photo->url, 'thumb' => $photo->thumb());
+				$urls[] = $url;
+			}
+			
+			$this->return = $urls;
 		} else $this->return = array();
 	}
 

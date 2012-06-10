@@ -79,6 +79,7 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 		->join('logs')->on('logs.id_log', '=', 'logs_monuments.id_log')
 		->join('monuments')->on('monuments.id_monument', '=', 'logs_monuments.id_monument')
 		->where('id_tracker', '=', $this->id_tracker)
+		->order_by(DB::expr('RAND()'))
 		->execute();
 		
 		$ids = array();

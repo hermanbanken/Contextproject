@@ -22,6 +22,7 @@ return array(
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Bars',
 		'single.forecast' => 'Forecast',
+		'single.flickr' => 'Photos from the area',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
 
