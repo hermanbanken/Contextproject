@@ -44,7 +44,8 @@ $(function(){
             else if(event.keyCode == 37)
                 setParameter('page', prev-1 || 1);
 
-            setState();
+            if(event.keyCode == 39 || event.keyCode == 37)
+                setState();
         }
     });
 
