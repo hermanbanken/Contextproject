@@ -16,7 +16,7 @@ class GooglePlaces {
 
 	/**
 	 * Function to get places near monument from Google Places
-	 * 
+	 *
 	 * @param monument $monument
 	 * @param string $categories
 	 * @param string $rankby
@@ -54,7 +54,7 @@ class GooglePlaces {
 
 	/**
 	 * Function to import places from Google Places in database
-	 * 
+	 *
 	 * @param monument $monument
 	 * @param string $categories
 	 * @param string $rankby
@@ -62,7 +62,7 @@ class GooglePlaces {
 	 * @param boolean $sensor
 	 */
 	public static function import($monument, $categories, $rankby, $radius, $sensor) {
-		$response = file_get_contents(
+		$response = Request::factory(
 				"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
 						"location" => $monument->lng.','.$monument->lat,
 						"rankby" => $rankby,
@@ -71,7 +71,8 @@ class GooglePlaces {
 						"key" => self::KEY,
 						"radius" => $rankby != 'distance' ? $radius : null,
 				))
-		);
+		)->execute();
+		
 		$places = @json_decode($response);
 
 		// Save places to database

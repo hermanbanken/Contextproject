@@ -57,7 +57,7 @@ class Flickr {
 		$url = sprintf($base_url, self::KEY, $monument->lng, $monument->lat, $monument->town->name);
 		
 		// Get contents of request
-		$request = file_get_contents($url);
+		$request = Request::factory($url)->execute();
 		
 		// Remove strange jsonflickr thingy
 		$request = str_replace('jsonFlickrApi(', '', $request);

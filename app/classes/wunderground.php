@@ -55,7 +55,7 @@ class Wunderground {
 		$url = sprintf($base_url, self::KEY, $monument->lng, $monument->lat);
 
 		// Get content of response and translate to json
-		$response_json = file_get_contents($url);
+		$response_json = Request::factory($url)->execute();
 		$response = @json_decode($response_json);
 
 		// Check if forecast is found
