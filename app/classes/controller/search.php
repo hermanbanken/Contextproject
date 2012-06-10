@@ -93,15 +93,6 @@ class Controller_Search extends Controller_Template {
 			$provinces = ORM::factory('province')->order_by('name')->find_all();
 			$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-			// Get view for form
-			$f = View::factory(static::$entity.'/selection');
-
-			// Give variables to view
-			$f->set('provinces', $provinces);
-			$f->set('categories', $categories);
-			$f->set('action', 'monument/list');
-			$f->set('formname', 'filter_list');
-
 			$result['pagination'] = (string) $pagination;
 			$result['monuments'] = array();
 			foreach($monuments as $m){
@@ -111,17 +102,21 @@ class Controller_Search extends Controller_Template {
 				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
+			Profiler::stop($benchmark_convert);
+
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
 
-			// Add view to template
-			$this->auto_render = false;
 
 			// Include bench marks
-			$result['bench'] = (string)View::factory('profiler/stats');
-
-			$this->response->body(json_encode($result));
+			$result['bench'] = (string) View::factory('profiler/stats');
+		} else {
+			$this->repsonse->status(404);
 		}
+
+		// Add view to template
+		$this->auto_render = false;
+		$this->response->body(json_encode($result));
 	}
 
 	function action_cloud() {
