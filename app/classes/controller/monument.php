@@ -4,14 +4,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 	
-	public function action_recommender() {
-		$v = View::factory('test');
-		
-		echo '<pre>'.print_r(Recommender::recommend_monument(ORM::factory('monument', 1), 5), true).'</pre>';
-		
-		$this->template->body = $v;
-	}
-	
 	/**
 	 * View to compare images visual
 	 */

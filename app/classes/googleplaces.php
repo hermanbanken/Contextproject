@@ -16,7 +16,8 @@ class GooglePlaces {
 
 	/**
 	 * Function to get places near monument from Google Places
-	 * @param int $id_monument
+	 * 
+	 * @param monument $monument
 	 * @param string $categories
 	 * @param string $rankby
 	 * @param double $radius
@@ -32,7 +33,7 @@ class GooglePlaces {
 		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 10 * 24 * 60 * 60))
 		->order_by('rating', 'desc')
 		->limit($limit);
-		
+
 		// Execute query (reset = false, so we can use it at later time)
 		$places_orm = $places_orm_query->reset(false)->find_all();
 
@@ -41,44 +42,57 @@ class GooglePlaces {
 			// Clear cache
 			DB::delete('places')->where('id_monument', '=', $monument->id_monument)->and_where('categories', '=', $categories)->execute();
 
-			// Get places from google places
-			$response = file_get_contents(
-					"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
-							"location" => $monument->lng.','.$monument->lat,
-							"rankby" => $rankby,
-							"types" => $categories,
-							"sensor" => $sensor ? 'true' : 'false',
-							"key" => self::KEY,
-							"radius" => $rankby != 'distance' ? $radius : null,
-					))
-			);
-			$places = @json_decode($response);
+			// Import places from google places
+			GooglePlaces::import($monument, $categories, $rankby, $radius, $sensor);
 
-			// Save places to database
-			foreach ($places->results as $place){
-				$loc = $place->geometry->location;
-
-				$rating = 0;
-				if (isset($place->rating)) {
-					$rating = $place->rating;
-				}
-
-				$place_orm = ORM::factory('place');
-				$place_orm->id_monument = $monument->id_monument;
-				$place_orm->categories = $categories;
-				$place_orm->vicinity = $place->vicinity;
-				$place_orm->name = $place->name;
-				$place_orm->lng = $loc->lng;
-				$place_orm->lat = $loc->lat;
-				$place_orm->rating = $rating;
-				$place_orm->save();
-			}
-
-			// Get places (use old query)
+			// Get new places (use old query)
 			$places_orm = $places_orm_query->reset(false)->find_all();
 		}
 
 		return $places_orm;
+	}
+
+	/**
+	 * Function to import places from Google Places in database
+	 * 
+	 * @param monument $monument
+	 * @param string $categories
+	 * @param string $rankby
+	 * @param double $radius
+	 * @param boolean $sensor
+	 */
+	public static function import($monument, $categories, $rankby, $radius, $sensor) {
+		$response = file_get_contents(
+				"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
+						"location" => $monument->lng.','.$monument->lat,
+						"rankby" => $rankby,
+						"types" => $categories,
+						"sensor" => $sensor ? 'true' : 'false',
+						"key" => self::KEY,
+						"radius" => $rankby != 'distance' ? $radius : null,
+				))
+		);
+		$places = @json_decode($response);
+
+		// Save places to database
+		foreach ($places->results as $place){
+			$loc = $place->geometry->location;
+
+			$rating = 0;
+			if (isset($place->rating)) {
+				$rating = $place->rating;
+			}
+
+			$place_orm = ORM::factory('place');
+			$place_orm->id_monument = $monument->id_monument;
+			$place_orm->categories = $categories;
+			$place_orm->vicinity = $place->vicinity;
+			$place_orm->name = $place->name;
+			$place_orm->lng = $loc->lng;
+			$place_orm->lat = $loc->lat;
+			$place_orm->rating = $rating;
+			$place_orm->save();
+		}
 	}
 
 	/**

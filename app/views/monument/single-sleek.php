@@ -10,8 +10,8 @@
 			
 			
 			<div class="thumbnail span4" style="float: right">
-				<img src="<?php echo $monument->photoUrl(); ?>"
-					alt="<?php echo $monument->name; ?>">
+				<a href="<?php echo $monument->photoUrl(); ?>" rel="shadowbox"><img src="<?php echo $monument->photoUrl(); ?>"
+					alt="<?php echo $monument->name; ?>"></a>
 				<div class="caption">
 					<p>
 						<a class="btn"
@@ -157,15 +157,18 @@
 		?>
 		<div class="row-fluid">
 			<div class="span6">
-				<ul class="nav nav-tabs" style="margin-top: 20px;">
-					<li class="active"><a class="aanbevelingen" href="#">
-						<?php echo __('single.recommendations'); ?>
+				<ul class="nav nav-tabs single-photos-nav" style="margin-top: 20px;">
+					<li>
+						<a class="recommendations" href="#recommendations"><?php echo __('single.recommendations'); ?>
+					</a></li>
+					<li>
+						<a class="flickr" href="#flickr"><?php echo __('single.flickr'); ?>
 					</a></li>
 				</ul>
 
 				<input id="id_monument" type="hidden" value="<?php echo $monument->id_monument; ?>" />
 
-				<div id="aanbevelingen" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
+				<div id="ajax_content_photos" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
 			</div>
 			<div class="span6">
 				<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">

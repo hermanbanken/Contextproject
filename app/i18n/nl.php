@@ -22,6 +22,7 @@ return array (
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Cafe\'s',
 		'single.forecast' => 'Weersvoorspelling',
+		'single.flickr' => 'Foto\'s uit de omgeving',
 		'single.visited' => 'Bezocht',
 		'single.not-visited' => 'Niet bezocht',
 
