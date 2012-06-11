@@ -708,7 +708,7 @@ class Importer {
 		set_time_limit(0);
 		
 		// select all uncategorized monuments
-		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
+		$monuments = ORM::factory('monument')->where('id_category','is',null)->or_where('id_category','=',12)->find_all();
 		$i = 0;
 		foreach($monuments as $monument) {
 		
