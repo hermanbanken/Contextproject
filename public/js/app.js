@@ -93,7 +93,10 @@ var exports = exports | {};
     CultuurApp.prototype.mapList = function(monuments, options)
     {
         var self = this;
-        var extractedMarker = false;
+        var open = {
+            marker: false,
+            zindex: false
+        };
         var scrolled = false;
         this.page = this.page || 1;
 
@@ -117,7 +120,7 @@ var exports = exports | {};
             $.map(monuments, function(monument)
             {
                 var id = monument.id_monument;
-                var desc = monument.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+                var desc = monument.summary;
                 var style = "float: left; margin-right: 10px; margin-top: 3px; ";//max-height: 100px; min-height: 100px;";
                 $("#list .list").append(
                     $(
@@ -125,30 +128,52 @@ var exports = exports | {};
                         "<a href='"+base+"monument/id/"+id+"' >" +
                         "<h2>" + monument.name + "</h2>" +
                         "<img class='map-info-photo' id='photo'"+id+"' src='"+monument.photoUrl+"' style='"+style+"' />" +
-                        "</a><p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>" +
+                        "</a><p>"+desc+"</p>" +
                         "</li>"
                     ).click(function(){
                         if($(this).hasClass("selected")){
+
                             $(this).removeClass("selected");
-                            if(extractedMarker){
-                                markerClusterer.addMarkers([extractedMarker]);
+
+                            // Add the highlighted marker back to the cluster
+                            if(open.marker){
+                                open.marker.setZIndex(open.zindex);
+                                markerClusterer.addMarkers([open.marker]);
                             }
-                            extractedMarker = false;
+                            open.marker = false;
+
+                            // Zoom back out
                             map.fitBounds(bounds);
                         }else{
+                            // Close info window
+                            if(self.infowindow)
+                                self.infowindow.close();
+
                             $(this).addClass("selected").siblings().removeClass("selected");
+
+                            // Center at monument
                             var point = new google.maps.LatLng( monument.lng, monument.lat );
                             map.panTo(point);
                             if(map.getZoom() < 16) map.setZoom(16);
 
-                            if(extractedMarker){
-                                markerClusterer.addMarkers([extractedMarker]);
+                            // Add the highlighted marker back to the cluster
+                            if(open.marker){
+                                open.marker.setZIndex(open.zindex);
+                                markerClusterer.addMarkers([open.marker]);
                             }
-                            extractedMarker = markersLookup[monument.id_monument];
-                            marker.setMap(map);
-                            //marker.setVisible(true);
-                            marker.setAnimation(google.maps.Animation.BOUNCE);
-                            //setTimeout(function(){ marker.setAnimation(null); }, 750);
+
+                            // Unlink monument marker from cluster
+                            open.marker = markersLookup[monument.id_monument];
+                            open.zindex = open.marker.getZIndex();
+                            markerClusterer.removeMarker(open.marker);
+                            open.marker.setMap(map);
+                            open.marker.setZIndex(999999);
+
+                            // Bounce
+                            google.maps.event.addListenerOnce(map, "idle", function(){
+                                open.marker.setAnimation(google.maps.Animation.BOUNCE);
+                                setTimeout(function(){ open.marker.setAnimation(null); }, 1500);
+                            });
                         }
                     })
                 );
@@ -251,13 +276,13 @@ var exports = exports | {};
                     // Add right source to image
                     $.getJSON(base+'monument/id/'+location[0], function (data) {
                         var id = location[0];
-                        var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+                        var desc = data.summary;
                         var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
                         infowindow.setContent(
                             "<a href='"+base+"monument/id/"+id+"' >" +
                                 "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
                                 "<h2>" + data.name + "</h2></a>" +
-                                "<p>"+desc+"<a href='"+base+"monument/id/"+id+"'>Meer</a></p>"
+                                "<p>"+desc+"</p>"
                         );
                         infowindow.open(map, marker);
                     });

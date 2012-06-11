@@ -22,7 +22,7 @@ class Translator {
 	{
 		$lang = strtolower(Session::instance()->get('lang', 'nl') );
 		
-		if ( $lang=='nl' )
+		if ( true || $lang=='nl' )
         {
             return $default;
         }

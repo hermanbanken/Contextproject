@@ -19,6 +19,13 @@ class Controller_Search extends Controller_Template {
 
 	private $_params = null;
 
+	public function log() {
+		$logger = Logger::instance();
+		$logger->category(ORM::factory('category', $this->_params['category']));
+		$logger->town(ORM::factory('town')->where('name', '=', $this->_params['town'])->find());
+		$logger->keywords($this->_params['search']);
+	}
+	
 	public function parameter($key = null)
 	{
 		if ($this->_params == null)
@@ -28,15 +35,13 @@ class Controller_Search extends Controller_Template {
 		return $key ? $this->_params[$key] : $this->_params;
 	}
 
-	public function action_search()
-	{
-		$this->response->body( "<pre>".$this->query()->compile(Database::instance())."</pre>" );
-	}
-
 	public function action_map()
 	{
 		$query = $this->query()->select("id_monument", "lng", "lat");
-
+		
+		// Log user info
+		$this->log();
+		
 		$monuments = $query->execute();
 		$r = array("monuments"=>array(), "debug"=>array());
 		foreach($monuments as $m){
@@ -53,17 +58,20 @@ class Controller_Search extends Controller_Template {
 			$this->response->status(404);
 	}
 
-	public function action_list(){
+	public function action_list(){		
 		// Set view
 		$result = array();
 
 		$query = $this->query()->select('id_monument');
 
+		// Log user info
+		$this->log();
+		
 		$monuments = $query->execute();
 
 		$limit = 8;
 		$offset = $limit * (intval($this->parameter("page")) - 1);
-
+		
 		// Create pagination (count query without limit and offset)
 		$pagination = Pagination::factory(array(
 				'total_items' => $total = $monuments->count(),
@@ -85,42 +93,36 @@ class Controller_Search extends Controller_Template {
 			$provinces = ORM::factory('province')->order_by('name')->find_all();
 			$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-			$tags = TextualMagic::tagcloud(20);
-			// create the view
-			$t = View::factory(static::$entity.'/tagcloud');
-			// bind the tags
-			$t->bind('tags',$tags);
-			// add tagcloud to page
-			$result['tagcloud'] = (string) $t;
-
-			// Get view for form
-			$f = View::factory(static::$entity.'/selection');
-
-			// Give variables to view
-			$f->set('provinces', $provinces);
-			$f->set('categories', $categories);
-			$f->set('action', 'monument/list');
-			$f->set('formname', 'filter_list');
-
 			$result['pagination'] = (string) $pagination;
 			$result['monuments'] = array();
 			foreach($monuments as $m){
-				$m['photoUrl'] = ORM::factory('photo')->url($m['id_monument']);
+				$monument = ORM::factory("monument", $m['id_monument']);
+				$m = $monument->object();
+				$m['photoUrl'] = $monument->photoUrl();
+				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
+			Profiler::stop($benchmark_convert);
+
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
 
-			// Add view to template
-			$this->auto_render = false;
-			$this->response->body(json_encode($result));
+
+			// Include bench marks
+			$result['bench'] = (string) View::factory('profiler/stats');
+		} else {
+			$this->repsonse->status(404);
 		}
+
+		// Add view to template
+		$this->auto_render = false;
+		$this->response->body(json_encode($result));
 	}
 
 	function action_cloud() {
 		$tags = TextualMagic::tagcloud(20);
 		// create the view
-		$this->template = View::factory(static::$entity.'/tagcloud');
+		$this->template = View::factory(static::$entity.'/tagcloud')->bind('tags',$tags);
 	}
 
 	/**
@@ -190,7 +192,7 @@ class Controller_Search extends Controller_Template {
 		switch ($sort)
 		{
 			case "street":
-				$query->order_by("street");
+				$query->order_by("id_street");
 				break;
 
 			case "name":
@@ -233,9 +235,13 @@ class Controller_Search extends Controller_Template {
 				// Close is relevant, not random, do not break
 				continue;
 
-			case "rand":
 			default:
-				$query->order_by(DB::expr("RAND()"));
+				if($longitude && $latitude)
+				{
+					$query->order_by("distance", "ASC");
+				} else {
+					$query->order_by("id_street");
+				}
 				break;
 
 		}

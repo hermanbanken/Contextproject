@@ -13,45 +13,27 @@ class Logger {
 	private $log;
 	private $saved = false;
 
+	/**
+	 * Create instance of logger
+	 */
 	public static function instance() {
 		return new Logger();
 	}
 	
+	/**
+	 * Constructor of logger
+	 */
 	public function __construct() {
-		$this->tracker = ORM::factory('tracker');
-		$session = Session::instance();
-
-		// If tracker is in session, use session
-		$s_tracker = $session->get('tracker');
-		if (isset($s_tracker)) {
-			// Find tracker
-			$this->tracker = ORM::factory('tracker')->where('hash', '=', $s_tracker)->find();
-		}
-		else {
-			// If tracker is in cookie, use cookie
-			$c_tracker = Cookie::get('tracker');
-			if (isset($c_tracker)) {
-				// Put tracker in session
-				$session->set('tracker', $c_tracker);
-
-				// Find tracker
-				$this->tracker = ORM::factory('tracker')->where('hash', '=', $c_tracker)->find();
-			}
-		}
-
-		// If not tracker is found, create new one and create session and cookie
-		if ($this->tracker->id_tracker == NULL) {
-			$this->tracker->hash = Logger::randomstring(30);
-			$this->tracker->dateCreated = date('Y-m-d H:i:s');
-			$this->tracker->save();
-			
-			$this->set_session_and_cookie();
-		}
+		$this->tracker = ORM::factory('tracker')->tracker();
 
 		$this->log = ORM::factory('log');
 		$this->log->id_tracker = $this->tracker->id_tracker;
 	}
 
+	/**
+	 * Log category
+	 * @param category $category
+	 */
 	public function category($category) {
 		// Check if category is set
 		if ($category->loaded()) {
@@ -61,6 +43,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log town
+	 * @param town $town
+	 */
 	public function town($town) {
 		if ($town->loaded()) {
 			$this->savelog();
@@ -69,6 +55,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log monument
+	 * @param monument $monument
+	 */
 	public function monument($monument) {
 		if ($monument->loaded()) {
 			$this->savelog();
@@ -77,6 +67,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Log keywords
+	 * @param string $keywords
+	 */
 	public function keywords($keywords) {
 		if ($keywords != '') {
 			$this->savelog();
@@ -88,7 +82,11 @@ class Logger {
 			}
 		}
 	}
-
+	
+	/**
+	 * Function which is called by every logging action
+	 * saves the created log if it isn't saved yet
+	 */
 	public function savelog() {
 		if (!$this->saved) {
 			$this->log->save();
@@ -97,6 +95,10 @@ class Logger {
 		}
 	}
 
+	/**
+	 * Function to bind user to tracker if he logs in
+	 * @param user $user
+	 */
 	public function bind_user($user) {
 		// Check if there already is a tracker for this user
 		$tracker = ORM::factory('tracker')->where('id_user', '=', $user->id)->find();
@@ -110,7 +112,7 @@ class Logger {
 			$this->tracker = $tracker;
 			
 			// Update session and cookies to right tracker
-			$this->set_session_and_cookie();
+			$this->tracker->set_session_and_cookie();
 		}
 		else {
 			// Just add a user id to the tracker
@@ -118,18 +120,11 @@ class Logger {
 			$this->tracker->save();
 		}
 	}
-	
-	public function set_session_and_cookie() {
-		// Init session
-		$session = Session::instance();
-		
-		// Create session
-		$session->set('tracker', $this->tracker->hash);
-		
-		// Create cookie
-		Cookie::set('tracker', $this->tracker->hash);
-	}
 
+	/**
+	 * Create random string
+	 * @param int $length
+	 */
 	public static function randomstring($length) {
 		$randomstring = '';
 		$chars = array_merge(range('A','Z'), range('a','z'), range(0, 9), array('!','#','@','$','%','^','&','*'));

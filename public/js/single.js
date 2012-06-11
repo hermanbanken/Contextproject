@@ -4,30 +4,41 @@ var map = null;
 var cache = new Array();
 cache['cafes'] = '';
 cache['restaurants'] = '';
-cache['locatie'] = '';
-cache['aanbevelingen'] = '';
-cache['forecast'] = '';
+cache['recommendations'] = '';
+cache['flickr'] = '';
 /**
  * On document ready, initialize functions and triggers
  */
 $(document).ready(
-		function() {			
+		function() {
+
+			Shadowbox.init();
+			
 			$(".single-nav li a").click(function (e) {				
 				// Get tab
-				var tab = $(this).attr('class');
+				var tab_places = $(this).attr('class');
 
 				$(".single-nav li").removeClass('active');
 				
-				show_content(tab);
+				show_content_places(tab_places);
 			});
 			
-			var tab = document.location.hash.replace('#', '');
-			if (tab == '') {
-				tab = 'restaurants';
-			}
+			$(".single-photos-nav li a").click(function (e) {				
+				// Get tab
+				var tab_photos = $(this).attr('class');
+
+				$(".single-photos-nav li").removeClass('active');
+				
+				show_content_photos(tab_photos);
+			});
+
+			var tab_places = 'restaurants';
+			var tab_photos = 'recommendations';
 			
-			if($("#id_monument").size() > 0)
-				show_content(tab);
+			if($("#id_monument").size() > 0) {
+				show_content_places(tab_places);
+				show_content_photos(tab_photos);
+			}
 			
 			// Visited functionality
 			$(".visited").click(function(e) {
@@ -45,25 +56,6 @@ $(document).ready(
 					}
 				}, "json");
 			});
-			
-
-			$("#aanbevelingen").html("Laden...");
-			$.post(base+'ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
-				var html = '';
-				
-				if (data.length == 0) {
-					html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
-				}
-				
-				$.each(data, function(key, monument) {
-					html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
-					html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
-					html += '</div>';
-				});
-				
-				$("#aanbevelingen").empty();
-				$("#aanbevelingen").html(html);
-			}, "json");
 		});
 
 function rating(r){
@@ -71,8 +63,14 @@ function rating(r){
 	return html;
 }
 
-function show_content(tab) {
-	$(".single-nav li ."+tab).parent().addClass('active');
+function show_content_places(tab) {
+	$li = $(".single-nav li ."+tab).parent();
+    $li.addClass('active');
+
+    if($li.hasClass("disabled")) {
+        $("#ajax_content").html("<p>Deze functie is helaas tijdelijk niet beschikbaar.</p>");
+        return;
+    }
 	
 	if (cache[tab] != '') {
 		$("#ajax_content").empty();
@@ -130,6 +128,67 @@ function show_content(tab) {
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);
+		}, "json");
+	}
+}
+
+
+function show_content_photos(tab) {
+	$li = $(".single-photos-nav li ."+tab).parent();
+    $li.addClass('active');
+
+    if($li.hasClass("disabled")) {
+        $("#ajax_content_photos").html("<p>Deze functie is helaas tijdelijk niet beschikbaar.</p>");
+        return;
+    }
+    
+	if (cache[tab] != '') {
+		$("#ajax_content_photos").empty();
+		$("#ajax_content_photos").html(cache[tab]);
+	}
+	else if (tab == 'recommendations') {
+		$("#ajax_content_photos").html("Laden...");
+		$.post(base+'ajax/single_aanbevelingen', {id_monument: $("#id_monument").val()}, succes = function(data) {
+			var html = '';
+			
+			if (data.length == 0) {
+				html += "<p>Er zijn helaas geen aanbevelingen gevonden.</p>";
+			}
+			
+			$.each(data, function(key, monument) {				
+				html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
+				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
+				html += '</div>';
+			});
+			
+			cache['recommendations'] = html;
+			
+			$("#ajax_content_photos").empty();
+			$("#ajax_content_photos").html(html);
+		}, "json");
+	}
+	else if (tab == 'flickr') {
+		$("#ajax_content_photos").html("Laden...");
+		$.post(base+'ajax/single_flickr', {id_monument: $("#id_monument").val()}, succes = function(data) {
+			var html = '';
+			
+			if (data.length == 0) {
+				html += "<p>Er zijn helaas geen foto's uit de omgeving gevonden.</p>";
+			}
+			
+			$.each(data, function(key, photo) {				
+				html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
+				html += '<a class="flickrphoto" rel="shadowbox[flickr]" href="'+photo.large+'"><img style="max-width: 80%; max-height: 165px;" src="'+photo.thumb+'" alt="" /></a>';
+				html += '</div>';
+			});
+			
+			cache['flickr'] = html;
+			
+			$("#ajax_content_photos").empty();
+			$("#ajax_content_photos").html(html);
+			
+			Shadowbox.clearCache();
+			Shadowbox.setup();
 		}, "json");
 	}
 }

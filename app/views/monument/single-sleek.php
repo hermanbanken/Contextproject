@@ -10,8 +10,8 @@
 			
 			
 			<div class="thumbnail span4" style="float: right">
-				<img src="<?php echo $monument->photoUrl(); ?>"
-					alt="<?php echo $monument->name; ?>">
+				<a href="<?php echo $monument->photoUrl(); ?>" rel="shadowbox"><img src="<?php echo $monument->photoUrl(); ?>"
+					alt="<?php echo $monument->name; ?>"></a>
 				<div class="caption">
 					<p>
 						<a class="btn"
@@ -152,30 +152,32 @@
 			</div>
 
 		</div>
+		<?php
+			$conf = Kohana::$config->load("features");
+		?>
 		<div class="row-fluid">
 			<div class="span6">
-				<ul class="nav nav-tabs" style="margin-top: 20px;">
-					<li class="active"><a class="aanbevelingen"
-						href="#"><?php echo __('single.recommendations'); ?>
-					</a>
-					</li>
+				<ul class="nav nav-tabs single-photos-nav" style="margin-top: 20px;">
+					<li>
+						<a class="recommendations" href="#recommendations"><?php echo __('single.recommendations'); ?>
+					</a></li>
+					<li>
+						<a class="flickr" href="#flickr"><?php echo __('single.flickr'); ?>
+					</a></li>
 				</ul>
 
-				<input id="id_monument" type="hidden"
-					value="<?php echo $monument->id_monument; ?>" />
+				<input id="id_monument" type="hidden" value="<?php echo $monument->id_monument; ?>" />
 
-				<div id="aanbevelingen"></div>
+				<div id="ajax_content_photos" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
 			</div>
 			<div class="span6">
 				<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
-					<li><a class="restaurants"
-						href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#restaurants"><?php echo __('single.restaurants'); ?>
-					</a>
-					</li>
-					<li><a class="cafes"
-						href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>#cafes"><?php echo __('single.bars'); ?>
-					</a>
-					</li>
+					<li class="<?php if(!$conf->get("restaurants")) echo "disabled"; ?>">
+						<a class="restaurants" href="#restaurants"><?php echo __('single.restaurants'); ?>
+					</a></li>
+					<li class="<?php if(!$conf->get("cafes")) echo "disabled"; ?>">
+						<a class="cafes" href="#cafes"><?php echo __('single.bars'); ?>
+					</a></li>
 					<li style="float: right"><img
 						src="https://developers.google.com/maps/documentation/places/images/powered-by-google-on-white.png"
 						alt="Powered by Google" style="background: none; border: none;" />

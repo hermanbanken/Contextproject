@@ -17,9 +17,6 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 				array('min_length', array(':value', 4)),
 				array('max_length', array(':value', 32)),
 			),
-			'city' => array(
-				array('not_empty'),
-			),
 		);
 	}
 
@@ -115,9 +112,19 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 				
 				if(!$v) return false;
 
+				$this->find($v->id);
 				$this->fromFourSquare($v, $monument);
-				$this->find()->save();
-				$monument->reload();
+
+				if($this->check())
+				{
+					$this->save();
+					$monument->reload();
+				}
+				else
+				{
+					return false;
+				}
+
 				return $this;
 			}
 			
@@ -138,8 +145,16 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 			$this->monument = $monument;
 
 		// Location
-		$this->city = $venue->location->city;
-		$this->address = $venue->location->address;
+		if(isset($venue->location->city))
+			$this->city = $venue->location->city;
+		elseif($monument)
+			$this->city = $monument->town->name;
+
+		if(isset($venue->location->address))
+			$this->address = $venue->location->address;
+		elseif($monument)
+			$this->address = $monument->street->name . " " . $monument->streetNumber;
+
 		$this->location = json_encode($venue->location);
 		$this->ll = $venue->location->lat . ';' . $venue->location->lng;
 		// Categories

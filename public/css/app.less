@@ -21,6 +21,21 @@ body {
     left: 0;
     right: 0;
 }
+.monument-list {
+    position: relative;
+
+    &.busy .monument {
+        opacity: .7;
+    }
+    .loading {
+        position: absolute;
+        display:none;
+        left: 50%;
+        width: 295px;
+        margin-left: -150px;
+        z-index: 900;
+    }
+}
 
 .monument-single {
     .map-outer {

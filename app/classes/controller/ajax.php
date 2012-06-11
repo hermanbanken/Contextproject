@@ -55,17 +55,38 @@ class Controller_Ajax extends Kohana_Controller_Template {
 		$post = $this->request->post();
 		if(isset($post['id_monument']))	{
 			$monument = ORM::factory('monument', $post['id_monument']);
-			$pca = ORM::factory('pca')->where('id_monument', '=', $monument->id_monument)->find();
-			$similars = $monument->visuallySimilars(5, $pca->features(), true);
+			$recommendations = Recommender::recommend_monument($monument, 5);
 
 			$monuments = array();
-			foreach ($similars AS $key => $monument) {
-				$url = $monument->getphoto()->url();
+			foreach ($recommendations['monuments'] AS $key => $monument) {
+				$url = $monument->photoUrl();
 				$monuments[$key] = $monument->as_array();
 				$monuments[$key]['photo_url'] = $url;
+				$monuments[$key]['recommendedwhy'] = ORM::factory('user', $recommendations['tracker']->id_user)->username;
 			}
 
 			$this->return = $monuments;
+		} else $this->return = array();
+	}
+
+	/**
+	 * Function to get recommendations for single view
+	 * @param (POST) (int) id_monument
+	 * @return array with monuments
+	 */
+	public function action_single_flickr() {
+		$post = $this->request->post();
+		if(isset($post['id_monument']))	{
+			$monument = ORM::factory('monument', $post['id_monument']);
+			$photos = Flickr::photos($monument, 5);
+
+			$urls = array();
+			foreach ($photos AS $photo) {
+				$url = array('large' => $photo->url, 'thumb' => $photo->thumb());
+				$urls[] = $url;
+			}
+			
+			$this->return = $urls;
 		} else $this->return = array();
 	}
 
