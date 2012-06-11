@@ -102,7 +102,6 @@ class Controller_Search extends Controller_Template {
 				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
-			Profiler::stop($benchmark_convert);
 
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
