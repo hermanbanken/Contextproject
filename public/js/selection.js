@@ -51,7 +51,7 @@ $(document).ready(
 						})
 			}
 
-			// Localisation of client
+			// Localization of client
 			$('#nearby').bind('click', function() {
 				if (this.checked)
 					$('#distancecontainer').slideDown();
@@ -66,7 +66,7 @@ $(document).ready(
 			});
 
 			// autocomplete needs a list of cities
-			$.post(base+'monument/getsteden', {}, succes = function(towns) {
+			$.post(base+'monument/getsteden', {}, success = function(towns) {
 				$("#town").autocomplete({
 					source : towns
 				});
