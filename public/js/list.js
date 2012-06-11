@@ -1,41 +1,14 @@
-var longitude = null;
-var latitude = null;
-
-$(document).ready(function() {
-	if (navigator.geolocation) {
-		browserSupportFlag = true;
-		navigator.geolocation.getCurrentPosition(function(position) {
-			latitude = position.coords.latitude;
-			longitude = position.coords.longitude;
-			
-			update_position();
-		});
-		// Try Google Gears Geolocation
-	} else if (google.gears) {
-		browserSupportFlag = true;
-		var geo = google.gears.factory.create('beta.geolocation');
-		geo.getCurrentPosition(function(position) {
-			latitude = position.latitude;
-			longitude = position.longitude;
-			
-			update_position();
-		});
-	}
-});
-
-function update_position() {
-	$('#longitude').val(longitude);
-	$('#latitude').val(latitude);
-}
-
 var exports = exports || {};
 $(function(){
+
+    // Default parameters for selection
     var keys = {"page": 1, "search": "", "town": "", "province": -1, "category": -1, "sort": "street", "latitude": null, "longitude": null, "distance": null, "distance_show": null, "lang": null};
     var page = getParameter('page');
     var empty = $(".monument-list .empty").hide();
     var $template = $(".monument-list .list-row.monument").remove();
     var coords = false;
 
+    // Add navigation with arrow keys
     $(document).keyup(function(event){
         if(event.target == document.body)
         {
@@ -50,6 +23,7 @@ $(function(){
         }
     });
 
+    // Function to get the GPS-coordinates
     function geo(callback) {
         // Cache location
         if ( coords ) callback( coords );
@@ -64,6 +38,7 @@ $(function(){
         }
     }
 
+    // Fetch the parameter from the URI
     function getParameterByName(name, source)
     {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -76,6 +51,7 @@ $(function(){
             return decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    // Fetch the parameter key or parameters given in key and if not set return the default value from keys
     function getParameter(key)
     {
         if(typeof key == 'object' || typeof key == 'undefined'){
@@ -91,6 +67,7 @@ $(function(){
         }
     }
 
+    // Set a parameter if it isn't de default value
     function setParameter(key, value)
     {
         var data = getParameter();
@@ -116,6 +93,12 @@ $(function(){
         history.pushState(data, window.title, location.origin + location.pathname + "?" + $.param(data));
     }
 
+    /**
+     * Update the state
+     * - load new monuments
+     * - update the form
+     * @param state
+     */
     function setState(state){
         state = state || getParameter() || {};
         load(state);
@@ -131,6 +114,9 @@ $(function(){
         });
     }
 
+    /**
+     * Make sure the pagination keeps on the page, handle with AJAX
+     */
     $(".pagination").on("click", "a", function(event){
         var page = getParameterByName("page", this.href) || keys['page'];
         setParameter('page', page);
@@ -139,12 +125,20 @@ $(function(){
 
         return false;
     });
+
+    /**
+     * Make sure the tagcloud keeps on the page, handle with AJAX
+     */
     $(".tagcloud").on("click", "a", function(event){
         var search = getParameterByName("search", this.href) || keys['search'];
         setParameter({search: search, page: keys['page']});
         event.preventDefault();
         setState();
     });
+
+    /**
+     * Make sure the form doesn't submit, handle with AJAX
+     */
     $(".page").on("submit", "form", function(event){
         var data = $(this).serializeArray(),
             mod = {};
@@ -159,7 +153,10 @@ $(function(){
         return false;
     });
 
-    // Update list
+    /**
+     * Load the current state from the server
+     * @param filters
+     */
     function load(filters){
 
         $.ajax({
@@ -167,8 +164,10 @@ $(function(){
             dataType: "json",
             data: filters,
             success: function(response, status, xhr){
+                // Hide 404 message
                 empty.hide();
 
+                // Update side elements like pagination and benchmarks, start load of tagcloud
                 $(".pagination").html(response.pagination);
                 $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
@@ -186,11 +185,13 @@ $(function(){
 		        	$(".recommendations").hide();
 		        }	
 
+                // Clear old monuments
                 $(".monument-list .list-row.monument").remove();
+                // Add new monuments
                 $.map(response.monuments, function(monument, i){
                     $html = $template.clone();
 
-                    $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
+					$html.find("a").attr("href", base+"monument/id/"+monument.id_monument + "#" + getParameter('search'));
                     $html.find("img").attr("src", monument.photoUrl);
                     $html.find(".summary").html(monument.summary);
                     $html.find(".name a").text(monument.name);
@@ -202,11 +203,11 @@ $(function(){
                             Math.round(monument.distance * 1000) + " m");
                     }
 
-
                     $(".monument-list").append($html);
                 });
             },
             error: function(){
+                // show error by 404 message
                 empty.show();
                 $(".monument-list .list-row.monument").remove();
             },
@@ -221,15 +222,15 @@ $(function(){
         });
     };
 
-    exports.loadList = setState;
-    exports.param = getParameter;
+    // Export to global scope
     exports.setParam = setParameter;
-    exports.paramByName = getParameterByName;
 
+    // Start by getting the coordinates
     geo(function(coords){
         setParameter({ latitude: coords.latitude, longitude: coords.longitude });
         setState();
     });
 
+    // Load first monuments
     setState();
 });

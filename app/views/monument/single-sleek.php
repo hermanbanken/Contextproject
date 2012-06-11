@@ -32,7 +32,9 @@
 					</p>
 				</div>
 			</div>
+			<div class='description'>
 			<?php echo str_replace("\n\n", "</p><p>", $monument->description); ?>
+			</div>
 			</p>
 
 		</div>
