@@ -107,10 +107,11 @@ class Controller_Search extends Controller_Template {
 
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
+			$result['keywordrecommend'] = Recommender::recommend_keywords($this->_params['search'], 5);
 
 
 			// Include bench marks
-			$result['bench'] = (string) View::factory('profiler/stats');
+			//$result['bench'] = (string) View::factory('profiler/stats');
 		} else {
 			$this->response->status(404);
 		}

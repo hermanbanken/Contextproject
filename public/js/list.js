@@ -172,6 +172,19 @@ $(function(){
                 $(".pagination").html(response.pagination);
                 $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
+                
+                if (response.keywordrecommend.length != 0) {
+	                var keywords = '';
+	                $.each(response.keywordrecommend, function (key, keyword) {
+	                	keywords += '<a href="'+base+'monument/list?search='+keyword+'">'+keyword+'</a> ';
+	                });
+	                
+                	$(".keywords").html(keywords);
+                	$(".recommendations").show();
+            	}
+		        else {
+		        	$(".recommendations").hide();
+		        }	
 
                 $(".monument-list .list-row.monument").remove();
                 $.map(response.monuments, function(monument, i){
