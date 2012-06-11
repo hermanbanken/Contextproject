@@ -123,10 +123,9 @@ class Recommender {
 					$tracker = ORM::factory('tracker', $tracker['id_tracker']);
 
 					$akeywords = $tracker->keywords();
-					unset($akeywords[array_search($keyword, $akeywords)]);
-
+					
 					foreach ($akeywords AS $akeyword) {
-						if (!in_array($akeyword, $recommendations)) {
+						if (!in_array($akeyword, $recommendations) && !in_array($akeyword, $keywords)) {
 							$recommendations[] = $akeyword;
 						}
 					}
