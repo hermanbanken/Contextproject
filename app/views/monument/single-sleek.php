@@ -90,17 +90,26 @@
 						</td>
 					</tr>
 					<tr>
-						<th><?php echo __('category'); ?>
+						<th><?php 
+						if($monument->category_extracted == 1) {
+							echo '<span rel="tooltip" id="category_extracted" title="'.__('category_extracted').'">'.__('category').'*</span>';
+						} else {
+							echo __('category');
+						} 
+						?>
 						</th>
 						<td><?php echo $monument->category->name; ?>
 						</td>
 					</tr>
-					<tr>
-						<th><?php echo __('subcategory'); ?>
-						</th>
-						<td><?php echo $monument->subcategory->name; ?>
-						</td>
-					</tr>
+					<?php
+						if($monument->category_extracted == 0 && $monument->id_subcategory > 0) {
+							echo '<tr>
+								<th>'.__('subcategory').'
+								</th>
+								<td>'.$monument->subcategory->name.'
+								</td>
+								</tr>';
+						}?>
 					<tr>
 						<th>Tags</th>
 						<td><?php
@@ -191,3 +200,8 @@
 	</div>
 </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#category_extracted').tooltip();
+});
+</script>

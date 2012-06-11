@@ -3,7 +3,7 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
-	
+
 	/**
 	 * View to compare images visual
 	 */
@@ -52,7 +52,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
 			$_SESSION['vc'] = $post;
-			unset($_SESSION['vc']['posted']);
 			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
@@ -130,7 +129,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		{
 			$obj = $monument->object();
 			$obj['photoUrl'] = $monument->photoUrl();
-			$obj['summary'] = $monument->summary();
 			$this->set_json(json_encode($obj));
 		}
 		else
@@ -210,8 +208,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${
-					$key} = $value;
+				${$key} = $value;
 			}
 		}
 
@@ -413,12 +410,20 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$v = View::factory(static::$entity.'/list-dynanmic');
 		$this->js("ca-list", "js/list.js", true);
 
-		// Get view for form
-		$f = View::factory(static::$entity.'/selection');
-
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
 		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+
+		$tags = TextualMagic::tagcloud(20);
+		// create the view
+		$t = View::factory(static::$entity.'/tagcloud');
+		// bind the tags
+		$t->bind('tags',$tags);
+		// add tagcloud to page
+		$v->set('tagcloud',$t);
+
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
 
 		// Give variables to view
 		$f->set('param', $this->getDefaults());
@@ -431,6 +436,102 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		$this->template->body = $v;
 
+		return;
+
+		// Set view
+		$v = View::factory(static::$entity.'/list');
+
+		// get defaults
+		$p = $this->getDefaults();
+
+		// Get post-data
+		$pform = $this->request->query();
+
+		// override values
+		foreach($pform as $key => $value) {
+			if($value != '') $p[$key] = $value;
+		}
+	
+		// If no post-data is set, get data from session or set default data
+		$session = Session_Native::instance();
+		$session = $session->as_array();
+
+		// fetch variables saved in session
+		foreach($session as $key => $value) {
+			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
+		}
+	
+		// add searchterm for external links
+		$search = $this->request->param('id');
+		if(isset($search) AND $search != '') {
+			// If searching for tag, remove irrelevant filterings, but keep post values used for sorting
+			unset($p['category']);
+			unset($p['town']);
+			unset($p['distance']);
+			$p['search'] = $search;
+		}
+
+		// re-initialize unset variables
+		foreach ($this->getDefaults() AS $key => $value) {
+			if (!isset($p[$key])) $p[$key] = $value;
+		}
+
+		// Get query with post-data (without limit and offset)
+		$sql = $this->buildQuery($p);
+		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Create pagination (count query without limit and offset)
+		$pagination = Pagination::factory(array(
+				'total_items' => $monuments->count(),
+				'items_per_page' => 8,
+				'view' => '../../../views/pagination'
+		));
+
+		// Tell pagination where we are
+		$pagination->route_params(array('controller' => $this->request->controller(), 'action' => $this->request->action()));
+
+		// Set new limit and offset to post-data
+		$p['limit'] = $pagination->items_per_page;
+		$p['offset'] = $pagination->offset;
+
+		// Build new query with limit and offset
+		$sql = $this->buildQuery($p);
+		$monuments = DB::query(Database::SELECT, $sql)->execute();
+
+		// Get provinces and categories for selection
+		$provinces = ORM::factory('province')->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+
+		$tags = TextualMagic::tagcloud(20);
+		// create the view
+		$t = View::factory(static::$entity.'/tagcloud');
+		// bind the tags
+		$t->bind('tags',$tags);
+		// add tagcloud to page
+		$v->set('tagcloud',$t);
+		
+		// Logging
+		$logger = Logger::instance();
+		$logger->category(ORM::factory('category', $p['category']));
+		$logger->town(ORM::factory('town')->where('name', '=', $p['town'])->find());
+		$logger->keywords($p['search']);
+
+		// Get view for form
+		$f = View::factory(static::$entity.'/selection');
+
+		// Give variables to view
+		$f->set('param', $p);
+		$f->set('provinces', $provinces);
+		$f->set('categories', $categories);
+		$f->set('action', 'monument/list');
+		$f->set('formname', 'filter_list');
+
+		$v->set('pagination', $pagination);
+		$v->set('selection_form', $f);
+		$v->bind('monuments', $monuments);
+
+		// Add view to template
+		$this->template->body = $v;
 	}
 }
 ?>
