@@ -213,6 +213,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	`id_town` int(10) NULL,
 	`id_municipality` int(10) NULL,
 	`id_province` int(10) NULL,
+	`popularity` int(10) NULL,
 	`streetNumber` varchar(4) NULL,
 	`zipCode` varchar(7) NULL,
 	`id_function` int(10) NULL,
