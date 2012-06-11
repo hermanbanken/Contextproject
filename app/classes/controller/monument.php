@@ -114,6 +114,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 */
 	public function action_id()
 	{
+		$this->js("ca-single", "js/single.js", true);
+
 		$id = $this->request->param('id');
 		$user = Auth::instance()->get_user();
 		$monument = ORM::factory('monument', $id);

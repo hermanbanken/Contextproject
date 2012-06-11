@@ -10,9 +10,10 @@
  */
 class Flickr {
 	/**
-	 * Flickr API KEY
+	 * Constants
 	 */
 	const KEY = 'e0ee3695155f9647a3d645aa6d3c0d2a';
+	const MAX_CACHE = 5;
 
 	/**
 	 * Function to get flickrphotos from neighbourhood of monument
@@ -25,7 +26,7 @@ class Flickr {
 		// Get cached flickrphotos (only flickrphotos that are not too old, max is 10 days)
 		$flickrphotos_orm_query = ORM::factory('flickrphoto')
 		->where('id_monument', '=', $monument->id_monument)
-		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 5 * 24 * 60 * 60))
+		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - self::MAX_CACHE * 24 * 60 * 60))
 		->limit($limit);
 
 		// Execute query (reset = false, so we can use it at later time)

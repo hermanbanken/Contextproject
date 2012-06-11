@@ -7,7 +7,7 @@ class Controller_Search extends Controller_Template {
 			'town' => '',
 			'province' => -1,
 			'category' => -1,
-			'sort' => 'distance',
+			'sort' => 'name',
 			'latitude' => false,
 			'longitude' => false,
 			'distance' => 0,
@@ -97,12 +97,13 @@ class Controller_Search extends Controller_Template {
 			$result['monuments'] = array();
 			foreach($monuments as $m){
 				$monument = ORM::factory("monument", $m['id_monument']);
+				$d = @$m['distance'];
 				$m = $monument->object();
+				$m['distance'] = $d;
 				$m['photoUrl'] = $monument->photoUrl();
 				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
-			Profiler::stop($benchmark_convert);
 
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
@@ -137,28 +138,21 @@ class Controller_Search extends Controller_Template {
 		$query = DB::select_array($fields)->from("monuments");
 
 		//****** FIELDS ********
-		if ((($distance > 0 && $distance_show == 1) || $sort == 'distance') && $longitude && $latitude)
+		if ($longitude && $latitude)
 		{
 			$calc = "((ACOS(SIN(:lng * PI() / 180) * SIN(lat * PI() / 180) + COS(:lng * PI() / 180) * COS(lat * PI() / 180) * COS((:lat - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 ";
 			$dexp = DB::expr($calc, array(
-					":lng" => $longitude,
-					":lat" => $latitude
+				":lng" => $longitude,
+				":lat" => $latitude
 			));
 
 			$query->select(array( $dexp, "distance" ));
 
-			if ($distance > 0 && $distance_show == 1)
+			if ($distance > 0 && $distance_show || $sort == 'distance')
 			{
 				$query->where($dexp, "<", $distance);
 			}
-
-		} elseif($sort == 'distance') {
-			// If the longitude or latitude isn't set we can't calculate the distance.
-			$sort = 'rand';
 		}
-
-		//$sql.= "HAVING 1 ";
-
 
 		//******* FILTERS *******
 		if ($category >= 0)
@@ -200,7 +194,10 @@ class Controller_Search extends Controller_Template {
 				break;
 
 			case "distance":
-				$query->order_by("distance", "ASC");
+				if ($longitude && $latitude)
+					$query->order_by("distance", "ASC");
+				else
+					$query->order_by("name");
 				break;
 
 			case "relevance":

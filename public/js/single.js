@@ -1,5 +1,7 @@
 // global variable map, reference to the google maps
 var map = null;
+var placemarkers = new Array();
+var monumentloc = null;
 
 var cache = new Array();
 cache['cafes'] = '';
@@ -11,8 +13,24 @@ cache['flickr'] = '';
  */
 $(document).ready(
 		function() {
-
 			Shadowbox.init();
+			
+            var m = document.getElementById("single-map"),
+            c = m.dataset['map'].split(";"),
+            p = new google.maps.LatLng(c[1], c[0]);
+            monumentloc = p;
+
+	        var options = {
+	          center : p,
+	          zoom : 12,
+	          mapTypeControl : false,
+	          streetViewControl : false,
+	          mapTypeId : google.maps.MapTypeId.ROADMAP
+	        };
+	        
+	        map = new google.maps.Map(m, options);
+	        
+	        new google.maps.Marker({ position : p, map : map});
 			
 			$(".single-nav li a").click(function (e) {				
 				// Get tab
@@ -64,6 +82,9 @@ function rating(r){
 }
 
 function show_content_places(tab) {
+	var bounds = new google.maps.LatLngBounds();
+	bounds.extend(monumentloc);
+	
 	$li = $(".single-nav li ."+tab).parent();
     $li.addClass('active');
 
@@ -72,25 +93,37 @@ function show_content_places(tab) {
         return;
     }
 	
-	if (cache[tab] != '') {
-		$("#ajax_content").empty();
-		$("#ajax_content").html(cache[tab]);
-	}
-	else if (tab == 'cafes') {
+	if (tab == 'cafes') {
 		$("#ajax_content").html("Laden...");
 		$.post(base+'ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'bar|cafe'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+
+			$.each(placemarkers, function(key, marker) {
+				marker.setMap(null);
+			});
+			
 			$.each(data, function(key, cafe) {
 				if (cafe['rating'] == null) {
 					cafe['rating'] = 0;
 				}
-				html += '<tr>';
+				html += '<tr id="cafe'+key+'">';
+				html += '	<td>'+(key + 1)+'</td>';
 				html += '	<td alt="'+cafe.rating+'">' + rating(cafe.rating) + '</td>';
 				html += '	<td>'+cafe.name+'</td>';
 				html += '	<td>'+cafe.vicinity+'</td>';
 				html += '	<td><a href="http://maps.google.nl/maps?q='+cafe.vicinity+'">'+Math.round(cafe.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
-			});
+				
+	            var p = new google.maps.LatLng(cafe.lat, cafe.lng);
+				
+		        var marker = new google.maps.Marker({ position : p, map : map, icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+(key + 1)+'|00AEEF|FFFFFF'});
+
+		    	bounds.extend(p);
+		    	
+		        placemarkers[key] = marker;
+		    });
+
+			map.fitBounds(bounds);
 			
 			if (data.length == 0) {
 				html += '<tr><td>Er zijn helaas geen cafe\'s in de omgeving gevonden.</td></tr>';
@@ -101,23 +134,46 @@ function show_content_places(tab) {
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);
+			
+			$.each(placemarkers, function(key, marker) {
+				$('#cafe'+key).click(function(e) {
+					map.setZoom(15);
+					map.setCenter(marker.getPosition());
+				});
+			});
 		}, "json");
 	}
 	else if (tab == 'restaurants') {
 		$("#ajax_content").html("Laden...");
 		$.post(base+'ajax/single_places', {id_monument: $("#id_monument").val(), categories: 'restaurant'}, succes = function(data) {
 			var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+
+			$.each(placemarkers, function(key, marker) {
+				marker.setMap(null);
+			});
+			
 			$.each(data, function(key, restaurant) {
 				if (restaurant['rating'] == null) {
 					restaurant['rating'] = 0;
 				}
-				html += '<tr>';
+				html += '<tr id="restaurant'+key+'">';
+				html += '	<td>'+(key + 1)+'</td>';
 				html += '	<td alt="'+restaurant.rating+'">' + rating(restaurant.rating) + '</td>';
 				html += '	<td>'+restaurant.name+'</td>';
 				html += '	<td>'+restaurant.vicinity+'</td>';
 				html += '	<td><a href="http://maps.google.nl/maps?q='+restaurant.vicinity+'">'+Math.round(restaurant.distance * 1000)+' meter</a></td>';
 				html += '</tr>';
+				
+	            var p = new google.maps.LatLng(restaurant.lat, restaurant.lng);
+	            
+		        var marker = new google.maps.Marker({ position : p, map : map, icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+(key + 1)+'|00AEEF|FFFFFF'});
+
+		    	bounds.extend(p);
+		    	
+		        placemarkers[key] = marker;
 			});
+
+			map.fitBounds(bounds);
 			
 			if (data.length == 0) {
 				html += '<tr><td>Er zijn helaas geen restaurants in de omgeving gevonden.</td></tr>';
@@ -128,6 +184,13 @@ function show_content_places(tab) {
 			
 			$("#ajax_content").empty();
 			$("#ajax_content").html(html);
+			
+			$.each(placemarkers, function(key, marker) {
+				$('#restaurant'+key).click(function(e) {
+					map.setZoom(15);
+					map.setCenter(marker.getPosition());
+				});
+			});
 		}, "json");
 	}
 }

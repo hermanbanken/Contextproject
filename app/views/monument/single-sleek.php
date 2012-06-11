@@ -48,20 +48,6 @@
 				<div class="map-outer">
 					<div class="map well" id="single-map"
 						data-map="<?php echo $monument->lat . ";" . $monument->lng; ?>">
-						<script type="text/javascript">
-              var m = document.getElementById("single-map"),
-                  c = m.dataset['map'].split(";"),
-                  p = new google.maps.LatLng(c[1], c[0]);
-
-              var options = {
-                center : p,
-                zoom : 12,
-                mapTypeControl : false,
-                streetViewControl : false,
-                mapTypeId : google.maps.MapTypeId.ROADMAP
-              };
-              new google.maps.Marker({ position : p, map : new google.maps.Map(m, options) });
-            </script>
 					</div>
 				</div>
 				<table class="table table-bordered table-striped">
