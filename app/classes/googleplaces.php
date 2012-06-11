@@ -10,9 +10,10 @@
  */
 class GooglePlaces {
 	/**
-	 * Google Places API KEY
+	 * Constants
 	 */
 	const KEY = 'AIzaSyDil96bzN3gQ6LToMoz8ib0Lz39BYmTfko';
+	const MAX_CACHE = 10;
 
 	/**
 	 * Function to get places near monument from Google Places
@@ -30,7 +31,7 @@ class GooglePlaces {
 		$places_orm_query = ORM::factory('place')
 		->where('id_monument', '=', $monument->id_monument)
 		->and_where('categories', '=', $categories)
-		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 10 * 24 * 60 * 60))
+		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - self::MAX_CACHE * 24 * 60 * 60))
 		->order_by('rating', 'desc')
 		->limit($limit);
 
@@ -61,8 +62,8 @@ class GooglePlaces {
 	 * @param double $radius
 	 * @param boolean $sensor
 	 */
-	public static function import($monument, $categories, $rankby, $radius, $sensor) {
-		$response = Request::factory(
+	public static function import($monument, $categories, $rankby, $radius, $sensor) {		
+		$response = file_get_contents(
 				"https://maps.googleapis.com/maps/api/place/search/json".URL::query( array(
 						"location" => $monument->lng.','.$monument->lat,
 						"rankby" => $rankby,
@@ -71,7 +72,7 @@ class GooglePlaces {
 						"key" => self::KEY,
 						"radius" => $rankby != 'distance' ? $radius : null,
 				))
-		)->execute();
+		);
 		
 		$places = @json_decode($response);
 
