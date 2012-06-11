@@ -1,6 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage{graphicx,wrapfig,hyperref}
 \usepackage[hmargin=3.5cm,vmargin=3.0cm]{geometry}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -58,8 +59,24 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
 		
 		\subsubsection{Term Frequency Inverse Document Frequency}
-		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Hoe hoger de waarde is, hoe specifieker het trefwoord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Het tweede deel is Inverse Document Frequency. Dit is inver evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. Inverse Document Frequency wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
+		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Hoe hoger de waarde is, hoe specifieker het trefwoord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. 
+		
+		\begin{equation}
+			TF = (occ / totalocc)
+		\end{equation}
+		
+		Het tweede deel is Inverse Document Frequency. Dit is inver evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. Inverse Document Frequency wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
+		
+		\begin{equation}
+			IDF = log(total / subset)
+		\end{equation}
+		
+		
 		Aan de hand van dit algoritme heeft CultuurApp alle woorden van alle beschrijvingen van alle monumenten geanalyseerd en waarden gegeven. CultuurApp maakt live berekeningen en extraheert geautomatiseerd sleutelwoorden uit de beschrijving door voor ieder woord in de beschrijving van het monument een TFIDF waarde te berekenen en de woorden met de hoogste score worden als sleutelwoord aangewezen.
+		
+		\begin{equation}
+			\text{Score woord} =(occ / totalocc) \cdot log(total / subset)
+		\end{equation}
 		
 		\subsubsection{Tag-cloud}
 		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TFIDF waarde vastgesteld relatief naar de monumenten. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TFIDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. Door willekeurig bovengemiddelde waarden te pakken uit de set, kan een tagcloud worden gemaakt. Woorden met een hogere score krijgen een groter lettertype.
@@ -115,10 +132,21 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 	Helaas werd vrij snel duidelijk dat de visuele analyse van monumenten vaak niet het gewenste resultaat had. Gebouwen worden niet alleen en vaak zelfs juist niet op uiterlijk geselecteerd, maar juist op functie in de maatschappij. Zo wordt een watertoren ingedeeld bij 'Overheidsgebouwen' waar een visueel herkenningssysteem deze eerder zal indelen in de categorie 'Kastelen'. Een percentage hoger dan 20\% is hier helaas nooit gehaald.
 	
 		\subsubsection{Textueel}
-	Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TFIDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TFIDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hierd komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.\\
-	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TFIDF waarde van het sleutelwoord te vermenigvuldigen met de TFIDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. CultuurApp kijkt nu welke categorie het meest waarschijnlijk is en wijst deze categorie toe aan het monument.\\
+	Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TFIDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TFIDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hierd komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
+	
+	\begin{equation}
+		\text{Score woord i category j} = p_{ij} = (occ_{ij} / occ_{i\*}) \cdot log(count(j) / occ_{i\*})
+	\end{equation}
+	
+	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TFIDF waarde van het sleutelwoord te vermenigvuldigen met de TFIDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. 
+	
+	\begin{equation}
+		\text{Categorie van een monument}: max_j(\sum_{i=1}^5 p_{ij}) = max_j(\sum_{i=1}^5 (occ_{ij} / occ_{i\*}) \cdot log(count(j) / occ_{i\*}))
+	\end{equation}
+	
+	CultuurApp kijkt nu welke categorie het meest waarschijnlijk is en wijst deze categorie toe aan het monument.\\
 		\\
-		Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aaan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 4300 categorie\"en juist te voorspellen.
+		Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aaan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 19200 categorie\"en juist te voorspellen.
 		
 	\subsection{Aanbevelingen}
 	Toeristen zoeken naar monumenten die ze interessant vinden, maar willen daarbij ook geprikkeld worden. Monumenten ontdekken, zichzelf verrijken met monumenten die ze zelf niet zouden kunnen vinden. Hiervoor zijn aanbevelingen de uitkomst. Binnen CultuurApp zijn twee plaatsen waar aanbevelingen worden gegeven, namelijk op de profielpagina en bij een monument dat wordt bekeken:
