@@ -32,7 +32,7 @@ return array(
 		'list.monuments' => 'Monuments',
 		'list.selection' => 'Selection',
 		'list.zero-results' => 'Unfortunately no monuments have been found with the current search criteria.',
-		'list.keywordrecommend' => 'Other users also searched for:',
+		'list.keywordrecommend' => 'Other users also searched for:'
 		
 		'selection.category' => 'Category',
 		'selection.sort' => 'Sort',

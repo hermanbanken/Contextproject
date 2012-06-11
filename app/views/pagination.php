@@ -55,12 +55,7 @@ for ($i = $n7; $i <= $n8; $i++)
 }
 ?>
 <?php 
-if (count($links) == 1) {
-?>
-<div style="padding-top: 10px;">Er zijn <?php echo $total_items; ?> monumenten gevonden.</div>
-<?php 
-}
-else {
+if (count($links) > 1) {
 ?>
 <div class="pagination">
 <ul>

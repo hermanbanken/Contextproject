@@ -198,9 +198,8 @@ function show_content_places(tab) {
 
 function show_content_photos(tab) {
 	// Activate right tab in menu
-	$li = $(".single-nav li ."+tab).parent();
+	$li = $(".single-photos-nav li ."+tab).parent();
     $li.addClass('active');
-
 
     // If it is disabled in config, show message
     if($li.hasClass("disabled")) {
