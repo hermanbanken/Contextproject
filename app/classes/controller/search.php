@@ -112,7 +112,7 @@ class Controller_Search extends Controller_Template {
 			// Include bench marks
 			$result['bench'] = (string) View::factory('profiler/stats');
 		} else {
-			$this->repsonse->status(404);
+			$this->response->status(404);
 		}
 
 		// Add view to template
@@ -148,7 +148,7 @@ class Controller_Search extends Controller_Template {
 
 			$query->select(array( $dexp, "distance" ));
 
-			if ($distance > 0 && $distance_show || $sort == 'distance')
+			if ($distance > 0 && $distance_show)
 			{
 				$query->where($dexp, "<", $distance);
 			}
