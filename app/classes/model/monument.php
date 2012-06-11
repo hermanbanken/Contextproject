@@ -99,16 +99,25 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public static function descToSummary($text, $id, $search = false)
 	{
+		$more = " " . HTML::anchor('monument/id/'.$id, __('more'));
 		if($search){
 			$search = preg_replace(array("~[^a-z0-9\s]+~im", "~\s~"), array("", "|"), $search);
 			$success = preg_match("~(^|\s).{0,200}(".$search.").{0,200}(\s|$)~im", $text, $match);
 
 			if($success && !empty($match[0])){
-				return preg_replace("~(".$search.")~im", "<b>$1</b>", $match[0]);
+				return preg_replace(array(
+					"~^\s~",
+					"~\s$~",
+					"~(".$search.")~im"
+				), array(
+					"... ",
+					" ...",
+					"<b>$1</b>"
+				), $match[0]) . $more;
 			}
 		}
 
-		return Text::limit_chars($text, 200, "...", true) . " " . HTML::anchor('monument/id/'.$id, __('more'));
+		return Text::limit_chars($text, 200, "...", true) . $more;
 	}
 
 	/**
