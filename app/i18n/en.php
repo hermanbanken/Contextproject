@@ -117,6 +117,7 @@ return array(
     'register.error.username.unique' => "The username is already used",
     'register.error.email.unique' => "The emailaddress is already used",
     'register.invalidfields' => 'There were errors, please see form below.',
+	'category_extracted' => 'Based on textual analysis of the description of the monument, CultuurApp guesses this category.',
 
 	'more' => "more",
 );
