@@ -7,17 +7,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 	/**
 	 * View to compare images visual
 	 */
-	public function action_test() {
-		$v = View::factory('test');
-		
-		print_r(Recommender::recommend_keywords('molen klokgevel', 5));;
-		
-		$this->template->body = $v;
-	}
-	
-	/**
-	 * View to compare images visual
-	 */
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
 

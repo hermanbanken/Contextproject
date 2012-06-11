@@ -95,7 +95,7 @@ $(document).ready(
 
 // Function to get html string for rating
 function rating(r){
-	var html = '<div class="classification"><div class="cover"></div><div class="percentage" style="width: '+(r * 10)+'%;"></div></div>';
+	var html = '<div class="classification" title="'+r+'"><div class="cover"></div><div class="percentage" style="width: '+(r * 10)+'%;"></div></div>';
 	return html;
 }
 

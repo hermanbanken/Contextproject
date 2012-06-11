@@ -175,7 +175,7 @@ $(function(){
                     $(".pagination").html(response.pagination);
                 	$(".pagination").show();
                 }
-                $(".total").html(response.total);
+                $(".total").html('('+response.total+')');
                 $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
                 

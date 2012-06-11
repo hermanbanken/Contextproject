@@ -62,8 +62,8 @@ class Controller_Search extends Controller_Template {
 		// Set view
 		$result = array();
 
-		$query = $this->query()->select('id_monument');
-
+		$query = $this->query()->select('monuments.id_monument');
+		
 		// Log user info
 		$this->log();
 		
@@ -111,7 +111,7 @@ class Controller_Search extends Controller_Template {
 
 
 			// Include bench marks
-			//$result['bench'] = (string) View::factory('profiler/stats');
+			$result['bench'] = (string) View::factory('profiler/stats');
 		} else {
 			$this->response->status(404);
 		}
@@ -137,7 +137,7 @@ class Controller_Search extends Controller_Template {
 		extract($params);
 
 		$query = DB::select_array($fields)->from("monuments");
-
+		
 		//****** FIELDS ********
 		if ($longitude && $latitude)
 		{
@@ -183,6 +183,8 @@ class Controller_Search extends Controller_Template {
 			}
 		}
 
+		$query->group_by('monuments.id_monument');
+		
 		//****** ORDERING ********
 		switch ($sort)
 		{
@@ -192,6 +194,10 @@ class Controller_Search extends Controller_Template {
 
 			case "name":
 				$query->order_by("name");
+				break;
+
+			case "popularity":
+				$query->order_by("popularity");
 				break;
 
 			case "distance":

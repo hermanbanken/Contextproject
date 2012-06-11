@@ -10,6 +10,33 @@
  */
 class Importer {
 	/**
+	 * Function to import the popularity of each monument
+	 * This should be included in a cronjob and executes every hour
+	 * 
+	 * @return int aantal monumenten
+	 */
+	public static function popularity() {
+		$query = DB::select('monuments.id_monument')
+		->select(array(DB::expr("(3 * COUNT(dev_visits.id) + 2 * COUNT(id_log) + COUNT(dev_venues.id))"), "new_popularity"))
+		->from('monuments')
+		->join('logs_monuments', 'left')->on('logs_monuments.id_monument', '=', 'monuments.id_monument')
+		->join('visits', 'left')->on('visits.id_monument', '=', 'monuments.id_monument')
+		->join('venues', 'left')->on('venues.id_monument', '=', 'monuments.id_monument')
+		->having('new_popularity', '!=', 'popularity')
+		->group_by('monuments.id_monument')
+		->execute();
+		
+		foreach ($query AS $monument) {
+			$query = DB::update('monuments')
+			->set(array('popularity' => $monument['new_popularity']))
+			->where('id_monument', '=', $monument['id_monument'])
+			->execute();
+		}
+		
+		return count($query);
+	}
+	
+	/**
 	 * Function to import monuments from the folder "files/monuments"
 	 * Files should be xml-files named {id_monument}.xml
 	 *
