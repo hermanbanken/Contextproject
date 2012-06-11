@@ -49,7 +49,7 @@ class Wunderground {
 	 * 
 	 * @param monument $monument
 	 */
-	public static function import($monument) {
+	private static function import($monument) {
 		// Request data from wunderground with our key
 		$base_url = "http://api.wunderground.com/api/%s/forecast/lang:NL/q/%s,%s.json";
 		$url = sprintf($base_url, self::KEY, $monument->lng, $monument->lat);
