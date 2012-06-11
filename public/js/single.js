@@ -32,6 +32,14 @@ $(document).ready(
 	        
 	        new google.maps.Marker({ position : p, map : map});
 			
+			// highlight search string
+			if(document.location.hash.length>0) {
+				var searchstring = document.location.hash.substring(1);
+				searchstring = '('+searchstring.replace(/[\s]+/gi,')|(')+')';
+				var regex = new RegExp(searchstring,'ig');
+				$('.description').html($('.description').html().replace(regex,'<span style="font-weight:bold">$&</span>'));
+			}
+			
 			$(".single-nav li a").click(function (e) {				
 				// Get tab
 				var tab_places = $(this).attr('class');

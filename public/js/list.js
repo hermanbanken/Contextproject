@@ -177,7 +177,7 @@ $(function(){
                 $.map(response.monuments, function(monument, i){
                     $html = $template.clone();
 
-                    $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
+					$html.find("a").attr("href", base+"monument/id/"+monument.id_monument + "#" + getParameter('search'));
                     $html.find("img").attr("src", monument.photoUrl);
                     $html.find(".summary").html(monument.summary);
                     $html.find(".name a").text(monument.name);
