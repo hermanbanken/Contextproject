@@ -6,12 +6,12 @@
  * Recommend monuments depedend on user or monument
  * @package CultuurApp
  * @category Helpers
- * @author Rutger Plak
+ * @author Sjoerd van Bekhoven
  */
 class Recommender {
 	/**
 	 * Get recommended monuments based on user history
-	 * 
+	 *
 	 * @param int $limit
 	 * @return monuments $monuments
 	 */
@@ -35,7 +35,7 @@ class Recommender {
 
 			// Find number of matches between monuments of own tracker and other tracker
 			$score = self::matches($monuments, $amonuments);
-			
+
 			// If score is larger then max score, enlarge max score, save similar monuments and save tracker
 			if ($score > $max_score) {
 				$max_score = $score;
@@ -57,7 +57,7 @@ class Recommender {
 	/**
 	 * Get recommended monuments for a monument
 	 * based on all users history
-	 * 
+	 *
 	 * @param monument $monument
 	 * @param int $limit
 	 */
@@ -79,13 +79,13 @@ class Recommender {
 		// Init array and similarstracker
 		$ids = array();
 		$similarstracker = ORM::factory('tracker');
-		
+
 		// If tracker is found, update similarstracker and get ids of other monuments in tracker
 		if (isset($tracker[0])) {
 			$similarstracker = ORM::factory('tracker', $tracker[0]['id_tracker']);
 			$ids = $similarstracker->monuments();
 		}
-		
+
 		// Remove current monument
 		unset($ids[array_search($monument->id_monument, $ids)]);
 
@@ -97,8 +97,58 @@ class Recommender {
 	}
 
 	/**
+	 * Get recommended keywords based on keywords
+	 *
+	 * @param monument $monument
+	 * @param int $limit
+	 */
+	public static function recommend_keywords($keywords, $limit) {
+		$atracker = ORM::factory('tracker')->tracker();
+
+		$recommendations = array();
+		$keywords = explode(' ', $keywords);
+		
+		if (count($keywords) > 0) {
+			foreach ($keywords AS $keyword) {
+				$trackers = DB::select('id_tracker')
+				->distinct(true)
+				->from('logs_keywords')
+				->join('logs')->on('logs.id_log', '=', 'logs_keywords.id_log')
+				->where('value', '=', $keyword)
+				->where('id_tracker', '!=', $atracker->id_tracker)
+				->order_by(DB::expr('RAND()'))
+				->execute();
+
+				foreach ($trackers AS $tracker) {
+					$tracker = ORM::factory('tracker', $tracker['id_tracker']);
+
+					$akeywords = $tracker->keywords();
+					
+					foreach ($akeywords AS $akeyword) {
+						if (!in_array($akeyword, $recommendations) && !in_array($akeyword, $keywords)) {
+							$recommendations[] = $akeyword;
+						}
+					}
+				}
+			}
+		}
+
+		shuffle($recommendations);
+
+		$return = array();
+		$i = 0;
+		foreach ($recommendations AS $keyword) {
+			$return[] = $keyword;
+			$i++;
+			if ($i == $limit) break;
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Create ordered query based on an array of ids and limit
-	 * 
+	 *
 	 * @param array $ids
 	 * @param int $limit
 	 */
@@ -136,7 +186,7 @@ class Recommender {
 	/**
 	 * Remove matches of array $new
 	 * and return $new array
-	 * 
+	 *
 	 * @param array $original
 	 * @param arary $new
 	 */
@@ -155,14 +205,14 @@ class Recommender {
 
 	/**
 	 * Number of matches between two strings
-	 * 
+	 *
 	 * @param array $arr1
 	 * @param array $arr2
 	 */
 	public static function matches($arr1, $arr2) {
 		// Standard score is zero
 		$score = 0;
-		
+
 		// For each match between two arrays, increment score
 		foreach ($arr1 AS $id) {
 			if (array_search($id, $arr2)) {

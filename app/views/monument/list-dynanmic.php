@@ -1,8 +1,9 @@
 <div class="container-fluid" id="list">
 	<div class="row-fluid">
 		<div class="span9">
-			<h1 style="margin-bottom: 10px;"><?php echo __('list.monuments'); ?></h1>
+			<h1 style="margin-bottom: 10px;"><?php echo __('list.monuments'); ?> <span class="total"></span></h1>
 
+			<div style="display: none;" class="recommendations alert alert-info"><?php echo __('list.keywordrecommend'); ?> <span class="keywords"></span></div>
 			<div class='pagination'></div>
 			<div class="monument-list container-fluid list-container" style="padding: 0;">
 				<div class="loading"></div>

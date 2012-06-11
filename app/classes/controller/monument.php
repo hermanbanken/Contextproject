@@ -3,7 +3,7 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
-
+	
 	/**
 	 * View to compare images visual
 	 */
@@ -88,7 +88,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$p = Arr::overwrite($p, $this->request->query());
 		}
 		// Get provinces and categories for selection
-		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('name', '!=', 'N.V.T.')->order_by('name')->find_all();
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
@@ -414,7 +414,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
-		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('name', '!=', 'N.V.T.')->order_by('name')->find_all();
 
 		$tags = TextualMagic::tagcloud(20);
 		// create the view

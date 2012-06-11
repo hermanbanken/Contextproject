@@ -17,6 +17,20 @@ class Controller_Import extends Controller_Abstract_Object {
 	}
 	
 	/**
+	 * Import popularity (cronjob happens once per hour)
+	 */
+	public function action_popularity() {
+		$v = View::factory('import');
+
+		$count = Importer::popularity();
+		
+		$v->set('type', 'popularity');
+		$v->set('count', $count);
+		
+		$this->template->body = $v;
+	}
+	
+	/**
 	 * Import tags
 	 */
 	public function action_tags() {

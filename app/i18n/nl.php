@@ -32,6 +32,7 @@ return array (
 		'list.monuments' => 'Monumenten',
 		'list.selection' => 'Selectie',
 		'list.zero-results' => 'Er zijn helaas geen monumenten gevonden met de huidige zoekcriteria.',
+		'list.keywordrecommend' => 'Andere gebruikers zochten ook naar:',
 
 		'selection.category' => 'Categorie',
 		'selection.sort' => 'Sorteer',

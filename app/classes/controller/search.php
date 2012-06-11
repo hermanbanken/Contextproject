@@ -62,8 +62,8 @@ class Controller_Search extends Controller_Template {
 		// Set view
 		$result = array();
 
-		$query = $this->query()->select('id_monument');
-
+		$query = $this->query()->select('monuments.id_monument');
+		
 		// Log user info
 		$this->log();
 		
@@ -107,6 +107,7 @@ class Controller_Search extends Controller_Template {
 
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
+			$result['keywordrecommend'] = Recommender::recommend_keywords($this->_params['search'], 5);
 
 
 			// Include bench marks
@@ -136,7 +137,7 @@ class Controller_Search extends Controller_Template {
 		extract($params);
 
 		$query = DB::select_array($fields)->from("monuments");
-
+		
 		//****** FIELDS ********
 		if ($longitude && $latitude)
 		{
@@ -182,6 +183,8 @@ class Controller_Search extends Controller_Template {
 			}
 		}
 
+		$query->group_by('monuments.id_monument');
+		
 		//****** ORDERING ********
 		switch ($sort)
 		{
@@ -191,6 +194,10 @@ class Controller_Search extends Controller_Template {
 
 			case "name":
 				$query->order_by("name");
+				break;
+
+			case "popularity":
+				$query->order_by("popularity");
 				break;
 
 			case "distance":

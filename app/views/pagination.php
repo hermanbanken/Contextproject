@@ -53,7 +53,9 @@ for ($i = $n7; $i <= $n8; $i++)
 {
 	$links[$i] = $i;
 }
-
+?>
+<?php 
+if (count($links) > 1) {
 ?>
 <div class="pagination">
 <ul>
@@ -84,3 +86,6 @@ for ($i = $n7; $i <= $n8; $i++)
 	<?php endif ?>
 </ul>
 </div><!-- .pagination -->
+<?php 
+}
+?>

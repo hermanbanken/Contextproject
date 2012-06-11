@@ -42,11 +42,11 @@ class PrepareTestDB {
 			 ->values( array(2, "tagcontent2", 200, 0.22))
 			 ->values( array(3, "tag3", 3000, 0.13))
 			 ->values( array(4, "tagcontent4", 10, 0.31))
-			 ->values( array(5, "tagcontent5", 10, 0.31))
-			 ->values( array(6, "tagcontent6", 10, 0.31))
-			 ->values( array(7, "tagcontent7", 10, 0.31))
-			 ->values( array(8, "tagcontent8", 10, 0.31))
-			 ->values( array(9, "tagcontent9", 10, 0.31))
+			 ->values( array(5, "tagcontent5", 10, 0.32))
+			 ->values( array(6, "tagcontent6", 10, 0.33))
+			 ->values( array(7, "tagcontent7", 10, 0.34))
+			 ->values( array(8, "tagcontent8", 10, 0.35))
+			 ->values( array(9, "tagcontent9", 10, 0.36))
 			 ->execute();
 
 			 //tag monument links
@@ -93,17 +93,18 @@ class PrepareTestDB {
 			 
 			 //monuments
 			 DB::insert("monuments", array('id_monument', 'id_category', 'id_subcategory', 'name', 'id_province', 'id_municipality', 'id_town', 'id_street', 'streetNumber', 'zipCode', 'id_function', 'description_commons', 'description', 'lng', 'lat', 'category_extracted'))
-			 ->values(array(1,1,1,"test monument", 1, 1, 1, 1, '31', '1234AB', 1, "description commons", "description", 10.5, 10.5, 0))
-			 ->values(array(2,1,1,"test monument2", 1, 1, 1, 1, '32', '1234CD', 1, "description commons2", "description2", 10.2, 10.2, 0))
-			 ->values(array(3,1,1,"test monument3", 1, 1, 1, 1, '32', '1234EF', 1, "description commons3", "description3", 10.3, 10.3, 0))
-			 ->values(array(4,1,1,"test monument4", 1, 1, 1, 1, '32', '1234GH', 1, "description commons4", "vertaling", 10.3, 10.3, 0))
+			 ->values(array(1,1,1,"test monument", 1, 1, 1, 1, '31', '1234AB', 1, "description commons", "description", 50.5, 50.5, 0))
+			 ->values(array(2,1,1,"test monument2", 1, 1, 1, 1, '32', '1234CD', 1, "description commons2", "description2", 100.2, 100.2, 0))
+			 ->values(array(3,1,1,"test monument3", 1, 1, 3, 1, '32', '1234EF', 1, "description commons3", "description3", 10.3, 10.3, 0))
+			 ->values(array(4,1,1,"test monument4", 1, 1, 3, 1, '32', '1234GH', 1, "description commons4", "vertaling", 10.3, 10.3, 0))
+			 ->values(array(5,1,1,"test monument5", 1, 1, '', 1, '32', '1234IJ', 1, "description commons5", "description5", '', '', 0))
 			 ->execute();
 			 
-
+	}
 			
 			
 			
 			
-	   }
+	   
 }
 ?>

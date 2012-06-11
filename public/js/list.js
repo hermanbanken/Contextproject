@@ -168,9 +168,29 @@ $(function(){
                 empty.hide();
 
                 // Update side elements like pagination and benchmarks, start load of tagcloud
-                $(".pagination").html(response.pagination);
+                if (response.pagination == '') {
+                	$(".pagination").hide();
+                }
+                else {
+                    $(".pagination").html(response.pagination);
+                	$(".pagination").show();
+                }
+                $(".total").html('('+response.total+')');
                 $(".tagcloud").load(base+"search/cloud").ajaxStart(function(){ $(this).animate({opacity:.05}, 300); }).ajaxStop(function(){ $(this).animate({opacity:1}, 300); });
                 $(".bench").html(response.bench);
+                
+                if (response.keywordrecommend.length != 0) {
+	                var keywords = '';
+	                $.each(response.keywordrecommend, function (key, keyword) {
+	                	keywords += '<a href="'+base+'monument/list?search='+keyword+'">'+keyword+'</a> ';
+	                });
+	                
+                	$(".keywords").html(keywords);
+                	$(".recommendations").show();
+            	}
+		        else {
+		        	$(".recommendations").hide();
+		        }	
 
                 // Clear old monuments
                 $(".monument-list .list-row.monument").remove();
@@ -178,7 +198,7 @@ $(function(){
                 $.map(response.monuments, function(monument, i){
                     $html = $template.clone();
 
-                    $html.find("a").attr("href", base+"monument/id/"+monument.id_monument);
+					$html.find("a").attr("href", base+"monument/id/"+monument.id_monument + "#" + getParameter('search'));
                     $html.find("img").attr("src", monument.photoUrl);
                     $html.find(".summary").html(monument.summary);
                     $html.find(".name a").text(monument.name);
