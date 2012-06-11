@@ -97,7 +97,9 @@ class Controller_Search extends Controller_Template {
 			$result['monuments'] = array();
 			foreach($monuments as $m){
 				$monument = ORM::factory("monument", $m['id_monument']);
+				$d = $m['distance'];
 				$m = $monument->object();
+				$m['distance'] = $d;
 				$m['photoUrl'] = $monument->photoUrl();
 				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
