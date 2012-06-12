@@ -19,3 +19,4 @@ test/monument.sql
 .gitignore
 /public/.htaccess
 /.project
+/inschrijven/

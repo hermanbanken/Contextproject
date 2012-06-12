@@ -33,6 +33,7 @@ class GooglePlaces {
 		->and_where('categories', '=', $categories)
 		->and_where('cachedOn', '>', date('Y-m-d H:i:s', mktime(0, 0, 0, date('n'), date('j'), date('Y')) - self::MAX_CACHE * 24 * 60 * 60))
 		->order_by('rating', 'desc')
+		->order_by('distance', 'asc')
 		->limit($limit);
 
 		// Execute query (reset = false, so we can use it at later time)
@@ -92,6 +93,7 @@ class GooglePlaces {
 			$place_orm->name = $place->name;
 			$place_orm->lng = $loc->lng;
 			$place_orm->lat = $loc->lat;
+			$place_orm->distance = GooglePlaces::distance($loc->lat, $loc->lng, $monument->lng, $monument->lat, "K");
 			$place_orm->rating = $rating;
 			$place_orm->save();
 		}

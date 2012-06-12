@@ -75,10 +75,36 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	);
 
 	/**
+	 * Get name of monument
+	 *
+	 * @return string name
+	 */
+	public function name() {
+		if ($this->name_object != NULL) {
+			return $this->name_object;
+		}
+		else {
+			return $this->name;
+		}
+	}
+
+	/**
 	 * @return mixed url of photo
 	 */
 	public function photoUrl(){
 		return ORM::factory('photo')->url($this->id_monument);
+	}
+
+	/**
+	 * @return mixed thumb url of photo
+	 */
+	public function thumbUrl(){
+		if ($this->thumb != NULL) {
+			return $this->thumb;
+		}
+		else {
+			return ORM::factory('photo')->url($this->id_monument);
+		}
 	}
 
 	/**
@@ -209,6 +235,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	`id_category` int(10) NULL,
 	`id_subcategory` int(10) NULL,
 	`name` varchar(200) NULL,
+	`name_object` varchar(200) NULL,
 	`id_street` int(10) NULL,
 	`id_town` int(10) NULL,
 	`id_municipality` int(10) NULL,
@@ -222,6 +249,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	`lng` double(10,5) NULL,
 	`lat` double(10,5) NULL,
 	`category_extracted` tinyint(4) NOT NULL DEFAULT '0',
+	`thumb` varchar(500) NULL,
+	`image` varchar(500) NULL,
 	PRIMARY KEY (`id_monument`),
 	KEY `id_category` (`id_category`),
 	KEY `id_subcategory` (`id_subcategory`),

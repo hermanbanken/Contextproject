@@ -180,13 +180,13 @@ function placePins(locations) {
 						// Add right source to image
 						$.getJSON('monument/id/'+locations[i][0], function (data) {
 							var id = locations[i][0];
-							var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
+//							var desc = data.description.replace(/^(.{170,200})[\.\,\s](.*)/, "$1... ");
 							var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
 							infowindow.setContent(
 							  "<a href='monument/id/"+id+"' >" +
 							  "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
 							  "<h2>" + data.name + "</h2></a>" +
-							  "<p>"+desc+"<a href='monument/id/"+id+"'>Meer</a></p>"
+							  "<p>"+data.summary+"<a href='monument/id/"+id+"'>Meer</a></p>"
 							);
 							infowindow.open(map, marker);
 						});

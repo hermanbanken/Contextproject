@@ -43,6 +43,7 @@ return array (
 		'selection.relevance' => 'Relevantie',
 		'selection.distance' => 'Afstand',
 		'selection.popularity' => 'Populariteit',
+		'selection.year' => 'Bouwjaar',
 
 		'foursquare.form.header' => 'Voeg FourSquare-plaats toe',
 		'foursquare.form.legend' => 'Maak een plaats op FourSquare en koppel deze met deze monumentpagina.',

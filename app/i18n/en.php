@@ -43,6 +43,7 @@ return array(
 		'selection.relevance' => 'Relevance',
 		'selection.distance' => 'Distance',
 		'selection.popularity' => 'Popularity',
+		'selection.year' => 'Year of building',
 
 		'foursquare.form.header' => 'Add FourSquare venue',
 		'foursquare.form.legend' => 'Make a FourSquare venue for this monument',

@@ -100,7 +100,8 @@ class Controller_Search extends Controller_Template {
 				$d = @$m['distance'];
 				$m = $monument->object();
 				$m['distance'] = $d;
-				$m['photoUrl'] = $monument->photoUrl();
+				$m['photoUrl'] = $monument->thumbUrl();
+				$m['name'] = $monument->name();
 				$m['summary'] = $monument->summary();
 				$result['monuments'][] = $m;
 			}
@@ -194,6 +195,10 @@ class Controller_Search extends Controller_Template {
 
 			case "name":
 				$query->order_by("name");
+				break;
+
+			case "year":
+				$query->order_by("year", 'DESC');
 				break;
 
 			case "popularity":

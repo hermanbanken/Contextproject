@@ -59,7 +59,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 
 			$monuments = array();
 			foreach ($recommendations['monuments'] AS $key => $monument) {
-				$url = $monument->photoUrl();
+				$url = $monument->thumbUrl();
 				$monuments[$key] = $monument->as_array();
 				$monuments[$key]['photo_url'] = $url;
 				$monuments[$key]['recommendedwhy'] = ORM::factory('user', $recommendations['tracker']->id_user)->username;
@@ -140,10 +140,7 @@ class Controller_Ajax extends Kohana_Controller_Template {
 			// Translate places to array
 			$return_places = array();
 			foreach ($places AS $key => $place) {
-				$distance = GooglePlaces::distance($place->lat, $place->lng, $monument->lng, $monument->lat, 'K');
-				
 				$return_places[$key] = $place->as_array();
-				$return_places[$key]['distance'] = $distance;
 			}
 			
 			$this->return = $return_places;

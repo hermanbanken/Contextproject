@@ -7,6 +7,18 @@ class Controller_Monument extends Controller_Abstract_Object {
 	/**
 	 * View to compare images visual
 	 */
+	public function action_popularity() {
+		$v = View::factory('test');
+		set_time_limit(0);
+		
+		echo '<pre>'.var_dump(Rijksmonumenten::monument(ORM::factory('monument', 20390)), true).'</pre>';
+		
+		$this->template->body = $v;
+	}
+	
+	/**
+	 * View to compare images visual
+	 */
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
 
@@ -115,26 +127,28 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_id()
 	{
 		$this->js("ca-single", "js/single.js", true);
-
-		$id = $this->request->param('id');
-		$user = Auth::instance()->get_user();
-		$monument = ORM::factory('monument', $id);
-		$forecasts = $monument->forecast();
 		
-		// Log monument
-		Logger::instance()->monument($monument);
-
+		$id = $this->request->param('id');
+		$monument = ORM::factory('monument', $id);
+			
 		if(!$monument->loaded())
 			throw new HTTP_Exception_404(__('monument.notfound'));
 
 		if($this->is_json())
 		{
 			$obj = $monument->object();
-			$obj['photoUrl'] = $monument->photoUrl();
+			$obj['photoUrl'] = $monument->thumbUrl();
+			$obj['summary'] = $monument->summary();
 			$this->set_json(json_encode($obj));
 		}
 		else
 		{
+			$user = Auth::instance()->get_user();
+			$forecasts = $monument->forecast();
+			
+			// Log monument
+			Logger::instance()->monument($monument);
+		
 			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);

@@ -4,7 +4,7 @@
 		<div class="span8 monument-single-overview">
 
 			<h1>
-				<?php echo $monument->name; ?>
+				<?php echo $monument->name(); ?>
 			</h1>
 			<p>
 			
