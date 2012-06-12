@@ -102,7 +102,7 @@ class Controller_Search extends Controller_Template {
 				$m['distance'] = $d;
 				$m['photoUrl'] = $monument->thumbUrl();
 				$m['name'] = $monument->name();
-				$m['summary'] = $monument->summary();
+				$m['summary'] = $monument->summary($this->parameter("search"));
 				$result['monuments'][] = $m;
 			}
 
@@ -112,7 +112,7 @@ class Controller_Search extends Controller_Template {
 
 
 			// Include bench marks
-			$result['bench'] = (string) View::factory('profiler/stats');
+			// $result['bench'] = (string) View::factory('profiler/stats');
 		} else {
 			$this->response->status(404);
 		}
@@ -195,10 +195,6 @@ class Controller_Search extends Controller_Template {
 
 			case "name":
 				$query->order_by("name");
-				break;
-
-			case "year":
-				$query->order_by("year", 'DESC');
 				break;
 
 			case "popularity":

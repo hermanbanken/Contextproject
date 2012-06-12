@@ -223,7 +223,7 @@ $(function(){
                 $(".monument-list .monument").animate({ opacity:.7});
             },
             complete: function() {
-                $(".loading").animate({ opacity: 0}, 200).animate({opacity: 0, display: "none"}, 1);
+                $(".loading").animate({ opacity: 0}, 200, function(){ $(this).css({display: "none"}); });
                 $(".monument-list .monument").animate({ opacity: 1});
             }
         });
