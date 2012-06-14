@@ -13,7 +13,7 @@ class Flickr {
 	 * Constants
 	 */
 	const KEY = 'e0ee3695155f9647a3d645aa6d3c0d2a';
-	const MAX_CACHE = 5;
+	const MAX_CACHE = 10;
 
 	/**
 	 * Function to get flickrphotos from neighbourhood of monument
