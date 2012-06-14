@@ -39,6 +39,10 @@
 				}
 				?>
             </ul>
+			<form style="float: right;" class="navbar-search" method="get" <?php if(preg_match('/\/id\/[0-9]+/i', Request::detect_uri())) echo 'action="'.URL::site('monument/list').'"';?>>
+                <input type="text" name="search" class="search-query span3" placeholder="<?php echo __('selection.search')?>">
+                <div class="icon-search"></div>
+            </form>
           </div>
 	      <?php echo Request::factory("localize/menu")->execute(); ?>
           <?php echo Request::factory("user/menu")->execute(); ?>
