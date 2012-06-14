@@ -124,7 +124,7 @@ var exports = exports | {};
                 var style = "float: left; margin-right: 10px; margin-top: 3px; ";
                 
                 $mon = $("<li class='monument'><a><h2></h2><img class='map-info-photo' style='"+style+"' /></a><p></p></li>");
-                $mon.find("a").attr('href', monument.photoUrl);
+                $mon.find("a").attr('href', base+"monument/id/"+id);
                 $mon.find("h2").text(monument.name);
                 $mon.find("img").attr('src', monument.photoUrl).attr('id', 'photo'+id);
                 $mon.find("p").html(monument.summary);
