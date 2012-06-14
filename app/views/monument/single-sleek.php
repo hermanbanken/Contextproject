@@ -35,8 +35,9 @@
 			<div class='description'>
 			<?php echo str_replace("\n\n", "</p><p>", $monument->description); ?>
 			</div>
-			</p>
 
+			</p>
+			<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
 		</div>
 
 		<div class="span4 monument-single-details">

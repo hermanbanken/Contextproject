@@ -152,7 +152,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$meta = array(
 				"og:title" => $monument->name(),
 				"og:url" => URL::site("monument/id/".$monument->id_monument, "http"),
-				"og:type" => "monument",
+				"og:type" => "cultuurapp:monument",
 				"og:image" => URL::site($monument->photoUrl(), "http"),
 				"og:description" => $monument->description,
 				"cultuurapp:location:longitude" => $monument->lat,
@@ -162,6 +162,17 @@ class Controller_Monument extends Controller_Abstract_Object {
 			foreach($meta as $prop => $val){
 				$this->snippet($prop, sprintf("<meta property='$prop' content='%s' />", addslashes($val)));
 			}
+			$this->snippet(
+				"facebook-api",
+				"<div id='fb-root'></div> <script>(function(d, s, id) {
+					  var js, fjs = d.getElementsByTagName(s)[0];
+					  if (d.getElementById(id)) return;
+					  js = d.createElement(s); js.id = id;
+					  js.src = '//connect.facebook.net/nl_NL/all.js#xfbml=1&appId=297097407038174';
+					  fjs.parentNode.insertBefore(js, fjs);
+					}(document, 'script', 'facebook-jssdk'));
+				</script>"
+			);
 
 			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
