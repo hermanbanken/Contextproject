@@ -10,6 +10,7 @@ class Controller_Template extends Kohana_Controller_Template {
 
 	private $css = array();
 	private $js = array();
+	private $snip = array();
 	
 	/**
 	 * before
@@ -87,7 +88,19 @@ class Controller_Template extends Kohana_Controller_Template {
 		$src = file_exists(DOCROOT.$file) ? URL::site($file."?v=".time()) : $file;
 		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
 		return $this;
-	} 
+	}
+
+	/**
+	 * Add a snippet to the dom of the layout
+	 * @param $name
+	 * @param $html
+	 * @param bool $head
+	 */
+	public function snippet($name, $html, $head = true)
+	{
+		$this->snip[$name] = array($head, $html);
+		return $this;
+	}
 	
 	public function after(){
 		// Prepare javascript includes
@@ -105,6 +118,13 @@ class Controller_Template extends Kohana_Controller_Template {
 		$css = array();
 		foreach($this->css as $c){
 			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href']."?v=".time(), $c['media']);
+		}
+
+		foreach($this->snip as $s){
+			if($s[0])
+				$js_head[] = $s[1];
+			else
+				$js_foot[] = $s[1];
 		}
 		
 		$js_head = implode("\n", $js_head);

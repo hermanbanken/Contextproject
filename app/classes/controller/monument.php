@@ -148,7 +148,21 @@ class Controller_Monument extends Controller_Abstract_Object {
 			
 			// Log monument
 			Logger::instance()->monument($monument);
-		
+
+			$meta = array(
+				"og:title" => $monument->name(),
+				"og:url" => URL::site("monument/id/".$monument->id_monument, "http"),
+				"og:type" => "monument",
+				"og:image" => $monument->photoUrl(),
+				"og:description" => $monument->description,
+				"cultuurapp:location:longitude" => $monument->lat,
+				"cultuurapp:location:latitude" => $monument->lng,
+				"cultuurapp:location:altitude" => "0"
+			);
+			foreach($meta as $prop => $val){
+				$this->snippet($prop, sprintf("<meta property='$prop' content='%s' />", addslashes($val)));
+			}
+
 			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
