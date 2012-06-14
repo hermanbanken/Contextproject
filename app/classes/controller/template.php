@@ -114,6 +114,9 @@ class Controller_Template extends Kohana_Controller_Template {
 		View::set_global('js_head', $js_head);
 		View::set_global('js_foot', $js_foot);
 		View::set_global('css', $css);
+
+		$class = Request::$initial->controller() . " " . Request::$initial->controller() . "-" . Request::$initial->action();
+		$this->template->set("class", $class);
 		
 		parent::after();
 	}
