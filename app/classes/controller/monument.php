@@ -153,7 +153,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 				"og:title" => $monument->name(),
 				"og:url" => URL::site("monument/id/".$monument->id_monument, "http"),
 				"og:type" => "monument",
-				"og:image" => $monument->photoUrl(),
+				"og:image" => URL::site($monument->photoUrl(), "http"),
 				"og:description" => $monument->description,
 				"cultuurapp:location:longitude" => $monument->lat,
 				"cultuurapp:location:latitude" => $monument->lng,
