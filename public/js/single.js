@@ -47,6 +47,9 @@ $(document).ready(
 				var regex = new RegExp(searchstring,'ig');
 				$('.description').html($('.description').html().replace(regex,'<span style="font-weight:bold">$&</span>'));
 			}
+
+			// Load weather
+			$(".forecast .well").load(base+"weather/monument/"+$("#id_monument").val());
 			
 			// Click event for places nav
 			$(".single-nav li a").click(function (e) {				

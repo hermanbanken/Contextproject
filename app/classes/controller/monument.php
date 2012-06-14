@@ -145,7 +145,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		else
 		{
 			$user = Auth::instance()->get_user();
-			$forecasts = $monument->forecast();
 			
 			// Log monument
 			Logger::instance()->monument($monument);
@@ -153,7 +152,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
-			$v->bind('forecasts', $forecasts);
 			$this->template->body = $v;
 		}
 	}
