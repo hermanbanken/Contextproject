@@ -307,14 +307,15 @@ function drawMagic(){
                 var newX = stars[i].attr("x");
                 stars[i].attr("x", Math.max(Math.min(pos[i][0] + pos[i][2], newX), pos[i][0] - pos[i][2]));
                 stars[i].attr({x:0, y:0});
+                stars[i].rotate(Math.PI/20);
             }
         })();
 
-        (function color(fg, bg, stars){
+        (function color(fg, bg, stars_color){
             wand_bg.attr({fill: bg, stroke: fg});
             wand_fg.attr({fill: fg, stroke: "none"});
-            stars.attr({fill: stars, stroke: "none"});
-        })("#444", "#fff", "#444");
+            stars.attr({fill: stars_color, stroke: "none"});
+        })("#444", "#fff", "#ff0");
 
         (function tick(){
             setTimeout(tick, 1000);

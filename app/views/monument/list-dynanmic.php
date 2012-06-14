@@ -84,3 +84,18 @@
 		});
 	</script>
 </div>
+
+<div class="background-drawing"></div>
+<script>
+	$(function(){
+		$(".background-drawing").appendTo($(".background"));
+		var paper = Raphael($(".background-drawing").get(0), "100%", "100%");
+
+		// Draw sky
+		paper.add([{
+			type: "rect", x: 0, y: 0, width: "100%", height: "100%",
+			fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
+		// Draw grass
+		paper.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
+	});
+</script>

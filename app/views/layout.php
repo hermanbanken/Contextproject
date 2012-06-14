@@ -18,7 +18,7 @@
 	);
 
 ?>
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
+<body data-spy="scroll" data-target=".subnav" data-offset="50" class="<?php echo $class; ?>">
 	<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -45,7 +45,7 @@
       	</div>
 	  </div>
     </div>
-	<div class='page'>
+	<div class='page page-<?php echo Request::$initial->action(); ?>'>
     <div class="container">
 	<?php
 	/*
@@ -69,5 +69,6 @@
        echo View::factory('profiler/stats');
     }
 ?>
+<div class='background'></div>
 </body>
 </html>
