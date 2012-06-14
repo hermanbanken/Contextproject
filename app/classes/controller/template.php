@@ -10,6 +10,7 @@ class Controller_Template extends Kohana_Controller_Template {
 
 	private $css = array();
 	private $js = array();
+	private $snip = array();
 	
 	/**
 	 * before
@@ -28,19 +29,19 @@ class Controller_Template extends Kohana_Controller_Template {
 			//->less('lib/bootstrap/less/bootstrap.less')
 			//->less('lib/bootstrap/less/responsive.less')
 			->css('css/jquery-ui-1.8.19.custom.css')
+			->css('css/shadowbox.css')
 			->less('lib/bootstrap/docs/assets/css/docs.css')
 			->less('css/app.less')
 			->js('Less.js', 'js/lib/less-1.3.0.min.js', true)
 			->js('jquery', 'js/lib/jquery-1.7.2.min.js', true)
+			->js('shadowbox', 'js/lib/shadowbox.js', true)
 			->js('raphael', 'js/lib/raphael-min.js', true)
 			->js('iscroll', 'js/lib/iscroll.js', true)
 			->js('jquery-ui', 'js/lib/jquery-ui-1.8.19.custom.min.js', true)
 			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&sensor=true', true)
 			->js('selection', 'js/selection.js', true)
 			->js('ca-application', 'js/app.js', true)
-			->js('single-gmaps', 'js/single.js', true)
 			->js('clusterer', 'js/lib/markerclusterer.js', true)
-			//->js('ca-list', 'js/list.js', true)
 			->js('bootstrap-alert', 'lib/bootstrap/js/bootstrap-alert.js')
 			->js('bootstrap-dropdown', 'lib/bootstrap/js/bootstrap-dropdown.js')
 			->js('bootstrap-collapse', 'lib/bootstrap/js/bootstrap-collapse.js')
@@ -87,7 +88,19 @@ class Controller_Template extends Kohana_Controller_Template {
 		$src = file_exists(DOCROOT.$file) ? URL::site($file."?v=".time()) : $file;
 		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
 		return $this;
-	} 
+	}
+
+	/**
+	 * Add a snippet to the dom of the layout
+	 * @param $name
+	 * @param $html
+	 * @param bool $head
+	 */
+	public function snippet($name, $html, $head = true)
+	{
+		$this->snip[$name] = array($head, $html);
+		return $this;
+	}
 	
 	public function after(){
 		// Prepare javascript includes
@@ -106,6 +119,13 @@ class Controller_Template extends Kohana_Controller_Template {
 		foreach($this->css as $c){
 			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href']."?v=".time(), $c['media']);
 		}
+
+		foreach($this->snip as $s){
+			if($s[0])
+				$js_head[] = $s[1];
+			else
+				$js_foot[] = $s[1];
+		}
 		
 		$js_head = implode("\n", $js_head);
 		$js_foot = implode("\n", $js_foot);
@@ -114,6 +134,9 @@ class Controller_Template extends Kohana_Controller_Template {
 		View::set_global('js_head', $js_head);
 		View::set_global('js_foot', $js_foot);
 		View::set_global('css', $css);
+
+		$class = Request::$initial->controller() . " " . Request::$initial->controller() . "-" . Request::$initial->action();
+		$this->template->set("class", $class);
 		
 		parent::after();
 	}

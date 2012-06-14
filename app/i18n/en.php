@@ -22,6 +22,7 @@ return array(
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Bars',
 		'single.forecast' => 'Forecast',
+		'single.flickr' => 'Photos from the area',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
 
@@ -31,6 +32,7 @@ return array(
 		'list.monuments' => 'Monuments',
 		'list.selection' => 'Selection',
 		'list.zero-results' => 'Unfortunately no monuments have been found with the current search criteria.',
+		'list.keywordrecommend' => 'Other users also searched for:'
 		
 		'selection.category' => 'Category',
 		'selection.sort' => 'Sort',
@@ -41,6 +43,7 @@ return array(
 		'selection.relevance' => 'Relevance',
 		'selection.distance' => 'Distance',
 		'selection.popularity' => 'Popularity',
+		'selection.year' => 'Year of building',
 
 		'foursquare.form.header' => 'Add FourSquare venue',
 		'foursquare.form.legend' => 'Make a FourSquare venue for this monument',
@@ -116,6 +119,7 @@ return array(
     'register.error.username.unique' => "The username is already used",
     'register.error.email.unique' => "The emailaddress is already used",
     'register.invalidfields' => 'There were errors, please see form below.',
+	'category_extracted' => 'Based on textual analysis of the description of the monument, CultuurApp categorized this monument.',
 
 	'more' => "more",
 );

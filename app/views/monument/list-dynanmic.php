@@ -1,8 +1,9 @@
 <div class="container-fluid" id="list">
 	<div class="row-fluid">
 		<div class="span9">
-			<h1 style="margin-bottom: 10px;"><?php echo __('list.monuments'); ?></h1>
+			<h1 style="margin-bottom: 10px;"><?php echo __('list.monuments'); ?> <span class="total"></span></h1>
 
+			<div style="display: none;" class="recommendations alert alert-info"><?php echo __('list.keywordrecommend'); ?> <span class="keywords"></span></div>
 			<div class='pagination'></div>
 			<div class="monument-list container-fluid list-container" style="padding: 0;">
 				<div class="loading"></div>
@@ -83,3 +84,18 @@
 		});
 	</script>
 </div>
+
+<div class="background-drawing"></div>
+<script>
+	$(function(){
+		$(".background-drawing").appendTo($(".background"));
+		var paper = Raphael($(".background-drawing").get(0), "100%", "100%");
+
+		// Draw sky
+		paper.add([{
+			type: "rect", x: 0, y: 0, width: "100%", height: "100%",
+			fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
+		// Draw grass
+		paper.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
+	});
+</script>

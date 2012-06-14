@@ -121,62 +121,61 @@ var exports = exports | {};
             {
                 var id = monument.id_monument;
                 var desc = monument.summary;
-                var style = "float: left; margin-right: 10px; margin-top: 3px; ";//max-height: 100px; min-height: 100px;";
-                $("#list .list").append(
-                    $(
-                        "<li class='monument'>"+
-                        "<a href='"+base+"monument/id/"+id+"' >" +
-                        "<h2>" + monument.name + "</h2>" +
-                        "<img class='map-info-photo' id='photo'"+id+"' src='"+monument.photoUrl+"' style='"+style+"' />" +
-                        "</a><p>"+desc+"</p>" +
-                        "</li>"
-                    ).click(function(){
-                        if($(this).hasClass("selected")){
+                var style = "float: left; margin-right: 10px; margin-top: 3px; ";
+                
+                $mon = $("<li class='monument'><a><h2></h2><img class='map-info-photo' style='"+style+"' /></a><p></p></li>");
+                $mon.find("a").attr('href', base+"monument/id/"+id);
+                $mon.find("h2").text(monument.name);
+                $mon.find("img").attr('src', monument.photoUrl).attr('id', 'photo'+id);
+                $mon.find("p").html(monument.summary);
+                $("#list .list").append($mon);
 
-                            $(this).removeClass("selected");
+                $mon.click(function(){
+                    if($(this).hasClass("selected")){
 
-                            // Add the highlighted marker back to the cluster
-                            if(open.marker){
-                                open.marker.setZIndex(open.zindex);
-                                markerClusterer.addMarkers([open.marker]);
-                            }
-                            open.marker = false;
+                        $(this).removeClass("selected");
 
-                            // Zoom back out
-                            map.fitBounds(bounds);
-                        }else{
-                            // Close info window
-                            if(self.infowindow)
-                                self.infowindow.close();
-
-                            $(this).addClass("selected").siblings().removeClass("selected");
-
-                            // Center at monument
-                            var point = new google.maps.LatLng( monument.lng, monument.lat );
-                            map.panTo(point);
-                            if(map.getZoom() < 16) map.setZoom(16);
-
-                            // Add the highlighted marker back to the cluster
-                            if(open.marker){
-                                open.marker.setZIndex(open.zindex);
-                                markerClusterer.addMarkers([open.marker]);
-                            }
-
-                            // Unlink monument marker from cluster
-                            open.marker = markersLookup[monument.id_monument];
-                            open.zindex = open.marker.getZIndex();
-                            markerClusterer.removeMarker(open.marker);
-                            open.marker.setMap(map);
-                            open.marker.setZIndex(999999);
-
-                            // Bounce
-                            google.maps.event.addListenerOnce(map, "idle", function(){
-                                open.marker.setAnimation(google.maps.Animation.BOUNCE);
-                                setTimeout(function(){ open.marker.setAnimation(null); }, 1500);
-                            });
+                        // Add the highlighted marker back to the cluster
+                        if(open.marker){
+                            open.marker.setZIndex(open.zindex);
+                            markerClusterer.addMarkers([open.marker]);
                         }
-                    })
-                );
+                        open.marker = false;
+
+                        // Zoom back out
+                        map.fitBounds(bounds);
+                    }else{
+                        // Close info window
+                        if(self.infowindow)
+                            self.infowindow.close();
+
+                        $(this).addClass("selected").siblings().removeClass("selected");
+
+                        // Center at monument
+                        var point = new google.maps.LatLng( monument.lng, monument.lat );
+                        map.panTo(point);
+                        if(map.getZoom() < 16) map.setZoom(16);
+
+                        // Add the highlighted marker back to the cluster
+                        if(open.marker){
+                            open.marker.setZIndex(open.zindex);
+                            markerClusterer.addMarkers([open.marker]);
+                        }
+
+                        // Unlink monument marker from cluster
+                        open.marker = markersLookup[monument.id_monument];
+                        open.zindex = open.marker.getZIndex();
+                        markerClusterer.removeMarker(open.marker);
+                        open.marker.setMap(map);
+                        open.marker.setZIndex(999999);
+
+                        // Bounce
+                        google.maps.event.addListenerOnce(map, "idle", function(){
+                            open.marker.setAnimation(google.maps.Animation.BOUNCE);
+                            setTimeout(function(){ open.marker.setAnimation(null); }, 1500);
+                        });
+                    }
+                });
             });
 
             $("#list .info").text($("#list ul .monument").size() + " / " + options.total);

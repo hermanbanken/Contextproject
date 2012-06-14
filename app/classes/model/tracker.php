@@ -79,6 +79,7 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 		->join('logs')->on('logs.id_log', '=', 'logs_monuments.id_log')
 		->join('monuments')->on('monuments.id_monument', '=', 'logs_monuments.id_monument')
 		->where('id_tracker', '=', $this->id_tracker)
+		->order_by(DB::expr('RAND()'))
 		->execute();
 		
 		$ids = array();
@@ -87,6 +88,27 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 		}
 		
 		return $ids;
+	}
+	
+	/**
+	 * Get array of monument_ids visited by tracker
+	 * @return array monuments
+	 */
+	public function keywords() {
+		$query = DB::select('logs_keywords.value')
+		->distinct(true)
+		->from('logs_keywords')
+		->join('logs')->on('logs.id_log', '=', 'logs_keywords.id_log')
+		->where('id_tracker', '=', $this->id_tracker)
+		->order_by(DB::expr('RAND()'))
+		->execute();
+		
+		$keywords = array();
+		foreach ($query AS $keyword) {
+			$keywords[] = $keyword['value'];
+		}
+		
+		return $keywords;
 	}
 
 	protected $_table_columns = array(

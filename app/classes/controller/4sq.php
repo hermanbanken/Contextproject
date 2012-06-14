@@ -193,7 +193,7 @@ class Controller_4sq extends Controller_Template {
     	} else {
 			// Fill form
 			$venue->values(array(
-				"name" => $monument->name,
+				"name" => $monument->name(),
 				"address" => $monument->street->name.' '.$monument->streetNumber,
 				"city" => $monument->town->name,
 				"id_monument" => $monument->id_monument,

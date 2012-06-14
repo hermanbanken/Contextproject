@@ -28,7 +28,7 @@ class VisualMagic {
 		$photo = $monument->getphoto();
 		if ($photo->id_monument != NULL) {
 			// Set euclidian select part for query
-			$euclidian = 'sqrt(';
+			$euclidian = '';
 			$i = 0;
 
 			// If features are set, use them, otherwise get all features
@@ -44,7 +44,6 @@ class VisualMagic {
 					$i++;
 				}
 			}
-			$euclidian .= ')';
 
 			// Find monuments based on euclidian distance
 			$monuments = ORM::factory('monument')
@@ -79,7 +78,7 @@ class VisualMagic {
 		$pca = ORM::factory('PCA')->where('id_monument', '=', $monument->id_monument)->find();
 		if ($pca->id_monument != NULL) {
 			// Set euclidian select part for query
-			$euclidian = 'sqrt(';
+			$euclidian = '';
 			$i = 0;
 
 			// If features are set, use them, otherwise get all features
@@ -95,7 +94,6 @@ class VisualMagic {
 					$i++;
 				}
 			}
-			$euclidian .= ')';
 			
 			// Find monuments based on euclidian distance
 			$monuments = ORM::factory('monument')

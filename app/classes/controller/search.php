@@ -7,7 +7,7 @@ class Controller_Search extends Controller_Template {
 			'town' => '',
 			'province' => -1,
 			'category' => -1,
-			'sort' => 'distance',
+			'sort' => 'name',
 			'latitude' => false,
 			'longitude' => false,
 			'distance' => 0,
@@ -62,8 +62,8 @@ class Controller_Search extends Controller_Template {
 		// Set view
 		$result = array();
 
-		$query = $this->query()->select('id_monument');
-
+		$query = $this->query()->select('monuments.id_monument');
+		
 		// Log user info
 		$this->log();
 		
@@ -93,35 +93,33 @@ class Controller_Search extends Controller_Template {
 			$provinces = ORM::factory('province')->order_by('name')->find_all();
 			$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
 
-			// Get view for form
-			$f = View::factory(static::$entity.'/selection');
-
-			// Give variables to view
-			$f->set('provinces', $provinces);
-			$f->set('categories', $categories);
-			$f->set('action', 'monument/list');
-			$f->set('formname', 'filter_list');
-
 			$result['pagination'] = (string) $pagination;
 			$result['monuments'] = array();
 			foreach($monuments as $m){
 				$monument = ORM::factory("monument", $m['id_monument']);
+				$d = @$m['distance'];
 				$m = $monument->object();
-				$m['photoUrl'] = $monument->photoUrl();
-				$m['summary'] = $monument->summary();
+				$m['distance'] = $d;
+				$m['photoUrl'] = $monument->thumbUrl();
+				$m['name'] = $monument->name();
+				$m['summary'] = $monument->summary($this->parameter("search"));
 				$result['monuments'][] = $m;
 			}
+
 			$result['more'] = $pagination->valid_page($this->parameter("page")+1);
 			$result['total'] = $total;
+			$result['keywordrecommend'] = Recommender::recommend_keywords($this->_params['search'], 5);
 
-			// Add view to template
-			$this->auto_render = false;
 
 			// Include bench marks
-			$result['bench'] = (string)View::factory('profiler/stats');
-
-			$this->response->body(json_encode($result));
+			// $result['bench'] = (string) View::factory('profiler/stats');
+		} else {
+			$this->response->status(404);
 		}
+
+		// Add view to template
+		$this->auto_render = false;
+		$this->response->body(json_encode($result));
 	}
 
 	function action_cloud() {
@@ -140,30 +138,23 @@ class Controller_Search extends Controller_Template {
 		extract($params);
 
 		$query = DB::select_array($fields)->from("monuments");
-
+		
 		//****** FIELDS ********
-		if ((($distance > 0 && $distance_show == 1) || $sort == 'distance') && $longitude && $latitude)
+		if ($longitude && $latitude)
 		{
 			$calc = "((ACOS(SIN(:lng * PI() / 180) * SIN(lat * PI() / 180) + COS(:lng * PI() / 180) * COS(lat * PI() / 180) * COS((:lat - lng) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)*1.6 ";
 			$dexp = DB::expr($calc, array(
-					":lng" => $longitude,
-					":lat" => $latitude
+				":lng" => $longitude,
+				":lat" => $latitude
 			));
 
 			$query->select(array( $dexp, "distance" ));
 
-			if ($distance > 0 && $distance_show == 1)
+			if ($distance > 0 && $distance_show)
 			{
 				$query->where($dexp, "<", $distance);
 			}
-
-		} elseif($sort == 'distance') {
-			// If the longitude or latitude isn't set we can't calculate the distance.
-			$sort = 'rand';
 		}
-
-		//$sql.= "HAVING 1 ";
-
 
 		//******* FILTERS *******
 		if ($category >= 0)
@@ -193,6 +184,8 @@ class Controller_Search extends Controller_Template {
 			}
 		}
 
+		$query->group_by('monuments.id_monument');
+		
 		//****** ORDERING ********
 		switch ($sort)
 		{
@@ -204,8 +197,15 @@ class Controller_Search extends Controller_Template {
 				$query->order_by("name");
 				break;
 
+			case "popularity":
+				$query->order_by("popularity");
+				break;
+
 			case "distance":
-				$query->order_by("distance", "ASC");
+				if ($longitude && $latitude)
+					$query->order_by("distance", "ASC");
+				else
+					$query->order_by("name");
 				break;
 
 			case "relevance":

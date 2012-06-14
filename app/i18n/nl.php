@@ -22,6 +22,7 @@ return array (
 		'single.restaurants' => 'Restaurants',
 		'single.bars' => 'Cafe\'s',
 		'single.forecast' => 'Weersvoorspelling',
+		'single.flickr' => 'Foto\'s uit de omgeving',
 		'single.visited' => 'Bezocht',
 		'single.not-visited' => 'Niet bezocht',
 
@@ -31,6 +32,7 @@ return array (
 		'list.monuments' => 'Monumenten',
 		'list.selection' => 'Selectie',
 		'list.zero-results' => 'Er zijn helaas geen monumenten gevonden met de huidige zoekcriteria.',
+		'list.keywordrecommend' => 'Andere gebruikers zochten ook naar:',
 
 		'selection.category' => 'Categorie',
 		'selection.sort' => 'Sorteer',
@@ -41,6 +43,7 @@ return array (
 		'selection.relevance' => 'Relevantie',
 		'selection.distance' => 'Afstand',
 		'selection.popularity' => 'Populariteit',
+		'selection.year' => 'Bouwjaar',
 
 		'foursquare.form.header' => 'Voeg FourSquare-plaats toe',
 		'foursquare.form.legend' => 'Maak een plaats op FourSquare en koppel deze met deze monumentpagina.',
@@ -111,6 +114,7 @@ return array (
 		'register.signup' => 'Registreren',
     'register.error.username.unique' => "De gebruikersnaam is al in gebruik",
     'register.error.email.unique' => "Het e-mailadres is al in gebruik",
+	'category_extracted' => 'Gebaseerd op de tekstuele analyse van de beschrijving van dit monument heeft CultuurApp de categorie van dit monument ingedeeld.',
 
 	'more' => "meer",
 );

@@ -4,14 +4,14 @@
 		<div class="span8 monument-single-overview">
 
 			<h1>
-				<?php echo $monument->name; ?>
+				<?php echo $monument->name(); ?>
 			</h1>
 			<p>
 			
 			
 			<div class="thumbnail span4" style="float: right">
-				<img src="<?php echo $monument->photoUrl(); ?>"
-					alt="<?php echo $monument->name; ?>">
+				<a href="<?php echo $monument->photoUrl(); ?>" rel="shadowbox"><img src="<?php echo $monument->photoUrl(); ?>"
+					alt="<?php echo $monument->name; ?>"></a>
 				<div class="caption">
 					<p>
 						<a class="btn"
@@ -32,9 +32,12 @@
 					</p>
 				</div>
 			</div>
+			<div class='description'>
 			<?php echo str_replace("\n\n", "</p><p>", $monument->description); ?>
-			</p>
+			</div>
 
+			</p>
+			<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
 		</div>
 
 		<div class="span4 monument-single-details">
@@ -48,20 +51,6 @@
 				<div class="map-outer">
 					<div class="map well" id="single-map"
 						data-map="<?php echo $monument->lat . ";" . $monument->lng; ?>">
-						<script type="text/javascript">
-              var m = document.getElementById("single-map"),
-                  c = m.dataset['map'].split(";"),
-                  p = new google.maps.LatLng(c[1], c[0]);
-
-              var options = {
-                center : p,
-                zoom : 12,
-                mapTypeControl : false,
-                streetViewControl : false,
-                mapTypeId : google.maps.MapTypeId.ROADMAP
-              };
-              new google.maps.Marker({ position : p, map : new google.maps.Map(m, options) });
-            </script>
 					</div>
 				</div>
 				<table class="table table-bordered table-striped">
@@ -90,23 +79,32 @@
 						</td>
 					</tr>
 					<tr>
-						<th><?php echo __('category'); ?>
+						<th><?php 
+						if($monument->category_extracted == 1) {
+							echo '<span rel="tooltip" id="category_extracted" title="'.__('category_extracted').'">'.__('category').'*</span>';
+						} else {
+							echo __('category');
+						} 
+						?>
 						</th>
 						<td><?php echo $monument->category->name; ?>
 						</td>
 					</tr>
-					<tr>
-						<th><?php echo __('subcategory'); ?>
-						</th>
-						<td><?php echo $monument->subcategory->name; ?>
-						</td>
-					</tr>
+					<?php
+						if($monument->category_extracted == 0 && $monument->id_subcategory > 0) {
+							echo '<tr>
+								<th>'.__('subcategory').'
+								</th>
+								<td>'.$monument->subcategory->name.'
+								</td>
+								</tr>';
+						}?>
 					<tr>
 						<th>Tags</th>
 						<td><?php
 						$tags = $monument->tags();
 						foreach($tags as $tag)
-							echo '<a href="'.URL::site('monument/list/'.$tag['original']).'">'.$tag['content'].'</a> ';
+							echo '<a href="'.URL::site('monument/list?search='.$tag['original']).'">'.$tag['content'].'</a> ';
 						?></td>
 					</tr>
 					<tr>
@@ -135,18 +133,6 @@
 
 				<div class="forecast">
 					<div class="inner well">
-						<?php
-						foreach ($forecasts AS $forecast) {
-							?>
-						<div class="span1 day">
-							<i><img src="<?php echo $forecast->icon(); ?>" alt="" />
-							</i> <span class="temperature"><?php echo $forecast->temperature(); ?>
-								&deg;C</span> <span class="dayabbr"><?php echo $forecast->day(); ?>
-							</span>
-						</div>
-						<?php
-						}
-						?>
 					</div>
 				</div>
 			</div>
@@ -157,15 +143,18 @@
 		?>
 		<div class="row-fluid">
 			<div class="span6">
-				<ul class="nav nav-tabs" style="margin-top: 20px;">
-					<li class="active"><a class="aanbevelingen" href="#">
-						<?php echo __('single.recommendations'); ?>
+				<ul class="nav nav-tabs single-photos-nav" style="margin-top: 20px;">
+					<li>
+						<a class="recommendations" href="#recommendations"><?php echo __('single.recommendations'); ?>
+					</a></li>
+					<li>
+						<a class="flickr" href="#flickr"><?php echo __('single.flickr'); ?>
 					</a></li>
 				</ul>
 
 				<input id="id_monument" type="hidden" value="<?php echo $monument->id_monument; ?>" />
 
-				<div id="aanbevelingen" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
+				<div id="ajax_content_photos" class="<?php if($conf->get("recommendations")) echo "disabled"; ?>"></div>
 			</div>
 			<div class="span6">
 				<ul class="nav nav-tabs single-nav" style="margin-top: 20px;">
@@ -188,3 +177,19 @@
 	</div>
 </div>
 </div>
+<div class="background-drawing"></div>
+<script type="text/javascript">
+$(function() {
+	$('#category_extracted').tooltip();
+
+	$(".background-drawing").appendTo($(".background"));
+	var paper = Raphael($(".background-drawing").get(0), "100%", "100%");
+
+	// Draw sky
+	paper.add([{
+		type: "rect", x: 0, y: 0, width: "100%", height: "100%",
+		fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
+	// Draw grass
+	paper.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
+});
+</script>

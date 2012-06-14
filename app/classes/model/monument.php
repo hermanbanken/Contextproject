@@ -75,10 +75,36 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	);
 
 	/**
+	 * Get name of monument
+	 *
+	 * @return string name
+	 */
+	public function name() {
+		if ($this->name_object != NULL) {
+			return $this->name_object;
+		}
+		else {
+			return $this->name;
+		}
+	}
+
+	/**
 	 * @return mixed url of photo
 	 */
 	public function photoUrl(){
 		return ORM::factory('photo')->url($this->id_monument);
+	}
+
+	/**
+	 * @return mixed thumb url of photo
+	 */
+	public function thumbUrl(){
+		if ($this->thumb != NULL) {
+			return $this->thumb;
+		}
+		else {
+			return ORM::factory('photo')->url($this->id_monument);
+		}
 	}
 
 	/**
@@ -88,7 +114,7 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public function summary($search = false)
 	{
-		return self::descToSummary($this->description, $this->id_monument);
+		return self::descToSummary($this->description, $this->id_monument, $search);
 	}
 
 	/**
@@ -99,11 +125,25 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	 */
 	public static function descToSummary($text, $id, $search = false)
 	{
+		$more = " " . HTML::anchor('monument/id/'.$id, __('more'));
 		if($search){
-			return $text;
-		}else{
-			return Text::limit_chars($text, 200, "...", true) . " " . HTML::anchor('monument/id/'.$id, __('more'));
+			$search = preg_replace(array("~[^a-z0-9\s]+~im", "~\s~"), array("", "|"), $search);
+			$success = preg_match("~(^|\s).{0,200}(".$search.").{0,200}(\s|$)~im", $text, $match);
+
+			if($success && !empty($match[0])){
+				return preg_replace(array(
+					"~^\s~",
+					"~\s$~",
+					"~(".$search.")~im"
+				), array(
+					"... ",
+					" ...",
+					"<b>$1</b>"
+				), $match[0]) . $more;
+			}
 		}
+
+		return Text::limit_chars($text, 200, "...", true) . $more;
 	}
 
 	/**
@@ -209,10 +249,12 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	`id_category` int(10) NULL,
 	`id_subcategory` int(10) NULL,
 	`name` varchar(200) NULL,
+	`name_object` varchar(200) NULL,
 	`id_street` int(10) NULL,
 	`id_town` int(10) NULL,
 	`id_municipality` int(10) NULL,
 	`id_province` int(10) NULL,
+	`popularity` int(10) NULL,
 	`streetNumber` varchar(4) NULL,
 	`zipCode` varchar(7) NULL,
 	`id_function` int(10) NULL,
@@ -221,6 +263,8 @@ class Model_Monument extends Model_Abstract_Cultuurorm {
 	`lng` double(10,5) NULL,
 	`lat` double(10,5) NULL,
 	`category_extracted` tinyint(4) NOT NULL DEFAULT '0',
+	`thumb` varchar(500) NULL,
+	`image` varchar(500) NULL,
 	PRIMARY KEY (`id_monument`),
 	KEY `id_category` (`id_category`),
 	KEY `id_subcategory` (`id_subcategory`),

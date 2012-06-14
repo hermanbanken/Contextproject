@@ -4,12 +4,14 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
 	
-	public function action_recommender() {
+	/**
+	 * View to compare images visual
+	 */
+	public function action_popularity() {
 		$v = View::factory('test');
+		set_time_limit(0);
 		
-		foreach (Recommender::recommend(5) AS $monument) {
-			echo var_dump($monument, true);
-		}
+		echo '<pre>'.var_dump(Rijksmonumenten::monument(ORM::factory('monument', 20390)), true).'</pre>';
 		
 		$this->template->body = $v;
 	}
@@ -62,7 +64,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
 			$_SESSION['vc'] = $post;
-			unset($_SESSION['vc']['posted']);
 			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
@@ -99,7 +100,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 			$p = Arr::overwrite($p, $this->request->query());
 		}
 		// Get provinces and categories for selection
-		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('name', '!=', 'N.V.T.')->order_by('name')->find_all();
 
 		// Get view for form
 		$f = View::factory(static::$entity.'/selection');
@@ -125,30 +126,57 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 */
 	public function action_id()
 	{
-		$id = $this->request->param('id');
-		$user = Auth::instance()->get_user();
-		$monument = ORM::factory('monument', $id);
-		$forecasts = $monument->forecast();
+		$this->js("ca-single", "js/single.js", true);
 		
-		// Log monument
-		Logger::instance()->monument($monument);
-
+		$id = $this->request->param('id');
+		$monument = ORM::factory('monument', $id);
+			
 		if(!$monument->loaded())
 			throw new HTTP_Exception_404(__('monument.notfound'));
 
 		if($this->is_json())
 		{
 			$obj = $monument->object();
-			$obj['photoUrl'] = $monument->photoUrl();
+			$obj['photoUrl'] = $monument->thumbUrl();
 			$obj['summary'] = $monument->summary();
+			$obj['name'] = $monument->name();
 			$this->set_json(json_encode($obj));
 		}
 		else
 		{
+			$user = Auth::instance()->get_user();
+			
+			// Log monument
+			Logger::instance()->monument($monument);
+
+			$meta = array(
+				"og:title" => $monument->name(),
+				"og:url" => URL::site("monument/id/".$monument->id_monument, "http"),
+				"og:type" => "cultuurapp:monument",
+				"og:image" => URL::site($monument->photoUrl(), "http"),
+				"og:description" => $monument->description,
+				"cultuurapp:location:longitude" => $monument->lat,
+				"cultuurapp:location:latitude" => $monument->lng,
+				"cultuurapp:location:altitude" => "0"
+			);
+			foreach($meta as $prop => $val){
+				$this->snippet($prop, sprintf("<meta property='$prop' content='%s' />", addslashes($val)));
+			}
+			$this->snippet(
+				"facebook-api",
+				"<div id='fb-root'></div> <script>(function(d, s, id) {
+					  var js, fjs = d.getElementsByTagName(s)[0];
+					  if (d.getElementById(id)) return;
+					  js = d.createElement(s); js.id = id;
+					  js.src = '//connect.facebook.net/nl_NL/all.js#xfbml=1&appId=297097407038174';
+					  fjs.parentNode.insertBefore(js, fjs);
+					}(document, 'script', 'facebook-jssdk'));
+				</script>"
+			);
+
 			$v = View::factory('monument/single-sleek');
 			$v->bind('monument', $monument);
 			$v->bind('user', $user);
-			$v->bind('forecasts', $forecasts);
 			$this->template->body = $v;
 		}
 	}
@@ -220,8 +248,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$defaults = array('zoeken','stad','-1','');
 		foreach($post as $key=>$value) {
 			if(!in_array($value,$defaults)) {
-				${
-					$key} = $value;
+				${$key} = $value;
 			}
 		}
 
@@ -425,7 +452,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 
 		// Get provinces and categories for selection
 		$provinces = ORM::factory('province')->order_by('name')->find_all();
-		$categories = ORM::factory('category')->where('id_category', '!=', 3)->order_by('name')->find_all();
+		$categories = ORM::factory('category')->where('name', '!=', 'N.V.T.')->order_by('name')->find_all();
 
 		$tags = TextualMagic::tagcloud(20);
 		// create the view
@@ -460,13 +487,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Get post-data
 		$pform = $this->request->query();
 
-		//die(var_dump($pform));
-
 		// override values
 		foreach($pform as $key => $value) {
-			$p[$key] = $value;
+			if($value != '') $p[$key] = $value;
 		}
-
+	
 		// If no post-data is set, get data from session or set default data
 		$session = Session_Native::instance();
 		$session = $session->as_array();
@@ -475,7 +500,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		foreach($session as $key => $value) {
 			if(!isset($p[$key]) OR $p[$key] == '') $p[$key] = $value;
 		}
-
+	
 		// add searchterm for external links
 		$search = $this->request->param('id');
 		if(isset($search) AND $search != '') {

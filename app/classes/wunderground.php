@@ -16,10 +16,11 @@ class Wunderground {
 
 	/**
 	 * Function to get forecast near monument from Wunderground
+	 * 
 	 * @param monument $monument
 	 * @return array with forecasts => array(date, image, forecast)
 	 */
-	public static function forecast($monument, $lang = 'NL') {
+	public static function forecast($monument) {
 		// Get cached forecasts (only forecasts that are not too old, max is one day)
 		$forecasts_query = ORM::factory('forecast')
 		->where('id_town', '=', $monument->id_town)
@@ -30,34 +31,49 @@ class Wunderground {
 
 		// Check if there are cached forecasts
 		if ($forecasts->count() == 0) {
-			// No cached forecasts? Request data from wunderground with our key
-			$url = "http://api.wunderground.com/api/".self::KEY."/forecast/lang:".$lang."/q/".$monument->lng.",".$monument->lat.".json";
-			// 			$url = "http://api.wunderground.com/api/".self::KEY."/geolookup/conditions/forecast/lang:".$lang."/q/NL/".urlencode($monument->town->name).".json";
-			$response_json = file_get_contents($url);
-			$response = @json_decode($response_json);
+			// Clear cache
+			DB::delete('forecasts')->where('id_town', '=', $monument->id_town)->execute();
 
-			// Check if forecast is found
-			if (isset($response->forecast->simpleforecast->forecastday)) {
-				// Clear cache
-				DB::delete('forecasts')->where('id_town', '=', $monument->id_town)->execute();
+			// Import new forecasts
+			Wunderground::import($monument);
 
-				$forecast = $response->forecast->simpleforecast->forecastday;
-
-				// Loop through forecasts, cache in database
-				foreach ($forecast AS $f) {
-					$forecast_orm = ORM::factory('forecast');
-					$forecast_orm->id_town = $monument->id_town;
-					$forecast_orm->icon = $f->icon;
-					$forecast_orm->low = $f->low->celsius;
-					$forecast_orm->high = $f->high->celsius;
-					$forecast_orm->date = date('Y-m-d', mktime(0, 0, 0, $f->date->month, $f->date->day, $f->date->year));
-					$forecast_orm->save();
-				}
-
-				$forecasts = $forecasts_query->reset(false)->find_all();
-			}
+			// Get new forecasts from database
+			$forecasts = $forecasts_query->reset(false)->find_all();
 		}
 
 		return $forecasts;
 	}
+
+	/**
+	 * Import forecasts from WUnderground
+	 * 
+	 * @param monument $monument
+	 */
+	private static function import($monument) {
+		// Request data from wunderground with our key
+		$base_url = "http://api.wunderground.com/api/%s/forecast/lang:NL/q/%s,%s.json";
+		$url = sprintf($base_url, self::KEY, $monument->lng, $monument->lat);
+
+		// Get content of response and translate to json
+		$response_json = Request::factory($url)->execute();
+		$response = @json_decode($response_json);
+
+		// Check if forecast is found
+		if (isset($response->forecast->simpleforecast->forecastday)) {
+
+			$forecast = $response->forecast->simpleforecast->forecastday;
+
+			// Loop through forecasts, cache in database
+			foreach ($forecast AS $f) {
+				$forecast_orm = ORM::factory('forecast');
+				$forecast_orm->id_town = $monument->id_town;
+				$forecast_orm->icon = $f->icon;
+				$forecast_orm->low = $f->low->celsius;
+				$forecast_orm->high = $f->high->celsius;
+				$forecast_orm->date = date('Y-m-d', mktime(0, 0, 0, $f->date->month, $f->date->day, $f->date->year));
+				$forecast_orm->save();
+			}
+		}
+	}
 }
+?>

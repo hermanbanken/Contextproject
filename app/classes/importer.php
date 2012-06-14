@@ -10,6 +10,64 @@
  */
 class Importer {
 	/**
+	 * Function to import extra information of rijksmonumenten
+	 *
+	 * @return int aantal monumenten
+	 */
+	public static function rijksmonumenten() {
+		set_time_limit(0);
+
+		$monuments = ORM::factory('monument')->where('thumb', 'IS', DB::expr('NULL'))->find_all();
+		var_dump($monuments);
+		foreach ($monuments AS $monument) {
+			$data = Rijksmonumenten::monument($monument);
+			if ($data) {
+				if (isset($data->abc_objectnaam)) $monument->name_object = $data->abc_objectnaam;
+				if (isset($data->abc_thumb_url)) $monument->thumb = $data->abc_thumb_url;
+				if (isset($data->abc_image_url)) $monument->image = $data->abc_image_url;
+						
+				try {
+					$monument->save();
+				}
+				catch(Exception $e) {
+					echo 'errortje<br />';
+				}
+			}
+		}
+
+		return count($monuments);
+	}
+
+	/**
+	 * Function to import the popularity of each monument
+	 * This should be included in a cronjob and executes every hour
+	 *
+	 * @return int aantal monumenten
+	 */
+	public static function popularity() {
+		set_time_limit(0);
+
+		$query = DB::select('monuments.id_monument')
+		->select(array(DB::expr("(3 * COUNT(dev_visits.id) + 2 * COUNT(id_log) + COUNT(dev_venues.id))"), "new_popularity"))
+		->from('monuments')
+		->join('logs_monuments', 'left')->on('logs_monuments.id_monument', '=', 'monuments.id_monument')
+		->join('visits', 'left')->on('visits.id_monument', '=', 'monuments.id_monument')
+		->join('venues', 'left')->on('venues.id_monument', '=', 'monuments.id_monument')
+		->having('new_popularity', '!=', 'popularity')
+		->group_by('monuments.id_monument')
+		->execute();
+
+		foreach ($query AS $monument) {
+			$query = DB::update('monuments')
+			->set(array('popularity' => $monument['new_popularity']))
+			->where('id_monument', '=', $monument['id_monument'])
+			->execute();
+		}
+
+		return count($query);
+	}
+
+	/**
 	 * Function to import monuments from the folder "files/monuments"
 	 * Files should be xml-files named {id_monument}.xml
 	 *
@@ -319,8 +377,8 @@ class Importer {
 			}
 
 			// filter unused characters
-			$description = strtolower(preg_replace('/[^a-zA-Z0-9\-\_\s]/','',$monument['description']));
-
+			$description = strtolower(preg_replace('/[^a-zA-Z0-9\-\_\s]/','',utf8_decode($monument['description'])));
+				
 			// explode original keywords into array
 			$originals = explode(' ',$description);
 
@@ -503,7 +561,7 @@ class Importer {
 	/**
 	 * Function to normalize the imported MATLAB features
 	 * already put in database with function action_import
-	 * 
+	 *
 	 * @param string $type, 'photo' or 'pca'
 	 */
 	public static function normalize_features($type) {
@@ -699,21 +757,21 @@ class Importer {
 
 		return $i;
 	}
-	
+
 	/**
 	 * Import categories based on textual analysis
 	 */
 	public static function categories() {
 		// can take a long time
 		set_time_limit(0);
-		
+
 		// select all uncategorized monuments
-		$monuments = ORM::factory('monument')->where('id_category','is',null)->find_all();
+		$monuments = ORM::factory('monument')->where('id_category','is',null)->or_where('id_category','=',12)->find_all();
 		$i = 0;
 		foreach($monuments as $monument) {
-		
+
 			$category = $monument->extractCategory();
-		
+
 			// save the extracted category to the database
 			$monument->id_category = $category;
 			$monument->category_extracted = 1;
@@ -722,7 +780,7 @@ class Importer {
 				$monument->save();
 			}
 		}
-		
+
 		return $i;
 	}
 }

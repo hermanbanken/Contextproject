@@ -43,7 +43,7 @@ body {
     }
     .map {
         overflow: hidden;
-        height: 120px;
+        height: 160px;
         margin-bottom:0;
         .border-radius(4px 4px 0 0);
         border-bottom: 0;
@@ -294,6 +294,34 @@ body {
 	left: 0px;
 	height: 17px;
 	z-index: 102;
+}
+
+body { background-color: #fff; background-image: none; }
+.background { display: none }
+.page > .container { padding-top: 15px; }
+
+@media(min-width: 980px){
+    body.welcome, body.monument { background-color: #44BB43; }
+    body > * { z-index: 100; }
+    body > .page { position: relative; }
+    body > .page.page-map { position: static; }
+    body > .background { z-index: 1; }
+
+    .page-list > .container, .page-id > .container {
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, .4);
+        border: 1px solid #EEE;
+    }
+
+    .background { display: block }
+}
+
+body.monument-map .background {
+    display: none;
+}
+
+.tagcloud {
+    overflow:hidden;
 }
 
 /**

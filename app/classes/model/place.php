@@ -29,6 +29,7 @@ class Model_Place extends Model_Abstract_Cultuurorm {
 	`vicinity` varchar(155) NOT NULL,
 	`lng` double NOT NULL,
 	`lat` double NOT NULL,
+	`distance` double NOT NULL,
 	`rating` double NOT NULL,
 	`cachedOn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id_place`),
