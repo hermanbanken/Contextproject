@@ -90,7 +90,7 @@ $(function(){
             }
         }
 
-        history.pushState(data, window.title, location.origin + location.pathname + "?" + $.param(data));
+        history.pushState(data, window.title, location.pathname + "?" + $.param(data));
     }
 
     /**

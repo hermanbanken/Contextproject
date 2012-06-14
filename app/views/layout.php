@@ -4,7 +4,7 @@
 <?php else: ?>
 <html>
 <?php endif; ?>
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# cultuurapp: http://ogp.me/ns/fb/cultuurapp#">
   <title>CultuurApp.nl</title>
   <script>var base = "<?php echo URL::base(); ?>";</script>
   <?php echo $header; ?>
