@@ -10,7 +10,7 @@ return array(
 	 * be provided when making OAuth requests.
 	 */
 	'twitter' => array(
-		'key' => 'your consumer key',
-		'secret' => 'your consumer secret'
+		'key' => 'ieBbg0ObuDg0c9GbZMx05w',
+		'secret' => 'GToIvahZJRdPlX03XZiGJS1v9OEiyuZSnLcN4sVfCE'
 	),
 );
