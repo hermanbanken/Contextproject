@@ -155,12 +155,15 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		\begin{equation}
 			n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}
 		\end{equation}
-		Met:
-		\begin{itemize}
-			\item $v_{fm} =$ de waarde van feature $f$ van monument $m$.
-			\item $v_{f} =$ de waardes van de monumenten bij feature $f$.
-			\item $n_{fm} =$ de genormaliseerde waarde van feature $f$ van monument $m$.
-		\end{itemize}
+		
+		\noindent Met:
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$v_{fm}$ & de waarde van feature $f$ van monument $m$.\\
+				$v_{f}$ & de waardes van de monumenten bij feature $f$.\\
+				$n_{fm}$ & de genormaliseerde waarde van feature $f$ van monument $m$.
+			\end{tabular}
+		\end{center}
 		
 		\subsubsection{Vergelijking van monumenten}
 		Als we de features verkregen door de FeatureExtractor met elkaar willen vergelijken, beschouwen we de 399 features als een vector en kunnen we deze vergelijken met behulp van een zogenaamde Euclidian Distance. Omdat in de Euclidian Distance een voor onze vergelijking onnodige wortel-functie owrdt gebruikt, hebben we deze weggelaten in de functie om de afstanden tussen de monumenten te berekenen. Een normale Euclidian Distance ziet er dus als volgt uit:
@@ -172,11 +175,14 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			ed(q, p) = (q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2
 		\end{equation}
 		Beide vergelijkingen gebruiken de volgende variabelen:
-		\begin{itemize}
-			\item $q$/$p =$ vectoren van de 399 features van monument $q$ of $p$.
-			\item $q_{i}$/$p_{i} =$ feature $i$ van monument $q$ of $p$.
-			\item $n =$ het totaal aantal features per monument.
-		\end{itemize}
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$q$/$p$ & vectoren van de 399 features van monument $q$ of $p$.\\
+				$q_{i}$/$p_{i}$ & feature $i$ van monument $q$ of $p$.\\
+				$n$ & het totaal aantal features per monument.
+			\end{tabular}
+		\end{center}
+		
 		Door een bepaald monument $q$ te noemen en alle monumenten langs te gaan en deze $p$ te noemen, kunnen we de afstanden tussen $q$ en de andere monumenten vinden. Het monument met de kleinste afstand is het meest 'visueel gelijkend'.
 		
 	\subsection{Completeren dataset}
