@@ -2,6 +2,7 @@
 
 return array(
    'providers' => array(
-		'facebook' => true
+		'facebook' => true,
+		'twitter' => true,
 	),
 );
