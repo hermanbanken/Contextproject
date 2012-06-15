@@ -49,6 +49,7 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('bootstrap-tooltip', 'lib/bootstrap/js/bootstrap-tooltip.js')
 			->js('bootstrap-modal', 'lib/bootstrap/js/bootstrap-modal.js')
 			->js('ca-forms', 'js/forms.js')
+			->snippet("og:title", "<meta property='og:image' content='http://cultuurapp.nl/images/touch-icon-114x114.png' />")
 			->snippet(
 				"facebook-api",
 				"<div id='fb-root'></div> <script>(function(d, s, id) {
