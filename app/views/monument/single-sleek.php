@@ -17,18 +17,6 @@
 						<a class="btn"
 							href="<?php echo URL::site('monument/visualcomparison/'.$monument->id_monument); ?>">Vergelijk
 							visueel</a>
-						<?php
-						if ($user) {
-                $visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
-						<a style="margin-top: 10px;"
-							class="btn <?php echo ($visited ? 'btn-success ' : ''); ?>visited"
-							href="#"><i
-							class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i>
-							<span class="text"><?php echo ($visited ? __('single.visited') : __('single.not-visited')); ?>
-						</span> </a>
-						<?php
-						}
-						?>
 					</p>
 				</div>
 			</div>
@@ -38,6 +26,20 @@
 
 			</p>
 			<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
+
+			<?php
+			if ($user) {
+				$visited = in_array($monument->id_monument, $user->visited_monument_ids()); ?>
+				<a style="margin-top: 4px"
+				   class="btn <?php echo ($visited ? 'btn-success ' : ''); ?>visited"
+				   href="#"><i
+						class="icon-ok <?php echo ($visited ? 'icon-white ' : ''); ?>"></i>
+							<span class="text"><?php echo ($visited ? __('single.visited') : __('single.not-visited')); ?>
+						</span> </a>
+				<?php
+			}
+			?>
+
 		</div>
 
 		<div class="span4 monument-single-details">
