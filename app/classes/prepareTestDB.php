@@ -98,9 +98,23 @@ class PrepareTestDB {
 			 ->values(array(3,1,1,"test monument3", 1, 1, 3, 1, '32', '1234EF', 1, "description commons3", "description3", 10.3, 10.3, 0))
 			 ->values(array(4,1,1,"test monument4", 1, 1, 3, 1, '32', '1234GH', 1, "description commons4", "vertaling", 10.3, 10.3, 0))
 			 ->values(array(5,1,1,"test monument5", 1, 1, '', 1, '32', '1234IJ', 1, "description commons5", "description5", '', '', 0))
+			 ->values(array(6,1,1,"test monument6", 1, 1, '', 1, '32', '1234IJ', 1, "description commons6", "description6", '52', '4.5', 0))
+			 ->values(array(-1,1,1,"test monument-1", 1, 1, '', 1, '32', '1234IJ', 1, "description commons-1", "description-1", '52', '4.5', 0))
 			 ->execute();
 			 
+			 
+			 
+			 //towns
+			 DB::insert("towns", array("id_town", "id_municipality", "name"))
+			 ->values(array(1,1,"town1"))
+			 ->values(array(2,2,"town2"))
+			 ->values(array(3,3,"town3"))
+			 ->execute();
+			 
+			 
+			 
 	}
+			
 			
 			
 			
