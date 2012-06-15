@@ -20,6 +20,7 @@ class MapTest extends Kohana_UnitTest_TestCase
 		
 	}
 	
+	/*
 	public function test_SelectieItems(){
 		
 		$pageDOM = str_get_html(Request::factory('monument/map')->execute()->send_headers()->body());
@@ -39,4 +40,5 @@ class MapTest extends Kohana_UnitTest_TestCase
 		//$this->assertCount(3, $inputs);
 		//$this->assertCount(2, $selects);
 	}
+	*/
 }
