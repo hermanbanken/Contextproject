@@ -23,23 +23,23 @@ class Controller_User extends Controller_Template {
     }
 
 	public function action_profile(){
-    $user = Auth::instance()->get_user();
-    if(!$user){
-      $this->request->redirect('user/login');
-    } else {
-      $v = View::factory('user/profile');
-      $v->bind('user', $user);
+		$user = Auth::instance()->get_user();
+		if(!$user){
+		  $this->request->redirect('user/login');
+		} else {
+		  $v = View::factory('user/profile');
+		  $v->bind('user', $user);
 
-      $this->template->body = $v;
-    }
+		  $this->template->body = $v;
+		}
 	}
  
     public function action_register() 
     {
-        $this->template->body = View::factory('user/register')
+        $v = View::factory('user/register')
             ->bind('errors', $errors)
             ->bind('message', $message)
-			      ->set('post', $this->request->post());
+			->set('post', $this->request->post());
              
         if (HTTP_Request::POST == $this->request->method()) 
         {           
@@ -78,11 +78,12 @@ class Controller_User extends Controller_Template {
                 $errors = $etree;
             }
         }
+		$this->template->body = (string) $v;
     }
      
     public function action_login() 
     {
-        $this->template->body = View::factory('user/login')
+        $this->template->body = (string) View::factory('user/login')
             ->bind('message', $message);
              
         if (HTTP_Request::POST == $this->request->method()) 

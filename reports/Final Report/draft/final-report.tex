@@ -52,36 +52,85 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 %
 \section{Oplossingen / Highlights}
 	\subsection{Textuele analyse}
-	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Uit een dergelijk grote dataset van $\pm$ 25000 monumenten kan interessante data worden herleid.
+	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Uit een dergelijk grote dataset van $\pm$ 25.000 monumenten kan interessante data worden herleid.
 
 		\subsubsection{Trefwoorden}
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
 		
 		\subsubsection{Term Frequency Inverse Document Frequency}
-		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Hoe hoger de waarde is, hoe specifieker het trefwoord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. 
+		Term Frequency Inverse Document Frequency (TF-IDF) geeft elk woord in een tekst een bepaalde waarde. Deze waarde is een afweging tussen twee waarden. Hoe hoger de totaalwaarde is, hoe hoger de score voor het woord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Ieder woord $w$ in beschrijving $x$ heeft de volgende Term Frequency:
 		
 		\begin{equation}
-			TF = \frac{\text{occ}}{\text{totalocc}}
+			TF_w = \frac{\text{occ}_w}{\text{count}_x}
 		\end{equation}
 		
-		Het tweede deel is Inverse Document Frequency. Dit is inver evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. Inverse Document Frequency wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
+		\noindent Met:
+		\begin{center}
+			\begin{tabular}{ c | l }
+				TF$_w$ & Term Frequency van woord $w$. \\
+			  	occ$_w$ & Aantal voorkomens van het woord $w$ in de beschrijving. \\
+			  	count$_x$ & Totaal aantal woorden in de beschrijving $x$. 
+			\end{tabular}
+		\end{center}
+		
+		Het tweede deel is Inverse Document Frequency (IDF). Dit is invers evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefilterd. De Inverse Document Frequency van woord $w$ wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
 		
 		\begin{equation}
-			IDF = \log{\frac{\text{total}}{\text{subset}}}
+			IDF_w = \log\left({\frac{\text{total}}{\text{subset}_w}}\right)
 		\end{equation}
 		
+		\noindent Met:
+		\begin{center}
+			\begin{tabular}{ c | l }
+				IDF$_w$ & Inverse Document Frequency van woord $w$. \\
+			  	total & Totaal aantal beschrijvingen (monumenten). \\
+			  	subset$_w$ & Aantal beschrijvingen (monumenten) waar woord $w$ in voorkomt.
+			\end{tabular}
+		\end{center}
 		
-		Aan de hand van dit algoritme heeft CultuurApp alle woorden van alle beschrijvingen van alle monumenten geanalyseerd en waarden gegeven. CultuurApp maakt live berekeningen en extraheert geautomatiseerd sleutelwoorden uit de beschrijving door voor ieder woord in de beschrijving van het monument een TFIDF waarde te berekenen en de woorden met de hoogste score worden als sleutelwoord aangewezen.
+		Aan de hand van dit algoritme heeft CultuurApp alle woorden van alle beschrijvingen van alle monumenten geanalyseerd en waarden gegeven. CultuurApp maakt live berekeningen en extraheert geautomatiseerd sleutelwoorden uit de beschrijving door voor ieder woord in de beschrijving van het monument een TFIDF waarde te berekenen en de woorden met de hoogste score worden als sleutelwoord aangewezen. De Term Frequency en Inverse Document Frequency worden door deze te vermenigvuldigen \'e\'en waarde:
 		
 		\begin{equation}
-			\text{Score woord} = \frac{\text{occ}}{\text{totalocc}} \cdot \log{\frac{\text{total}}{\text{subset}}}
+			\text{TF-IDF}_w =\frac{\text{occ}_w}{\text{count}_x} \cdot  \log\left({\frac{\text{total}}{\text{subset}_w}}\right)
 		\end{equation}
+		
+		\noindent Met:
+		\begin{center}
+			\begin{tabular}{ c | l }
+				occ$_w$ & Aantal voorkomens van het woord $w$ in de beschrijving. \\
+			  	count$_x$ & Totaal aantal woorden in de beschrijving $x$.\\
+				total & Totaal aantal beschrijvingen (monumenten). \\
+			  	subset$_w$ & Aantal beschrijvingen (monumenten) waar woord $w$ in voorkomt.
+			\end{tabular}
+		\end{center}
+		
+		Per woord in een beschrijving berekent CultuurApp de TF-IDF waarde. De top vijf woorden met de hoogste TF-IDF waarde worden door CultuurApp aangewezen als tags (trefwoorden). Deze trefwoorden\label{trefwoorden_berekening} toont CultuurApp op de monumentpagina.
 		
 		\subsubsection{Tag-cloud}
-		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TFIDF waarde vastgesteld relatief naar de monumenten. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TFIDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. Door willekeurig bovengemiddelde waarden te pakken uit de set, kan een tagcloud worden gemaakt. Woorden met een hogere score krijgen een groter lettertype.
+		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TF-IDF waarde vastgesteld relatief naar de monumenten. Dit door bij ieder voorkomen van een woord zijn TF-IDF waarde te berekenen en hiervan een gemiddelde te nemen. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TF-IDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. 
+		
+		\begin{equation}
+			\overline{\text{TF-IDF}_w} =\frac{\sum \left\{ \frac{\text{occ}_w}{\text{count}_x} \cdot  \log{\left(\frac{\text{total}}{\text{subset}_w}}\right)\right\}}{subset_w}
+		\end{equation}
+		
+		\noindent Voor ieder monument $x$ waar woord $w$ voorkomt, met:
+		
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$x$ & monument waar woord $w$ in de beschrijving staat.\\
+				occ$_w$ & Aantal voorkomens van het woord $w$ in de beschrijving. \\
+			  	count$_x$ & Totaal aantal woorden in de beschrijving $x$.\\
+				total & Totaal aantal beschrijvingen (monumenten). \\
+			  	subset$_w$ & Aantal beschrijvingen (monumenten) waar woord $w$ in voorkomt.\\
+			$\overline{\text{TF-IDF}_w}$ & Gemiddelde TF-IDF waarde van woord $w$.
+			
+			\end{tabular}
+		\end{center}
+		
+		Door willekeurig bovengemiddelde waarden te pakken uit de set, kan een tagcloud worden gemaakt. Alleen woorden met een TF-IDF waarde hoger dan gemiddeld worden getoond, hierdoor worden stopwoorden gefilterd. Woorden met een hogere score krijgen een groter lettertype.
 		
 		\subsubsection{Gerelateerde monumenten}
-		Ieder monument heeft steekwoorden. Hoe groter de interceptie van de steekwoorden van twee verschillende monumenten is, hoe groter de kans is dat deze monumenten bij elkaar horen. CultuurApp zoekt bij een monument welke andere monumenten zoveel mogelijk steekwoorden overeen hebben, om op deze manier gerelateerde monumenten te bepalen.
+		Ieder monument heeft steekwoorden. Hoe groter de interceptie van de steekwoorden van twee verschillende monumenten is, hoe groter de kans is dat deze monumenten bij elkaar horen. CultuurApp zoekt bij een monument welke andere monumenten zoveel mogelijk tags (trefwoorden)[\ref{trefwoorden_berekening}] overeen hebben, om op deze manier gerelateerde monumenten te bepalen.
 
 	\subsection{Visuele analyse}		
 		\subsubsection{Feature Extraction}
@@ -106,12 +155,15 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		\begin{equation}
 			n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}
 		\end{equation}
-		Met:
-		\begin{itemize}
-			\item $v_{fm} =$ de waarde van feature $f$ van monument $m$.
-			\item $v_{f} =$ de waardes van de monumenten bij feature $f$.
-			\item $n_{fm} =$ de genormaliseerde waarde van feature $f$ van monument $m$.
-		\end{itemize}
+		
+		\noindent Met:
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$v_{fm}$ & de waarde van feature $f$ van monument $m$.\\
+				$v_{f}$ & de waardes van de monumenten bij feature $f$.\\
+				$n_{fm}$ & de genormaliseerde waarde van feature $f$ van monument $m$.
+			\end{tabular}
+		\end{center}
 		
 		\subsubsection{Vergelijking van monumenten}
 		Als we de features verkregen door de FeatureExtractor met elkaar willen vergelijken, beschouwen we de 399 features als een vector en kunnen we deze vergelijken met behulp van een zogenaamde Euclidian Distance. Omdat in de Euclidian Distance een voor onze vergelijking onnodige wortel-functie owrdt gebruikt, hebben we deze weggelaten in de functie om de afstanden tussen de monumenten te berekenen. Een normale Euclidian Distance ziet er dus als volgt uit:
@@ -123,11 +175,14 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			ed(q, p) = (q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2
 		\end{equation}
 		Beide vergelijkingen gebruiken de volgende variabelen:
-		\begin{itemize}
-			\item $q$/$p =$ vectoren van de 399 features van monument $q$ of $p$.
-			\item $q_{i}$/$p_{i} =$ feature $i$ van monument $q$ of $p$.
-			\item $n =$ het totaal aantal features per monument.
-		\end{itemize}
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$q$/$p$ & vectoren van de 399 features van monument $q$ of $p$.\\
+				$q_{i}$/$p_{i}$ & feature $i$ van monument $q$ of $p$.\\
+				$n$ & het totaal aantal features per monument.
+			\end{tabular}
+		\end{center}
+		
 		Door een bepaald monument $q$ te noemen en alle monumenten langs te gaan en deze $p$ te noemen, kunnen we de afstanden tussen $q$ en de andere monumenten vinden. Het monument met de kleinste afstand is het meest 'visueel gelijkend'.
 		
 	\subsection{Completeren dataset}
@@ -136,22 +191,65 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		\subsubsection{Visueel}
 		In eerste instantie was het idee om met behulp van visuele analyse van de foto's van monumenten alle monumenten zonder categorie in te delen in een bepaalde categorie aan de hand van de visuele eigenschappen van de monumenten die wel een categorie bevatten. Helaas werd vrij snel duidelijk dat visuele eigenschappen van monumenten zelden iets zeggen over de categorie waarin een monument zou moeten vallen. Zo wordt een watertoren aan de hand van compositie, kleur en textuur gemakkelijk ingedeeld in de categorie 'Kastelen', waar deze oorspronkelijk was ingedeeld in de categorie 'Overheidsgebouwen'. Zo heeft CultuurApp het eigenlijk niet echt 'verkeerd', maar zijn de selectiecriteria voor het indelen van een monument in een categorie niet gebaseerd op visuele eigenschappen. Hierdoor is het nooit gelukt om CultuurApp een percentage hoger dan 20\% 'goed bepaalde' categorie\"en te verkrijgen.
 	
-		\subsubsection{Textueel}
-		Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
+		\subsubsection{Tekstueel}
+		Voor de tekstuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categori\"en kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Maar wanneer een woord bij alle categori\"en vaak voorkomt, is het onwaarschijnlijk dat het woord is toe te wijzen aan een categorie. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categori\"en vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
+		
+		\begin{equation}
+		\text{TF-IDF}_m^i = \sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}{\text{occ}_w}\right)
+		\end{equation}
+		
+		\noindent Voor ieder woord $w$ voorkomend in categorie $i$ met:
+		
+		\begin{center}
+			\begin{tabular}{ c | l }
+				$m$ & Ongecategoriseerd monument $m$.\\
+				$w$ & De top 5 ge\"extraheerde tags.\\
+				$i$ & Iedere categorie waar woord $w$ voorkomt.\\
+				occ$_{wi}$ & Aantal voorkomens van het woord $w$ in categorie $i$. \\
+			  	occ$_{w}$ & Aantal voorkomens van het woord $w$.\\
+				count$_x$ & Totaal aantal gecategoriseerde monumenten.\\
+				TF-IDF$_m^i$ & TF-IDF waarde monument $m$ voor categorie $i$.
+			
+			\end{tabular}
+		\end{center}
+
+	
+	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven tags (keywords) uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TF-IDF waarde van de tag te vermenigvuldigen met de TF-IDF waarde van de tag relatief tot de categorie. Deze waarden worden voor de tags opgeteld, zodat een totaalscore is bepaald per categorie. 
 	
 	\begin{equation}
-		\text{Score woord i category j} = p_{ij} = \frac{occ_{ij}}{occ_{i\*}} \cdot \log{\frac{count(j)}{occ_{i\*}}}
+		\text{Categorie}: max_i\left(\sum_{w=1}^5 \text{TF-IDF}_m^i \cdot \overline{\text{TF-IDF}_w}\right) 
 	\end{equation}
-	
-	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TF-IDF waarde van het sleutelwoord te vermenigvuldigen met de TF-IDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. 
+	\begin{center}
+	$=$
+	\end{center}
 	
 	\begin{equation}
-		\text{Categorie}: max_j(\sum_{i=1}^5 p_{ij}) = max_j(\sum_{i=1}^5 \frac{occ_{ij}}{occ_{i\*}} \cdot \log{\frac{count(j)}{occ_{i\*}}})
-	\end{equation}
+	max_i\left(\sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}\right)\cdot \frac{\sum \left\{ \frac{\text{occ}_w}{\text{count}_x} \cdot  \log{\left(\frac{\text{total}}{\text{subset}_w}}\right)\right\}}{subset_w}
+ \right)
+		\end{equation}
 	
-	CultuurApp kijkt nu welke categorie het meest waarschijnlijk is en wijst deze categorie toe aan het monument.\\
-	\\
-	Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 19200 categorie\"en juist te voorspellen.
+	\noindent Voor iedere categorie $i$ en de top 5 tags $w$ met:
+	
+	\begin{center}
+			\begin{tabular}{ c | l }
+				$m$ & Ongecategoriseerd monument $m$.\\
+				$w$ & De top 5 ge\"extraheerde tags.\\
+				$i$ & Iedere categorie waar woord $w$ voorkomt.\\
+				total & Totaal aantal monumenten.\\
+				$\text{subset}_w$ & Aantal monumenten waar woord $w$ voor komt.\\
+				occ$_{wi}$ & Aantal voorkomens van het woord $w$ in categorie $i$. \\
+			  	occ$_{w}$ & Aantal voorkomens van het woord $w$.\\
+				count$_x$ & Totaal aantal gecategoriseerde monumenten.\\
+				TF-IDF$_m^i$ & TF-IDF waarde monument $m$ voor categorie $i$.\\
+			$\overline{\text{TF-IDF}_w}$ & Gemiddelde TF-IDF waarde van woord $w$.
+		
+			
+			\end{tabular}
+		\end{center}
+	
+	\noindent CultuurApp kijkt nu welke categorie $i$ de hoogste score haalt en het meest waarschijnlijk is .Deze categorie wordt toegewezen aan het monument.
+	
+	Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, is het mogelijk om de juistheid van de voorspelling te controleren. Aan de hand van tekstuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 19200 van de categorie\"en van de gecategoriseerde monumenten juist te voorspellen.
 		
 	\subsection{Aanbevelingen}
 	Toeristen zoeken naar monumenten die ze interessant vinden, maar willen daarbij ook geprikkeld worden. Monumenten ontdekken, zichzelf verrijken met monumenten die ze zelf niet zouden kunnen vinden. Hiervoor zijn aanbevelingen de uitkomst. Binnen CultuurApp zijn twee plaatsen waar aanbevelingen worden gegeven, namelijk op de profielpagina en bij een monument dat wordt bekeken:
@@ -176,13 +274,13 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			\item Zoek de set van monumenten van de aan te bevelen toerist of CultuurApp-gebruiker, noem deze $A$.
 			\item Selecteer de sets monumenten van alle gebruikers die monument $m$ bevatten, noem deze $Q$.
 			\item Loop door $Q$ heen, noem een set uit $Q$ steeds $B$ en sla de score $s = \left|A \cap B\right|$ op in $C$ als $C\left[s\right] = B$.
-			\item Sorteer $C$ aflopend op score, haal de eerste set op en noem deze $D$.d
+			\item Sorteer $C$ aflopend op score, haal de eerste set op en noem deze $D$.
 			\item Verwijder nu de monumenten van $A$ (deze bevat ook monument $m$) uit $D$ en sla deze op in $E$, oftewel $E = D - A$.
 			\item Beveel op willekeurige volgorde monumenten uit $E$ aan aan de toerist of CultuurApp-gebruiker.
 		\end{enumerate}
 	
 	\subsection{Externe informatiebronnen}
-		CultuurApp maakt gebruik van enkele externe informatiebronnen om bijvoorbeeld het weer en de faciliteiten uit de omgeving van een monument te  weergeven. Externe informatiebronnen zijn handig, maar gevaarlijk voor de betrouwbaarheid van het systeem, omdat ze bijvoorbeeld tijdelijk onbereikbaar kunnen zijn. Voor het gebruik van deze bronnen zijn verschillende systeemcomponenten geschreven, waardoor deze externe bronnen altijd op dezelfde manier benaderd en gecached worden. Een externe informatiebron wordt nooit $\pm$ 25.000 keer achter elkaar aangroepen om de informatie van alle monumenten in \'e\'en keer op te slaan. In plaats daarvan wordt op het moment dat een toerist een bepaald monument bekijkt alle informatie indien nodig live van de externe informatiebronnen opgehaald en direct opgeslagen in de database (caching). Dit zorgt ervoor dat er de volgende keer dat deze informatie wordt opgevraagd geen contact nodig is met de externe informatiebron. Het aantal dagen dat informatie opgeslagen blijft, verschilt per informatiebron, maar is nooit oneindig, omdat de externe informatiebron variabel zijn.
+		CultuurApp maakt gebruik van enkele externe informatiebronnen om bijvoorbeeld het weer en de faciliteiten uit de omgeving van een monument te  weergeven. Externe informatiebronnen zijn handig, maar gevaarlijk voor de betrouwbaarheid van het systeem, omdat ze bijvoorbeeld tijdelijk onbereikbaar kunnen zijn. Voor het gebruik van deze bronnen zijn verschillende systeemcomponenten geschreven, waardoor deze externe bronnen altijd op dezelfde manier benaderd en gecached worden. Een externe informatiebron wordt nooit $\pm$ 25.000 keer achter elkaar aangroepen om de informatie van alle monumenten in \'e\'en keer op te slaan. In plaats daarvan wordt op het moment dat een toerist een bepaald monument bekijkt alle informatie indien nodig live van de externe informatiebronnen opgehaald en direct opgeslagen in de database (caching). Dit zorgt ervoor dat er de volgende keer dat deze informatie wordt opgevraagd geen contact nodig is met de externe informatiebron. Het aantal dagen dat informatie opgeslagen blijft, verschilt per informatiebron, maar is nooit oneindig, omdat de externe informatiebronnen variabel zijn.
 	
 		\subsubsection{Wunderground}
 		Met de API van Wunderground\footnote{http://www.wunderground.com/weather/api/} is het mogelijk om aan de hand van een longitude en latitude een weersvoorspelling te verkrijgen in. Omdat het weer binnen een stad in Nederland redelijk constant is, hebben we besloten om het weer per stad te cachen. Weersvoorspellingen worden per dag per stad gecached, waardoor voor iedere stad het weer dus \'e\'en keer per dag moet worden opgehaald.
@@ -200,6 +298,32 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 	
 	\subsection{Ontwikkelfase}
 	De ontwikkelfase ging bij de eerste iteratie erg hard, maar dit was noodzakelijk, omdat we veel tijd verloren waren aan de voorbereidingsfase. De taken werden onderverdeeld en individuele software werd automatisch gekoppeld door vooraf vastgestelde eigenschappen. In de hierop volgende iteraties bleek het regelmatig nodig te zijn code uit de eerste iteratie te verbeteren. Te implementeren features werden complexer en voortgang werd trager. Iedere week hebben we echter een deadline voor onszelf gesteld. Wanneer taken niet afgemaakt werden tijdens de bijeenkomsten, werd thuis verder gewerkt. Er is vele malen meer tijd in het project komen te zitten dan voorgeschreven was. Dit doordat de groepsgenoten allen gedreven zijn, trots zijn op wat ze doen en dit een interessant project was. Het cre\"eeren van data maakt veel mogelijk en deze nieuwe mogelijkheden zijn interessant om te ontdekken. Tijdens bijeenkomsten is alles overlegd en ideeen uitgewisseld. Bij het onmogelijk blijken van features zijn oplossingen besproken en geimplementeerd. Door regelmatige afwezigheid en/of te laat komen van een van de groepsgenoten zijn irritaties ontstaan. Deze irritaties zijn uitgepraat en de taakverdeling is hierop afgesteld. 
+	
+	\subsection{Taakverdeling}
+	\begin{tabular}{l || c | c | c | c}
+  		Feature&					Tim&Herman&Rutger&Sjoerd\\
+  		\hline
+  		\hline						%	T   H   R   S
+  		Kaart-weergave&					  & x & x &   \\
+  		Lijst-weergave&					x & x & x & x \\
+  		Detail-weergave&				  & x &   & x \\
+  		Filtering en zoeken&			  & x & x & x \\
+  		Sortering&						  & x & x & x \\
+  		Visuele Vergelijking&			  &   &   & x \\
+  		Textuele Vergelijking&			  &   & x &   \\
+  		Inloggen en registreren&		  & x &   &   \\
+  		Foursquare&			  			  & x &   &   \\
+  		Flickr&				  			  &   &   & x \\
+  		Wunderground&		  			  &   &   & x \\
+  		Google Places&		  			  &   &   & x \\
+  		Thesauraus&		  				  &   & x &   \\
+  		Completeren dataset&	  		  &   & x & x \\
+  		Logging&				  		  &   &   & x \\
+  		Aanbevelingen \& Populariteit&	  &   &   & x \\
+  		Translator&		  				x & x &   &   \\
+  		Lay-out&			  			  & x &   &   \\
+  		Testing&		  			  	x &   &   &
+  	\end{tabular}
 
 	\subsection{Individuele reflectie op het teamwork}
 		

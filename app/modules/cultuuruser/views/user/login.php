@@ -4,12 +4,17 @@
 	    <h3><?php echo __('login.login-to-cultuurapp'); ?></h3>
 	</div>
 	<div class="modal-body">
-	<?php 	
+	<?php
 		echo Form::open(URL::site('user/login'));
-		if ($message){
-			echo $message;
+
+		$messages = Message::pull();
+		foreach($messages as $m){
+			echo "<div class='alert alert-$m[type]'>$m[message]</div>";
 		}
-	
+		if ($message){
+			echo "<div class='alert alert-error'>$message</div>";
+		}
+
 		echo Form::input('username', Request::current()->post('username'), array('placeholder'=>__("login.username"))); 
 		echo Form::password('password', array('placeholder'=>__("login.password")));
 	
@@ -26,12 +31,12 @@
 		<div class="bs-links">
 			<p><a href="<?php echo URL::site("user/register"); ?>"><?php echo __('login.register'); ?></a> <?php echo __("login.no-account"); ?></p>
 			<div class="btn-group">
-				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>">F</a>
-				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>"><?php echo __('login.with-fb'); ?></a>
+				<?php echo HTML::anchor("user/provider/facebook", "F", array("class"=> "btn btn-small btn-primary"))?>
+				<?php echo HTML::anchor("user/provider/facebook", __('login.with-fb'), array("class"=> "btn btn-small btn-primary"))?>
 			</div>
 			<div class="btn-group">
-				<a class="btn btn-small btn-info">T</a>
-				<a class="btn btn-small btn-info"><?php echo __('login.with-twitter'); ?></a>
+				<?php echo HTML::anchor("user/provider/twitter", "T", array("class"=> "btn btn-small btn-info"))?>
+				<?php echo HTML::anchor("user/provider/twitter", __('login.with-twitter'), array("class"=> "btn btn-small btn-info"))?>
 			</div>
 		</div>
 	</div>
