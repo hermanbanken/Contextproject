@@ -2,6 +2,7 @@
 class PrepareTestDB {   
     
 	public static function prepDB(){
+		   ini_set('memory_limit', '12800M');
 		   
 		   $db = Database::instance();
 			
@@ -111,6 +112,8 @@ class PrepareTestDB {
 			 ->values(array(3,3,"town3"))
 			 ->execute();
 			 
+			 
+			
 			 
 			 
 	}
