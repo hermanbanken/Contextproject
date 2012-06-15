@@ -235,7 +235,7 @@ function show_content_photos(tab) {
 			// Add recommendations to html
 			$.each(data, function(key, monument) {				
 				html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
-				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
+				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img class="aanbeveling_tooltip" title="'+monument.name+'<br />'+monument.street+' '+monument.streetNumber+'<br />'+monument.town+'" style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
 				html += '</div>';
 			});
 			
@@ -245,6 +245,7 @@ function show_content_photos(tab) {
 			// Clear and fill content
 			$("#ajax_content_photos").empty();
 			$("#ajax_content_photos").html(html);
+			$('.aanbeveling_tooltip').tooltip();
 		}, "json");
 	}
 	else if (tab == 'flickr') {

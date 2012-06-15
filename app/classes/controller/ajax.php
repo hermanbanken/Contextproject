@@ -75,8 +75,15 @@ class Controller_Ajax extends Kohana_Controller_Template {
 			$monuments = array();
 			foreach ($recommendations['monuments'] AS $key => $monument) {
 				$url = $monument->thumbUrl();
+				$name = $monument->name();
+				$town = $monument->town->name;
+				$street = $monument->street->name;
+				
 				$monuments[$key] = $monument->as_array();
 				$monuments[$key]['photo_url'] = $url;
+				$monuments[$key]['name'] = $name;
+				$monuments[$key]['town'] = $town;
+				$monuments[$key]['street'] = $street;
 				$monuments[$key]['recommendedwhy'] = ORM::factory('user', $recommendations['tracker']->id_user)->username;
 			}
 
