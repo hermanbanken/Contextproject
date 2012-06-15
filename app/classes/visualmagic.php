@@ -21,6 +21,9 @@ class VisualMagic {
 	 * @return array with monuments
 	 */
 	public static function similars($monument, $limit = 12, $features = false) {
+		// May cost lots of time
+		set_time_limit(0);
+		
 		// Set initial array
 		$monuments = array();
 
