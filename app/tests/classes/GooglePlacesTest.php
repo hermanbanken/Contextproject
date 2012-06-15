@@ -19,9 +19,9 @@ class GooglePlacesTest extends Kohana_UnitTest_TestCase
 		
 		$monument1 = ORM::factory('monument')->where('id_monument','=',6)->find();
 		
-		$places = GooglePlaces::places($monument1, "bar|cafe", "rating", '500000', true, 5);
+		$places = GooglePlaces::places($monument1, "bar|cafe", "rating", 999999.999, false, 5);
 		
-		print_r($places->as_array());
+		//print_r($places->as_array());
 		
 		
 	}

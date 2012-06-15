@@ -13,6 +13,9 @@ class RijksmonumentenTest extends Kohana_UnitTest_TestCase
 		
 		$info2 = Rijksmonumenten::monument($monument2);
 		
+		
+		$this->assertEquals('rce:' . $monument1->id_monument, $info1->Id);
+		
 		$this->assertFalse($info2);
 		//print_r($info);
 		

@@ -31,6 +31,17 @@ class LoggerTest extends Kohana_UnitTest_TestCase
 		
 	}
 	
+	public function test_category(){
+		
+		$logger = new Logger;
+		
+		$categorie = Model::factory('Category');
+		$categorie->id_category = 1;
+		
+		$logger->category($categorie);
+		
+	}
+	
 }
 
 ?>

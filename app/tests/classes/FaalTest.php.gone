@@ -1,0 +1,9 @@
+<?php defined('SYSPATH') or die('No direct access allowed!');
+ 
+class SampleTest2 extends Kohana_UnitTest_TestCase
+{
+    public function test_faal()
+    {
+        $this->assertEquals(3, 1+1);
+    }
+}

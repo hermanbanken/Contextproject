@@ -19,7 +19,7 @@ class FlickrTest extends Kohana_UnitTest_TestCase
 		
 		$monument1 = ORM::factory('monument')->where('id_monument','=',1)->find();
 		
-		$photos = Flickr::photos($monument1, 2);
+		//$photos = Flickr::photos($monument1, 2);
 		
 		//print_r($photos);
 		
