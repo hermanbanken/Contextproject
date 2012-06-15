@@ -15,7 +15,7 @@ class Controller_Error_Handler extends Controller_Template
 		{
 			if ($message = rawurldecode($this->request->param('message')))
 			{
-				$this->template->message = $message;
+				$this->template->message = htmlentities($message);
 			}
 		}
 		else
@@ -29,7 +29,6 @@ class Controller_Error_Handler extends Controller_Template
 	public function action_404()
 	{
 		$this->template->title = '404 Not Found';
-		$this->template->message = htmlentities($this->request->param("message"));
 
 		// Here we check to see if a 404 came from our website. This allows the
 		// webmaster to find broken links and update them in a shorter amount of time.
