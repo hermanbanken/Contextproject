@@ -16,42 +16,26 @@ class Recommender {
 	 * @return monuments $monuments
 	 */
 	public static function recommend($limit) {
-		// Get tracker of user and ids of monuments
-		$tracker = ORM::factory('tracker')->tracker();
-		$monuments = $tracker->monuments();
-
-		// Select all trackers except above selected tracker
-		$trackers = ORM::factory('tracker')->where('id_tracker', '!=', $tracker->id_tracker)->order_by(DB::expr('RAND()'))->find_all();
-
-		// Init array and max_score
-		$similars = array();
-		$max_score = -1;
-		$similarstracker = ORM::factory('tracker');
-
-		// Loop through all trackers (random order, so if two or more trackers have same score, one of them will be randomly selected
-		foreach ($trackers AS $atracker) {
-			// Get ids of monuments of tracker
-			$amonuments = $atracker->monuments();
-
-			// Find number of matches between monuments of own tracker and other tracker
-			$score = self::matches($monuments, $amonuments);
-
-			// If score is larger then max score, enlarge max score, save similar monuments and save tracker
-			if ($score > $max_score) {
-				$max_score = $score;
-				$similars = $amonuments;
-				$similarstracker = $atracker;
-			}
+		// Get tracker of user
+		$utracker = ORM::factory('tracker')->tracker();
+		
+		// Get similar trackers
+		$similartrackers = $utracker->similars();
+		
+		// If tracker is found, select it
+		$similartracker = ORM::factory('tracker');
+		if (count($htrackers) != 0) {
+			$similartracker = $htrackers[0];
 		}
-
-		// Remove matching monuments (so monuments which are viewed already are not showed)
-		$ids = self::removematches($monuments, $similars);
-
+		
+		// Remove matches
+		$ids = self::removematches($utracker->monuments(), $similartracker->monuments());
+		
 		// Get monuments
 		$monuments = self::query($ids, $limit);
-
+		
 		// Return monuments and tracker
-		return array('monuments' => $monuments, 'tracker' => $similarstracker);
+		return array('monuments' => $monuments, 'tracker' => $similartracker);
 	}
 
 	/**
@@ -63,37 +47,33 @@ class Recommender {
 	 */
 	public static function recommend_monument($monument, $limit) {
 		// Get tracker of  user
-		$atracker = ORM::factory('tracker')->tracker();
-
-		// Get random tracker which contains selected monument
-		$tracker = DB::select('id_tracker')
-		->distinct(true)
-		->from('logs_monuments')
-		->join('logs')->on('logs.id_log', '=', 'logs_monuments.id_log')
-		->where('id_monument', '=', $monument->id_monument)
-		->where('id_tracker', '!=', $atracker->id_tracker)
-		->order_by(DB::expr('RAND()'))
-		->limit(1)
-		->execute();
-
-		// Init array and similarstracker
-		$ids = array();
-		$similarstracker = ORM::factory('tracker');
-
-		// If tracker is found, update similarstracker and get ids of other monuments in tracker
-		if (isset($tracker[0])) {
-			$similarstracker = ORM::factory('tracker', $tracker[0]['id_tracker']);
-			$ids = $similarstracker->monuments();
+		$utracker = ORM::factory('tracker')->tracker();
+		
+		// Get similar trackers
+		$similartrackers = $utracker->similars();
+		
+		// Check if monument is found in trackers
+		foreach ($similartrackers AS $key => $similartracker) {
+			if (!in_array($monument->id_monument, $similartracker['tracker']->monuments())) {
+				unset($similartrackers[$key]);
+			}
 		}
-
-		// Remove current monument
-		unset($ids[array_search($monument->id_monument, $ids)]);
-
+		
+		// Get first similar tracker with monument in it
+		$similartracker = ORM::factory('tracker');
+		foreach ($similartrackers AS $similartracker) {
+			$similartracker = $similartracker['tracker'];
+			break;
+		}
+		
+		// Remove matches
+		$ids = self::removematches($utracker->monuments(), $similartracker->monuments());
+		
 		// Get monuments
 		$monuments = self::query($ids, $limit);
-
+		
 		// Return monuments and tracker
-		return array('monuments' => $monuments, 'tracker' => $similarstracker);
+		return array('monuments' => $monuments, 'tracker' => $similartracker);
 	}
 
 	/**

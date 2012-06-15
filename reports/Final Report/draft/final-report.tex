@@ -52,7 +52,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 %
 \section{Oplossingen / Highlights}
 	\subsection{Textuele analyse}
-	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Uit een dergelijk grote dataset van $\pm$ 25000 monumenten kan interessante data worden herleid.
+	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Uit een dergelijk grote dataset van $\pm$ 25.000 monumenten kan interessante data worden herleid.
 
 		\subsubsection{Trefwoorden}
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
@@ -176,13 +176,13 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			\item Zoek de set van monumenten van de aan te bevelen toerist of CultuurApp-gebruiker, noem deze $A$.
 			\item Selecteer de sets monumenten van alle gebruikers die monument $m$ bevatten, noem deze $Q$.
 			\item Loop door $Q$ heen, noem een set uit $Q$ steeds $B$ en sla de score $s = \left|A \cap B\right|$ op in $C$ als $C\left[s\right] = B$.
-			\item Sorteer $C$ aflopend op score, haal de eerste set op en noem deze $D$.d
+			\item Sorteer $C$ aflopend op score, haal de eerste set op en noem deze $D$.
 			\item Verwijder nu de monumenten van $A$ (deze bevat ook monument $m$) uit $D$ en sla deze op in $E$, oftewel $E = D - A$.
 			\item Beveel op willekeurige volgorde monumenten uit $E$ aan aan de toerist of CultuurApp-gebruiker.
 		\end{enumerate}
 	
 	\subsection{Externe informatiebronnen}
-		CultuurApp maakt gebruik van enkele externe informatiebronnen om bijvoorbeeld het weer en de faciliteiten uit de omgeving van een monument te  weergeven. Externe informatiebronnen zijn handig, maar gevaarlijk voor de betrouwbaarheid van het systeem, omdat ze bijvoorbeeld tijdelijk onbereikbaar kunnen zijn. Voor het gebruik van deze bronnen zijn verschillende systeemcomponenten geschreven, waardoor deze externe bronnen altijd op dezelfde manier benaderd en gecached worden. Een externe informatiebron wordt nooit $\pm$ 25.000 keer achter elkaar aangroepen om de informatie van alle monumenten in \'e\'en keer op te slaan. In plaats daarvan wordt op het moment dat een toerist een bepaald monument bekijkt alle informatie indien nodig live van de externe informatiebronnen opgehaald en direct opgeslagen in de database (caching). Dit zorgt ervoor dat er de volgende keer dat deze informatie wordt opgevraagd geen contact nodig is met de externe informatiebron. Het aantal dagen dat informatie opgeslagen blijft, verschilt per informatiebron, maar is nooit oneindig, omdat de externe informatiebron variabel zijn.
+		CultuurApp maakt gebruik van enkele externe informatiebronnen om bijvoorbeeld het weer en de faciliteiten uit de omgeving van een monument te  weergeven. Externe informatiebronnen zijn handig, maar gevaarlijk voor de betrouwbaarheid van het systeem, omdat ze bijvoorbeeld tijdelijk onbereikbaar kunnen zijn. Voor het gebruik van deze bronnen zijn verschillende systeemcomponenten geschreven, waardoor deze externe bronnen altijd op dezelfde manier benaderd en gecached worden. Een externe informatiebron wordt nooit $\pm$ 25.000 keer achter elkaar aangroepen om de informatie van alle monumenten in \'e\'en keer op te slaan. In plaats daarvan wordt op het moment dat een toerist een bepaald monument bekijkt alle informatie indien nodig live van de externe informatiebronnen opgehaald en direct opgeslagen in de database (caching). Dit zorgt ervoor dat er de volgende keer dat deze informatie wordt opgevraagd geen contact nodig is met de externe informatiebron. Het aantal dagen dat informatie opgeslagen blijft, verschilt per informatiebron, maar is nooit oneindig, omdat de externe informatiebronnen variabel zijn.
 	
 		\subsubsection{Wunderground}
 		Met de API van Wunderground\footnote{http://www.wunderground.com/weather/api/} is het mogelijk om aan de hand van een longitude en latitude een weersvoorspelling te verkrijgen in. Omdat het weer binnen een stad in Nederland redelijk constant is, hebben we besloten om het weer per stad te cachen. Weersvoorspellingen worden per dag per stad gecached, waardoor voor iedere stad het weer dus \'e\'en keer per dag moet worden opgehaald.
@@ -200,6 +200,32 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 	
 	\subsection{Ontwikkelfase}
 	De ontwikkelfase ging bij de eerste iteratie erg hard, maar dit was noodzakelijk, omdat we veel tijd verloren waren aan de voorbereidingsfase. De taken werden onderverdeeld en individuele software werd automatisch gekoppeld door vooraf vastgestelde eigenschappen. In de hierop volgende iteraties bleek het regelmatig nodig te zijn code uit de eerste iteratie te verbeteren. Te implementeren features werden complexer en voortgang werd trager. Iedere week hebben we echter een deadline voor onszelf gesteld. Wanneer taken niet afgemaakt werden tijdens de bijeenkomsten, werd thuis verder gewerkt. Er is vele malen meer tijd in het project komen te zitten dan voorgeschreven was. Dit doordat de groepsgenoten allen gedreven zijn, trots zijn op wat ze doen en dit een interessant project was. Het cre\"eeren van data maakt veel mogelijk en deze nieuwe mogelijkheden zijn interessant om te ontdekken. Tijdens bijeenkomsten is alles overlegd en ideeen uitgewisseld. Bij het onmogelijk blijken van features zijn oplossingen besproken en geimplementeerd. Door regelmatige afwezigheid en/of te laat komen van een van de groepsgenoten zijn irritaties ontstaan. Deze irritaties zijn uitgepraat en de taakverdeling is hierop afgesteld. 
+	
+	\subsection{Taakverdeling}
+	\begin{tabular}{l || c | c | c | c}
+  		Feature&					Tim&Herman&Rutger&Sjoerd\\
+  		\hline
+  		\hline						%	T   H   R   S
+  		Kaart-weergave&					  & x & x &   \\
+  		Lijst-weergave&					x & x & x & x \\
+  		Detail-weergave&				  & x &   & x \\
+  		Filtering en zoeken&			  & x & x & x \\
+  		Sortering&						  & x & x & x \\
+  		Visuele Vergelijking&			  &   &   & x \\
+  		Textuele Vergelijking&			  &   & x &   \\
+  		Inloggen en registreren&		  & x &   &   \\
+  		Foursquare&			  			  & x &   &   \\
+  		Flickr&				  			  &   &   & x \\
+  		Wunderground&		  			  &   &   & x \\
+  		Google Places&		  			  &   &   & x \\
+  		Thesauraus&		  				  &   & x &   \\
+  		Completeren dataset&	  		  &   & x & x \\
+  		Logging&				  		  &   &   & x \\
+  		Aanbevelingen \& Populariteit&	  &   &   & x \\
+  		Translator&		  				x & x &   &   \\
+  		Lay-out&			  			  & x &   &   \\
+  		Testing&		  			  	x &   &   &
+  	\end{tabular}
 
 	\subsection{Individuele reflectie op het teamwork}
 		

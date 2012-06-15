@@ -53,6 +53,43 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 
 		return $this;
 	}
+	
+	/**
+	 * Get most similar trackers
+	 */
+	public function similars() {
+		// Monuments
+		$monuments = $this->monuments();
+		
+		// Select all trackers except above selected tracker
+		$trackers = ORM::factory('tracker')->where('id_tracker', '!=', $this->id_tracker)->order_by(DB::expr('RAND()'))->find_all();
+		
+		// Init tracker and tracker-array
+		$similartrackers = array();
+		$scores = array();
+		
+		// Loop through all trackers
+		foreach ($trackers AS $atracker) {
+			// Get ids of monuments of tracker
+			$amonuments = $atracker->monuments();
+		
+			// Find number of matches between monuments of own tracker and other tracker
+			$score = Recommender::matches($monuments, $amonuments);
+		
+			// Add to trackers
+			$similartrackers[] = $atracker;
+			$scores[] = $score;
+		}
+		
+		array_multisort($scores, SORT_DESC, SORT_REGULAR, $similartrackers);
+		
+		$return = array();
+		foreach ($similartrackers AS $key => $similartracker) {
+			$return[] = array('tracker' => $similartracker, 'score' => $scores[$key]);
+		}
+		
+		return $return;
+	}
 
 	/**
 	 * Set session and cookie from tracker
