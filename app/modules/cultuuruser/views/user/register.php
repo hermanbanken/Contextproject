@@ -18,8 +18,8 @@
 			}
 		}
 
-		echo Form::input('username', Request::current()->post('username'), array('placeholder'=>__('login.username')));
-		echo Form::input('email', Request::current()->post('email'), array('placeholder'=>__('register.email')));
+		echo Form::input('username', @$defaults['username'], array('placeholder'=>__('login.username')));
+		echo Form::input('email', @$defaults['email'], array('placeholder'=>__('register.email')));
 		echo Form::password('password', null, array('placeholder'=>__('login.password')));
 		echo Form::password('password_confirm', null, array('placeholder'=>__('register.password-confirm')));
 		echo "<p class='help-block'>".__('register.error-password')."</p>";
