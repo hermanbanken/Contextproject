@@ -48,7 +48,17 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('bootstrap-transition', 'lib/bootstrap/js/bootstrap-transition.js')
 			->js('bootstrap-tooltip', 'lib/bootstrap/js/bootstrap-tooltip.js')
 			->js('bootstrap-modal', 'lib/bootstrap/js/bootstrap-modal.js')
-			->js('ca-forms', 'js/forms.js');
+			->js('ca-forms', 'js/forms.js')
+			->snippet(
+				"facebook-api",
+				"<div id='fb-root'></div> <script>(function(d, s, id) {
+					  var js, fjs = d.getElementsByTagName(s)[0];
+					  if (d.getElementById(id)) return;
+					  js = d.createElement(s); js.id = id;
+					  js.src = '//connect.facebook.net/nl_NL/all.js#xfbml=1&appId=297097407038174';
+					  fjs.parentNode.insertBefore(js, fjs);
+					}(document, 'script', 'facebook-jssdk'));
+				</script>");
 	}
 	
 	/**

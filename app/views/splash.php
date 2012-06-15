@@ -48,7 +48,8 @@
 				<a href="<?php echo URL::site("monument/map"); ?>" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
 				<a href="<?php echo URL::site("user/register"); ?>" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
 			</p>
-			</div>
+		</div>
 	</header>
 	<div class='background'></div>
+	<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
 	<a class='torn' href='<?php echo URL::site("monument/map"); ?>'></a>
