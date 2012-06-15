@@ -74,7 +74,7 @@ class Model_Tracker extends Model_Abstract_Cultuurorm {
 			$amonuments = $atracker->monuments();
 		
 			// Find number of matches between monuments of own tracker and other tracker
-			$score = Recommender::matches($monuments, $amonuments) / count($amonuments);
+			$score = Recommender::matches($monuments, $amonuments);
 		
 			// Add to trackers
 			$similartrackers[] = $atracker;
