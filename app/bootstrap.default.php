@@ -111,6 +111,7 @@ Kohana::$config->attach(new Config_File);
 Kohana::modules(array(
 	 'cultuuruser'=> MODPATH.'cultuuruser',// CultuurApp user module
 	 'auth'       => MODPATH.'auth',       // Basic authentication
+	 'oauth'       => MODPATH.'oauth',       // OAuth authentication
 	 'cache'      => MODPATH.'cache',      // Caching with multiple backends
 	// 'codebench'  => MODPATH.'codebench',// Benchmarking tool
 	 'database'   => MODPATH.'database',   // Database access
