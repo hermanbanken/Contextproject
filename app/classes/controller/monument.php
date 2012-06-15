@@ -7,18 +7,6 @@ class Controller_Monument extends Controller_Abstract_Object {
 	/**
 	 * View to compare images visual
 	 */
-	public function action_popularity() {
-		$v = View::factory('test');
-		set_time_limit(0);
-		
-		echo '<pre>'.var_dump(Rijksmonumenten::monument(ORM::factory('monument', 20390)), true).'</pre>';
-		
-		$this->template->body = $v;
-	}
-	
-	/**
-	 * View to compare images visual
-	 */
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
 
