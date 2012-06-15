@@ -229,6 +229,9 @@ var exports = exports | {};
 
     CultuurApp.prototype.map = function(locations)
     {
+		$("#searchdiv").fadeTo(0, 0.8);
+		$("#filter_button").val("Laden...");
+    	
         var self = this;
 
         if(!locations){
@@ -237,6 +240,11 @@ var exports = exports | {};
             $.getJSON(base+"search/map", query, function(data){
                 self.map(data.monuments);
                 console.log("Debug", data.debug);
+            })
+            .error(function() { 
+            	alert("Er zijn geen monumenten gevonden die voldoen aan uw zoekcriteria.");
+                $("#searchdiv").fadeTo(0, 1);
+                $("#filter_button").val("Filter");
             });
         } else {
             this.locations = locations;
@@ -340,13 +348,6 @@ var exports = exports | {};
         var locations = this.locations;
         console.log("Placing pins");
 
-        // if no monument is found, notify the user
-        if (locations.length == 0) {
-            alert("Er zijn geen monumenten gevonden die voldoen aan uw zoekcriteria.");
-            $("#searchdiv").fadeTo('fast', 1);
-            $("#filter_button").val("Filter");
-        } else {
-
             // remove all current markers
             if (markersArray) {
                 for (i in markersArray) {
@@ -394,9 +395,8 @@ var exports = exports | {};
                     maxZoom: maxZoom
                 });
 
-            $("#searchdiv").fadeTo('fast', 1);
+            $("#searchdiv").fadeTo(0, 1);
             $("#filter_button").val("Filter");
-        }
     };
 
     function precondition(total){

@@ -235,7 +235,7 @@ function show_content_photos(tab) {
 			// Add recommendations to html
 			$.each(data, function(key, monument) {				
 				html += '<div style="text-align: center; float: left; width: 20%; height: 165px; line-height: 150px; vertical-align: middle;">';
-				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
+				html += '<a href="'+base+'monument/id/'+monument['id_monument']+'"><img class="aanbeveling_tooltip" title="'+monument.name+'<br />'+monument.street+' '+monument.streetNumber+'<br />'+monument.town+'" style="max-width: 80%; max-height: 165px;" src="'+monument['photo_url']+'" alt="'+monument['name']+'" /></a>';
 				html += '</div>';
 			});
 			
@@ -245,6 +245,7 @@ function show_content_photos(tab) {
 			// Clear and fill content
 			$("#ajax_content_photos").empty();
 			$("#ajax_content_photos").html(html);
+			$('.aanbeveling_tooltip').tooltip();
 		}, "json");
 	}
 	else if (tab == 'flickr') {
@@ -283,46 +284,81 @@ function show_content_photos(tab) {
 
 function drawMagic(){
     $(".monument-single-overview .thumbnail img").each(function(el, i){
-        $magic = $("<div class='magic'></div>");
+        $magic = $("<a class='magic'></a>");
         $(this).parents(".thumbnail").css("position", "relative").append($magic).find(".caption").remove();
-        $magic.css({ width: "100px", height: "100px", position: "absolute", bottom: 0, left: 0});
+        $magic.css({ width: "100px", height: "100px", position: "absolute", bottom: 0, left: 0, cursor: "pointer"});
+        $magic.attr("href", base+"monument/visualcomparison/"+$("#id_monument").val());
 
+        // Create paper and sets
         var paper = new Raphael($magic.get(0), "100px", "100px");
         var wand_bg, wand_fg, wand = paper.set();
-        wand.push(
-            wand_bg = paper.path("M66.325,30.626c-1.142-1.462-2.824-2.927-4.886-4.22c-2.062-1.291-4.109-2.167-5.935-2.555c-1.726-0.314-3.644-0.524-4.995,1.311L-5,113.75l15.75,12l56.566-90.051C68.379,33.68,67.359,32.05,66.325,30.626z"),
-            wand_fg = paper.path("M66.325,30.626c-1.141-1.462-2.824-2.927-4.886-4.22c-2.061-1.291-4.109-2.167-5.934-2.555c-1.726-0.314-3.643-0.524-4.995,1.311L-5,113.75l15.75,12l56.567-90.051C68.379,33.68,67.359,32.05,66.325,30.626zM48.743,58.71c-0.89-1.386-2.593-3.003-4.812-4.396c-2.217-1.388-4.412-2.223-6.052-2.417l15.5-24.725c0.224-0.046,0.917-0.074,1.902,0.231c1.215,0.324,2.754,1,4.295,1.971c1.768,1.097,3.185,2.374,3.973,3.401c0.396,0.508,0.623,0.95,0.684,1.174c0.008,0.02,0.015,0.038,0.015,0.053L48.743,58.71z")
-        );
 
+        // Convert star polygon to path
         var polygonPoints = '71.805,8.105 70.387,0 64.812,6.055 56.671,4.897 60.704,12.067 57.088,19.459 65.154,17.834 71.068,23.56 72.016,15.384 79.288,11.531';
         var p_star = polygonPoints.replace(/([0-9.]+),([0-9.]+)/g, function($0, x, y) {
             return 'L ' + Math.floor(x) + ',' + Math.floor(y) + ' ';
         }).replace(/^L/, 'M'); // replace first L with M (moveTo)
 
-        var stars = paper.set();
-        stars.push(paper.path(p_star));
-        stars.push(paper.path(p_star));
-        stars.push(paper.path(p_star));
-        var pos = [[30, 10, 5], [60, 30, 10], [40, 80, 7]];
+        var stars = [];
+        var pos = [[0, 15, 15], [-10, 50, 20], [-50, 20, 17]];
 
-        (function position(){
+        // Place stars
+        for(var i = 0; i < pos.length; i++){
+            var p = paper.path(p_star);
+            p.attr("transform", "t" + pos[i][0] + "," + pos[i][1]);
+            stars.push(p);
+        }
+
+        // Make wand
+        wand.push(
+            wand_bg = paper.path("M66.325,30.626c-1.142-1.462-2.824-2.927-4.886-4.22c-2.062-1.291-4.109-2.167-5.935-2.555c-1.726-0.314-3.644-0.524-4.995,1.311L-5,113.75l15.75,12l56.566-90.051C68.379,33.68,67.359,32.05,66.325,30.626z"),
+            wand_fg = paper.path("M66.325,30.626c-1.141-1.462-2.824-2.927-4.886-4.22c-2.061-1.291-4.109-2.167-5.934-2.555c-1.726-0.314-3.643-0.524-4.995,1.311L-5,113.75l15.75,12l56.567-90.051C68.379,33.68,67.359,32.05,66.325,30.626zM48.743,58.71c-0.89-1.386-2.593-3.003-4.812-4.396c-2.217-1.388-4.412-2.223-6.052-2.417l15.5-24.725c0.224-0.046,0.917-0.074,1.902,0.231c1.215,0.324,2.754,1,4.295,1.971c1.768,1.097,3.185,2.374,3.973,3.401c0.396,0.508,0.623,0.95,0.684,1.174c0.008,0.02,0.015,0.038,0.015,0.053L48.743,58.71z")
+        );
+
+        function position(time, w){
+            // Move stars
             for(var i = 0; i < stars.length; i++){
-                var newX = stars[i].attr("x");
-                stars[i].attr("x", Math.max(Math.min(pos[i][0] + pos[i][2], newX), pos[i][0] - pos[i][2]));
-                stars[i].attr({x:0, y:0});
-                stars[i].rotate(Math.PI/20);
+                var newX = pos[i][0] + Math.random()*pos[i][2],
+                    newY = pos[i][1] + Math.random()*pos[i][2];
+                var x = Math.max(Math.min(pos[i][0] + pos[i][2], newX), pos[i][0] - pos[i][2]),
+                    y = Math.max(Math.min(pos[i][1] + pos[i][2], newY), pos[i][1] - pos[i][2]),
+                    r = Math.random()*180;
+                stars[i].animate({
+                    "transform": "t"+x+","+y+"r"+r
+                }, time, "linear");
             }
-        })();
+            // Move wand
+            if(w)
+            wand.animate({
+                "transform": "t10,-10"
+            }, time * .35, "linear", function(){
+                wand.animate({"transform":"t20,15"}, time *.35, function(){
+                    wand.animate({"transform":"t0,0"}, time*.3);
+                });
+            });
+        }
+        // Initial move stars
+        position(2000, false);
 
         (function color(fg, bg, stars_color){
             wand_bg.attr({fill: bg, stroke: fg});
             wand_fg.attr({fill: fg, stroke: "none"});
-            stars.attr({fill: stars_color, stroke: "none"});
+            for(var i = 0; i < stars.length; i++)
+            stars[i].attr({fill: stars_color, stroke: "none"});
         })("#444", "#fff", "#ff0");
 
-        (function tick(){
-            setTimeout(tick, 1000);
-        })();
+        var timeout = false;
 
+        $magic.hover(function(){
+            position(2000, true);
+            clearTimeout(timeout);
+            function tick(){
+                timeout = setTimeout(tick, 2000);
+                position(2000, false);
+            }
+            timeout = setTimeout(tick, 2000);
+        }, function(){
+            clearTimeout(timeout);
+        });
     });
 }

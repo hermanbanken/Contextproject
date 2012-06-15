@@ -39,7 +39,7 @@ class Controller_User extends Controller_Template {
         $v = View::factory('user/register')
             ->bind('errors', $errors)
             ->bind('message', $message)
-			->set('post', $this->request->post());
+			->set('defaults', $this->request->post());
              
         if (HTTP_Request::POST == $this->request->method()) 
         {           
@@ -337,11 +337,11 @@ class Controller_User extends Controller_Template {
 				{
 					if ($provider_name == 'twitter')
 					{
-						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
+						Message::add('info', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
 					}
 					else
 					{
-						Message::add('error', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
+						Message::add('info', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
 					}
 					
 					// in case the data for some reason fails, the user will still see something sensible:
@@ -355,7 +355,7 @@ class Controller_User extends Controller_Template {
 					$values['password'] = $values['password_confirm'] = '';
 					$view->set('defaults', $values);
 					
-					$this->template->body = $view;
+					$this->template->body = (string) $view;
 				}
 			}
 			else
