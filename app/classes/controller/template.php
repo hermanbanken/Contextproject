@@ -28,8 +28,8 @@ class Controller_Template extends Kohana_Controller_Template {
 		$this
 			//->less('lib/bootstrap/less/bootstrap.less')
 			//->less('lib/bootstrap/less/responsive.less')
-			->css('css/jquery-ui-1.8.19.custom.css')
-			->css('css/shadowbox.css')
+			->css('css/lib/jquery-ui-1.8.19.custom.css')
+			->css('css/lib/shadowbox.css')
 			->less('lib/bootstrap/docs/assets/css/docs.css')
 			->less('css/app.less')
 			->js('Less.js', 'js/lib/less-1.3.0.min.js', true)
@@ -49,7 +49,9 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('bootstrap-tooltip', 'lib/bootstrap/js/bootstrap-tooltip.js')
 			->js('bootstrap-modal', 'lib/bootstrap/js/bootstrap-modal.js')
 			->js('ca-forms', 'js/forms.js')
-			->snippet("og:title", "<meta property='og:image' content='http://cultuurapp.nl/images/touch-icon-114x114.png' />")
+			->snippet("og:title", "<meta property='og:title' content='CultuurApp' />")
+			->snippet("og:description", "<meta property='og:description' content='Discover monuments in the Netherlands' />")
+			->snippet("og:image", "<meta property='og:image' content='http://cultuurapp.nl/images/touch-icon-114x114.png' />")
 			->snippet(
 				"facebook-api",
 				"<div id='fb-root'></div> <script>(function(d, s, id) {

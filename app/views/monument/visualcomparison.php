@@ -1,7 +1,7 @@
 <div class="row" style="padding-bottom: 20px;">
 	<div class="span12">
-		<h1>
-			<?php echo __('visualcomparison.title').' '.$monument->name; ?>
+		<h1 style="color: #fff;">
+			<?php echo __('visualcomparison.title').' '.$monument->name(); ?>
 		</h1>
 	</div>
 </div>
@@ -11,6 +11,8 @@
 			<img style="max-width: 100%; max-height: 400px;"
 				src="<?php echo $monument->photoUrl(); ?>"
 				alt="<?php echo $monument->name; ?>" />
+				
+				<a style="margin-top: 15px;" href="<?php echo URL::site('monument/id/'.$monument->id_monument); ?>" class="btn btn-primary"><?php echo __('visualcomparison.gotomonument'); ?></a>
 		</div>
 	</div>
 	<div class="span8">
