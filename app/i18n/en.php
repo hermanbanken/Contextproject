@@ -9,6 +9,7 @@ return array(
 		'subcategory' => 'Subcategory',
 		'english' => 'English',
 		'dutch' => 'Netherlands',
+		'monument.notfound' => "The requested monument was not found in our database.",
 		
 		'forecast.days' => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'),
 		

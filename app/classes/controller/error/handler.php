@@ -15,7 +15,7 @@ class Controller_Error_Handler extends Controller_Template
 		{
 			if ($message = rawurldecode($this->request->param('message')))
 			{
-				$this->template->message = $message;
+				$this->template->message = htmlentities($message);
 			}
 		}
 		else
