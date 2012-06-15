@@ -13,7 +13,7 @@ class Flickr {
 	 * Constants
 	 */
 	const KEY = 'e0ee3695155f9647a3d645aa6d3c0d2a';
-	const MAX_CACHE = 5;
+	const MAX_CACHE = 10;
 
 	/**
 	 * Function to get flickrphotos from neighbourhood of monument
@@ -57,6 +57,7 @@ class Flickr {
 		$base_url = 'http://api.flickr.com/services/rest/?method=flickr.photos.search&extras=tags&format=json&api_key=%s&lat=%s&lon=%s&tags=%s';
 		$url = sprintf($base_url, self::KEY, $monument->lng, $monument->lat, $monument->town->name);
 		
+		echo $url;
 		// Get contents of request
 		$request = Request::factory($url)->execute();
 		
