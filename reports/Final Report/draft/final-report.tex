@@ -58,7 +58,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
 		
 		\subsubsection{Term Frequency Inverse Document Frequency}
-		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Deze waarde is een afweging tussen twee waarden. Hoe hoger de totaalwaarde is, hoe hoger de score voor het woord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Ieder woord $w$ in beschrijving $x$ heeft de volgende Term Frequency:
+		Term Frequency Inverse Document Frequency (TF-IDF) geeft elk woord in een tekst een bepaalde waarde. Deze waarde is een afweging tussen twee waarden. Hoe hoger de totaalwaarde is, hoe hoger de score voor het woord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Ieder woord $w$ in beschrijving $x$ heeft de volgende Term Frequency:
 		
 		\begin{equation}
 			TF_w = \frac{\text{occ}_w}{\text{count}_x}
@@ -73,7 +73,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			\end{tabular}
 		\end{center}
 		
-		Het tweede deel is Inverse Document Frequency (IDF). Dit is invers evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. De Inverse Document Frequency van woord $w$ wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
+		Het tweede deel is Inverse Document Frequency (IDF). Dit is invers evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefilterd. De Inverse Document Frequency van woord $w$ wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
 		
 		\begin{equation}
 			IDF_w = \log\left({\frac{\text{total}}{\text{subset}_w}}\right)
@@ -107,10 +107,10 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Per woord in een beschrijving berekent CultuurApp de TF-IDF waarde. De top vijf woorden met de hoogste TF-IDF waarde worden door CultuurApp aangewezen als tags (trefwoorden). Deze trefwoorden\label{trefwoorden_berekening} toont CultuurApp op de monumentpagina.
 		
 		\subsubsection{Tag-cloud}
-		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TFIDF waarde vastgesteld relatief naar de monumenten. Dit door bij ieder voorkomen van een woord zijn TF-IDF waarde te berekenen en hiervan een gemiddelde te nemen. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TFIDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. 
+		Gebruikers weten vaak niet waar ze naar op zoek zijn. Een tagcloud kan hierbij uitkomst bieden. De gebruiker ziet in \'e\'en oogopslag een aantal tags staan en ziet direct hoe belangrijk deze tags zijn. CultuurApp heeft van alle woorden van alle beschrijvingen van alle monumenten een gemiddelde TF-IDF waarde vastgesteld relatief naar de monumenten. Dit door bij ieder voorkomen van een woord zijn TF-IDF waarde te berekenen en hiervan een gemiddelde te nemen. Bij ieder voorkomen van een woord bij een monument is de gemiddelde TF-IDF waarde bijgeschaald. Alle woorden hebben hierdoor een uiteindelijke score gekregen. 
 		
 		\begin{equation}
-			\overline{\text{TF-IDF}_w} =\frac{\sum \left\{ \frac{\text{occ}_w}{\text{count}_x} \cdot  \log{\left(\frac{\text{total}}{\text{subset}_w}}\right)\right\}}{x}
+			\overline{\text{TF-IDF}_w} =\frac{\sum \left\{ \frac{\text{occ}_w}{\text{count}_x} \cdot  \log{\left(\frac{\text{total}}{\text{subset}_w}}\right)\right\}}{subset_w}
 		\end{equation}
 		
 		\noindent Voor ieder monument $x$ waar woord $w$ voorkomt, met:
@@ -186,22 +186,23 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		In eerste instantie was het idee om met behulp van visuele analyse van de foto's van monumenten alle monumenten zonder categorie in te delen in een bepaalde categorie aan de hand van de visuele eigenschappen van de monumenten die wel een categorie bevatten. Helaas werd vrij snel duidelijk dat visuele eigenschappen van monumenten zelden iets zeggen over de categorie waarin een monument zou moeten vallen. Zo wordt een watertoren aan de hand van compositie, kleur en textuur gemakkelijk ingedeeld in de categorie 'Kastelen', waar deze oorspronkelijk was ingedeeld in de categorie 'Overheidsgebouwen'. Zo heeft CultuurApp het eigenlijk niet echt 'verkeerd', maar zijn de selectiecriteria voor het indelen van een monument in een categorie niet gebaseerd op visuele eigenschappen. Hierdoor is het nooit gelukt om CultuurApp een percentage hoger dan 20\% 'goed bepaalde' categorie\"en te verkrijgen.
 	
 		\subsubsection{Tekstueel}
-		Voor de tekstuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Maar wanneer een woord bij alle categori\"en vaak voorkomt, is het onwaarschijnlijk dat het woord is toe te wijzen aan een categorie. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categori\"en vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
+		Voor de tekstuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categori\"en kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Maar wanneer een woord bij alle categori\"en vaak voorkomt, is het onwaarschijnlijk dat het woord is toe te wijzen aan een categorie. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categori\"en vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
 		
 		\begin{equation}
-		\text{TF-IDF}_w^i = \frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}\right)
+		\text{TF-IDF}_m^i = \sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}{\text{occ}_w}\right)
 		\end{equation}
 		
 		\noindent Voor ieder woord $w$ voorkomend in categorie $i$ met:
 		
 		\begin{center}
 			\begin{tabular}{ c | l }
+				$m$ & Ongecategoriseerd monument $m$.\\
 				$w$ & De top 5 ge\"extraheerde tags.\\
 				$i$ & Iedere categorie waar woord $w$ voorkomt.\\
 				occ$_{wi}$ & Aantal voorkomens van het woord $w$ in categorie $i$. \\
 			  	occ$_{w}$ & Aantal voorkomens van het woord $w$.\\
 				count$_x$ & Totaal aantal gecategoriseerde monumenten.\\
-				TF-IDF$_w^i$ & TF-IDF waarde van woord $w$ voor categorie $i$.
+				TF-IDF$_m^i$ & TF-IDF waarde monument $m$ voor categorie $i$.
 			
 			\end{tabular}
 		\end{center}
@@ -210,19 +211,32 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven tags (keywords) uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TF-IDF waarde van de tag te vermenigvuldigen met de TF-IDF waarde van de tag relatief tot de categorie. Deze waarden worden voor de tags opgeteld, zodat een totaalscore is bepaald per categorie. 
 	
 	\begin{equation}
-		\text{Categorie}: max_i\left(\sum_{w=1}^5 \text{TF-IDF}_w^i\right) = max_i\left(\sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}\right)\right)
+		\text{Categorie}: max_i\left(\sum_{w=1}^5 \text{TF-IDF}_m^i \cdot \overline{\text{TF-IDF}_w}\right) 
 	\end{equation}
+	\begin{center}
+	$=$
+	\end{center}
+	
+	\begin{equation}
+	max_i\left(\sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}\right)\cdot \frac{\sum \left\{ \frac{\text{occ}_w}{\text{count}_x} \cdot  \log{\left(\frac{\text{total}}{\text{subset}_w}}\right)\right\}}{subset_w}
+ \right)
+		\end{equation}
 	
 	\noindent Voor iedere categorie $i$ en de top 5 tags $w$ met:
 	
 	\begin{center}
 			\begin{tabular}{ c | l }
+				$m$ & Ongecategoriseerd monument $m$.\\
 				$w$ & De top 5 ge\"extraheerde tags.\\
 				$i$ & Iedere categorie waar woord $w$ voorkomt.\\
+				total & Totaal aantal monumenten.\\
+				$\text{subset}_w$ & Aantal monumenten waar woord $w$ voor komt.\\
 				occ$_{wi}$ & Aantal voorkomens van het woord $w$ in categorie $i$. \\
 			  	occ$_{w}$ & Aantal voorkomens van het woord $w$.\\
 				count$_x$ & Totaal aantal gecategoriseerde monumenten.\\
-				TF-IDF$_w^i$ & TF-IDF waarde van woord $w$ voor categorie $i$.
+				TF-IDF$_m^i$ & TF-IDF waarde monument $m$ voor categorie $i$.\\
+			$\overline{\text{TF-IDF}_w}$ & Gemiddelde TF-IDF waarde van woord $w$.
+		
 			
 			\end{tabular}
 		\end{center}
