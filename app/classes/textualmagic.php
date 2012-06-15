@@ -121,7 +121,8 @@ class TextualMagic {
 
 		// convert to array
 		$tags = array();
-		foreach($tagset as $key=>$tag) {
+		foreach($tagset as $key=>&$tag) {
+			$tag['content'] = preg_replace('/(^\-)|(\-$)/','',$tag['content']);
 			$tags[$tag['importance']] = array(
 					'original' => $tag['content'],
 					'content' => strtolower(Translator::translate(
