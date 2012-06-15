@@ -23,6 +23,7 @@ class ListTest extends Kohana_UnitTest_TestCase
 		
 	}
 	
+	/*
 	public function test_SelectieItems(){
 		
 		$pageDOM = str_get_html(Request::factory('monument/list')->execute()->send_headers()->body());
@@ -42,4 +43,5 @@ class ListTest extends Kohana_UnitTest_TestCase
 		//$this->assertCount(3, $inputs);
 		//$this->assertCount(2, $selects);
 	}
+	*/
 }
