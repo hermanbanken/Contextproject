@@ -24,8 +24,8 @@ class Recommender {
 		
 		// If tracker is found, select it
 		$similartracker = ORM::factory('tracker');
-		if (count($htrackers) != 0) {
-			$similartracker = $htrackers[0];
+		if (count($similartrackers) != 0) {
+			$similartracker = $similartrackers[0]['tracker'];
 		}
 		
 		// Remove matches
