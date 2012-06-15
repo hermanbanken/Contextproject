@@ -10,6 +10,8 @@ class Controller_Monument extends Controller_Abstract_Object {
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
 
+		
+		
 		// Get post, query, user and monument information
 		$id = $this->request->param('id');
 		$user = Auth::instance()->get_user();
@@ -17,7 +19,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$post = $this->request->post();
 		$query = $this->request->query();
 		$session = Session::instance()->as_array();
-
+		
 		// If nothing is posted, use recent post in session if it exists
 		if (!isset($post['posted']) && isset($session['vc'])) {
 			$post = $session['vc'];
@@ -48,10 +50,11 @@ class Controller_Monument extends Controller_Abstract_Object {
 		// Set needed variables for view
 		$similars = array();
 		$posted = false;
-
+		
 		// If there is a post-request, find similar monuments and acknowledge post
 		if (isset($post['posted']) || isset($query['posted'])) {
 			$_SESSION['vc'] = $post;
+			unset($_SESSION['vc']['posted']);
 			$similars = $monument->visuallySimilars(16, $features, ($type == 'pca'));
 			$posted = true;
 		}
