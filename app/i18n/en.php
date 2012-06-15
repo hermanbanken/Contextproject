@@ -9,6 +9,7 @@ return array(
 		'subcategory' => 'Subcategory',
 		'english' => 'English',
 		'dutch' => 'Netherlands',
+		'monument.notfound' => "The requested monument was not found in our database.",
 		
 		'forecast.days' => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'),
 		
@@ -79,7 +80,8 @@ return array(
 		'visualcomparison.texture' => 'Texture',
 		'visualcomparison.advanced' => 'Extensive comparison',
 		'visualcomparison.advanced-explain' => 'The extensive comparison uses 100 times more features, but takes a lot longer.',
-		'visualcomparison.title' => 'Visual Comparison for',
+		'visualcomparison.title' => 'Visual Magic for',
+		'visualcomparison.gotomonument' => 'Details',
 		
 		'profile.recommendations-title' => 'Recommended monuments',
 		'profile.recommendations-text' => 'You might like these monuments. This was determined by comparing your monument history against other users history.',
