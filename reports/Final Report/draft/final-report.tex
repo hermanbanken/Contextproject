@@ -21,6 +21,7 @@
 \tableofcontents
 
 \clearpage
+
 %
 %
 % INLEIDING
@@ -36,15 +37,13 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 %
 \section{Problemen / Tekortkomingen}
 	\subsection{Niet toeristgericht}
-	Toeristen hebben andere behoeften dan wordt geboden op het internet. Een toerist wil in \'e\'en oogopslag zien waar in de buurt een monument is. Een toerist wil wanneer hij iets leest over dat monument direct kunnen zien waar hij of zij in de buurt iets kan eten of drinken. Voor een toerist is het belangrijk dat hij of zij aangeraden wordt een bepaald monument te bekijken, omdat de kennis van een toerist over het aanbod vaak gering is. De uitdaging is dan ook geweest om een systeem te maken dat zich zoveel mogelijk toespitst op de toerist. Door de toerist van zoveel mogelijk toeristgerelateerde nuttige informatie te voorzien, hebben wij getracht het systeem aantrekkelijk te maken voor toeristen. Aanbevelingen laten monumenten zien die een toerist anders nooit had gezien. En voor de toerist die geen Nederlands spreekt, werkt het volledige systeem gewoon in het Engels.
+	Toeristen zoeken en surfen op het internet met een ander doel dan bijvoorbeeld wetenschappers of studenten die zoeken naar informatie. Toeristen zijn over het algemeen minder geinteresseerd in gedetailleerde informatie en willen een overzicht krijgen van een bepaalde omgeving. Op monument-gerelateerde websites is nu vooral gedetailleerde informatie te zien over het monument zelf en ontbreekt alle praktische informatie, zoals het weer bij het monument en restaurants en foto's in de omgeving, maar ook een 'trigger' om meer monumenten te bekijken. De huidige systemen missen aantrekkelijkheid, waardoor de toerist niet gemotiveerd wordt om door te kijken en meer aantrekkelijke monumenten te vinden. Daarnaast zijn er geen systemen die de Nederlandse monumenten ook toegankelijk maken voor buitenlandse toeristen, omdat alle monument-gerelateerde websites in het Nederlands zijn.
 	
 	\subsection{Incomplete dataset}
-	De aangeleverde dataset is een inconsistente en incomplete dataset. ±5000 van de monumenten zijn niet gecategoriseerd. Het ontbreken van een categorie maakt het voor CultuurApp lastiger om relaties tussen monumenten te vinden. Ook filtering door de gebruiker kan hierdoor niet plaatsvinden. CultuurApp heeft deze categorien toegevoegd aan monumenten waar deze ontbreekt. Dit staat uitgewerkt bij tekstuele analyse. \\
-	Ieder monument heeft in de dataset een naam. Deze naam is veelal een straatnaam en huisnummer. Soms is het echter een beschrijving. Het kan een steekwoord zijn, of een combinatie van al deze informatie. Na veel en vaak brainstormen en algoritmen schrijven om deze namen consistent te maken, is besloten dit niet te doen. De willekeurigheid van de namen is te groot, een algoritme die dit tracht te verbeteren kan belangrijke data weggooien. 
+	De dataset die is aangeleverd door de leiding van het project bestaat uit $\pm$ 25.000 monumenten. Van deze monumenten zijn er $\pm$ 5000 monumenten niet ingedeeld in een categorie. Voor gebruikers van het systeem is het erg handig om een onderverdeling te kunnen maken in de monumenten aan de hand van categorie\"en en dan is het vanzelfsprekend erg vervelend als men hierdoor $\pm$ 5000 misloopt. CultuurApp heeft aan de hand van textuele analyse van de omschrijvingen van de monumenten waarvan de categorie reeds bekend was alle monumenten zonder categorie ingedeeld in een categorie.
 	
 	\subsection{Real-time visuele/textuele berekingen zijn duur}
-	Het extracten van features uit afbeeldingen om deze met elkaar te vergelijken is een zeer duur proces. Per afbeelding duurt dit ±6 seconde. Elke foto met elke foto vergelijken is daardoor niet haalbaar. Hiervoor zijn de berekeningen vooraf gedaan. Live hoeven nu slechts nog getallen te worden vergeleken. Dit wordt verder uitgewerkt in visuele analyse. \\
-	Het berekenen van alle TFIDF waarden zoals beschreven in tekstuele analyse kost veel tijd. Er moeten meer dan 500.000 woorden worden geanalyseerd. Deze analyse is vooraf bepaald, live hoeven er slechts nog berekeningen te worden gedaan met getallen. Dit wordt verder uitgewerkt in tekstuele analyse.
+	Het vergelijken van monumenten aan de hand van foto's voor visuele en omschrijvingen voor textuele analyse is een zeer duur proces. De features die nodig zijn om foto's met elkaar te vergelijken, kunnen alleen worden verkregen met wiskundige software als bijvoorbeeld MATLAB en zelfs dan duurt he tnog enkele seconden per foto. Het indelen van omschrijvingen in tags duurt ook enkele seconden per omschrijving en kan daarom ook niet real-time worden gedaan bij het vergelijken van monumenten. De informatie die nodig is om deze vergelijkingen uit te voeren, zal vooraf moeten worden opgeslagen, zodat tijdens het vergelijken louter getallen met elkaar hoeven te worden vergeleken.
 
 %
 %
@@ -53,7 +52,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 %
 \section{Oplossingen / Highlights}
 	\subsection{Textuele analyse}
-	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Met een dergelijk grote dataset van 24500+ monumenten kan interessante data worden herleid.
+	Ieder monument heeft een beschrijving. De lengte van de beschrijving verschilt per monument en is veelal tussen de 5 en 200 woorden. Uit een dergelijk grote dataset van $\pm$ 25000 monumenten kan interessante data worden herleid.
 
 		\subsubsection{Trefwoorden}
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
@@ -62,20 +61,20 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Term Frequency Inverse Document Frequency (TFIDF) geeft elk woord in een tekst een bepaalde waarde. Hoe hoger de waarde is, hoe specifieker het trefwoord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. 
 		
 		\begin{equation}
-			TF = (occ / totalocc)
+			TF = \frac{\text{occ}}{\text{totalocc}}
 		\end{equation}
 		
 		Het tweede deel is Inverse Document Frequency. Dit is inver evenredig met bij hoeveel monumenten het woord voor komt. Wanneer een woord bij veel monumenten voor komt, is het een minder specifiek trefwoord. Stopwoorden worden op deze manier ook automatisch gefiltert. Inverse Document Frequency wordt berekend door de log te nemen van het totaal aantal monumenten gedeeld door het aantal monumenten waar het woord voor komt. 
 		
 		\begin{equation}
-			IDF = log(total / subset)
+			IDF = \log{\frac{\text{total}}{\text{subset}}}
 		\end{equation}
 		
 		
 		Aan de hand van dit algoritme heeft CultuurApp alle woorden van alle beschrijvingen van alle monumenten geanalyseerd en waarden gegeven. CultuurApp maakt live berekeningen en extraheert geautomatiseerd sleutelwoorden uit de beschrijving door voor ieder woord in de beschrijving van het monument een TFIDF waarde te berekenen en de woorden met de hoogste score worden als sleutelwoord aangewezen.
 		
 		\begin{equation}
-			\text{Score woord} =(occ / totalocc) \cdot log(total / subset)
+			\text{Score woord} = \frac{\text{occ}}{\text{totalocc}} \cdot \log{\frac{\text{total}}{\text{subset}}}
 		\end{equation}
 		
 		\subsubsection{Tag-cloud}
@@ -100,12 +99,13 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 			\item Enkele waardes m.b.t. contrast, homogeneiteit, energie en ratio van rand-pixels tot de grootte van de afbeelding.
 			\item Enkele waardes m.b.t. entropie.
 		\end{enumerate}
-		\\
 		Al deze features worden door de FeatureExtractor opgeslagen in de volgende bestanden: dev\_acq.txt, dev\_gabor.txt, dev\_hsv.txt, dev\_light.txt, dev\_log.txt, dev\_rgb.txt, dev\_segment.txt, dev\_spatial.txt en dev\_texture.txt. We hebben er bewust voor gekozen ons niet te verdiepen in de verkregen waardes en wat deze precies betekenen.
 		
 		\subsubsection{Importeren}
 		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren\footnote{http://www.cs.bilkent.edu.tr/\~saksoy/papers/prletters01\_likelihood.pdf} met de volgende formule:
-		\[n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}\]
+		\begin{equation}
+			n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}
+		\end{equation}
 		Met:
 		\begin{itemize}
 			\item $v_{fm} =$ de waarde van feature $f$ van monument $m$.
@@ -114,39 +114,44 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		\end{itemize}
 		
 		\subsubsection{Vergelijking van monumenten}
-		Als we de features verkregen door de FeatureExtractor met elkaar willen vergelijken, beschouwen we de 399 features als een vector en kunnen we deze vergelijken met behulp van de zogenaamde Euclidian Distance:
-		\[ ed(q, p) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2} \]
-		Met:
+		Als we de features verkregen door de FeatureExtractor met elkaar willen vergelijken, beschouwen we de 399 features als een vector en kunnen we deze vergelijken met behulp van een zogenaamde Euclidian Distance. Omdat in de Euclidian Distance een voor onze vergelijking onnodige wortel-functie owrdt gebruikt, hebben we deze weggelaten in de functie om de afstanden tussen de monumenten te berekenen. Een normale Euclidian Distance ziet er dus als volgt uit:
+		\begin{equation}
+			ed(q, p) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2}
+		\end{equation}
+		De functie die wij gebruiken om de afstand tussen twee monumenten te berekenen ziet er als volgt uit:
+		\begin{equation}
+			ed(q, p) = (q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2
+		\end{equation}
+		Beide vergelijkingen gebruiken de volgende variabelen:
 		\begin{itemize}
-			\item $q$ en $p =$ vectoren van de 399 features van monument $q$ of $p$.
-			\item $q_{i}$ en $p_{i} =$ feature $i$ van monument $q$ of $p$.
+			\item $q$/$p =$ vectoren van de 399 features van monument $q$ of $p$.
+			\item $q_{i}$/$p_{i} =$ feature $i$ van monument $q$ of $p$.
 			\item $n =$ het totaal aantal features per monument.
 		\end{itemize}
-		\\
 		Door een bepaald monument $q$ te noemen en alle monumenten langs te gaan en deze $p$ te noemen, kunnen we de afstanden tussen $q$ en de andere monumenten vinden. Het monument met de kleinste afstand is het meest 'visueel gelijkend'.
 		
 	\subsection{Completeren dataset}
 	Bij $\pm$ 5000 monumenten is geen hoofd- en subcategorie bekend. Voor het gebruiksgemak is het gewenst dat deze categorie\"en worden ingevuld. Aan de hand van visuele en textuele analyse zou dit mogelijk moeten zijn, gezien het feit dat we beschikken over $\pm$ 20000 monumenten die wel een hoofd- en subcategorie bevatten.
 	
 		\subsubsection{Visueel}
-	Helaas werd vrij snel duidelijk dat de visuele analyse van monumenten vaak niet het gewenste resultaat had. Gebouwen worden niet alleen en vaak zelfs juist niet op uiterlijk geselecteerd, maar juist op functie in de maatschappij. Zo wordt een watertoren ingedeeld bij 'Overheidsgebouwen' waar een visueel herkenningssysteem deze eerder zal indelen in de categorie 'Kastelen'. Een percentage hoger dan 20\% is hier helaas nooit gehaald.
+		In eerste instantie was het idee om met behulp van visuele analyse van de foto's van monumenten alle monumenten zonder categorie in te delen in een bepaalde categorie aan de hand van de visuele eigenschappen van de monumenten die wel een categorie bevatten. Helaas werd vrij snel duidelijk dat visuele eigenschappen van monumenten zelden iets zeggen over de categorie waarin een monument zou moeten vallen. Zo wordt een watertoren aan de hand van compositie, kleur en textuur gemakkelijk ingedeeld in de categorie 'Kastelen', waar deze oorspronkelijk was ingedeeld in de categorie 'Overheidsgebouwen'. Zo heeft CultuurApp het eigenlijk niet echt 'verkeerd', maar zijn de selectiecriteria voor het indelen van een monument in een categorie niet gebaseerd op visuele eigenschappen. Hierdoor is het nooit gelukt om CultuurApp een percentage hoger dan 20\% 'goed bepaalde' categorie\"en te verkrijgen.
 	
 		\subsubsection{Textueel}
-	Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TFIDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TFIDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hierd komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
+		Voor de textuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categorien kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categorien vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score.
 	
 	\begin{equation}
-		\text{Score woord i category j} = p_{ij} = (occ_{ij} / occ_{i\*}) \cdot log(count(j) / occ_{i\*})
+		\text{Score woord i category j} = p_{ij} = \frac{occ_{ij}}{occ_{i\*}} \cdot \log{\frac{count(j)}{occ_{i\*}}}
 	\end{equation}
 	
-	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TFIDF waarde van het sleutelwoord te vermenigvuldigen met de TFIDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. 
+	Wanneer een ongecategoriseerd monument gecategoriseerd moet worden, extraheert CultuurApp zoals beschreven sleutelwoorden uit de tekst. Voor ieder van deze sleutelwoorden, die de belangrijkste woorden zijn van de tekst, wordt per categorie berekend wat de waarschijnlijkheid is dat een monument tot een categorie behoort. Dit gebeurt door de TF-IDF waarde van het sleutelwoord te vermenigvuldigen met de TF-IDF waarde van het sleutelwoord relatief tot de categorie. Deze waarden worden voor de sleutelwoorden opgeteld, zodat een totaalscore is bepaald per categorie. 
 	
 	\begin{equation}
-		\text{Categorie van een monument}: max_j(\sum_{i=1}^5 p_{ij}) = max_j(\sum_{i=1}^5 (occ_{ij} / occ_{i\*}) \cdot log(count(j) / occ_{i\*}))
+		\text{Categorie}: max_j(\sum_{i=1}^5 p_{ij}) = max_j(\sum_{i=1}^5 \frac{occ_{ij}}{occ_{i\*}} \cdot \log{\frac{count(j)}{occ_{i\*}}})
 	\end{equation}
 	
 	CultuurApp kijkt nu welke categorie het meest waarschijnlijk is en wijst deze categorie toe aan het monument.\\
-		\\
-		Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 19200 categorie\"en juist te voorspellen.
+	\\
+	Door bij een monument waarvan de categorie bekend is de categorie 'te vergeten' en daarna de categorie te voorspellen, was het mogelijk om de juistheid van de voorspelling te controleren. Aan de hand van textuele analyse is het CultuurApp gelukt om 86\%, dus $\pm$ 19200 categorie\"en juist te voorspellen.
 		
 	\subsection{Aanbevelingen}
 	Toeristen zoeken naar monumenten die ze interessant vinden, maar willen daarbij ook geprikkeld worden. Monumenten ontdekken, zichzelf verrijken met monumenten die ze zelf niet zouden kunnen vinden. Hiervoor zijn aanbevelingen de uitkomst. Binnen CultuurApp zijn twee plaatsen waar aanbevelingen worden gegeven, namelijk op de profielpagina en bij een monument dat wordt bekeken:
@@ -158,25 +163,35 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Bij de profielpagina wordt gebruik gemaakt van de set monumenten die door de toerist of CultuurApp-gebruiker is bezocht op de website. Deze set wordt vergeleken met alle sets van monumenten in de dtabase. De set met het meeste overeenkomsten met de set van de aan te bevelen toerist of CultuurApp-gebruiker, wordt gebruikt om aanbevelingen te geven. Dit wordt gedaan met het volgende algoritme:
 		\begin{enumerate}
 			\item Zoek de set van monumenten van de aan te bevelen toerist of CultuurApp-gebruiker, noem deze $A$.
-			\item Loop door alle sets monumenten heen, noem \'e\'en set $B$ en sla de score $S = n(A \cap B)$ op in $C$. ($n(x) =$ het aantal elementen in set x) 
-			\item Kies (\'e\'en van) de set(s) met de hoogste score uit $C$ en noem deze $D$.
-			\item Haal nu de overeenkomstige monumenten van $A$ en $D$ weg uit $D$ en sla deze op in $E$. ($E = D - A$).
+			\item Loop door de sets monumenten van alle gebruikers heen, noem een zo'n set $B$ en sla de score $s = |A \cap B|$ op in $C$ als $C\left[s\right] = B$.
+			\item Sorteer de set op score van hoog naar laag en haal de eerste set op uit $C$ en noem deze $D$.
+			\item Verwijder nu de monumenten van $A$ uit $D$ en sla deze op in $E$, oftewel $E = D - A$.
 			\item Beveel op willekeurige volgorde monumenten uit $E$ aan aan de toerist of CultuurApp-gebruiker.
 		\end{enumerate}
 		
 		\subsubsection{Monumentpagina}
 		Bij de monumentpagina wordt gebruikt gemaakt van alle sets monumenten per gebruiker die in de database staan. Hierbij wordt gekeken welke set(s) monumenten het monument bevat dat de gebruiker op dit moment bekijkt. Vervolgens worden de rest van de monumenten in deze set gebruikt om de gebruiker een aanbeveling te geven.
 		\begin{enumerate}
-			\item Zoek een set monumenten die het monument dat nu bekeken wordt bevat, noem deze $A$.
-			\item Beveel nu op willekeurige volgorde monumenten uit $A$ aan aan de toerist of CultuurApp-gebruiker.
+			\item Noem het monument waarbij aanbevelingen moeten worden gedaan $m$.
+			\item Zoek de set van monumenten van de aan te bevelen toerist of CultuurApp-gebruiker, noem deze $A$.
+			\item Selecteer de sets monumenten van alle gebruikers die monument $m$ bevatten, noem deze $Q$.
+			\item Loop door $Q$ heen, noem een set uit $Q$ steeds $B$ en sla de score $s = \left|A \cap B\right|$ op in $C$ als $C\left[s\right] = B$.
+			\item Sorteer $C$ aflopend op score, haal de eerste set op en noem deze $D$.d
+			\item Verwijder nu de monumenten van $A$ (deze bevat ook monument $m$) uit $D$ en sla deze op in $E$, oftewel $E = D - A$.
+			\item Beveel op willekeurige volgorde monumenten uit $E$ aan aan de toerist of CultuurApp-gebruiker.
 		\end{enumerate}
 	
-	\subsection{Weersvoorspelling}
-	Met de API van Wunderground\footnote{http://www.wunderground.com/weather/api/} is het mogelijk om aan de hand van een longitude en latitude een weersvoorspelling te verkrijgen. Omdat het weer binnen een stad redelijk hetzelfde is, hebben we besloten om het weer per stad te cachen. Daarom hoeft per stad maar \'e\'en keer per dag het weer live opgehaald te worden.
+	\subsection{Externe informatiebronnen}
+		CultuurApp maakt gebruik van enkele externe informatiebronnen om bijvoorbeeld het weer en de faciliteiten uit de omgeving van een monument te  weergeven. Externe informatiebronnen zijn handig, maar gevaarlijk voor de betrouwbaarheid van het systeem, omdat ze bijvoorbeeld tijdelijk onbereikbaar kunnen zijn. Voor het gebruik van deze bronnen zijn verschillende systeemcomponenten geschreven, waardoor deze externe bronnen altijd op dezelfde manier benaderd en gecached worden. Een externe informatiebron wordt nooit $\pm$ 25.000 keer achter elkaar aangroepen om de informatie van alle monumenten in \'e\'en keer op te slaan. In plaats daarvan wordt op het moment dat een toerist een bepaald monument bekijkt alle informatie indien nodig live van de externe informatiebronnen opgehaald en direct opgeslagen in de database (caching). Dit zorgt ervoor dat er de volgende keer dat deze informatie wordt opgevraagd geen contact nodig is met de externe informatiebron. Het aantal dagen dat informatie opgeslagen blijft, verschilt per informatiebron, maar is nooit oneindig, omdat de externe informatiebron variabel zijn.
 	
-	\subsection{Faciliteiten}
-	Met de API van Google Places\footnote{https://developers.google.com/maps/documentation/places/} is het mogelijk om aan de hand van een longitude, latitude en enkele steekwoorden de juiste faciliteiten rond een monument op te halen. Omdat het aantal faciliteiten rondom een monument zelden veradnerd, hebben we er voor gekozen om voor ieder monument de faciliteiten voor 15 dagen op te slaan in de database. Zo kost het slechts \'e\'en keer in de 15 dagen veel tijd om de faciliteiten rondom een monument op te halen. De faciliteiten rond een monument worden tot 5 km rondom het monument opgehaald en daarna gesorteerd op rating, waardoor een toerist altijd de beste bar of het beste restaurant als eerste te zien krijgt.
-		
+		\subsubsection{Wunderground}
+		Met de API van Wunderground\footnote{http://www.wunderground.com/weather/api/} is het mogelijk om aan de hand van een longitude en latitude een weersvoorspelling te verkrijgen in. Omdat het weer binnen een stad in Nederland redelijk constant is, hebben we besloten om het weer per stad te cachen. Weersvoorspellingen worden per dag per stad gecached, waardoor voor iedere stad het weer dus \'e\'en keer per dag moet worden opgehaald.
+	
+		\subsubsection{Google Places}
+		Met de API van Google Places\footnote{https://developers.google.com/maps/documentation/places/} is het mogelijk om aan de hand van een longitude, latitude en enkele steekwoorden de juiste faciliteiten rond een monument op te halen. Omdat het aantal faciliteiten rondom een monument zelden veradnerd (er wordt binnen \'e\'en dag namelijk niet zomaar een restaurant opgebouwd), hebben we er voor gekozen om voor ieder monument de faciliteiten voor 15 dagen op te slaan in de database. Zo is het per monument slechts \'e\'en keer in de 15 dagen nodig om de faciliteiten rondom een monument op te halen. De faciliteiten rond een monument worden tot 5 km rondom het monument opgehaald en weergegeven op aflopende volgorde qua rating en daarna op oplopende volgorde qua afstand, waardoor een toerist altijd de beste en dichtbijzijnste bars of restaurants als eerste te zien krijgt.
+	
+		\subsubsection{Flickr}
+		Met de API van Flickr\footnote{http://www.flickr.com/services/api/} is het mogelijk om aan de hand van een longitude, latitude en een zoekwoord foto's van de omgeving van een monument op te halen. Als zoekwoord geeft CultuurApp altijd de naam van de stad waarin het monument zich bevindt op, zodat een zo compleet beeld wordt gegeven van de omgeving van het monument. De URLs van foto's van Flickr worden opgeslagen voor 10 dagen per monument. Zo is het per monument slechts \'e\'en keer per 10 dagen nodig om de nieuwe URLs van de foto's op te halen. Toeristen krijgen hierdoor altijd een up-to-date beeld van de omgeving.
 		
 \section{Reflectie op het teamwork}
 
@@ -193,7 +208,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Ik had enkele ideeën voor het goede verloop van het project en de implementatie van de applicatie. Gelukkig pakten die ideeën goed uit en hebben mijn groepsgenoten goed gebruik gemaakt van de mogelijkheden die GIT en Kohana bieden, ook al waren ze vooraf een behoorlijk sceptisch.
 		
 		\subsubsection{Sjoerd van Bekhoven}
-		Bij het indelen van de groepen binnen ons Contextproject werd volgens de presentatie 'nergens rekening mee gehouden'. Toen ik echter kennis maakte met mijn groepsleden, kwam ik er vrij snel achter dat onze groep bestond uit zogenaamde 'langstudeerders'. Uiteindelijk viel \'e\'en persoon af en kwam Herman in ozne groep terecht en hij is een zeer waardevolle toevoeging geweest. Daarnaast heb ik ook nauwelijks last gehad van het feit dat onze groep bestond uit oudere studenten. De groep fungeerde vrij soepel en vergaderen was zelden nodig. Tim's te laat komen en/of afwezig zijn heeft op een gegeven moment tot irritatie geleid. Hij heeft dit enigszins rechtgetrokken door extra gas te geven tegen het einde. Rutger heeft zich ontplooid als harde werker en vindt het geen probleem om ook thuis even door te werken. Herman fungeerde als techneut en heeft ons aardig wat 'moeilijke, maar wel heel handige' snufjes aangereikt, wat op sommige momenten tot problemen leed, maar ons ook ontzettend veel heeft opgeleverd. Kortom: de groep was voornamelijk prettig en ik ben erg tevreden met het resultaat dat we bereikt hebben.
+		Bij het indelen van de groepen werd, zoals toen werd gezegd, geen rekening gehouden met het aantal punten of het aantal jaren dat je gestudeerd had. Toch bleek dat onze groep voornamelijk bestond uit zogenaamde 'langstudeerders', waar ik er zelf ook \'e\'en van ben. Uiteindelijk viel \'e\'en persoon van deze groep af en kwam Herman bij ons terecht. Hoewel ik er in het begin redelijk sceptisch instond, heb ik nauwelijks last gehad van het feit dat onze groep bestond uit oudere (en dus minder goed studerende) studenten. De groep fungeerde vrij soepel en vergaderen was zelden nodig. Tims regelmatige te laat komen en afwezig zijn heeft op een gegeven moment tot veel irritatie geleid. Hij heeft dit enigszins rechtgetrokken door extra gas te geven tegen het einde. Rutger heeft zich ontplooid als harde werker en vindt het geen probleem om ook thuis even door te werken. Herman fungeerde als techneut en heeft ons aardig wat 'moeilijke, maar wel heel handige' snufjes aangereikt, wat op sommige momenten tot problemen leed, maar ons ook ontzettend veel heeft opgeleverd. Kortom: de groep was voornamelijk prettig en ik ben erg tevreden met het resultaat dat we bereikt hebben.
 		
 		\subsubsection{Tim Eversdijk}
 		Afgelopen half jaar heb ik met plezier samen mogen werken met Rutger, Sjoerd en Herman. In het eerste kwartaal, tijdens de ontwikkel fase, viel het me op dat iedereen zeer gemotiveerd was een uitgebreid, goed, fancy en realistisch systeem te ontwerpen. Gelukkig zette deze motivatie zich ook door toen we in het 2e kwartaal de ontwikkel fase in gingen. Jammer genoeg is het meerdere malen voorgekomen dat ik niet op tijd aanwezig kon zijn en in combinatie met wat slechte communicatie vanaf mijn kant heeft dit wat terechte irritaties opgewekt. Hier hebben we het onderling over gehad en uitgepraat.\\
