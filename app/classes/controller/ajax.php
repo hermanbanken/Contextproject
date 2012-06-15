@@ -31,6 +31,21 @@ class Controller_Ajax extends Kohana_Controller_Template {
 	}
 
 	/**
+	 * Function for getting towns
+	 */
+	public function action_get_towns() {
+		$post = $this->request->post();
+
+		$return = array();
+		$towns = ORM::factory('town')->find_all();
+		foreach ($towns AS $town) {
+			$return[] = $town->name;
+		}
+
+		$this->return = $return;
+	}
+
+	/**
 	 * Function to get the url of a photo for google maps
 	 * @param (POST) int id_monument
 	 * @return string url of photo
