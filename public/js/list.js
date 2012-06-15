@@ -90,7 +90,7 @@ $(function(){
             }
         }
 
-        history.pushState(data, window.title, location.origin + location.pathname + "?" + $.param(data));
+        history.pushState(data, window.title, location.pathname + "?" + $.param(data));
     }
 
     /**
@@ -193,7 +193,7 @@ $(function(){
 		        }	
 
                 // Clear old monuments
-                $(".monument-list .list-row.monument").remove();
+                $("body .monument-list .list-row.monument").remove();
                 // Add new monuments
                 $.map(response.monuments, function(monument, i){
                     $html = $template.clone();
@@ -210,7 +210,7 @@ $(function(){
                             Math.round(monument.distance * 1000) + " m");
                     }
 
-                    $(".monument-list").append($html);
+                    $("body .monument-list").append($html);
                 });
             },
             error: function(){

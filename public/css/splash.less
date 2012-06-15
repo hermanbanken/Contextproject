@@ -7,10 +7,22 @@ body {
     overflow-x: hidden;
 }
 
-.page {
+html body > .page {
     padding-top:40px;
-    border-bottom:2px solid green;
+    position: static;
+
+    .background { display: block; }
 }
+body .page .container {
+    padding-top: 50px !important;
+}
+@media(max-width: 979px){
+    html body > .page {
+        position: relative;
+        margin-top: -2px;
+    }
+}
+
 .jumbotron {
     z-index: 500;
 }

@@ -4,7 +4,7 @@
 <?php else: ?>
 <html>
 <?php endif; ?>
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# cultuurapp: http://ogp.me/ns/fb/cultuurapp#">
   <title>CultuurApp.nl</title>
   <script>var base = "<?php echo URL::base(); ?>";</script>
   <?php echo $header; ?>
@@ -18,7 +18,7 @@
 	);
 
 ?>
-<body data-spy="scroll" data-target=".subnav" data-offset="50">
+<body data-spy="scroll" data-target=".subnav" data-offset="50" class="<?php echo $class; ?>">
 	<div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -39,13 +39,17 @@
 				}
 				?>
             </ul>
+			<form style="float: right;" class="navbar-search" method="get" <?php if(!preg_match('/\/list|\/map/i', Request::detect_uri())) echo 'action="'.URL::site('monument/list').'"';?>>
+                <input type="text" name="search" class="search-query span3" placeholder="<?php echo __('selection.search')?>">
+                <div class="icon-search"></div>
+            </form>
           </div>
 	      <?php echo Request::factory("localize/menu")->execute(); ?>
           <?php echo Request::factory("user/menu")->execute(); ?>
       	</div>
 	  </div>
     </div>
-	<div class='page'>
+	<div class='page page-<?php echo Request::$initial->action(); ?>'>
     <div class="container">
 	<?php
 	/*
@@ -69,5 +73,6 @@
        echo View::factory('profiler/stats');
     }
 ?>
+<div class='background'></div>
 </body>
 </html>

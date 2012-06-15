@@ -114,7 +114,7 @@ return array (
 		'register.signup' => 'Registreren',
     'register.error.username.unique' => "De gebruikersnaam is al in gebruik",
     'register.error.email.unique' => "Het e-mailadres is al in gebruik",
-	'category_extracted' => 'Gebaseerd op de tekstuele analyse van de beschrijving van dit monument heeft CultuurApp de categorie van dit monument geprobeerd in te delen.',
+	'category_extracted' => 'Gebaseerd op de tekstuele analyse van de beschrijving van dit monument heeft CultuurApp de categorie van dit monument ingedeeld.',
 
 	'more' => "meer",
 );

@@ -35,8 +35,9 @@
 			<div class='description'>
 			<?php echo str_replace("\n\n", "</p><p>", $monument->description); ?>
 			</div>
-			</p>
 
+			</p>
+			<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
 		</div>
 
 		<div class="span4 monument-single-details">
@@ -132,18 +133,6 @@
 
 				<div class="forecast">
 					<div class="inner well">
-						<?php
-						foreach ($forecasts AS $forecast) {
-							?>
-						<div class="span1 day">
-							<i><img src="<?php echo $forecast->icon(); ?>" alt="" />
-							</i> <span class="temperature"><?php echo $forecast->temperature(); ?>
-								&deg;C</span> <span class="dayabbr"><?php echo $forecast->day(); ?>
-							</span>
-						</div>
-						<?php
-						}
-						?>
 					</div>
 				</div>
 			</div>
@@ -188,8 +177,19 @@
 	</div>
 </div>
 </div>
+<div class="background-drawing"></div>
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
 	$('#category_extracted').tooltip();
+
+	$(".background-drawing").appendTo($(".background"));
+	var paper = Raphael($(".background-drawing").get(0), "100%", "100%");
+
+	// Draw sky
+	paper.add([{
+		type: "rect", x: 0, y: 0, width: "100%", height: "100%",
+		fill: "80-#4ad4e9-#016ecc", stroke: 0 } ]);
+	// Draw grass
+	paper.ellipse("50%", "100%", "100%", "40%").attr({ fill: "80-#009945-#81d941", "stroke-width": 4, stroke: "#37B34A"});
 });
 </script>
