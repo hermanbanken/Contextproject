@@ -23,23 +23,23 @@ class Controller_User extends Controller_Template {
     }
 
 	public function action_profile(){
-    $user = Auth::instance()->get_user();
-    if(!$user){
-      $this->request->redirect('user/login');
-    } else {
-      $v = View::factory('user/profile');
-      $v->bind('user', $user);
+		$user = Auth::instance()->get_user();
+		if(!$user){
+		  $this->request->redirect('user/login');
+		} else {
+		  $v = View::factory('user/profile');
+		  $v->bind('user', $user);
 
-      $this->template->body = $v;
-    }
+		  $this->template->body = $v;
+		}
 	}
  
     public function action_register() 
     {
-        $this->template->body = View::factory('user/register')
+        $v = View::factory('user/register')
             ->bind('errors', $errors)
             ->bind('message', $message)
-			      ->set('post', $this->request->post());
+			->set('defaults', $this->request->post());
              
         if (HTTP_Request::POST == $this->request->method()) 
         {           
@@ -78,11 +78,12 @@ class Controller_User extends Controller_Template {
                 $errors = $etree;
             }
         }
+		$this->template->body = (string) $v;
     }
      
     public function action_login() 
     {
-        $this->template->body = View::factory('user/login')
+        $this->template->body = (string) View::factory('user/login')
             ->bind('message', $message);
              
         if (HTTP_Request::POST == $this->request->method()) 
@@ -336,11 +337,11 @@ class Controller_User extends Controller_Template {
 				{
 					if ($provider_name == 'twitter')
 					{
-						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
+						Message::add('info', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');
 					}
 					else
 					{
-						Message::add('error', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
+						Message::add('info', 'We have successfully retrieved some of the data from your other account, but we were unable to get all the required fields. Please complete form below to register an account.');
 					}
 					
 					// in case the data for some reason fails, the user will still see something sensible:
@@ -354,7 +355,7 @@ class Controller_User extends Controller_Template {
 					$values['password'] = $values['password_confirm'] = '';
 					$view->set('defaults', $values);
 					
-					$this->template->body = $view;
+					$this->template->body = (string) $view;
 				}
 			}
 			else

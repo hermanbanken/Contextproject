@@ -4,36 +4,41 @@
 	    <h3><?php echo __('register.register-to-cultuurapp'); ?></h3>
 	</div>
 	<div class="modal-body">
-		<?php echo Form::open() ?>
-		<?php if ($errors): ?>
-		<p class="message"><?php echo __('register.error'); ?></p>
-		<ul class="errors">
-		<?php foreach ($errors as $message): ?>
-		    <li><?php echo $message ?></li>
-		<?php endforeach ?>
-		</ul>
-		<?php endif ?>
-		
-		<?php echo Form::input('username', Request::current()->post('username'), array('placeholder'=>__('login.username'))) ?>
-		<?php echo Form::input('email', Request::current()->post('email'), array('placeholder'=>__('register.email'))) ?>
-		<?php echo Form::password('password', null, array('placeholder'=>__('login.password'))) ?>
-		<?php echo Form::password('password_confirm', null, array('placeholder'=>__('register.password-confirm'))) ?>
-		<p class="help-block"><?php echo __('register.error-password'); ?></p>
-		
-		<?php echo Form::submit(NULL, __('register.signup'), array('class'=>'btn btn-primary')) ?>
-		<?php echo Form::close() ?>
+	<?php
+		echo Form::open();
+
+		$messages = Message::pull();
+		foreach($messages as $m){
+			echo "<div class='alert alert-$m[type]'>$m[message]</div>";
+		}
+		if ($errors){
+			echo "<p class='message'>".__('register.error')."</p>";
+			foreach($errors as $message){
+				echo "<div class='alert alert-error'>$message</div>";
+			}
+		}
+
+		echo Form::input('username', @$defaults['username'], array('placeholder'=>__('login.username')));
+		echo Form::input('email', @$defaults['email'], array('placeholder'=>__('register.email')));
+		echo Form::password('password', null, array('placeholder'=>__('login.password')));
+		echo Form::password('password_confirm', null, array('placeholder'=>__('register.password-confirm')));
+		echo "<p class='help-block'>".__('register.error-password')."</p>";
+
+		echo Form::submit(NULL, __('register.signup'), array('class'=>'btn btn-primary'));
+		echo Form::close();
+	?>
 	</div>
   	<div class="modal-footer">
 		<p class="modal-footer-legend">-- <?php echo __('login.or'); ?> --</p>
 		<div class="bs-links">
 			<p><a href="user/register"><?php echo __('login.register'); ?></a> <?php echo __("login.no-account"); ?></p>
 			<div class="btn-group">
-				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>">F</a>
-				<a class="btn btn-small btn-primary" href="<?php echo URL::site("user/provider/facebook"); ?>"><?php echo __('login.with-fb'); ?></a>
+				<?php echo HTML::anchor("user/provider/facebook", "F", array("class"=> "btn btn-small btn-primary"))?>
+				<?php echo HTML::anchor("user/provider/facebook", __('login.with-fb'), array("class"=> "btn btn-small btn-primary"))?>
 			</div>
 			<div class="btn-group">
-				<a class="btn btn-small btn-info">T</a>
-				<a class="btn btn-small btn-info"><?php echo __('login.with-twitter'); ?></a>
+				<?php echo HTML::anchor("user/provider/twitter", "T", array("class"=> "btn btn-small btn-info"))?>
+				<?php echo HTML::anchor("user/provider/twitter", __('login.with-twitter'), array("class"=> "btn btn-small btn-info"))?>
 			</div>
 		</div>
 	</div>

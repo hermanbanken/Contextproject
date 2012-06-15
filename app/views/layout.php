@@ -52,15 +52,12 @@
 	<div class='page page-<?php echo Request::$initial->action(); ?>'>
     <div class="container">
 	<?php
-	/*
-	$messages = Message::pull();
-	foreach($messages as $m){
-		echo "<div class='alert alert-$m[type]'>$m[message]</div>";
-	}
-	*/
-	?>
-	<?php 
-	echo $body;
+		$messages = Message::pull();
+		foreach($messages as $m){
+			echo "<div class='alert alert-$m[type]'>$m[message]</div>";
+		}
+
+		echo $body;
  	?>
     </div>
 	</div>
