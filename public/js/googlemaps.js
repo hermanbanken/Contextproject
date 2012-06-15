@@ -81,7 +81,7 @@ function getCoordinates() {
  * function to place the pins on the map
  */
 function updatePins() {
-	$("#searchdiv").fadeTo('fast', 0.8);
+	$("#searchdiv").fadeTo(0, 0.8);
 	$("#filter_button").val("Laden...");
 
 	var distance = 0;
@@ -246,7 +246,7 @@ function placePins(locations) {
 				maxZoom:maxZoom
 			});
 
-		$("#searchdiv").fadeTo('fast', 1);
+		$("#searchdiv").fadeTo(0, 1);
 		$("#filter_button").val("Filter");
 	}
 }
