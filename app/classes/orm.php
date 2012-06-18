@@ -35,7 +35,7 @@ class ORM extends Kohana_ORM {
 	{
 		$o = parent::object();
 
-		if($this->loaded())
+		if($this->loaded() && isset($this->_translated) && is_array($this->_translated))
 		foreach($this->_translated as $column => $val)
 		{
 			$o[$column] = $this->{$column};

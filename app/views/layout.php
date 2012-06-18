@@ -15,6 +15,7 @@
 	$menu = array(
 		'menu.map' => 'monument/map',
 		'menu.list' => 'monument/list',
+		'menu.index' => 'monument/town/A',
 	);
 
 ?>
