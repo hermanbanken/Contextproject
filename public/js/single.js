@@ -156,8 +156,7 @@ function show_content_places(tab) {
         if( status == google.maps.places.PlacesServiceStatus.OK &&  places.length > 0 )
         {
             places.sort(function(a,b){
-                if(a.rating == null) return Number.MAX_VALUE;
-                return b.rating - a.rating;
+                return (b.rating | 0) - (a.rating | 0);
             });
 
             $.each(places, function(key, place){

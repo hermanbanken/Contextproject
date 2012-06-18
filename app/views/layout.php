@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?php if(Kohana::$environment == Kohana::PRODUCTION): ?>
+<?php if(false && Kohana::$environment == Kohana::PRODUCTION): ?>
 <html manifest="<?php echo URL::site("manifest.txt"); ?>">
 <?php else: ?>
 <html>
