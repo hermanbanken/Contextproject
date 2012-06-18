@@ -38,7 +38,7 @@ class Controller_Template extends Kohana_Controller_Template {
 			->js('raphael', 'js/lib/raphael-min.js', true)
 			->js('iscroll', 'js/lib/iscroll.js', true)
 			->js('jquery-ui', 'js/lib/jquery-ui-1.8.19.custom.min.js', true)
-			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&sensor=true', true)
+			->js('gmaps', 'http://maps.googleapis.com/maps/api/js?key='.$googlekey.'&libraries=places&sensor=true', true)
 			->js('selection', 'js/selection.js', true)
 			->js('ca-application', 'js/app.js', true)
 			->js('clusterer', 'js/lib/markerclusterer.js', true)
