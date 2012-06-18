@@ -144,3 +144,9 @@ Route::set('default', '(<lang>/)(<controller>(/<action>(/<id>)))', array(
 		'controller' => 'welcome',
 		'action'     => 'index',
 	));
+
+Route::set('sitemap', 'sitemap.xml')
+	->defaults(array(
+		'controller' => 'sitemap',
+		'action' => 'index'
+	));
