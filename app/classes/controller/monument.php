@@ -3,7 +3,35 @@
 class Controller_Monument extends Controller_Abstract_Object {
 
 	protected static $entity = 'monument';
-	
+
+	/**
+	 * List all cities and monument
+	 * Mainly for search engine indexing
+	 */
+	public function action_town(){
+		$letter = substr($this->request->param("id"), 0, 1);
+
+		$cache = Cache::instance('file')->get('index.'.$letter, false);
+		if($cache)
+		{
+			$this->template->body = $cache;
+		} else {
+			$towns = ORM::factory("town")->where("name", "LIKE", $letter."%")->find_all();
+			$cities = array();
+			foreach($towns as $c => $city){
+				$city = (object) $city->object();
+				$city->monuments = ORM::factory("monument")->where("id_town", "=", $city->id_town)->find_all();
+				$cities[$c] = $city;
+			}
+
+			$v = View::factory(static::$entity.'/index');
+			$v->bind("cities", $cities);
+
+			Cache::instance('file')->set('index.'.$letter, (string) $v);
+			$this->template->body = $v;
+		}
+	}
+
 	/**
 	 * View to compare images visual
 	 */

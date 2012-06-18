@@ -66,6 +66,7 @@ return array (
 
 		'menu.map' => 'Kaart',
 		'menu.list' => 'Lijst',
+		'menu.index' => 'Index',
 		'menu.login' => 'login',
 		'menu.register' => 'registreer',
 		'menu.profile' => 'Profiel',
