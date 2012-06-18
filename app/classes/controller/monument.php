@@ -117,6 +117,7 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 */
 	public function action_id()
 	{
+		$this->js("google-places", "http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false", true);
 		$this->js("ca-single", "js/single.js", true);
 		
 		$id = $this->request->param('id');

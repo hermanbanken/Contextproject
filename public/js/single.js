@@ -129,76 +129,107 @@ function show_content_places(tab) {
 	// Find right categories
 	if (tab == 'cafes') {
 		// Cafes
-		var categories = 'bar|cafe';
+		var categories = ['bar','cafe'];
 	}
 	else {
 		// Else restaurants
-		var categories = 'restaurant';
+		var categories = ['restaurant'];
 	}
-		
-	// Ask for places with ajax
-	$.post(base+'ajax/single_places', {id_monument: $("#id_monument").val(), categories: categories}, succes = function(data) {
-		// Init table
-		var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
-		
-		// Remove all markers except monument
-		$.each(placemarkers, function(key, marker) {
-			marker.setMap(null);
-		});
-		
-		// Loop through places
-		$.each(data, function(key, place) {
-			// If no rating is found, set to zero
-			if (place['rating'] == null) {
-				place['rating'] = 0;
-			}
-			
-			// Create row with place information
-			html += '<tr id="place'+key+'">';
-			html += '	<td>'+(key + 1)+'</td>';
-			html += '	<td alt="'+place.rating+'">' + rating(place.rating) + '</td>';
-			html += '	<td>'+place.name+'</td>';
-			html += '	<td>'+place.vicinity+'</td>';
-			html += '	<td><a href="http://maps.google.nl/maps?q='+place.vicinity+'">'+Math.round(place.distance * 1000)+' meter</a></td>';
-			html += '</tr>';
-			
-			// Create location
-            var p = new google.maps.LatLng(place.lat, place.lng);
-			
-            // Add marker to map
-	        var marker = new google.maps.Marker({ position : p, map : map, icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+(key + 1)+'|00AEEF|FFFFFF'});
-	    	
-	        // Extend bounds for zooming
-	        bounds.extend(p);
-	    	
-	        // Add marker to our placemarkers-array
-	        placemarkers[key] = marker;
-	    });
-		
-		// Zoom map to right bounds
-		map.fitBounds(bounds);
-		
-		// If no places are found, show message
-		if (data.length == 0) {
-			html += '<tr><td>Er zijn helaas geen faciliteiten in de omgeving gevonden.</td></tr>';
-		}
-		
-		// End table
-		html += '</table>';
-		
-		// Clear and fill content
-		$("#ajax_content").empty();
-		$("#ajax_content").html(html);
-		
-		// Create click-events on the rows
-		$.each(placemarkers, function(key, marker) {
-			$('#place'+key).click(function(e) {
-				// Set zoom and center of map on click
-				map.setZoom(18);
-				map.setCenter(marker.getPosition());
-			});
-		});
-	}, "json");
+
+    // Ask for places through Maps Places API
+    service = new google.maps.places.PlacesService(map);
+    var request = {
+        location: monumentloc,
+        distance: '500',
+        rankBy: google.maps.places.RankBy.DISTANCE,
+        types: categories
+    };
+    service.search(request, function(places, status){
+
+        $.each(placemarkers, function(key, marker) {
+            marker.setMap(null);
+        });
+
+        // Init table
+        var html = '<table class="table table-bordered table-striped" style="margin-bottom: 0;">';
+
+        if( status == google.maps.places.PlacesServiceStatus.OK &&  places.length > 0 )
+        {
+            places.sort(function(a,b){
+                if(a.rating == null) return Number.MAX_VALUE;
+                return b.rating - a.rating;
+            });
+
+            $.each(places, function(key, place){
+                // If no rating is found, set to zero
+                if(key > 4)
+                    return;
+
+                // Calculate it's distance
+                place.distance = distance(
+                    place.geometry.location.lat(),
+                    place.geometry.location.lng(),
+                    monumentloc.lat(),
+                    monumentloc.lng(), "K"
+                );
+
+                // Create row with place information
+                html += '<tr id="place'+key+'">';
+                html += '	<td>'+(key + 1)+'</td>';
+                html += '	<td alt="'+place.rating+'">' + rating(place.rating) + '</td>';
+                html += '	<td>'+place.name+'</td>';
+                html += '	<td>'+place.vicinity+'</td>';
+                html += '	<td><a href="http://maps.google.nl/maps?q='+place.vicinity+'">'+Math.round(place.distance * 1000)+' meter</a></td>';
+                html += '</tr>';
+
+                // Use icon of preference
+                if(true){
+                    var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+(key + 1)+'|00AEEF|FFFFFF';
+                } else {
+                    var icon = new google.maps.MarkerImage(
+                        place.icon, new google.maps.Size(71, 71),
+                        new google.maps.Point(0, 0), new google.maps.Point(17, 34),
+                        new google.maps.Size(20, 20)
+                    );
+                }
+
+                // Add marker to map
+                var marker = new google.maps.Marker({
+                    position : place.geometry.location,
+                    map : map,
+                    icon: icon
+                });
+
+                // Extend bounds for zooming
+                bounds.extend(place.geometry.location);
+
+                // Add marker to our placemarkers-array
+                placemarkers[key] = marker;
+            });
+        } else {
+            // If no places are found, show message
+            html += '<tr><td>Er zijn helaas geen faciliteiten in de omgeving gevonden.</td></tr>';
+        }
+
+        // Zoom map to right bounds
+        map.fitBounds(bounds);
+
+        // End table
+        html += '</table>';
+
+        // Clear and fill content
+        $("#ajax_content").empty();
+        $("#ajax_content").html(html);
+
+        // Create click-events on the rows
+        $.each(placemarkers, function(key, marker) {
+            $('#place'+key).click(function(e) {
+                // Set zoom and center of map on click
+                map.setZoom(18);
+                map.setCenter(marker.getPosition());
+            });
+        });
+    });
 }
 
 
@@ -361,4 +392,29 @@ function drawMagic(){
             clearTimeout(timeout);
         });
     });
+}
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+
+    function deg2rad(deg){
+        return deg*0.0174532925;
+    }
+    function rad2deg(rad){
+        return rad/0.0174532925;
+    }
+
+    var $theta = $lon1 - $lon2;
+    var $dist = Math.sin(deg2rad($lat1)) * Math.sin(deg2rad($lat2)) +  Math.cos(deg2rad($lat1)) * Math.cos(deg2rad($lat2)) * Math.cos(deg2rad($theta));
+    $dist = Math.acos($dist);
+    $dist = rad2deg($dist);
+    var $miles = $dist * 60 * 1.1515;
+    var $unit = $unit.toUpperCase();
+
+    if ($unit == "K") {
+        return ($miles * 1.609344);
+    } else if ($unit == "N") {
+        return ($miles * 0.8684);
+    } else {
+        return $miles;
+    }
 }
