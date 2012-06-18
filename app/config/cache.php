@@ -4,8 +4,7 @@ return array(
 (
     'driver'             => 'memcache',
     'default_expire'     => 3600,
-    'compression'        => FALSE,              // Use Zlib compression 
-                                                (can cause issues with integers)
+    'compression'        => FALSE,              // Use Zlib compression (can cause issues with integers)
     'servers'            => array
     (
         array
@@ -15,14 +14,12 @@ return array(
             'persistent'       => FALSE,        // Persistent connection
         ),
     ),
-    'default_expire'     => 3600,
 ),
 'memcachetag' => array
 (
     'driver'             => 'memcachetag',
     'default_expire'     => 3600,
-    'compression'        => FALSE,              // Use Zlib compression 
-                                                (can cause issues with integers)
+    'compression'        => FALSE,              // Use Zlib compression (can cause issues with integers)
     'servers'            => array
     (
         array
@@ -32,5 +29,9 @@ return array(
             'persistent'       => FALSE,        // Persistent connection
         ),
     ),
-    'default_expire'     => 3600,
-),);
+),
+	'file' => array(
+		'driver'			 => 'file',
+		'default_expire'     => 3600*24,
+	)
+);

@@ -66,6 +66,7 @@ return array(
 
 		'menu.map' => 'Map',
 		'menu.list' => 'List',
+		'menu.index' => 'Index',
 		'menu.login' => 'login',
 		'menu.register' => 'register',
 		'menu.profile' => 'Profile',
