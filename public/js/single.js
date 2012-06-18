@@ -21,7 +21,7 @@ $(document).ready(
 			
 			// Select google maps and get longitude and ltitude
             var m = document.getElementById("single-map"),
-            c = m.dataset['map'].split(";"),
+            c = m.getAttribute('data-map').split(";"),
             p = new google.maps.LatLng(c[1], c[0]);
             monumentloc = p;
 
