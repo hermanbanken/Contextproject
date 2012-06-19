@@ -31,7 +31,7 @@
 	$(function() {
 		$('#category_extracted').tooltip();
 
-		$(".background-drawing").appendTo($(".background"));
+		$(".background-drawing").appendTo($(".background").css('display', 'block'));
 		var paper = Raphael($(".background-drawing").get(0), "100%", "100%");
 
 		// Draw sky
