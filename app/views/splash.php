@@ -15,7 +15,7 @@
 		var colors = {"blue": {fill: "#00ADEE", stroke: "#1B75BB"}, "orange": {stroke: "#8A5D3B", fill: "#C3996B"}, "brown": {fill: "#716558", stroke: "#603813"}};
 
 		$(function(){
-			$(".background-drawing").appendTo($(".page .background"));
+			$(".background-drawing").appendTo($(".page .background").css('display', 'block'));
 			var sky = Raphael($(".sky").get(0), "100%", "100%");
 			var grs = Raphael($(".grass").get(0), "100%", "100%");
 
