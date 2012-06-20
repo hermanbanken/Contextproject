@@ -20,6 +20,7 @@ body {
     bottom:0;
     left: 0;
     right: 0;
+    z-index: -100;
 }
 .monument-list {
     position: relative;
@@ -301,6 +302,9 @@ body { background-color: #fff; background-image: none; }
 .page > .container { padding-top: 15px; }
 .page-list, .page-id { padding-bottom: 20px; }
 
+.page-list > .container, .page-id > .container, .page-town > .container  {
+    background: white;
+}
 @media(min-width: 980px){
     body.welcome, body.monument { background-color: #44BB43; }
     body > * { z-index: 100; }
