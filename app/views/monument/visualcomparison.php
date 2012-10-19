@@ -16,7 +16,7 @@
 		</div>
 	</div>
 	<div class="span8">
-		<form class="well form-inline" method="post">
+		<form class="well form-inline features" method="post">
 			<input type="hidden" name="posted" value="" /> <label
 				class="checkbox" style="margin-right: 10px;"> <input type="checkbox"
 				name="color"
@@ -41,41 +41,26 @@
 			</label> <input class="btn btn-primary" type="submit"
 				value="<?php echo __('visualcomparison.compare'); ?>" />
 		</form>
+		<script>
+			var server = base+'monument/vc/<?php echo $monument->id_monument; ?>';
+			$("form.features").submit(function(){
+				$.post(server, $("form.features").serialize(), function(result){
+					$("table.similars").html(result);
+				});
+				return false;
+			}).trigger("submit");
+		</script>
 
 		<div class="well">
 			<table class="similars">
-				<?php 
-				// 				foreach ($similars AS $similar) {
-				// 					echo '
-				// 					<li class="span2"><a href="monument/visualcomparison/'.$similar->id_monument.'" class="thumbnail">
-				// 					<img style="max-height: 100px;" src="'.$similar->getphoto()->url().'" alt="'.$similar->name.'"></a></li>';
-				// 				}
-				$i = 1;
-				foreach ($similars AS $similar) {
-					if ($i == 5) {
-						echo '</tr><tr>';
-						$i = 1;
-					}
-					echo '
-					<td style="text-align: center; vertical-align: middle;">
-					<a style="display: block;" href="'.URL::site('monument/visualcomparison/'.$similar->id_monument).'?posted">
-					<img style="max-height: 100px;" src="'.$similar->getphoto()->url().'" alt="'.$similar->name.'">
-					</a>
-					</td>';
-					$i++;
-				}
-
-				if (count($similars) == 0) {
-					if ($posted) {
-						echo '<td>'.__('visualcomparison.nothingfound').'</td>';
-					}
-					else {
-						echo '<td>'.__('visualcomparison.searchinstructions').'</td>';
-					}
-				}
-
-				?>
-
+				<tr><td><?php echo '<td>'.__('visualcomparison.searchinstructions').'</td>'; ?></td></tr>
+		      	<script>
+					$('table.similars').load(server, function(r, s, x){ 
+						if(s == 'error'){ 
+							$('table.similars').html("<tr><td class='alert alert-error'>Helaas, de aanbevelingen kunnen niet geladen worden. Er ging iets mis.</td></tr>");
+						} 
+					});
+				</script>
 			</table>
 		</div>
 	</div>
