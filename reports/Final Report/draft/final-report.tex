@@ -58,7 +58,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Een tekst is voor een gebruiker vaak te lang om te lezen. Een gebruiker wil bij het zien van een monument direct weten wat voor monument het is. Trefwoorden bieden hierbij een uitkomst. Het handmatig aanmaken van trefwoorden voor ieder monument is tijdrovend. Hiervoor is een algoritme gebruikt.
 		
 		\subsubsection{Term Frequency Inverse Document Frequency}
-		Term Frequency Inverse Document Frequency (TF-IDF)\footnote{http://www.cs.rutgers.edu/~mlittman/courses/ml03/iCML03/papers/ramos.pdf} geeft elk woord in een tekst een bepaalde waarde. Deze waarde is een afweging tussen twee waarden. Hoe hoger de totaalwaarde is, hoe hoger de score voor het woord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Ieder woord $w$ in beschrijving $x$ heeft de volgende Term Frequency:
+		Term Frequency Inverse Document Frequency (TF-IDF) (zie reference \cite{1}) geeft elk woord in een tekst een bepaalde waarde. Deze waarde is een afweging tussen twee waarden. Hoe hoger de totaalwaarde is, hoe hoger de score voor het woord is. De berekening van de waarde bestaat uit twee delen. Term Frequency is het aantal keer dat een woord in een tekst voor komt. Wanneer "klokgevel" driemaal in een beschrijving van een monument voor komt, zal voor dat monument "klokgevel" een belangrijk trefwoord zijn. Term Frequency wordt berekend door het aantal keer dat het woord voorkomt in de beschrijving te delen door het totaal aantal woorden in de beschrijving. Ieder woord $w$ in beschrijving $x$ heeft de volgende Term Frequency:
 		
 		\begin{equation}
 			TF_w = \frac{\text{occ}_w}{\text{count}_x}
@@ -151,7 +151,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		Al deze features worden door de FeatureExtractor opgeslagen in de volgende bestanden: dev\_acq.txt, dev\_gabor.txt, dev\_hsv.txt, dev\_light.txt, dev\_log.txt, dev\_rgb.txt, dev\_segment.txt, dev\_spatial.txt en dev\_texture.txt. We hebben er bewust voor gekozen ons niet te verdiepen in de verkregen waardes en wat deze precies betekenen.
 		
 		\subsubsection{Importeren}
-		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren (zie reference \cite{1}) met de volgende formule:
+		De bestanden verkregen bij de Feature Extration kunnen door de CultuurApp worden uitgelezen en in de database ge\"importeerd. Om daadwerkelijk iets aan deze waarden te hebben, moeten ze worden genormaliseerd. De CultuurApp doet dit door de waarden lineair te normaliseren (zie reference \cite{11}) met de volgende formule:
 		\begin{equation}
 			n_{fm} = \frac{v_{fm} - \max(v_{f})}{\max(v_{f}) - \min(v_{f})}
 		\end{equation}
@@ -172,7 +172,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		\end{equation}
 		De functie die CultuurApp gebruikt om de afstand tussen twee monumenten te berekenen ziet er als volgt uit:
 		\begin{equation}
-			ed(q, p) = (q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2
+			ed(q, p)^2 = (q_1 - p_1)^2 + (q_2 - p_2)^2 + \cdot\cdot\cdot + (q_n - p_n)^2
 		\end{equation}
 		Beide vergelijkingen gebruiken de volgende variabelen:
 		\begin{center}
@@ -192,7 +192,7 @@ In dit verslag wordt de ontwikkeling van CultuurApp uitgewerkt. Zowel de problem
 		In eerste instantie was het idee om met behulp van visuele analyse van de foto's van monumenten alle monumenten zonder categorie in te delen in een bepaalde categorie aan de hand van de visuele eigenschappen van de monumenten die wel een categorie bevatten. Helaas werd vrij snel duidelijk dat visuele eigenschappen van monumenten zelden iets zeggen over de categorie waarin een monument zou moeten vallen. Zo wordt een watertoren aan de hand van compositie, kleur en textuur gemakkelijk ingedeeld in de categorie 'Kastelen', waar deze oorspronkelijk was ingedeeld in de categorie 'Overheidsgebouwen'. Zo heeft CultuurApp het eigenlijk niet echt 'verkeerd', maar zijn de selectiecriteria voor het indelen van een monument in een categorie niet gebaseerd op visuele eigenschappen. Hierdoor is het nooit gelukt om CultuurApp een percentage hoger dan 20\% 'goed bepaalde' categorie\"en te verkrijgen.
 	
 		\subsubsection{Tekstueel}
-		Voor de tekstuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categori\"en kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Maar wanneer een woord bij alle categori\"en vaak voorkomt, is het onwaarschijnlijk dat het woord is toe te wijzen aan een categorie. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categori\"en vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score. Deze methode lijkt sterk op de methode van Robertson en Jones \footnote{https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-356.pdf}. Er is voor deze methode gekozen omdat in eerdere tekstuele analyse tijdens het project TF-IDF is gebruikt.
+		Voor de tekstuele analyse gebruikt CultuurApp een aangepaste vorm van TF-IDF. Voor iedere woord voor iedere beschrijving voor ieder gecategoriseerd monument heeft CultuurApp opgeteld hoevaak het woord voor komt per categorie. Dit levert een grote, onduidelijke en onbruikbare set data op. Aan de hand van TF-IDF relatief tot de categori\"en kan deze set data enorm bruikbaar worden. Hoe vaker een woord voorkomt bij een categorie, hoe waarschijnlijker het is dat een woord een categorie voorspelt. Maar wanneer een woord bij alle categori\"en vaak voorkomt, is het onwaarschijnlijk dat het woord is toe te wijzen aan een categorie. Het aantal voorkomens van een woord bij een categorie wordt gedeeld door het totaal aantal voorkomens van het woord. Dit is het TF gedeelte van de berekening. Komt een woord bij alle categori\"en vaak voor, dan is het een te algemeen woord. Hier komt het IDF gedeelte weer van toepassing. De log van het totaal aantal gecategoriseerde monumenten gedeeld door het totaal aantal keer dat een woord voorkomt. Deze waarden worden vermenigvuldigd en er is nu een score bepaald. Nu heeft ieder woord, per categorie, een score. Deze methode lijkt sterk op de methode van Robertson en Jones (zie reference \cite{111}). Er is voor deze methode gekozen omdat in eerdere tekstuele analyse tijdens het project TF-IDF is gebruikt.
 		
 		\begin{equation}
 		\text{TF-IDF}_m^i = \sum_{w=1}^5\frac{occ_{wi}}{\text{occ}_w} \cdot log\left(\frac{count_x}{\text{occ}_w}{\text{occ}_w}\right)
@@ -354,12 +354,14 @@ Zoals te zien is zijn niet alle klassen volledig gedekt door de line-coverage. D
 		
 		\subsubsection{Rutger Plak}
 		Het was fijn om in deze projectgroep te zitten. De groepsgenoten waren, zoals helaas vaak niet zo is in willekeurige projectgroepen, even gedreven, gemotiveerd en enthousiast als ik. Tijdens de onderzoeksfase is dan ook vaak in groepsverband tot in de late uren doorgewerkt. Door deze gedrevenheid hebben wij tijdens de implementatiefase alles gedaan wat we wilden doen. Herman Banken bewaarde het overzicht over het systeem. Dit is erg handig omdat bij een systeem dat zo snel groeit vaak het vinden van een kleine component lastig kan zijn. Sjoerd van Bekhoven nam de lastige taak van visuele analyse op zich. Hij was hier vaak thuis mee bezig en heeft dan ook een indrukwekkend visueel vergelijkingssysteem neergezet.
-\clearpage
+		
 \begin{thebibliography}{99}
-\bibitem{1} Selim Aksoy and Robert M. Haralick, \textsl{Feature normalization and likelihood-based similarity measures for image retrieval}, 2001
+\bibitem{1} Juan Ramos, \textsl{Using TF-IDF to Determine Word Relevance in Document Queries}
+\bibitem{5} http://code.google.com/p/softwarestudies/wiki/FeatureExtractor
+\bibitem{11} Selim Aksoy and Robert M. Haralick, \textsl{Feature normalization and likelihood-based similarity measures for image retrieval}, 2001
+\bibitem{111} S.E. Robertson, K. Sp\"arck Jones, \textsl{Simple, proven approaches to text retrieval}, 1994
 \bibitem{2} http://www.wunderground.com/weather/api/
 \bibitem{3} https://developers.google.com/maps/documentation/places/
 \bibitem{4} http://www.flickr.com/services/api/
-\bibitem{5} http://code.google.com/p/softwarestudies/wiki/FeatureExtractor
 \end{thebibliography}		
 \end{document}

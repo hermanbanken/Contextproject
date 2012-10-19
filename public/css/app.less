@@ -21,10 +21,10 @@ body {
     left: 0;
     right: 0;
 }
-.monument-list {
+.monument-list, .event-list {
     position: relative;
 
-    &.busy .monument {
+    &.busy .monument, &.busy .event {
         opacity: .7;
     }
     .loading {
@@ -302,9 +302,9 @@ body { background-color: #fff; background-image: none; }
 .page-list, .page-id { padding-bottom: 20px; }
 
 @media(min-width: 980px){
-    body.welcome, body.monument { background-color: #44BB43; }
+    body.welcome, body.monument, body.event { background-color: #44BB43; }
     body > * { z-index: 100; }
-    body.monument > .page { position: relative; }
+    body.monument > .page, body.event > .page { position: relative; }
     body > .page.page-map { position: static; }
     body > .background { z-index: 1; }
 

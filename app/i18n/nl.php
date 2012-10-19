@@ -26,11 +26,13 @@ return array (
 		'single.flickr' => 'Foto\'s uit de omgeving',
 		'single.visited' => 'Bezocht',
 		'single.not-visited' => 'Niet bezocht',
+		'event.category' => 'Type',
 
     'foursquare.outboundlink' => 'Toon op FourSquare',
     'foursquare.checkins' => ':d checkins',
 
 		'list.monuments' => 'Monumenten',
+		'list.events' => 'Evenementen',
 		'list.selection' => 'Selectie',
 		'list.zero-results' => 'Er zijn helaas geen monumenten gevonden met de huidige zoekcriteria.',
 		'list.keywordrecommend' => 'Andere gebruikers zochten ook naar:',
@@ -45,6 +47,7 @@ return array (
 		'selection.distance' => 'Afstand',
 		'selection.popularity' => 'Populariteit',
 		'selection.year' => 'Bouwjaar',
+		'selection.date' => 'Datum',
 
 		'foursquare.form.header' => 'Voeg FourSquare-plaats toe',
 		'foursquare.form.legend' => 'Maak een plaats op FourSquare en koppel deze met deze monumentpagina.',
@@ -65,7 +68,8 @@ return array (
 		'foursquare.venue.create' => "Maak een FourSquare-locatie",
 
 		'menu.map' => 'Kaart',
-		'menu.list' => 'Lijst',
+		'menu.list' => 'Monumenten',
+		'menu.events' => 'Evenementen',
 		'menu.index' => 'Index',
 		'menu.login' => 'login',
 		'menu.register' => 'registreer',

@@ -1,0 +1,17 @@
+Suppose you are a tourist on a trip in the Netherlands. You're in a cultural mode and you want to visit some monuments.
+
+With CultuurApp you can lookup and explore monuments in the Netherlands. 
+
+- You can get look them up on a map
+- Filter them on the list view
+- Quickly find new monuments by browsing the tags
+- View individual monument and see
+	- their full description from Cultural Heritage Agency
+	- their location and all kinds of meta data
+- You can also view the weather information around the monument
+- Find restaurants and bars in the neighbourhood
+- Locate the venue on FourSquare and check in
+
+We also recommend monuments that are visited by users like you. We can compare monuments based on their description and their visual information.
+
+We have completed the dataset with tags and categories. The predicting of the category works really well, we got a success ratio of 86 percent.

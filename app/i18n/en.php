@@ -26,11 +26,13 @@ return array(
 		'single.flickr' => 'Photos from the area',
 		'single.visited' => 'Visited',
 		'single.not-visited' => 'Not visited',
+		'event.category' => 'Type',
 
     'foursquare.outboundlink' => 'View on FourSquare',
     'foursquare.checkins' => ':d checkins',
 		
 		'list.monuments' => 'Monuments',
+		'list.events' => 'Events',
 		'list.selection' => 'Selection',
 		'list.zero-results' => 'Unfortunately no monuments have been found with the current search criteria.',
 		'list.keywordrecommend' => 'Other users also searched for:',
@@ -45,6 +47,7 @@ return array(
 		'selection.distance' => 'Distance',
 		'selection.popularity' => 'Popularity',
 		'selection.year' => 'Year of building',
+		'selection.date' => 'Date',
 
 		'foursquare.form.header' => 'Add FourSquare venue',
 		'foursquare.form.legend' => 'Make a FourSquare venue for this monument',
@@ -65,7 +68,8 @@ return array(
 		'foursquare.venue.create' => "Create a venue",
 
 		'menu.map' => 'Map',
-		'menu.list' => 'List',
+		'menu.list' => 'Monuments',
+		'menu.events' => 'Events',
 		'menu.index' => 'Index',
 		'menu.login' => 'login',
 		'menu.register' => 'register',

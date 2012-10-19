@@ -13,8 +13,9 @@
 <?php
 
 	$menu = array(
-		'menu.map' => 'monument/map',
-		'menu.list' => 'monument/list',
+		'menu.map' => 'monument/map?town=Amsterdam',
+		'menu.list' => 'monument/list?town=Amsterdam&category=2&sort=name',
+		'menu.events' => 'event/list?town=Amsterdam&sort=date',
 		'menu.index' => 'monument/town/A',
 	);
 

@@ -236,6 +236,8 @@ var exports = exports | {};
 
         if(!locations){
             var query = this.parameter(false, function(){ self.map(); });
+			
+			this.drawEvents();
 
             $.getJSON(base+"search/map", query, function(data){
                 self.map(data.monuments);
@@ -255,13 +257,66 @@ var exports = exports | {};
     };
 
     /**
+     * Make single event and return it
+     * @param location
+     * @param map
+     * @param bounds
+     * @return {google.maps.Marker}
+     */
+    CultuurApp.prototype.addEventMarker = function(event, map){
+        var point = new google.maps.LatLng( event[1],  event[2]);
+        var marker = new google.maps.Marker({ 
+				position: point, zIndex: 80,
+				icon: new google.maps.MarkerImage(
+            		base+'images/bluedot.png',
+            		new google.maps.Size(16, 16),
+            		new google.maps.Point(0, 0)
+        		)
+			});
+        var self = this;
+        
+        // make sure the infowindow pops up upon click
+        google.maps.event.addListener(
+            marker,
+            'click',
+            (function (marker) {
+                return function () {
+                    // Close other open window
+                    if(self.infowindow)
+                        self.infowindow.close();
+
+                    // create infowindow for the pin
+                    var infowindow = self.infowindow = new google.maps.InfoWindow();
+
+                    // Add right source to image
+                    $.getJSON(base+'event/id/'+event[0], function (data) {
+                        var id = event[0];
+                        var desc = data.summary;
+                        var style = "float: left; max-height: 100px; margin-right: 15px; min-height: 100px;";
+                        infowindow.setContent(
+                            "<a href='"+base+"event/id/"+id+"' >" +
+                                "<img class='map-info-photo' id='photo'"+id+"' src='"+data.photoUrl+"' style='"+style+"' />" +
+                                "<h2>" + data.name + "</h2></a>" +
+                                "<p>"+desc+"</p>"
+                        );
+                        infowindow.open(map, marker);
+                    });
+
+                }
+            })(marker)
+        );
+
+        return marker;
+    };
+
+    /**
      * Make single marker and return it
      * @param location
      * @param map
      * @param bounds
      * @return {google.maps.Marker}
      */
-    CultuurApp.prototype.addMarker = function(location, map, bounds){
+    CultuurApp.prototype.addMarker = function(location, map, bounds, extra){
         var point = new google.maps.LatLng( location[1],  location[2]);
         var marker = new google.maps.Marker({ position: point, zIndex: 40 });
         var self = this;
@@ -300,6 +355,34 @@ var exports = exports | {};
 
         return marker;
     };
+
+	CultuurApp.prototype.drawEvents = function(data){
+		var events, data, self = this;
+		
+		if(typeof data != "undefined"){
+			events = data.split('|').map(function(event) {
+			  	return event.split(";");
+			});
+
+			events.forEach(function(event){
+				// add current location
+		        var marker = self.addEventMarker(event, map);
+				marker.setMap(map);
+				console.log(event);
+			});
+		} else {
+			if(window.localStorage && (data = localStorage.getItem("cultuurapp.events"))){
+				self.drawEvents(data);
+			} else {
+				$.get(base+"event/markers", function(data)
+		        {
+					if(window.localStorage) localStorage.setItem("cultuurapp.events", data);
+					self.drawEvents(data);
+		        });
+			}
+		}
+		
+	};
 
     CultuurApp.prototype.drawLocation = function(point, map, bounds){
         // add current location
