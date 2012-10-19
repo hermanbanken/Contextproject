@@ -33,6 +33,10 @@ class Controller_User extends Controller_Template {
 		  $this->template->body = $v;
 		}
 	}
+	
+	public function action_recommendations(){
+		$this->template = View::factory('user/recommendations');
+	}
  
     public function action_register() 
     {

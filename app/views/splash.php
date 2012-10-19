@@ -53,3 +53,9 @@
 	<div class='background'></div>
 	<div class="fb-like" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
 	<a class='torn' href='<?php echo URL::site("monument/map"); ?>'></a>
+	<script type="text/javascript">
+		var mes = "Deze website is niet gemaakt voor Internet Explorer. Gebruikt u a.u.b. Google Chrome of Firefox om deze website te bekijken. Wilt u worden doorgestuurd naar de downloadpagina van Google Chrome?";
+		if(navigator.userAgent.indexOf("MSIE") > 0 && window.confirm(mes)){
+			window.location = "http://www.google.com/intl/nl/chrome/browser/";
+		}
+	</script>
