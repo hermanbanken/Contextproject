@@ -17,6 +17,7 @@ return array(
 		'splash.show-map' => 'Show map',
 		'splash.create-account' => 'Create an account',
 		'splash.free' => 'Free',
+		'splash.appsamsterdam' => 'Now with events in Amsterdam thanks to',
 		
 		'single.recommendations' => 'Recommendations',
 		'single.location' => 'Location',

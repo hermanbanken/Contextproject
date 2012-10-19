@@ -48,6 +48,8 @@
 				<a href="<?php echo URL::site("monument/map?town=Amsterdam"); ?>" class="btn btn-primary btn-large"><?php echo __('splash.show-map'); ?></a>
 				<a href="<?php echo URL::site("user/register"); ?>" class="btn btn-large"><?php echo __('splash.create-account'); ?> <small>(<?php echo __('splash.free'); ?>)</small></a>
 			</p>
+			<p style="color:black"><?php echo __('splash.appsamsterdam'); ?><br />
+				<img src="http://www.appsforamsterdam.nl/wp-content/themes/appsynth/assets/logo-2.png"></p>
 		</div>
 	</header>
 	<div class='background'></div>

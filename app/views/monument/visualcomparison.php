@@ -46,7 +46,9 @@
 			$("form.features").submit(function(){
 				$.post(server, $("form.features").serialize(), function(result){
 					$("table.similars").html(result);
+					$("form.features input[type=submit]").removeAttr('disabled');
 				});
+				$("form.features input[type=submit]").attr('disabled', '');
 				return false;
 			}).trigger("submit");
 		</script>
