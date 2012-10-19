@@ -127,6 +127,8 @@ class Controller_Event extends Controller_Abstract_Object {
 				$m['photoUrl'] = $event->thumb;
 				$m['name'] = $event->title;
 				$m['summary'] = $event->descr;
+				$m['date_s'] = $event->date_start;
+				$m['date_e'] = $event->date_end;
 				$result['events'][] = $m;
 			}
 
