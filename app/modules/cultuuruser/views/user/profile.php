@@ -32,18 +32,11 @@
 	<div class="span12">
 	      <h2><?php echo __('profile.recommendations-title'); ?></h2>
 	      <p><?php echo __('profile.recommendations-text'); ?></p>
-      <ul class="thumbnails">
-      <?php
-      $monuments = Recommender::recommend(4);
-      foreach ($monuments['monuments'] AS $monument) {
-      	echo '
-        <li class="span3">
-          <a href="'.URL::site('monument/id/'.$monument->id_monument).'" class="thumbnail">
-            <img src="'.$monument->photoUrl().'" style="max-width: 260px; max-height: 180px;" alt="">
-          </a>
-        </li>';
-      }
-        ?>
+      <ul class="thumbnails recommendations">
+		<li>Laden...</li>
+      	<script>
+			$('ul.recommendations').load(base+'user/recommendations');
+		</script>
       </ul>
 	    </div>
 	
