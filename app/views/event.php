@@ -34,6 +34,12 @@
 					</div>
 				</div>
 				<table class="table table-bordered table-striped">
+					<?php if(!empty($model->date_start)){ ?><tr>
+						<th><?php echo __('date'); ?>
+						</th>
+						<td><?php echo $model->date_start . ' ' . __('tot') . ' ' . $model->date_end; ?>
+						</td>
+					</tr><?php } ?>
 					<tr>
 						<th><?php echo __('address'); ?>
 						</th>

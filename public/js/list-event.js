@@ -189,6 +189,7 @@ $(function(){
 					$html.find("a").attr("href", base+"event/id/"+event.id_event + "#" + getParameter('search'));
                     $html.find("img").attr("src", event.photoUrl);
                     $html.find(".summary").html(event.summary);
+                    $html.find(".distance").text(event.date_s ? (event.date_s + (event.date_e ? " tot " + event.date_e : "")) : "");
                     $html.find(".name a").text(event.title);
 
                     $("body .monument-list").append($html);
