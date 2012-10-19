@@ -37,8 +37,50 @@ class Controller_Monument extends Controller_Abstract_Object {
 	 */
 	public function action_visualcomparison() {
 		$v = View::factory(static::$entity.'/visualcomparison');
-
 		
+		// Get post, query, user and monument information
+		$id = $this->request->param('id');
+		$user = Auth::instance()->get_user();
+		$monument = ORM::factory('monument', $id);
+		$post = $this->request->post();
+		$query = $this->request->query();
+		$session = Session::instance()->as_array();
+		
+		// If nothing is posted, use recent post in session if it exists
+		if (!isset($post['posted']) && isset($session['vc'])) {
+			$post = $session['vc'];
+		}
+
+		// Set categories
+		$cats = array('color', 'composition', 'texture', 'orientation');
+		$cur_cats = array();
+		foreach ($cats AS $cat) {
+			if (isset($post[$cat])) {
+				$cur_cats[] = $cat;
+			}
+		}
+
+		// Determine if we have to use 400 or 4 features
+		$type = 'pca';
+		if (isset($post['advanced'])) {
+			$type = 'photo';
+		}
+
+		// Bind variables to view
+		$v->set('selected', $cur_cats);
+		$v->set('advanced', ($type != 'pca'));
+		$v->bind('monument', $monument);
+		$v->bind('user', $user);
+			
+		// Bind view to template
+		$this->template->body = $v;
+	}
+	
+	/**
+	 * Actual AJAX result
+	 */
+	public function action_vc() {
+		$v = View::factory(static::$entity.'/vcresult');
 		
 		// Get post, query, user and monument information
 		$id = $this->request->param('id');
@@ -94,9 +136,9 @@ class Controller_Monument extends Controller_Abstract_Object {
 		$v->set('posted', $posted);
 		$v->bind('monument', $monument);
 		$v->bind('user', $user);
-			
+		
 		// Bind view to template
-		$this->template->body = $v;
+		$this->template = $v;
 	}
 
 	/**

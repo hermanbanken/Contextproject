@@ -35,7 +35,11 @@
       <ul class="thumbnails recommendations">
 		<li>Laden...</li>
       	<script>
-			$('ul.recommendations').load(base+'user/recommendations');
+			$('ul.recommendations').load(base+'user/recommendations1', function(r, s, x){ 
+				if(s == 'error'){ 
+					$('ul.recommendations').html("<li class='alert alert-error'>Helaas, de aanbevelingen kunnen niet geladen worden. Er ging iets mis.</li>");
+				} 
+			});
 		</script>
       </ul>
 	    </div>

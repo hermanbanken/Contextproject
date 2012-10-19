@@ -17,6 +17,7 @@ return array (
 		'splash.show-map' => 'Toon kaart',
 		'splash.create-account' => 'Maak een account',
 		'splash.free' => 'gratis',
+		'splash.appsamsterdam' => 'Nu met evenementen in Amsterdam dankzij',
 
 		'single.recommendations' => 'Aanbevelingen',
 		'single.location' => 'Locatie',
