@@ -17,7 +17,7 @@ class Controller_Event extends Controller_Abstract_Object {
 		{
 			$obj = $event->object();
 			$obj['photoUrl'] = $event->thumb;
-			$obj['summary'] = $event->descr;
+			$obj['summary'] = !empty($event->descr) ? $event->descr : $event->short;
 			$obj['name'] = $event->title;
 			$this->set_json(json_encode($obj));
 		}
@@ -33,7 +33,7 @@ class Controller_Event extends Controller_Abstract_Object {
 				"og:url" => URL::site("event/id/".$event->id_event, "http"),
 				"og:type" => "cultuurapp:event",
 				"og:image" => URL::site($event->media, "http"),
-				"og:description" => $event->descr,
+				"og:description" => !empty($event->descr) ? $event->descr : $event->short,
 				"cultuurapp:location:longitude" => $event->lat,
 				"cultuurapp:location:latitude" => $event->lng,
 				"cultuurapp:location:altitude" => "0"
@@ -126,7 +126,7 @@ class Controller_Event extends Controller_Abstract_Object {
 				$m = $event->object();
 				$m['photoUrl'] = $event->thumb;
 				$m['name'] = $event->title;
-				$m['summary'] = $event->descr;
+				$m['summary'] = !empty($event->short) ? $event->short : $event->descr;
 				$m['date_s'] = $event->date_start;
 				$m['date_e'] = $event->date_end;
 				$result['events'][] = $m;
@@ -209,7 +209,9 @@ class Controller_Event extends Controller_Abstract_Object {
 				$query->order_by("title");
 				break;
 			case "date":
-				$query->order_by("date_start");
+				if(empty($search))
+					$query->and_where("date_start", ">", '2012-09-15');
+				$query->order_by("date_start", "ASC");
 				break;
 			case "relevance":
 				if (isset($piped))
