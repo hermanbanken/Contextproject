@@ -74,7 +74,8 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 			$query = Kohana::$config->load('4sq.match.name') ? $name_clean : null;
 			
 			// Get venues from FourSquare
-			$response = file_get_contents(
+			try {
+				$response = file_get_contents(
 					"https://api.foursquare.com/v2/venues/search".URL::query( array(
 						"intent" => "browse",
 						"ll" => $monument->lng . ',' . $monument->lat,
@@ -85,12 +86,14 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 						"client_secret" => Kohana::$config->load('4sq.client.secret'),
 					))
 				);
-				
+			} catch(Exception $e){
+				$response = false;
+			}	
 			$obj = @json_decode($response);
 			
-// 			if($response->status() != 200 || count($obj->response->venues) < 1){
-// 				return false;
-// 			} else {
+ 			if(!is_object($response) || $response->status() != 200 || count($obj->response->venues) < 1){
+ 				return false;
+ 			} else {
 				// Make sure we don't pick a strange result
 				while($v = current($obj->response->venues)){
 					// Discard if too far away
@@ -129,7 +132,7 @@ class Model_Venue extends Model_Abstract_Cultuurorm {
 			}
 			
 			return false;	
-// 		}
+ 		}
 	}
 
 	/**

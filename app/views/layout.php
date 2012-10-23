@@ -17,6 +17,7 @@
 		'menu.list' => 'monument/list?town=Amsterdam&category=2&sort=name',
 		'menu.events' => 'event/list?town=Amsterdam&sort=date',
 		'menu.index' => 'monument/town/A',
+		'menu.about' => 'welcome/about'
 	);
 
 ?>
