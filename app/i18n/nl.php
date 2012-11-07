@@ -76,6 +76,7 @@ return array (
 		'menu.register' => 'registreer',
 		'menu.profile' => 'Profiel',
 		'menu.logout' => 'Uitloggen',
+		'menu.about' => 'Over CultuurApp',
 		
 		'visualcomparison.nothingfound' => 'Deze foto is (nog) niet geindexeerd en kan daarom niet vergeleken worden met andere monumenten.',
 		'visualcomparison.searchinstructions' => 'Selecteer eventueel enkele features om op te zoeken en klik op \'Vergelijken\' om te beginnen.',
