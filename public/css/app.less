@@ -78,6 +78,10 @@ body {
             .temperature { position: absolute; top: 0; right: 0; color: black; text-align: right; font-size: 80%; }
         }
     }
+
+	.thumbnail {
+		min-height: 200px;
+	}
 }
 
 .modal {
@@ -302,13 +306,13 @@ body { background-color: #fff; background-image: none; }
 .page-list, .page-id { padding-bottom: 20px; }
 
 @media(min-width: 980px){
-    body.welcome, body.monument, body.event { background-color: #44BB43; }
+    body.welcome, body.monument, body.event, body.welcome-about { background-color: #44BB43; }
     body > * { z-index: 100; }
-    body.monument > .page, body.event > .page { position: relative; }
+    body.monument > .page, body.event > .page, body.welcome-about > .page { position: relative; }
     body > .page.page-map { position: static; }
     body > .background { z-index: 1; }
 
-    .page-list > .container, .page-id > .container, .page-town > .container  {
+    .page-list > .container, .page-id > .container, .page-town > .container, .page-about > .container  {
         background: white;
         box-shadow: 0 0 15px rgba(0, 0, 0, .4);
         border: 1px solid #EEE;
@@ -323,6 +327,11 @@ body.monument-map .background, body.4sq {
 
 .tagcloud {
     overflow:hidden;
+}
+
+.datasources img {
+	text-align: center;
+	max-height: 62px;
 }
 
 .page-town .container li.city {

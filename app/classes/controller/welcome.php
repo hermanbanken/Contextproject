@@ -17,6 +17,12 @@ class Controller_Welcome extends Controller_Template {
 		$this->template->body = $v;
 	}
 	
+	public function action_about(){
+		$v = View::factory("about");
+		
+		$this->template->body = $v;
+	}
+	
 }
 
 ?>

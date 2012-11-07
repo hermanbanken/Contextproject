@@ -76,6 +76,7 @@ return array(
 		'menu.register' => 'register',
 		'menu.profile' => 'Profile',
 		'menu.logout' => 'Logout',
+		'menu.about' => 'About',
 		
 		'visualcomparison.nothingfound' => 'This photo is not (yet) indexed and can therefore not be compared to other monuments.',
 		'visualcomparison.searchinstructions' => 'Optionally select some features to search on and click \'Compare\' to begin.',
