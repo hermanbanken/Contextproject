@@ -98,7 +98,8 @@ class Controller_Template extends Kohana_Controller_Template {
 	 * @return Controller $this - for chainability
 	 */
 	public function js($name, $file, $head = false, $depends = null){
-		$src = file_exists(DOCROOT.$file) ? URL::site($file."?v=".time()) : $file;
+		$cachestop = Kohana::$environment == Kohana::PRODUCTION ? "" : "?v=".time();
+		$src = file_exists(DOCROOT.$file) ? URL::site($file.$cachestop) : $file;
 		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
 		return $this;
 	}
@@ -130,7 +131,8 @@ class Controller_Template extends Kohana_Controller_Template {
 		// Prepare css includes
 		$css = array();
 		foreach($this->css as $c){
-			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href']."?v=".time(), $c['media']);
+			$cachestop = Kohana::$environment == Kohana::PRODUCTION ? "" : "?v=".time();
+			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href'].$cachestop, $c['media']);
 		}
 
 		foreach($this->snip as $s){
