@@ -51,6 +51,8 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
 /**
  * Set environment
  */
+Kohana::$server_name = $_SERVER['SERVER_NAME'];
+
 if(Kohana::$server_name == "cultuurapp.nl")
 	$_SERVER['KOHANA_ENV'] = "PRODUCTION";
 elseif(Kohana::$server_name == "dev.cultuurapp.nl")

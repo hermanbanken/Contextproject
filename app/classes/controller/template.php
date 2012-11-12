@@ -98,8 +98,7 @@ class Controller_Template extends Kohana_Controller_Template {
 	 * @return Controller $this - for chainability
 	 */
 	public function js($name, $file, $head = false, $depends = null){
-		$cachestop = Kohana::$environment == Kohana::PRODUCTION ? "" : "?v=".time();
-		$src = file_exists(DOCROOT.$file) ? URL::site($file.$cachestop) : $file;
+		$src = file_exists(DOCROOT.$file) ? URL::site($file).self::prevent_cache() : $file;
 		$this->js[$name] = array('src'=>$src, 'head'=>$head, 'dependson'=>$depends);
 		return $this;
 	}
@@ -114,6 +113,10 @@ class Controller_Template extends Kohana_Controller_Template {
 	{
 		$this->snip[$name] = array($head, $html);
 		return $this;
+	}
+
+	public static function prevent_cache(){
+		return Kohana::$environment == Kohana::PRODUCTION || Kohana::STAGING ? "" : "?v=".time();
 	}
 	
 	public function after(){
@@ -131,8 +134,7 @@ class Controller_Template extends Kohana_Controller_Template {
 		// Prepare css includes
 		$css = array();
 		foreach($this->css as $c){
-			$cachestop = Kohana::$environment == Kohana::PRODUCTION ? "" : "?v=".time();
-			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href'].$cachestop, $c['media']);
+			$css[] = sprintf("<link rel='%s' type='text/css' href='%s' media='%s' />", $c['rel'], $c['href'].self::prevent_cache(), $c['media']);
 		}
 
 		foreach($this->snip as $s){
